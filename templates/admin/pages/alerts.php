@@ -149,7 +149,7 @@ use SiteAlerts\Utils\TemplateUtils;
                     <?php
                     printf(
                     /* translators: 1: average pageviews, 2: average 404 errors */
-                        esc_html__('Average per day: %1$s pageviews · %2$s 404 errors', 'site-alerts'),
+                        esc_html__('Average per day: %1$s pageviews · %2$s page errors (404)', 'site-alerts'),
                         '<strong>' . esc_html(number_format_i18n($history['average']['pageviews'])) . '</strong>',
                         '<strong>' . esc_html(number_format_i18n($history['average']['errors_404'])) . '</strong>'
                     );
