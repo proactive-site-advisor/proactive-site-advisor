@@ -95,6 +95,11 @@ class NotFoundTracker extends AbstractSingleton
             return true;
         }
 
+        // Favicon (WordPress core)
+        if (is_favicon()) {
+            return true;
+        }
+
         // REST requests
         if (defined('REST_REQUEST') && REST_REQUEST) {
             return true;
