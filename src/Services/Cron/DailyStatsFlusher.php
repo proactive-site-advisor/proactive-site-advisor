@@ -41,8 +41,10 @@ class DailyStatsFlusher extends AbstractSingleton
         $cache->set($lockKey, 1, MINUTE_IN_SECONDS * 5);
 
         try {
+            $now = DateTimeUtils::current();
+
             // Flush YESTERDAY's data (the completed day when cron runs at midnight)
-            $yesterday    = current_datetime()->modify('-1 day');
+            $yesterday    = $now->modify('-1 day');
             $yesterdayYmd = $yesterday->format('Y-m-d');
             $yesterdayKey = $yesterday->format('Ymd');
 
@@ -63,7 +65,7 @@ class DailyStatsFlusher extends AbstractSingleton
             $cache->delete(CacheKeys::notFoundMapForDate($yesterdayKey));
 
             // Retention: keep 7 days
-            $sevenDaysAgo = current_datetime()->modify('-7 days');
+            $sevenDaysAgo = $now->modify('-7 days');
             $purgeBefore  = $sevenDaysAgo->format('Y-m-d');
             DailyStats::purgeOlderThan($purgeBefore);
             AlertEngine::getInstance()->purgeAlertsOlderThan($purgeBefore);

@@ -73,6 +73,17 @@ class DateTimeUtils
     }
 
     /**
+     * Get the current date and time as a DateTimeImmutable object in the WordPress timezone.
+     * Wrapper around WordPress's current_datetime() function.
+     *
+     * @return DateTimeImmutable The current DateTime in WordPress timezone.
+     */
+    public static function current(): DateTimeImmutable
+    {
+        return current_datetime();
+    }
+
+    /**
      * Get the WordPress timezone as a DateTimeZone object.
      *
      * @return DateTimeZone The WordPress timezone.
