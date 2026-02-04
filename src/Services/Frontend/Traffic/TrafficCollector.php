@@ -46,56 +46,11 @@ class TrafficCollector extends AbstractSingleton
      */
     public function maybeCountPageview(): void
     {
-        if ($this->shouldSkip()) {
+        if (!PageviewSignal::shouldCollect()) {
             return;
         }
 
         $key = CacheKeys::pageviewsToday();
         CacheManager::getInstance()->increment($key, 1, self::TRANSIENT_TTL);
-    }
-
-    /**
-     * Determine if this request should be skipped.
-     *
-     * @return bool True if request should not be counted.
-     */
-    private function shouldSkip(): bool
-    {
-        // Admin area
-        if (is_admin()) {
-            return true;
-        }
-
-        // Favicon (WordPress core)
-        if (is_favicon()) {
-            return true;
-        }
-
-        // REST requests
-        if (defined('REST_REQUEST') && REST_REQUEST) {
-            return true;
-        }
-
-        // AJAX requests
-        if (defined('DOING_AJAX') && DOING_AJAX) {
-            return true;
-        }
-
-        // Cron runs
-        if (defined('DOING_CRON') && DOING_CRON) {
-            return true;
-        }
-
-        // Feed requests
-        if (is_feed()) {
-            return true;
-        }
-
-        // Preview requests
-        if (is_preview()) {
-            return true;
-        }
-
-        return false;
     }
 }

@@ -53,11 +53,11 @@ class NotFoundTracker extends AbstractSingleton
      */
     public function maybeTrack404(): void
     {
-        if ($this->shouldSkip()) {
+        if (!is_404()) {
             return;
         }
-
-        if (!is_404()) {
+        
+        if (!PageviewSignal::shouldCollect()) {
             return;
         }
 
@@ -81,41 +81,6 @@ class NotFoundTracker extends AbstractSingleton
         $map = $this->pruneMap($map);
 
         $cache->set($mapKey, wp_json_encode($map), self::TRANSIENT_TTL);
-    }
-
-    /**
-     * Determine if this request should be skipped.
-     *
-     * @return bool True if request should not be tracked.
-     */
-    private function shouldSkip(): bool
-    {
-        // Admin area
-        if (is_admin()) {
-            return true;
-        }
-
-        // Favicon (WordPress core)
-        if (is_favicon()) {
-            return true;
-        }
-
-        // REST requests
-        if (defined('REST_REQUEST') && REST_REQUEST) {
-            return true;
-        }
-
-        // AJAX requests
-        if (defined('DOING_AJAX') && DOING_AJAX) {
-            return true;
-        }
-
-        // Cron runs
-        if (defined('DOING_CRON') && DOING_CRON) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
