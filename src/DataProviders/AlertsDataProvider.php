@@ -4,6 +4,8 @@ namespace SiteAlerts\DataProviders;
 
 use SiteAlerts\Abstracts\AbstractDataProvider;
 use SiteAlerts\Models\Alert;
+use SiteAlerts\Utils\OptionUtils;
+use SiteAlerts\Config\UserOptions;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -48,6 +50,104 @@ class AlertsDataProvider extends AbstractDataProvider
         }
 
         return array_map([$this, 'enrichAlert'], $rows);
+    }
+
+    /**
+     * Get the priority-based count of alerts for the menu badge.
+     *
+     * Priority order:
+     * 1. Critical alerts count
+     * 2. Warning alerts count
+     * 3. Info alerts count
+     *
+     * @param int $days Number of days to look back.
+     * @return array{count: int, severity: string} The count and severity based on priority.
+     */
+    public function getPriorityCount(int $days = 7): array
+    {
+        global $wpdb;
+
+        $table = Alert::getTableName();
+        $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
+
+        $lastSeenId = $this->getLastSeenAlertId();
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT severity, COUNT(*) as count
+                 FROM {$table}
+                 WHERE alert_date >= %s
+                 AND id > %d
+                 GROUP BY severity",
+                $start,
+                $lastSeenId
+            ),
+            ARRAY_A
+        );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        $counts = [
+            'critical' => 0,
+            'warning'  => 0,
+            'info'     => 0,
+        ];
+
+        if (is_array($rows)) {
+            foreach ($rows as $row) {
+                $severity = strtolower((string)($row['severity'] ?? ''));
+                if (isset($counts[$severity])) {
+                    $counts[$severity] = (int)$row['count'];
+                }
+            }
+        }
+
+        if ($counts['critical'] > 0) {
+            return ['count' => $counts['critical'], 'severity' => 'critical'];
+        }
+
+        if ($counts['warning'] > 0) {
+            return ['count' => $counts['warning'], 'severity' => 'warning'];
+        }
+
+        return ['count' => $counts['info'], 'severity' => 'info'];
+    }
+
+    /**
+     * Get the ID of the most recent alert.
+     *
+     * @return int
+     */
+    public function getLatestAlertId(): int
+    {
+        global $wpdb;
+        $table = Alert::getTableName();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        return (int)$wpdb->get_var("SELECT MAX(id) FROM {$table}");
+    }
+
+    /**
+     * Get the ID of the alert last acknowledged by the current user.
+     *
+     * @return int
+     */
+    public function getLastSeenAlertId(): int
+    {
+        return (int)OptionUtils::getUserOption(UserOptions::LAST_SEEN_ALERT_ID, 0);
+    }
+
+    /**
+     * Update the last seen alert ID for the current user.
+     *
+     * @return void
+     */
+    public function updateLastSeenAlertId(): void
+    {
+        $latestId = $this->getLatestAlertId();
+        if ($latestId > 0) {
+            OptionUtils::setUserOption(UserOptions::LAST_SEEN_ALERT_ID, $latestId);
+        }
     }
 
     /**
