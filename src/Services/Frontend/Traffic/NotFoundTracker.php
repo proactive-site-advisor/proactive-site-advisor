@@ -1,10 +1,10 @@
 <?php
 
-namespace SiteAlerts\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Cache\CacheManager;
-use SiteAlerts\Utils\CacheKeys;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Cache\CacheKeys;
+use ProactiveSiteAdvisor\Cache\CacheManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Tracks 404 errors on frontend requests.
  * Stores total count and a pruned map of paths that triggered 404s.
  *
- * @package SiteAlerts\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
 class NotFoundTracker extends AbstractSingleton

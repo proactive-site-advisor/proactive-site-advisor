@@ -1,48 +1,22 @@
-// ============================================
-// AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
-// ============================================
-// Generated from: config/prefix.config.cjs
-// Regenerate with: npm run build
-// ============================================
+// AUTO-GENERATED FILE - DO NOT EDIT
 
-// Core prefix (e.g., 'sa')
-$prefix: 'sa' !default;
+$base: 'proactive-site-advisor' !default;
 
-// CSS custom property prefix (e.g., '--sa')
-$css-var-prefix: '--sa' !default;
-
-// Data attribute prefix (e.g., 'data-sa')
-$data-attr-prefix: 'data-sa' !default;
-
-// Event prefix for JavaScript events (e.g., 'sa')
-$event-prefix: 'sa' !default;
-
-// Storage prefix for localStorage (e.g., 'sa')
-$storage-prefix: 'sa' !default;
-
-// ============================================
-// Helper function to build prefixed class name
-// Usage: #{prefix('btn')} outputs '.sa-btn'
-// ============================================
-@function prefix($name) {
-    @return $prefix + '-' + $name;
+@function css-class($name) {
+    @return $base + '-' + $name;
 }
 
-// ============================================
-// Helper function to build CSS variable reference
-// Usage: #{css-var('primary')} outputs 'var(--sa-primary)'
-// ============================================
 @function css-var($name) {
-    @return var(#{$css-var-prefix}-#{$name});
+    @return var(--#{$base}-#{$name});
 }
 
-// ============================================
-// Helper function to build data attribute selector
-// Usage: #{data-attr('theme', 'dark')} outputs '[data-sa-theme="dark"]'
-// ============================================
+@function css-var-name($name) {
+  @return --#{$base}-#{$name};
+}
+
 @function data-attr($name, $value: null) {
     @if $value {
-        @return '[#{$data-attr-prefix}-#{$name}="#{$value}"]';
+        @return '[data-#{$base}-#{$name}="#{$value}"]';
     }
-    @return '[#{$data-attr-prefix}-#{$name}]';
+    @return '[data-#{$base}-#{$name}]';
 }

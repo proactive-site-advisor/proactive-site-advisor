@@ -1,11 +1,11 @@
 <?php
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
-use SiteAlerts\Models\DailyStats;
-use SiteAlerts\Config\PluginMeta;
-use SiteAlerts\Utils\DateTimeUtils;
-use SiteAlerts\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Models\DailyStats;
+use ProactiveSiteAdvisor\Config\PluginMeta;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  * Utility class for determining the current plugin/monitoring status.
  * Provides reusable status checks that can be used across the plugin.
  *
- * @package SiteAlerts\Utils
+ * @package ProactiveSiteAdvisor\Utils
  * @version 1.0.0
  */
 class PluginStatus
@@ -33,7 +33,7 @@ class PluginStatus
     /**
      * Option key for last daily run timestamp.
      */
-    public const OPTION_LAST_DAILY_RUN = 'site_alerts_last_daily_run';
+    public const OPTION_LAST_DAILY_RUN = 'proactive_site_advisor_last_daily_run';
 
     /**
      * Baseline period in days.

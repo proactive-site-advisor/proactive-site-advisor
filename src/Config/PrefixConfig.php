@@ -1,162 +1,110 @@
 <?php
-/**
- * ============================================
- * AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
- * ============================================
- * Generated from: config/prefix.config.cjs
- * Regenerate with: npm run build
- * ============================================
- */
 
-namespace SiteAlerts\Config;
+namespace ProactiveSiteAdvisor\Config;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
- * Prefix Configuration Class
+ * Class PrefixConfig
  *
- * Provides centralized access to all prefix values.
- * Used by PHP components for consistent naming.
+ * Provides helper methods to generate prefixed identifiers
+ * used across the plugin.
  *
- * @package SiteAlerts\Config
+ * @package ProactiveSiteAdvisor\Config
  * @version 1.0.0
  */
 final class PrefixConfig
 {
     /**
-     * Core prefix (e.g., 'sa')
+     * Base slug used for CSS classes and handles (kebab-case).
      */
-    public const PREFIX = 'sa';
+    public const BASE = 'proactive-site-advisor';
 
     /**
-     * Uppercase constant prefix (e.g., 'SA')
+     * PHP-safe prefix (snake_case).
      */
-    public const CONSTANT_PREFIX = 'SA';
+    public const PREFIX = 'proactive_site_advisor';
 
     /**
-     * JavaScript namespace (e.g., 'SA')
+     * Uppercase constant prefix.
      */
-    public const JS_NAMESPACE = 'SA';
+    public const CONSTANT_PREFIX = 'PROACTIVE_SITE_ADVISOR';
 
     /**
-     * CSS class prefix with hyphen (e.g., 'sa-')
+     * Global JS config object name.
      */
-    public const CSS_PREFIX = 'sa-';
+    public const CONFIG_OBJECT = 'proactiveSiteAdvisorConfig';
 
     /**
-     * Data attribute prefix (e.g., 'data-sa')
+     * Prevent instantiation.
      */
-    public const DATA_ATTR = 'data-sa';
+    private function __construct(){}
 
     /**
-     * CSS custom property prefix (e.g., '--sa')
+     * Generate a prefixed CSS class.
+     *
+     * @param string $name Class suffix.
+     * @return string
      */
-    public const CSS_VAR = '--sa';
-
-    /**
-     * PHP function/option prefix with underscore (e.g., 'sa_')
-     */
-    public const PHP_PREFIX = 'sa_';
-
-    /**
-     * WordPress handle prefix (e.g., 'sa-')
-     */
-    public const HANDLE_PREFIX = 'sa-';
-
-    /**
-     * Event prefix for JavaScript events (e.g., 'sa')
-     */
-    public const EVENT_PREFIX = 'sa';
-
-    /**
-     * Localized config object name (e.g., 'saConfig')
-     */
-    public const CONFIG_OBJECT = 'saConfig';
-
-    /**
-     * Storage prefix for localStorage (e.g., 'sa')
-     */
-    public const STORAGE_PREFIX = 'sa';
-
-    /**
-     * Prevent instantiation
-     */
-    private function __construct()
+    public static function css(string $name): string
     {
+        return self::BASE . '-' . $name;
     }
 
     /**
-     * Get prefixed CSS class name
+     * Generate a prefixed data attribute name.
      *
-     * @param string $name Class name without prefix
-     * @return string Prefixed class name (e.g., 'sa-btn')
-     */
-    public static function cssClass(string $name): string
-    {
-        return self::CSS_PREFIX . $name;
-    }
-
-    /**
-     * Get prefixed data attribute name
-     *
-     * @param string $name Attribute name without prefix
-     * @return string Prefixed attribute (e.g., 'data-sa-toggle')
+     * @param string $name Attribute suffix.
+     * @return string
      */
     public static function dataAttr(string $name): string
     {
-        return self::DATA_ATTR . '-' . $name;
+        return 'data-' . self::BASE . '-' . $name;
     }
 
     /**
-     * Get prefixed CSS variable name
+     * Generate a script/style handle.
      *
-     * @param string $name Variable name without prefix
-     * @return string Prefixed variable (e.g., '--sa-primary')
-     */
-    public static function cssVar(string $name): string
-    {
-        return self::CSS_VAR . '-' . $name;
-    }
-
-    /**
-     * Get prefixed option/meta key
-     *
-     * @param string $name Key name without prefix
-     * @return string Prefixed key (e.g., 'sa_settings')
-     */
-    public static function optionKey(string $name): string
-    {
-        return self::PHP_PREFIX . $name;
-    }
-
-    /**
-     * Get prefixed WordPress handle
-     *
-     * @param string $name Handle name without prefix
-     * @return string Prefixed handle
+     * @param string $name Handle suffix.
+     * @return string
      */
     public static function handle(string $name): string
     {
-        return self::HANDLE_PREFIX . $name;
+        return self::BASE . '-' . $name;
     }
 
     /**
-     * Get prefixed AJAX action name
+     * Generate an Ajax action name.
      *
-     * @param string $name Action name without prefix
-     * @return string Prefixed action (e.g., 'sa_save_settings')
+     * @param string $name Action suffix.
+     * @return string
      */
     public static function ajaxAction(string $name): string
     {
-        return self::PHP_PREFIX . $name;
+        return self::PREFIX . '_' . $name;
     }
 
     /**
-     * Get prefixed nonce name
+     * Generate a nonce action name.
      *
-     * @param string $name Nonce name without prefix
-     * @return string Prefixed nonce (e.g., 'sa_nonce')
+     * @param string $name Nonce suffix.
+     * @return string
      */
     public static function nonce(string $name = 'nonce'): string
     {
-        return self::PHP_PREFIX . $name;
+        return self::PREFIX . '_' . $name;
+    }
+
+    /**
+     * Generate a database table name (without $wpdb prefix).
+     *
+     * @param string $name Table suffix.
+     * @return string
+     */
+    public static function table(string $name): string
+    {
+        return self::PREFIX . '_' . $name;
     }
 }

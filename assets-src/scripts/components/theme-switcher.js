@@ -9,11 +9,11 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('ThemeSwitcher requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('ThemeSwitcher requires global namespace.');
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('ThemeSwitcher requires global namespace.');
 
-    var Helpers = SA.Helpers;
-    var Config = SA.Config;
+    var Helpers = ProactiveSiteAdvisor.Helpers;
+    var Config = ProactiveSiteAdvisor.Config;
     if (!Helpers || !Config) throw new Error('ThemeSwitcher requires helpers.js and config.js.');
 
     function storageGet(key) {
@@ -36,8 +36,11 @@
         storageKey: null,
 
         init: function () {
-            this.storageKey = SA.storageKey('theme');
-            this.wrapper = document.querySelector(SA.selector('wrap'));
+            this.storageKey = ProactiveSiteAdvisor.storageKey('theme');
+            this.wrapper = document.querySelector(
+                ProactiveSiteAdvisor.selector('wrap')
+            );
+
             this.bindEvents();
             this.applyStoredTheme();
         },
@@ -49,7 +52,9 @@
                 var target = Helpers.getElement(e.target);
                 if (!target) return;
 
-                if (!target.closest(SA.dataSelector('theme-toggle'))) return;
+                if (!target.closest(
+                    ProactiveSiteAdvisor.dataSelector('theme-toggle')
+                )) return;
 
                 e.preventDefault();
                 self.toggle();
@@ -58,50 +63,83 @@
 
         getTheme: function () {
             var stored = storageGet(this.storageKey);
-            if (stored === 'light' || stored === 'dark') return stored;
+            if (stored === 'light' || stored === 'dark') {
+                return stored;
+            }
 
             if (this.wrapper) {
-                var domTheme = this.wrapper.getAttribute(SA.dataAttr('theme'));
-                if (domTheme === 'light' || domTheme === 'dark') return domTheme;
+                var domTheme = this.wrapper.getAttribute(
+                    ProactiveSiteAdvisor.dataAttr('theme')
+                );
+
+                if (domTheme === 'light' || domTheme === 'dark') {
+                    return domTheme;
+                }
             }
 
             return 'light';
         },
 
         setTheme: function (theme) {
-            if (theme !== 'light' && theme !== 'dark') theme = 'light';
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = 'light';
+            }
 
-            if (this.wrapper) this.wrapper.setAttribute(SA.dataAttr('theme'), theme);
+            if (this.wrapper) {
+                this.wrapper.setAttribute(
+                    ProactiveSiteAdvisor.dataAttr('theme'),
+                    theme
+                );
+            }
+
             storageSet(this.storageKey, theme);
 
             this.saveToServer(theme);
             this.updateToggleIcons(theme);
 
-            SA.dispatch('themeChanged', {theme: theme}, document);
+            ProactiveSiteAdvisor.dispatch('themeChanged', {theme: theme}, document);
         },
 
         toggle: function () {
-            this.setTheme(this.getTheme() === 'light' ? 'dark' : 'light');
+            this.setTheme(
+                this.getTheme() === 'light' ? 'dark' : 'light'
+            );
         },
 
         applyStoredTheme: function () {
             var stored = storageGet(this.storageKey);
-            var theme = (stored === 'light' || stored === 'dark') ? stored : this.getTheme();
+            var theme = (stored === 'light' || stored === 'dark')
+                ? stored
+                : this.getTheme();
 
             if (stored === 'light' || stored === 'dark') {
-                if (this.wrapper) this.wrapper.setAttribute(SA.dataAttr('theme'), stored);
+                if (this.wrapper) {
+                    this.wrapper.setAttribute(
+                        ProactiveSiteAdvisor.dataAttr('theme'),
+                        stored
+                    );
+                }
             }
 
             this.updateToggleIcons(theme);
         },
 
         updateToggleIcons: function (theme) {
-            var toggles = document.querySelectorAll(SA.dataSelector('theme-toggle'));
+            var toggles = document.querySelectorAll(
+                ProactiveSiteAdvisor.dataSelector('theme-toggle')
+            );
 
             for (var i = 0; i < toggles.length; i++) {
                 var toggle = toggles[i];
-                var lightIcon = toggle.querySelector(SA.selector('theme-icon-light'));
-                var darkIcon = toggle.querySelector(SA.selector('theme-icon-dark'));
+
+                var lightIcon = toggle.querySelector(
+                    ProactiveSiteAdvisor.selector('theme-icon-light')
+                );
+
+                var darkIcon = toggle.querySelector(
+                    ProactiveSiteAdvisor.selector('theme-icon-dark')
+                );
+
                 if (!lightIcon || !darkIcon) continue;
 
                 if (theme === 'dark') {
@@ -122,7 +160,10 @@
             if (!ajaxUrl || !nonce) return;
 
             var formData = new FormData();
-            formData.append('action', PREFIX_CONFIG.prefix + '_switch_theme');
+            formData.append(
+                'action',
+                ProactiveSiteAdvisor.ajaxAction('switch_theme')
+            );
             formData.append('security', nonce);
             formData.append('theme', theme);
 
@@ -143,6 +184,6 @@
         ThemeSwitcher.init();
     }
 
-    SA.ThemeSwitcher = ThemeSwitcher;
+    ProactiveSiteAdvisor.ThemeSwitcher = ThemeSwitcher;
 
 })(window, document);

@@ -7,7 +7,7 @@
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are locally scoped via include.
  *
- * @package SiteAlerts
+ * @package ProactiveSiteAdvisor
  * @version 1.0.0
  *
  * @var array $columns Array of column definitions: [['key' => 'column_key', 'label' => 'Column Label'], ...]
@@ -21,12 +21,12 @@ defined('ABSPATH') || exit;
 $columns      = $columns ?? [];
 $rows         = $rows ?? [];
 $tableClass   = $tableClass ?? '';
-$emptyMessage = $emptyMessage ?? __('No data available.', 'site-alerts');
+$emptyMessage = $emptyMessage ?? __('No data available.', 'proactive-site-advisor');
 ?>
 
-<div class="sa-card sa-table-card">
-    <div class="sa-table-responsive">
-        <table class="sa-table <?php echo esc_attr($tableClass); ?>">
+<div class="proactive-site-advisor-card proactive-site-advisor-table-card">
+    <div class="proactive-site-advisor-table-responsive">
+        <table class="proactive-site-advisor-table <?php echo esc_attr($tableClass); ?>">
             <?php if (!empty($columns)) : ?>
                 <thead>
                     <tr>
@@ -64,7 +64,7 @@ $emptyMessage = $emptyMessage ?? __('No data available.', 'site-alerts');
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td colspan="<?php echo esc_attr(count($columns)); ?>" class="sa-table__empty">
+                        <td colspan="<?php echo esc_attr(count($columns)); ?>" class="proactive-site-advisor-table__empty">
                             <?php echo esc_html($emptyMessage); ?>
                         </td>
                     </tr>

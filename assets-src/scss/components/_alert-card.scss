@@ -7,10 +7,10 @@
 
 @use "../prefix" as *;
 
-.#{$prefix}-alert-card {
+.#{css-class('alert-card')} {
   position: relative;
   margin-bottom: 0.75rem;
-  border-left: 3px solid #{css-var('border-color')};
+  border-left: 3px solid css-var(border-color);
   transition: border-color 0.2s ease;
 
   &:last-child {
@@ -19,44 +19,44 @@
 
   // Collapsible cards show pointer cursor on body
   &--collapsible {
-    .#{$prefix}-alert-card__body {
+    .#{css-class('alert-card__body')} {
       cursor: pointer;
     }
   }
 
   // Severity variants
   &--info {
-    border-left-color: #{css-var('info')};
+    border-left-color: css-var(info);
 
-    .#{$prefix}-alert-card__icon {
-      background-color: rgba(#{css-var('info-rgb')}, 0.16);
+    .#{css-class('alert-card__icon')} {
+      background-color: rgba(css-var(info-rgb), 0.16);
 
       span {
-        background-color: #{css-var('info')};
+        background-color: css-var(info);
       }
     }
   }
 
   &--warning {
-    border-left-color: #{css-var('warning')};
+    border-left-color: css-var(warning);
 
-    .#{$prefix}-alert-card__icon {
-      background-color: rgba(#{css-var('warning-rgb')}, 0.16);
+    .#{css-class('alert-card__icon')} {
+      background-color: rgba(css-var(warning-rgb), 0.16);
 
       span {
-        background-color: #{css-var('warning')};
+        background-color: css-var(warning);
       }
     }
   }
 
   &--critical {
-    border-left-color: #{css-var('danger')};
+    border-left-color: css-var(danger);
 
-    .#{$prefix}-alert-card__icon {
-      background-color: rgba(#{css-var('danger-rgb')}, 0.16);
+    .#{css-class('alert-card__icon')} {
+      background-color: rgba(css-var(danger-rgb), 0.16);
 
       span {
-        background-color: #{css-var('danger')};
+        background-color: css-var(danger);
       }
     }
   }
@@ -73,14 +73,14 @@
     justify-content: center;
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: #{css-var('border-radius')};
+    border-radius: css-var(border-radius);
     flex-shrink: 0;
-    background-color: #{css-var('gray-100')};
+    background-color: css-var(gray-100);
 
     span {
       width: 1.125rem;
       height: 1.125rem;
-      background-color: #{css-var('muted-color')};
+      background-color: css-var(muted-color);
     }
   }
 
@@ -99,20 +99,20 @@
 
   &__date {
     font-size: 0.75rem;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
   }
 
   &__title {
     margin: 0 0 0.25rem 0;
     font-size: 0.9375rem;
     font-weight: 500;
-    color: #{css-var('heading-color')};
+    color: css-var(heading-color);
   }
 
   &__message {
     margin: 0;
     font-size: 0.8125rem;
-    color: #{css-var('body-color')};
+    color: css-var(body-color);
     line-height: 1.5;
   }
 
@@ -128,12 +128,12 @@
     margin-left: 0.5rem;
     background: none;
     border: none;
-    border-radius: #{css-var('border-radius')};
+    border-radius: css-var(border-radius);
     cursor: pointer;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
     transition: transform 0.2s ease;
 
-    [class^="#{$prefix}-icon--"] {
+    [class^="#{css-class('icon--')}"] {
       width: 1.25rem;
       height: 1.25rem;
     }
@@ -148,7 +148,7 @@
   &__details {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #{css-var('border-color')};
+    border-top: 1px solid css-var(border-color);
   }
 
   &__section {
@@ -163,20 +163,20 @@
     margin: 0 0 0.5rem 0;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: #{css-var('heading-color')};
+    color: css-var(heading-color);
   }
 
   &__section-text {
     margin: 0;
     font-size: 0.8125rem;
     line-height: 1.5;
-    color: #{css-var('body-color')};
+    color: css-var(body-color);
   }
 
   &__checklist {
     margin: 0;
     font-size: 0.8125rem;
-    color: #{css-var('body-color')};
+    color: css-var(body-color);
 
     li {
       margin-bottom: 0.25rem;
@@ -199,7 +199,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 0.375rem 0;
-      border-bottom: 1px solid #{css-var('border-color')};
+      border-bottom: 1px solid css-var(border-color);
 
       &:last-child {
         border-bottom: none;
@@ -210,10 +210,10 @@
   &__url-path {
     font-family: monospace;
     font-size: 0.75rem;
-    background-color: #{css-var('gray-100')};
+    background-color: css-var(gray-100);
     padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
-    color: #{css-var('body-color')};
+    color: css-var(body-color);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -222,13 +222,13 @@
 
   &__url-count {
     font-size: 0.75rem;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
     flex-shrink: 0;
   }
 }
 
 // Alerts list container
-.#{$prefix}-alerts-list {
+.#{css-class('alerts-list')} {
   display: flex;
   flex-direction: column;
 }

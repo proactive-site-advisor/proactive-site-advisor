@@ -9,10 +9,10 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('Header requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('Header requires global namespace.');
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('Header requires global namespace.');
 
-    var Helpers = SA.Helpers;
+    var Helpers = ProactiveSiteAdvisor.Helpers;
     if (!Helpers) throw new Error('Header requires helpers.js.');
 
     var Header = {
@@ -22,10 +22,18 @@
         isOpen: false,
 
         init: function () {
-            this.toggleBtn = document.querySelector(SA.selector('header-toggle'));
-            this.nav = document.getElementById(PREFIX_CONFIG.cssPrefix + 'header-nav');
-            this.wrapper = document.querySelector(SA.selector('header-nav-wrapper'));
+            this.toggleBtn = document.querySelector(
+                ProactiveSiteAdvisor.selector('header-toggle')
+            );
+            this.nav = document.querySelector(
+                ProactiveSiteAdvisor.selector('header-nav')
+            );
+            this.wrapper = document.querySelector(
+                ProactiveSiteAdvisor.selector('header-nav-wrapper')
+            );
+
             if (!this.toggleBtn || !this.nav) return;
+
             this.bindEvents();
         },
 
@@ -42,6 +50,7 @@
                 if (!self.isOpen) return;
 
                 var target = Helpers.getElement(e.target) || e.target;
+
                 var inside =
                     (self.wrapper && self.wrapper.contains(target)) ||
                     (self.toggleBtn && self.toggleBtn.contains(target));
@@ -58,11 +67,18 @@
 
             this.nav.addEventListener('click', function (e) {
                 var target = Helpers.getElement(e.target) || e.target;
-                if (target && target.closest(SA.selector('header-nav-link'))) self.close();
+
+                if (target && target.closest(
+                    ProactiveSiteAdvisor.selector('header-nav-link')
+                )) {
+                    self.close();
+                }
             });
 
             var onResize = Helpers.debounce(function () {
-                if (window.innerWidth > 991.98 && self.isOpen) self.close();
+                if (window.innerWidth > 991.98 && self.isOpen) {
+                    self.close();
+                }
             }, 100);
 
             window.addEventListener('resize', onResize);
@@ -74,21 +90,27 @@
 
         open: function () {
             this.toggleBtn.setAttribute('aria-expanded', 'true');
-            this.nav.classList.add(SA.selector('show').slice(1));
+            this.nav.classList.add(
+                ProactiveSiteAdvisor.cssClass('show')
+            );
             this.isOpen = true;
 
-            var first = this.nav.querySelector('a, button, [tabindex]:not([tabindex="-1"])');
+            var first = this.nav.querySelector(
+                'a, button, [tabindex]:not([tabindex="-1"])'
+            );
             if (first) first.focus();
 
-            SA.dispatch('header:opened', {nav: this.nav}, document);
+            ProactiveSiteAdvisor.dispatch('header:opened', {nav: this.nav}, document);
         },
 
         close: function () {
             this.toggleBtn.setAttribute('aria-expanded', 'false');
-            this.nav.classList.remove(SA.selector('show').slice(1));
+            this.nav.classList.remove(
+                ProactiveSiteAdvisor.cssClass('show')
+            );
             this.isOpen = false;
 
-            SA.dispatch('header:closed', {nav: this.nav}, document);
+            ProactiveSiteAdvisor.dispatch('header:closed', {nav: this.nav}, document);
         }
     };
 
@@ -100,6 +122,6 @@
         Header.init();
     }
 
-    SA.Header = Header;
+    ProactiveSiteAdvisor.Header = Header;
 
 })(window, document);

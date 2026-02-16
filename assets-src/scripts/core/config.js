@@ -9,16 +9,16 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('Config requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('Config requires global namespace.');
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('Config requires global namespace.');
 
     var configObject = PREFIX_CONFIG.configObject;
-    var cssVarPrefix = PREFIX_CONFIG.cssVar;
 
     var Config = {
+
         getCssVar: function (name) {
             return getComputedStyle(document.documentElement)
-                .getPropertyValue(cssVarPrefix + '-' + name)
+                .getPropertyValue(ProactiveSiteAdvisor.cssVar(name))
                 .trim();
         },
 
@@ -41,9 +41,10 @@
         },
 
         getTheme: function () {
-            var wrap = document.querySelector(SA.selector('wrap'));
-            return (wrap && wrap.getAttribute(SA.dataAttr('theme'))) ||
-                document.documentElement.getAttribute(SA.dataAttr('theme')) ||
+            var wrap = document.querySelector('.' + ProactiveSiteAdvisor.cssClass('wrap'));
+
+            return (wrap && wrap.getAttribute(ProactiveSiteAdvisor.dataAttr('theme'))) ||
+                document.documentElement.getAttribute(ProactiveSiteAdvisor.dataAttr('theme')) ||
                 'light';
         },
 
@@ -66,6 +67,6 @@
         }
     };
 
-    SA.Config = Config;
+    ProactiveSiteAdvisor.Config = Config;
 
 })(window, document);

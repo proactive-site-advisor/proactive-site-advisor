@@ -1,15 +1,8 @@
 /**
  * Gulp Build Configuration
  *
- * Build pipeline with automatic prefix generation from config/prefix.config.cjs
- *
- * Commands:
- *   npm run build    - Full production build
- *   npm run watch    - Development mode with file watching
- *   gulp prefix      - Generate prefix files only
- *
- * @package SiteAlerts
- * @version 2.0.0
+ * Canonical prefix system
+ * Single source of truth: config/prefix.config.cjs
  */
 
 import gulp from 'gulp';
@@ -25,51 +18,34 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import {createRequire} from 'module';
 
-// ES module dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Initialize Sass compiler
 const sass = gulpSass(dartSass);
-
-// Create require function for CommonJS module loading in ESM
 const require = createRequire(import.meta.url);
 
 /**
- * Load prefix configuration
- * Using createRequire for CommonJS compatibility in ESM
+ * Load Prefix Config
  */
 function loadPrefixConfig() {
     try {
         const configPath = path.resolve(__dirname, 'config/prefix.config.cjs');
-
-        // Clear require cache to get fresh config
         delete require.cache[configPath];
-
-        // Use require for CommonJS module
         return require(configPath);
     } catch (error) {
         console.error('Error loading prefix config:', error);
-        // Return defaults if config not found
+
         return {
-            prefix: 'sa',
-            constantPrefix: 'SA',
-            namespace: 'SA',
-            configObject: 'saConfig',
-            eventPrefix: 'sa',
-            storagePrefix: 'sa',
-            cssPrefix: 'sa-',
-            dataAttr: 'data-sa',
-            cssVar: '--sa',
-            scssVar: '$sa',
-            phpPrefix: 'sa_',
-            handlePrefix: 'sa-',
+            base: 'proactive-site-advisor',
+            basePhp: 'proactive_site_advisor',
+            baseConst: 'PROACTIVE_SITE_ADVISOR',
+            namespace: 'ProactiveSiteAdvisor',
+            configObject: 'proactiveSiteAdvisorConfig',
         };
     }
 }
 
 /**
- * Build paths configuration
+ * Paths
  */
 const paths = {
     config: {
@@ -84,9 +60,8 @@ const paths = {
         dest: 'assets/css/',
     },
     js: {
-        // Order matters: namespace first, then core, components, vendors, main
         src: [
-            'assets-src/scripts/core/namespace.js', // Generated - must be first
+            'assets-src/scripts/core/namespace.js',
             'assets-src/scripts/core/config.js',
             'assets-src/scripts/core/helpers.js',
             'assets-src/scripts/components/theme-switcher.js',
@@ -101,392 +76,255 @@ const paths = {
 };
 
 /**
- * Generate prefix files from configuration
- *
- * Creates:
- * - SCSS prefix variables (_prefix.scss)
- * - JavaScript namespace configuration (namespace.js)
- * - PHP prefix constants (PrefixConfig.php)
+ * Generate Prefix Files
  */
 export async function generatePrefixFiles(cb) {
     const p = await loadPrefixConfig();
 
-    console.log(`\n  Generating prefix files with prefix: "${p.prefix}"\n`);
+    const base = p.base;
+    const basePhp = p.basePhp;
+    const baseConst = p.baseConst;
+    const namespace = p.namespace;
+    const configObject = p.configObject;
 
-    // Compute derived values if not present (for plain object)
-    const cssPrefix = p.cssPrefix || p.prefix + '-';
-    const dataAttr = p.dataAttr || 'data-' + p.prefix;
-    const cssVar = p.cssVar || '--' + p.prefix;
-    const phpPrefix = p.phpPrefix || p.prefix + '_';
-    const handlePrefix = p.handlePrefix || p.prefix + '-';
+    console.log(`\nGenerating prefix files from base: "${base}"\n`);
 
-    // =========================================
-    // 1. Generate SCSS prefix file
-    // =========================================
-    const scssContent = `// ============================================
-// AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
-// ============================================
-// Generated from: config/prefix.config.cjs
-// Regenerate with: npm run build
-// ============================================
+    // ===============================
+    // SCSS
+    // ===============================
+    const scssContent = `// AUTO-GENERATED FILE - DO NOT EDIT
 
-// Core prefix (e.g., 'sa')
-$prefix: '${p.prefix}' !default;
+$base: '${base}' !default;
 
-// CSS custom property prefix (e.g., '--sa')
-$css-var-prefix: '${cssVar}' !default;
-
-// Data attribute prefix (e.g., 'data-sa')
-$data-attr-prefix: '${dataAttr}' !default;
-
-// Event prefix for JavaScript events (e.g., 'sa')
-$event-prefix: '${p.eventPrefix}' !default;
-
-// Storage prefix for localStorage (e.g., 'sa')
-$storage-prefix: '${p.storagePrefix}' !default;
-
-// ============================================
-// Helper function to build prefixed class name
-// Usage: #{prefix('btn')} outputs '.sa-btn'
-// ============================================
-@function prefix($name) {
-    @return $prefix + '-' + $name;
+@function css-class($name) {
+    @return $base + '-' + $name;
 }
 
-// ============================================
-// Helper function to build CSS variable reference
-// Usage: #{css-var('primary')} outputs 'var(--sa-primary)'
-// ============================================
 @function css-var($name) {
-    @return var(#{$css-var-prefix}-#{$name});
+    @return var(--#{$base}-#{$name});
 }
 
-// ============================================
-// Helper function to build data attribute selector
-// Usage: #{data-attr('theme', 'dark')} outputs '[data-sa-theme="dark"]'
-// ============================================
+@function css-var-name($name) {
+  @return --#{$base}-#{$name};
+}
+
 @function data-attr($name, $value: null) {
     @if $value {
-        @return '[#{$data-attr-prefix}-#{$name}="#{$value}"]';
+        @return '[data-#{$base}-#{$name}="#{$value}"]';
     }
-    @return '[#{$data-attr-prefix}-#{$name}]';
+    @return '[data-#{$base}-#{$name}]';
 }
 `;
 
     fs.writeFileSync(paths.config.scssOut, scssContent);
-    console.log(`  [OK] Generated: ${paths.config.scssOut}`);
 
-    // =========================================
-    // 2. Generate JavaScript namespace file
-    // =========================================
-    const jsContent = `/**
- * ============================================
- * AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
- * ============================================
- * Generated from: config/prefix.config.cjs
- * Regenerate with: npm run build
- * ============================================
- */
+    // ===============================
+    // JS Namespace (Fully Canonical)
+    // ===============================
+    const jsContent = `(function(window){
+'use strict';
 
-(function(window) {
-    'use strict';
+var CONFIG = Object.freeze({
+    base: '${base}',
+    basePhp: '${basePhp}',
+    namespace: '${namespace}',
+    configObject: '${configObject}'
+});
 
-    /**
-     * Prefix Configuration Object
-     *
-     * Provides centralized access to all prefix values.
-     * Available globally as window.__PREFIX_CONFIG__
-     */
-    window.__PREFIX_CONFIG__ = Object.freeze({
-        // Core prefix (e.g., 'sa')
-        prefix: '${p.prefix}',
+window.__PREFIX_CONFIG__ = CONFIG;
 
-        // JavaScript namespace (e.g., 'SA')
-        namespace: '${p.namespace}',
+var NS = CONFIG.namespace;
 
-        // Localized config object name (e.g., 'saConfig')
-        configObject: '${p.configObject}',
+window[NS] = window[NS] || {};
+window[NS].__config = CONFIG;
 
-        // Event prefix (e.g., 'sa')
-        eventPrefix: '${p.eventPrefix}',
+window[NS].cssClass = function(name){
+    return CONFIG.base + '-' + name;
+};
 
-        // Storage prefix (e.g., 'sa')
-        storagePrefix: '${p.storagePrefix}',
+window[NS].cssVar = function(name){
+    return '--' + CONFIG.base + '-' + name;
+};
 
-        // CSS class prefix (e.g., 'sa-')
-        cssPrefix: '${cssPrefix}',
+window[NS].dataAttr = function(name){
+    return 'data-' + CONFIG.base + '-' + name;
+};
 
-        // Data attribute prefix (e.g., 'data-sa')
-        dataAttr: '${dataAttr}',
+window[NS].dataSelector = function(name,value){
+    var attr = 'data-' + CONFIG.base + '-' + name;
+    return value !== undefined
+        ? '[' + attr + '="' + value + '"]'
+        : '[' + attr + ']';
+};
 
-        // CSS variable prefix (e.g., '--sa')
-        cssVar: '${cssVar}'
-    });
+window[NS].event = function(name){
+    return CONFIG.base + ':' + name;
+};
 
-    /**
-     * Initialize Global Namespace
-     *
-     * Creates the plugin's global namespace object.
-     * All modules attach to this namespace.
-     */
-    var NS = '${p.namespace}';
-    window[NS] = window[NS] || {};
-
-    // Attach config reference to namespace
-    window[NS].__config = window.__PREFIX_CONFIG__;
-
-    /**
-     * Utility: Build prefixed CSS class selector
-     * @param {string} name - Class name without prefix
-     * @returns {string} Selector (e.g., '.sa-btn')
-     */
-    window[NS].selector = function(name) {
-        return '.' + window.__PREFIX_CONFIG__.cssPrefix + name;
-    };
-
-    /**
-     * Utility: Build data attribute selector
-     * @param {string} name - Attribute name without prefix
-     * @param {string} [value] - Optional attribute value
-     * @returns {string} Selector (e.g., '[data-sa-toggle="modal"]')
-     */
-    window[NS].dataSelector = function(name, value) {
-        var attr = window.__PREFIX_CONFIG__.dataAttr + '-' + name;
-        if (value !== undefined) {
-            return '[' + attr + '="' + value + '"]';
-        }
-        return '[' + attr + ']';
-    };
-    
-    /**
-     * Utility: Build data attribute name (NOT selector)
-     * @param {string} name - Attribute name without prefix
-     * @returns {string} Attribute name (e.g., 'data-sa-theme')
-     */
-    window[NS].dataAttr = function(name) {
-        return window.__PREFIX_CONFIG__.dataAttr + '-' + name;
-    };
-
-    /**
-     * Utility: Dispatch prefixed custom event
-     * @param {string} name - Event name without prefix
-     * @param {Object} [detail] - Event detail data
-     * @param {Element} [target] - Target element (default: document)
-     */
-    window[NS].dispatch = function(name, detail, target) {
-        var eventName = window.__PREFIX_CONFIG__.eventPrefix + ':' + name;
-        var event = new CustomEvent(eventName, {
+window[NS].dispatch = function(name,detail,target){
+    var event = new CustomEvent(
+        CONFIG.base + ':' + name,
+        {
             detail: detail || {},
             bubbles: true,
             cancelable: true
-        });
-        (target || document).dispatchEvent(event);
-    };
+        }
+    );
+    (target || document).dispatchEvent(event);
+};
 
-    /**
-     * Utility: Get prefixed localStorage key
-     * @param {string} key - Key name without prefix
-     * @returns {string} Prefixed key
-     */
-    window[NS].storageKey = function(key) {
-        return window.__PREFIX_CONFIG__.storagePrefix + '-' + key;
-    };
+window[NS].storageKey = function(key){
+    return CONFIG.base + '-' + key;
+};
+
+window[NS].selector = function(name){
+    return '.' + CONFIG.base + '-' + name;
+};
+
+window[NS].ajaxAction = function(name){
+    return CONFIG.basePhp + '_' + name;
+};
 
 })(window);
 `;
 
     fs.writeFileSync(paths.config.jsOut, jsContent);
-    console.log(`  [OK] Generated: ${paths.config.jsOut}`);
 
-    // =========================================
-    // 3. Generate PHP PrefixConfig class
-    // =========================================
+    // ===============================
+    // PHP (Canonical & DRY)
+    // ===============================
     const phpContent = `<?php
-/**
- * ============================================
- * AUTO-GENERATED FILE - DO NOT EDIT DIRECTLY
- * ============================================
- * Generated from: config/prefix.config.cjs
- * Regenerate with: npm run build
- * ============================================
- */
 
-namespace SiteAlerts\\Config;
+namespace ${namespace}\\Config;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
- * Prefix Configuration Class
+ * Class PrefixConfig
  *
- * Provides centralized access to all prefix values.
- * Used by PHP components for consistent naming.
+ * Provides helper methods to generate prefixed identifiers
+ * used across the plugin.
  *
- * @package SiteAlerts\\Config
+ * @package ${namespace}\\Config
  * @version 1.0.0
  */
 final class PrefixConfig
 {
     /**
-     * Core prefix (e.g., 'sa')
+     * Base slug used for CSS classes and handles (kebab-case).
      */
-    public const PREFIX = '${p.prefix}';
+    public const BASE = '${base}';
 
     /**
-     * Uppercase constant prefix (e.g., 'SA')
+     * PHP-safe prefix (snake_case).
      */
-    public const CONSTANT_PREFIX = '${p.constantPrefix}';
+    public const PREFIX = '${basePhp}';
 
     /**
-     * JavaScript namespace (e.g., 'SA')
+     * Uppercase constant prefix.
      */
-    public const JS_NAMESPACE = '${p.namespace}';
+    public const CONSTANT_PREFIX = '${baseConst}';
 
     /**
-     * CSS class prefix with hyphen (e.g., 'sa-')
+     * Global JS config object name.
      */
-    public const CSS_PREFIX = '${cssPrefix}';
+    public const CONFIG_OBJECT = '${configObject}';
 
     /**
-     * Data attribute prefix (e.g., 'data-sa')
+     * Prevent instantiation.
      */
-    public const DATA_ATTR = '${dataAttr}';
+    private function __construct(){}
 
     /**
-     * CSS custom property prefix (e.g., '--sa')
+     * Generate a prefixed CSS class.
+     *
+     * @param string $name Class suffix.
+     * @return string
      */
-    public const CSS_VAR = '${cssVar}';
-
-    /**
-     * PHP function/option prefix with underscore (e.g., 'sa_')
-     */
-    public const PHP_PREFIX = '${phpPrefix}';
-
-    /**
-     * WordPress handle prefix (e.g., 'sa-')
-     */
-    public const HANDLE_PREFIX = '${handlePrefix}';
-
-    /**
-     * Event prefix for JavaScript events (e.g., 'sa')
-     */
-    public const EVENT_PREFIX = '${p.eventPrefix}';
-
-    /**
-     * Localized config object name (e.g., 'saConfig')
-     */
-    public const CONFIG_OBJECT = '${p.configObject}';
-
-    /**
-     * Storage prefix for localStorage (e.g., 'sa')
-     */
-    public const STORAGE_PREFIX = '${p.storagePrefix}';
-
-    /**
-     * Prevent instantiation
-     */
-    private function __construct()
+    public static function css(string $name): string
     {
+        return self::BASE . '-' . $name;
     }
 
     /**
-     * Get prefixed CSS class name
+     * Generate a prefixed data attribute name.
      *
-     * @param string \$name Class name without prefix
-     * @return string Prefixed class name (e.g., 'sa-btn')
+     * @param string $name Attribute suffix.
+     * @return string
      */
-    public static function cssClass(string \$name): string
+    public static function dataAttr(string $name): string
     {
-        return self::CSS_PREFIX . \$name;
+        return 'data-' . self::BASE . '-' . $name;
     }
 
     /**
-     * Get prefixed data attribute name
+     * Generate a script/style handle.
      *
-     * @param string \$name Attribute name without prefix
-     * @return string Prefixed attribute (e.g., 'data-sa-toggle')
+     * @param string $name Handle suffix.
+     * @return string
      */
-    public static function dataAttr(string \$name): string
+    public static function handle(string $name): string
     {
-        return self::DATA_ATTR . '-' . \$name;
+        return self::BASE . '-' . $name;
     }
 
     /**
-     * Get prefixed CSS variable name
+     * Generate an Ajax action name.
      *
-     * @param string \$name Variable name without prefix
-     * @return string Prefixed variable (e.g., '--sa-primary')
+     * @param string $name Action suffix.
+     * @return string
      */
-    public static function cssVar(string \$name): string
+    public static function ajaxAction(string $name): string
     {
-        return self::CSS_VAR . '-' . \$name;
+        return self::PREFIX . '_' . $name;
     }
 
     /**
-     * Get prefixed option/meta key
+     * Generate a nonce action name.
      *
-     * @param string \$name Key name without prefix
-     * @return string Prefixed key (e.g., 'sa_settings')
+     * @param string $name Nonce suffix.
+     * @return string
      */
-    public static function optionKey(string \$name): string
+    public static function nonce(string $name = 'nonce'): string
     {
-        return self::PHP_PREFIX . \$name;
+        return self::PREFIX . '_' . $name;
     }
 
     /**
-     * Get prefixed WordPress handle
+     * Generate a database table name (without $wpdb prefix).
      *
-     * @param string \$name Handle name without prefix
-     * @return string Prefixed handle
+     * @param string $name Table suffix.
+     * @return string
      */
-    public static function handle(string \$name): string
+    public static function table(string $name): string
     {
-        return self::HANDLE_PREFIX . \$name;
-    }
-
-    /**
-     * Get prefixed AJAX action name
-     *
-     * @param string \$name Action name without prefix
-     * @return string Prefixed action (e.g., 'sa_save_settings')
-     */
-    public static function ajaxAction(string \$name): string
-    {
-        return self::PHP_PREFIX . \$name;
-    }
-
-    /**
-     * Get prefixed nonce name
-     *
-     * @param string \$name Nonce name without prefix
-     * @return string Prefixed nonce (e.g., 'sa_nonce')
-     */
-    public static function nonce(string \$name = 'nonce'): string
-    {
-        return self::PHP_PREFIX . \$name;
+        return self::PREFIX . '_' . $name;
     }
 }
 `;
 
-    // Ensure directory exists
     const phpDir = path.dirname(paths.config.phpOut);
     if (!fs.existsSync(phpDir)) {
         fs.mkdirSync(phpDir, {recursive: true});
     }
+
     fs.writeFileSync(paths.config.phpOut, phpContent);
-    console.log(`  [OK] Generated: ${paths.config.phpOut}`);
 
-    console.log('\n  Prefix files generated successfully!\n');
-
+    console.log('\nPrefix files generated successfully!\n');
     cb();
 }
 
 /**
- * Clean compiled assets
+ * Clean
  */
 export async function clean() {
     await deleteAsync([paths.scss.dest, paths.js.dest]);
 }
 
 /**
- * Compile SCSS to minified CSS
+ * SCSS
  */
 export function compileScss() {
     return gulp
@@ -498,68 +336,21 @@ export function compileScss() {
 }
 
 /**
- * Concatenate and minify JavaScript
+ * JS
  */
 export function compileJs() {
     return gulp
             .src(paths.js.src, {allowEmpty: true})
             .pipe(concat('admin.js'))
-            .pipe(
-                    terser({
-                        format: {
-                            comments: false,
-                        },
-                        compress: {
-                            drop_console: false, // Keep console for debugging
-                        },
-                    })
-            )
+            .pipe(terser())
             .pipe(rename({suffix: '.min'}))
             .pipe(gulp.dest(paths.js.dest));
 }
 
-/**
- * Watch files for changes
- */
-export function watchFiles() {
-    // Watch config file - regenerate prefix files and rebuild all
-    gulp.watch(
-            paths.config.src,
-            gulp.series(generatePrefixFiles, gulp.parallel(compileScss, compileJs))
-    );
-
-    // Watch SCSS files
-    gulp.watch(paths.scss.watch, compileScss);
-
-    // Watch JS files (excluding generated namespace.js to prevent loops)
-    gulp.watch(
-            [paths.js.watch, '!' + paths.config.jsOut],
-            compileJs
-    );
-}
-
-// =========================================
-// Task Definitions
-// =========================================
-
-// Generate prefix files only
-export const prefix = generatePrefixFiles;
-
-// Compile SCSS
-export const scss = compileScss;
-
-// Compile JS
-export const js = compileJs;
-
-// Full build: generate prefix files, then compile in parallel
 export const build = gulp.series(
         generatePrefixFiles,
         clean,
         gulp.parallel(compileScss, compileJs)
 );
 
-// Watch mode: build first, then watch for changes
-export const watch = gulp.series(build, watchFiles);
-
-// Default task
 export default build;

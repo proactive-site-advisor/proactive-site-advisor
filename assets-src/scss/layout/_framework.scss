@@ -12,7 +12,7 @@
 @use "../base/variables" as *;
 @use "../base/variables-dark" as *;
 
-.#{$prefix}-wrap {
+.#{css-class('wrap')} {
   // Layout
   margin: 0 0 0 -20px;
   display: flex;
@@ -20,14 +20,14 @@
   min-block-size: calc(100vh - 32px); // Account for WP admin bar
 
   // Base styles
-  background-color: #{css-var('body-bg')};
-  color: #{css-var('body-color')};
+  background-color: css-var(body-bg);
+  color: css-var(body-color);
   padding: 1.5rem;
 
   // Typography
-  font-family: #{css-var('font-family')};
-  font-size: #{css-var('font-size-base')};
-  line-height: #{css-var('line-height-base')};
+  font-family: css-var(font-family), serif;
+  font-size: css-var(font-size-base);
+  line-height: css-var(line-height-base);
 
   // Reset box-sizing for all elements
   *,
@@ -38,14 +38,14 @@
 
   // Reset WordPress link styles
   a {
-    color: #{css-var('link-color')};
+    color: css-var(link-color);
     text-decoration: none;
     box-shadow: none;
     outline: none;
 
     &:hover,
     &:focus {
-      color: #{css-var('link-hover-color')};
+      color: css-var(link-hover-color);
       text-decoration: none;
       box-shadow: none;
     }
@@ -65,7 +65,7 @@
   hr {
     margin: 1rem 0;
     border: 0;
-    border-top: 1px solid #{css-var('border-color')};
+    border-top: 1px solid css-var(border-color);
   }
 
   // Reset WordPress button styles within our wrapper
@@ -83,33 +83,33 @@
   h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-    font-weight: #{css-var('font-weight-semibold')};
+    font-weight: css-var(font-weight-semibold);
     line-height: 1.2;
-    color: #{css-var('heading-color')};
+    color: css-var(heading-color);
   }
 
   h1 {
-    font-size: #{css-var('h1-font-size')};
+    font-size: css-var(h1-font-size);
   }
 
   h2 {
-    font-size: #{css-var('h2-font-size')};
+    font-size: css-var(h2-font-size);
   }
 
   h3 {
-    font-size: #{css-var('h3-font-size')};
+    font-size: css-var(h3-font-size);
   }
 
   h4 {
-    font-size: #{css-var('h4-font-size')};
+    font-size: css-var(h4-font-size);
   }
 
   h5 {
-    font-size: #{css-var('h5-font-size')};
+    font-size: css-var(h5-font-size);
   }
 
   h6 {
-    font-size: #{css-var('h6-font-size')};
+    font-size: css-var(h6-font-size);
   }
 
   // Reset WordPress list styles
@@ -126,7 +126,7 @@
   }
 
   // Override WordPress .button class within our components
-  .#{$prefix}-btn {
+  .#{css-class('btn')} {
     &.button {
       // Reset WordPress .button styles
       background: none;
@@ -140,7 +140,7 @@
   }
 }
 
-.#{$prefix}-content-wrapper {
+.#{css-class('content-wrapper')} {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -155,36 +155,36 @@
 // =====================================================
 
 // Light theme (default)
-body:has(.#{$prefix}-wrap) {
-  background-color: $sa-body-bg;
+body:has(.#{css-class('wrap')}) {
+  background-color: $body-bg;
 
   #wpfooter {
-    background-color: $sa-body-bg;
-    color: $sa-muted-color;
+    background-color: $body-bg;
+    color: $muted-color;
 
     a {
-      color: $sa-link-color;
+      color: $link-color;
 
       &:hover {
-        color: $sa-link-hover-color;
+        color: $link-hover-color;
       }
     }
   }
 }
 
 // Dark theme
-body:has(.#{$prefix}-wrap#{data-attr('theme', 'dark')}) {
-  background-color: $sa-dark-body-bg;
+body:has(.#{css-class('wrap')}#{data-attr('theme', 'dark')}) {
+  background-color: $dark-body-bg;
 
   #wpfooter {
-    background-color: $sa-dark-body-bg;
-    color: $sa-dark-muted-color;
+    background-color: $dark-body-bg;
+    color: $dark-muted-color;
 
     a {
-      color: $sa-dark-link-color;
+      color: $dark-link-color;
 
       &:hover {
-        color: $sa-dark-link-hover-color;
+        color: $dark-link-hover-color;
       }
     }
   }

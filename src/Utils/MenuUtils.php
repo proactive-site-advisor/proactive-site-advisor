@@ -4,12 +4,12 @@
  *
  * Helper functions for menu-related operations like slug prefixing and URL generation.
  *
- * @package SiteAlerts\Utils
+ * @package ProactiveSiteAdvisor\Utils
  */
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
-use SiteAlerts\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -26,12 +26,12 @@ class MenuUtils
      * Get the prefixed menu slug.
      *
      * @param string $id Menu ID (with or without prefix)
-     * @return string Prefixed menu slug (e.g., 'sa_site-alerts')
+     * @return string Prefixed menu slug
      */
     public static function getSlug(string $id): string
     {
-        $prefix = PrefixConfig::PHP_PREFIX;
-        return strpos($id, $prefix) === 0 ? $id : $prefix . $id;
+        $base = PrefixConfig::BASE;
+        return strpos($id, $base) === 0 ? $id : $base . $id;
     }
 
     /**

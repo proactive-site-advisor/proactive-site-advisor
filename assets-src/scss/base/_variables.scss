@@ -7,252 +7,252 @@
 // -----------------------------------------------------
 
 // Brand Colors
-$sa-primary: #3b82f6 !default;
-$sa-secondary: #808390 !default;
-$sa-success: #28c76f !default;
-$sa-info: #00bad1 !default;
-$sa-warning: #ff9f43 !default;
-$sa-danger: #ff4c51 !default;
-$sa-light: #dfdfe3 !default;
-$sa-dark: #2f3349 !default;
+$primary: #3b82f6 !default;
+$secondary: #808390 !default;
+$success: #28c76f !default;
+$info: #00bad1 !default;
+$warning: #ff9f43 !default;
+$danger: #ff4c51 !default;
+$light: #dfdfe3 !default;
+$dark: #2f3349 !default;
 
 // Gray Scale
-$sa-white: #fff !default;
-$sa-black: #2f2b3d !default;
-$sa-gray-25: #fcfcfc !default;
-$sa-gray-50: #f3f2f3 !default;
-$sa-gray-100: #eaeaec !default;
-$sa-gray-200: #e6e6e8 !default;
-$sa-gray-300: #c1bfc5 !default;
-$sa-gray-400: #acaab1 !default;
-$sa-gray-500: #97959e !default;
-$sa-gray-600: #82808b !default;
-$sa-gray-700: #6d6b77 !default;
-$sa-gray-800: #595564 !default;
-$sa-gray-900: #444050 !default;
+$white: #fff !default;
+$black: #2f2b3d !default;
+$gray-25: #fcfcfc !default;
+$gray-50: #f3f2f3 !default;
+$gray-100: #eaeaec !default;
+$gray-200: #e6e6e8 !default;
+$gray-300: #c1bfc5 !default;
+$gray-400: #acaab1 !default;
+$gray-500: #97959e !default;
+$gray-600: #82808b !default;
+$gray-700: #6d6b77 !default;
+$gray-800: #595564 !default;
+$gray-900: #444050 !default;
 
 // Background & Surface Colors
-$sa-body-bg: #f8f7fa !default;
-$sa-paper-bg: #ffffff !default;
-$sa-card-bg: #ffffff !default;
+$body-bg: #f8f7fa !default;
+$paper-bg: #ffffff !default;
+$card-bg: #ffffff !default;
 
 // Text Colors
-$sa-body-color: #6d6b77 !default;
-$sa-heading-color: #444050 !default;
-$sa-muted-color: #acaab1 !default;
+$body-color: #6d6b77 !default;
+$heading-color: #444050 !default;
+$muted-color: #acaab1 !default;
 
 // Border Colors
-$sa-border-color: #e6e6e8 !default;
+$border-color: #e6e6e8 !default;
 
 // Link Colors
-$sa-link-color: $sa-primary !default;
-$sa-link-hover-color: #2563eb !default;
+$link-color: $primary !default;
+$link-hover-color: #2563eb !default;
 
 // -----------------------------------------------------
 // Typography
 // -----------------------------------------------------
 
-$sa-font-family-sans-serif: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !default;
-$sa-font-family-monospace: "SFMono-Regular", Menlo, Monaco, Consolas, monospace !default;
+$font-family-sans-serif: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !default;
+$font-family-monospace: "SFMono-Regular", Menlo, Monaco, Consolas, monospace !default;
 
-$sa-font-size-base: 0.9375rem !default;
-$sa-font-size-sm: 0.8125rem !default;
-$sa-font-size-lg: 1.0625rem !default;
-$sa-font-size-xs: 0.75rem !default;
+$font-size-base: 0.9375rem !default;
+$font-size-sm: 0.8125rem !default;
+$font-size-lg: 1.0625rem !default;
+$font-size-xs: 0.75rem !default;
 
-$sa-font-weight-light: 300 !default;
-$sa-font-weight-normal: 400 !default;
-$sa-font-weight-medium: 500 !default;
-$sa-font-weight-semibold: 600 !default;
-$sa-font-weight-bold: 700 !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
 
-$sa-line-height-base: 1.375 !default;
+$line-height-base: 1.375 !default;
 
 // Heading Font Sizes
-$sa-h1-font-size: 2.125rem !default;
-$sa-h2-font-size: 1.625rem !default;
-$sa-h3-font-size: 1.375rem !default;
-$sa-h4-font-size: 1.125rem !default;
-$sa-h5-font-size: 1rem !default;
-$sa-h6-font-size: 0.9375rem !default;
+$h1-font-size: 2.125rem !default;
+$h2-font-size: 1.625rem !default;
+$h3-font-size: 1.375rem !default;
+$h4-font-size: 1.125rem !default;
+$h5-font-size: 1rem !default;
+$h6-font-size: 0.9375rem !default;
 
 // -----------------------------------------------------
 // Spacing
 // -----------------------------------------------------
 
-$sa-spacer: 1rem !default;
+$spacer: 1rem !default;
 
 // -----------------------------------------------------
 // Borders & Radius
 // -----------------------------------------------------
 
-$sa-border-width: 1px !default;
-$sa-border-style: solid !default;
-$sa-border-radius: 0.375rem !default;
-$sa-border-radius-sm: 0.25rem !default;
-$sa-border-radius-lg: 0.5rem !default;
-$sa-border-radius-xl: 0.625rem !default;
-$sa-border-radius-pill: 50rem !default;
+$border-width: 1px !default;
+$border-style: solid !default;
+$border-radius: 0.375rem !default;
+$border-radius-sm: 0.25rem !default;
+$border-radius-lg: 0.5rem !default;
+$border-radius-xl: 0.625rem !default;
+$border-radius-pill: 50rem !default;
 
 // -----------------------------------------------------
 // Shadows
 // -----------------------------------------------------
 
-$sa-shadow-color: rgba(47, 43, 61, 0.14) !default;
-$sa-box-shadow: 0 0.1875rem 0.75rem 0 $sa-shadow-color !default;
-$sa-box-shadow-sm: 0 0.125rem 0.5rem 0 rgba(47, 43, 61, 0.12) !default;
-$sa-box-shadow-lg: 0 0.25rem 1.125rem 0 rgba(47, 43, 61, 0.16) !default;
+$shadow-color: rgba(47, 43, 61, 0.14) !default;
+$box-shadow: 0 0.1875rem 0.75rem 0 $shadow-color !default;
+$box-shadow-sm: 0 0.125rem 0.5rem 0 rgba(47, 43, 61, 0.12) !default;
+$box-shadow-lg: 0 0.25rem 1.125rem 0 rgba(47, 43, 61, 0.16) !default;
 
 // -----------------------------------------------------
 // Transitions
 // -----------------------------------------------------
 
-$sa-transition-base: all 0.2s ease-in-out !default;
-$sa-transition-fade: opacity 0.15s linear !default;
-$sa-transition-collapse: height 0.35s ease !default;
+$transition-base: all 0.2s ease-in-out !default;
+$transition-fade: opacity 0.15s linear !default;
+$transition-collapse: height 0.35s ease !default;
 
 // -----------------------------------------------------
 // Z-Index
 // -----------------------------------------------------
 
-$sa-zindex-dropdown: 1000 !default;
-$sa-zindex-sticky: 1020 !default;
-$sa-zindex-fixed: 1030 !default;
-$sa-zindex-modal-backdrop: 1050 !default;
-$sa-zindex-modal: 1055 !default;
-$sa-zindex-tooltip: 1070 !default;
-$sa-zindex-toast: 1080 !default;
+$zindex-dropdown: 1000 !default;
+$zindex-sticky: 1020 !default;
+$zindex-fixed: 1030 !default;
+$zindex-modal-backdrop: 1050 !default;
+$zindex-modal: 1055 !default;
+$zindex-tooltip: 1070 !default;
+$zindex-toast: 1080 !default;
 
 // -----------------------------------------------------
 // Components - Card
 // -----------------------------------------------------
 
-$sa-card-border-radius: $sa-border-radius-lg !default;
-$sa-card-spacer-y: 1.5rem !default;
-$sa-card-spacer-x: 1.5rem !default;
+$card-border-radius: $border-radius-lg !default;
+$card-spacer-y: 1.5rem !default;
+$card-spacer-x: 1.5rem !default;
 
 // -----------------------------------------------------
 // Components - Button
 // -----------------------------------------------------
 
-$sa-btn-padding-y: 0.5rem !default;
-$sa-btn-padding-x: 1.25rem !default;
-$sa-btn-border-radius: $sa-border-radius !default;
+$btn-padding-y: 0.5rem !default;
+$btn-padding-x: 1.25rem !default;
+$btn-border-radius: $border-radius !default;
 
 // -----------------------------------------------------
 // Components - Form Inputs
 // -----------------------------------------------------
 
-$sa-input-padding-y: 0.426rem !default;
-$sa-input-padding-x: 0.9375rem !default;
-$sa-input-padding-y-sm: 0.25rem !default;
-$sa-input-padding-x-sm: 0.625rem !default;
-$sa-input-padding-y-lg: 0.5625rem !default;
-$sa-input-padding-x-lg: 1rem !default;
-$sa-input-font-size: $sa-font-size-base !default;
-$sa-input-font-size-sm: $sa-font-size-sm !default;
-$sa-input-font-size-lg: $sa-font-size-lg !default;
-$sa-input-line-height: 1.625 !default;
-$sa-input-border-width: 1px !default;
-$sa-input-focus-border-width: 2px !default;
-$sa-input-border-radius: $sa-border-radius !default;
-$sa-input-border-radius-sm: $sa-border-radius-sm !default;
-$sa-input-border-radius-lg: $sa-border-radius-lg !default;
-$sa-input-border-color: $sa-border-color !default;
-$sa-input-hover-border-color: $sa-gray-600 !default;
-$sa-input-focus-border-color: $sa-primary !default;
-$sa-input-disabled-bg: $sa-gray-100 !default;
-$sa-input-disabled-border-color: $sa-gray-200 !default;
-$sa-input-placeholder-color: $sa-gray-400 !default;
-$sa-input-height: 2.375rem !default;
-$sa-input-height-sm: 1.875rem !default;
-$sa-input-height-lg: 3rem !default;
+$input-padding-y: 0.426rem !default;
+$input-padding-x: 0.9375rem !default;
+$input-padding-y-sm: 0.25rem !default;
+$input-padding-x-sm: 0.625rem !default;
+$input-padding-y-lg: 0.5625rem !default;
+$input-padding-x-lg: 1rem !default;
+$input-font-size: $font-size-base !default;
+$input-font-size-sm: $font-size-sm !default;
+$input-font-size-lg: $font-size-lg !default;
+$input-line-height: 1.625 !default;
+$input-border-width: 1px !default;
+$input-focus-border-width: 2px !default;
+$input-border-radius: $border-radius !default;
+$input-border-radius-sm: $border-radius-sm !default;
+$input-border-radius-lg: $border-radius-lg !default;
+$input-border-color: $border-color !default;
+$input-hover-border-color: $gray-600 !default;
+$input-focus-border-color: $primary !default;
+$input-disabled-bg: $gray-100 !default;
+$input-disabled-border-color: $gray-200 !default;
+$input-placeholder-color: $gray-400 !default;
+$input-height: 2.375rem !default;
+$input-height-sm: 1.875rem !default;
+$input-height-lg: 3rem !default;
 
 // -----------------------------------------------------
 // Components - Form Select
 // -----------------------------------------------------
 
-$sa-form-select-padding-y: $sa-input-padding-y !default;
-$sa-form-select-padding-x: $sa-input-padding-x !default;
-$sa-form-select-indicator-padding: 2.625rem !default;
+$form-select-padding-y: $input-padding-y !default;
+$form-select-padding-x: $input-padding-x !default;
+$form-select-indicator-padding: 2.625rem !default;
 
 // -----------------------------------------------------
 // Components - Form Check (Checkbox/Radio/Switch)
 // -----------------------------------------------------
 
-$sa-form-check-input-width: 1.125rem !default;
-$sa-form-check-padding-start: 1.625rem !default;
-$sa-form-check-margin-bottom: 0.25rem !default;
-$sa-form-check-input-bg: transparent !default;
-$sa-form-check-input-border-color: $sa-gray-400 !default;
-$sa-form-check-input-checked-bg: $sa-primary !default;
-$sa-form-check-input-checked-border-color: $sa-primary !default;
-$sa-form-check-input-disabled-bg: $sa-gray-200 !default;
+$form-check-input-width: 1.125rem !default;
+$form-check-padding-start: 1.625rem !default;
+$form-check-margin-bottom: 0.25rem !default;
+$form-check-input-bg: transparent !default;
+$form-check-input-border-color: $gray-400 !default;
+$form-check-input-checked-bg: $primary !default;
+$form-check-input-checked-border-color: $primary !default;
+$form-check-input-disabled-bg: $gray-200 !default;
 
 // -----------------------------------------------------
 // Components - Form Switch
 // -----------------------------------------------------
 
-$sa-form-switch-width: 2.125rem !default;
-$sa-form-switch-height: 1.25rem !default;
-$sa-form-switch-padding-start: 2.625rem !default;
-$sa-form-switch-bg: $sa-gray-300 !default;
+$form-switch-width: 2.125rem !default;
+$form-switch-height: 1.25rem !default;
+$form-switch-padding-start: 2.625rem !default;
+$form-switch-bg: $gray-300 !default;
 
 // -----------------------------------------------------
 // Components - Form Validation
 // -----------------------------------------------------
 
-$sa-form-feedback-valid-color: $sa-success !default;
-$sa-form-feedback-invalid-color: $sa-danger !default;
+$form-feedback-valid-color: $success !default;
+$form-feedback-invalid-color: $danger !default;
 
 // -----------------------------------------------------
 // Components - Table
 // -----------------------------------------------------
 
-$sa-table-cell-padding-y: 0.75rem !default;
-$sa-table-cell-padding-x: 1rem !default;
+$table-cell-padding-y: 0.75rem !default;
+$table-cell-padding-x: 1rem !default;
 
 // -----------------------------------------------------
 // Components - Modal
 // -----------------------------------------------------
 
-$sa-modal-content-border-radius: $sa-border-radius-lg !default;
+$modal-content-border-radius: $border-radius-lg !default;
 
 // -----------------------------------------------------
 // Components - Alert
 // -----------------------------------------------------
 
-$sa-alert-padding-y: 0.75rem !default;
-$sa-alert-padding-x: 1rem !default;
+$alert-padding-y: 0.75rem !default;
+$alert-padding-x: 1rem !default;
 
 // -----------------------------------------------------
 // Components - Badge
 // -----------------------------------------------------
 
-$sa-badge-padding-y: 0.35em !default;
-$sa-badge-padding-x: 0.65em !default;
+$badge-padding-y: 0.35em !default;
+$badge-padding-x: 0.65em !default;
 
 // -----------------------------------------------------
 // Components - Tooltip
 // -----------------------------------------------------
 
-$sa-tooltip-bg: $sa-dark !default;
-$sa-tooltip-color: $sa-white !default;
+$tooltip-bg: $dark !default;
+$tooltip-color: $white !default;
 
 // -----------------------------------------------------
 // Components - Progress
 // -----------------------------------------------------
 
-$sa-progress-height: 0.5rem !default;
+$progress-height: 0.5rem !default;
 
 // -----------------------------------------------------
 // Components - Spinner
 // -----------------------------------------------------
 
-$sa-spinner-width: 2rem !default;
+$spinner-width: 2rem !default;
 
 // -----------------------------------------------------
 // Components - Stepper
 // -----------------------------------------------------
 
-$sa-stepper-step-size: 2.5rem !default;
+$stepper-step-size: 2.5rem !default;

@@ -1,6 +1,6 @@
 # Security Policy
 
-The security of Site Alerts is a top priority.
+The security of Proactive Site Advisor is a top priority.
 
 If you discover a security vulnerability, please report it responsibly and **do not** open a public issue.
 
@@ -27,4 +27,4 @@ Only the latest released version of the plugin is actively supported with securi
 
 We kindly ask that you give us a reasonable amount of time to investigate and fix the issue before disclosing it publicly.
 
-Thank you for helping keep Site Alerts secure.
+Thank you for helping keep Proactive Site Advisor secure.

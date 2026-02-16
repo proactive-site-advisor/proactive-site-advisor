@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\CLI\Commands;
+namespace ProactiveSiteAdvisor\CLI\Commands;
 
-use SiteAlerts\Database\Seeders\SeederManager;
+use ProactiveSiteAdvisor\Database\Seeders\SeederManager;
 use WP_CLI;
 
 if (!defined('ABSPATH')) {
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * WP-CLI command for database seeding.
  *
- * @package SiteAlerts\CLI\Commands
+ * @package ProactiveSiteAdvisor\CLI\Commands
  * @version 1.0.0
  */
 class SeedCommand
@@ -45,16 +45,16 @@ class SeedCommand
      * ## EXAMPLES
      *
      *     # Seed 30 days of realistic data
-     *     wp site-alerts seed
+     *     wp proactive-site-advisor seed
      *
      *     # Seed 60 days of data designed to trigger alerts
-     *     wp site-alerts seed --days=60 --pattern=alerts
+     *     wp proactive-site-advisor seed --days=60 --pattern=alerts
      *
      *     # Run only the DailyStats seeder
-     *     wp site-alerts seed --seeder=DailyStats
+     *     wp proactive-site-advisor seed --seeder=DailyStats
      *
      *     # Seed only alerts with 90 days of data
-     *     wp site-alerts seed --seeder=Alert --days=90
+     *     wp proactive-site-advisor seed --seeder=Alert --days=90
      *
      * @param array $args Positional arguments.
      * @param array $assocArgs Associative arguments.
@@ -65,7 +65,7 @@ class SeedCommand
         $options = $this->validateOptions($assocArgs);
 
         WP_CLI::log('');
-        WP_CLI::log('Site Alerts Database Seeder');
+        WP_CLI::log('Proactive Site Advisor Database Seeder');
         WP_CLI::log('===========================');
         WP_CLI::log('');
 

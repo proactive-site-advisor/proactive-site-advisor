@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Database\Seeders;
+namespace ProactiveSiteAdvisor\Database\Seeders;
 
-use SiteAlerts\Abstracts\AbstractSeeder;
-use SiteAlerts\Database\Factories\AlertFactory;
+use ProactiveSiteAdvisor\Abstracts\AbstractSeeder;
+use ProactiveSiteAdvisor\Database\Factories\AlertFactory;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Seeds the alerts table with fake alert data.
  *
- * @package SiteAlerts\Database\Seeders
+ * @package ProactiveSiteAdvisor\Database\Seeders
  * @version 1.0.0
  */
 class AlertSeeder extends AbstractSeeder

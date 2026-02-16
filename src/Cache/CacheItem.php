@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\Cache;
+namespace ProactiveSiteAdvisor\Cache;
 
-use SiteAlerts\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,52 +11,44 @@ if (!defined('ABSPATH')) {
 /**
  * Class CacheItem
  *
- * Represents a cache item with metadata.
+ * Represents a cache entry with metadata such as:
+ * - value
+ * - expiration
+ * - hit status
+ * - tags
  *
- * @package SiteAlerts\Cache
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Cache
+ * @since 1.0.0
  */
 class CacheItem
 {
     /**
-     * Cache key
-     *
-     * @var string
+     * Cache key.
      */
     private string $key;
 
     /**
-     * Cached value
-     *
-     * @var mixed
+     * Cached value.
      */
-    private $value; // Mixed type
+    private $value = null;
 
     /**
-     * Whether the item was a cache hit
-     *
-     * @var bool
+     * Whether this item was retrieved from cache.
      */
     private bool $hit = false;
 
     /**
-     * Expiration timestamp
-     *
-     * @var int|null
+     * Expiration timestamp.
      */
     private ?int $expiration = null;
 
     /**
-     * Tags associated with this item
-     *
-     * @var array
+     * Associated tags.
      */
     private array $tags = [];
 
     /**
-     * CacheItem constructor.
-     *
-     * @param string $key Cache key.
+     * Constructor.
      */
     public function __construct(string $key)
     {
@@ -64,10 +56,7 @@ class CacheItem
     }
 
     /**
-     * Create a new cache item.
-     *
-     * @param string $key Cache key.
-     * @return self
+     * Factory method.
      */
     public static function create(string $key): self
     {
@@ -75,9 +64,7 @@ class CacheItem
     }
 
     /**
-     * Get the cache key.
-     *
-     * @return string
+     * Get key.
      */
     public function getKey(): string
     {
@@ -85,31 +72,24 @@ class CacheItem
     }
 
     /**
-     * Get the cached value.
-     *
-     * @return mixed
+     * Get value.
      */
-    public function get()
+    public function get(): mixed
     {
         return $this->value;
     }
 
     /**
-     * Set the cached value.
-     *
-     * @param mixed $value Value to cache.
-     * @return self
+     * Set value.
      */
-    public function set($value): self
+    public function set(mixed $value): self
     {
         $this->value = $value;
         return $this;
     }
 
     /**
-     * Check if this was a cache hit.
-     *
-     * @return bool
+     * Check if cache hit.
      */
     public function isHit(): bool
     {
@@ -117,10 +97,7 @@ class CacheItem
     }
 
     /**
-     * Mark as a cache hit.
-     *
-     * @param bool $hit Whether it was a hit.
-     * @return self
+     * Mark hit status.
      */
     public function setHit(bool $hit): self
     {
@@ -129,24 +106,24 @@ class CacheItem
     }
 
     /**
-     * Set expiration time.
-     *
-     * @param int $seconds Seconds until expiration.
-     * @return self
+     * Set expiration relative to now.
      */
-    public function expiresAfter(int $seconds): self
+    public function expiresAfter(?int $seconds): self
     {
+        if ($seconds === null) {
+            $this->expiration = null;
+            return $this;
+        }
+
         $this->expiration = DateTimeUtils::timestamp() + $seconds;
+
         return $this;
     }
 
     /**
-     * Set expiration timestamp.
-     *
-     * @param int $timestamp Unix timestamp.
-     * @return self
+     * Set absolute expiration timestamp.
      */
-    public function expiresAt(int $timestamp): self
+    public function expiresAt(?int $timestamp): self
     {
         $this->expiration = $timestamp;
         return $this;
@@ -154,8 +131,6 @@ class CacheItem
 
     /**
      * Get expiration timestamp.
-     *
-     * @return int|null
      */
     public function getExpiration(): ?int
     {
@@ -163,9 +138,7 @@ class CacheItem
     }
 
     /**
-     * Get time to live in seconds.
-     *
-     * @return int|null
+     * Get remaining TTL in seconds.
      */
     public function getTtl(): ?int
     {
@@ -174,13 +147,12 @@ class CacheItem
         }
 
         $ttl = $this->expiration - DateTimeUtils::timestamp();
+
         return $ttl > 0 ? $ttl : 0;
     }
 
     /**
-     * Check if the item is expired.
-     *
-     * @return bool
+     * Check if expired.
      */
     public function isExpired(): bool
     {
@@ -188,25 +160,28 @@ class CacheItem
             return false;
         }
 
-        return DateTimeUtils::timestamp() > $this->expiration;
+        return DateTimeUtils::timestamp() >= $this->expiration;
     }
 
     /**
-     * Add tags to this item.
-     *
-     * @param array $tags Tags to add.
-     * @return self
+     * Attach tags to item.
      */
     public function tag(array $tags): self
     {
-        $this->tags = array_unique(array_merge($this->tags, $tags));
+        $normalized = array_map(
+            static fn($tag) => strtolower(trim((string)$tag)),
+            $tags
+        );
+
+        $this->tags = array_values(
+            array_unique(array_merge($this->tags, $normalized))
+        );
+
         return $this;
     }
 
     /**
      * Get tags.
-     *
-     * @return array
      */
     public function getTags(): array
     {
@@ -214,13 +189,10 @@ class CacheItem
     }
 
     /**
-     * Check if item has a specific tag.
-     *
-     * @param string $tag Tag to check.
-     * @return bool
+     * Check if item has tag.
      */
     public function hasTag(string $tag): bool
     {
-        return in_array($tag, $this->tags, true);
+        return in_array(strtolower(trim($tag)), $this->tags, true);
     }
 }

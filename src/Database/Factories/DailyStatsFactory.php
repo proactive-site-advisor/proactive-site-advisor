@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Database\Factories;
+namespace ProactiveSiteAdvisor\Database\Factories;
 
-use SiteAlerts\Abstracts\AbstractFactory;
-use SiteAlerts\Models\DailyStats;
+use ProactiveSiteAdvisor\Abstracts\AbstractFactory;
+use ProactiveSiteAdvisor\Models\DailyStats;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Factory for creating DailyStats records with fake data.
  *
- * @package SiteAlerts\Database\Factories
+ * @package ProactiveSiteAdvisor\Database\Factories
  * @version 1.0.0
  */
 class DailyStatsFactory extends AbstractFactory

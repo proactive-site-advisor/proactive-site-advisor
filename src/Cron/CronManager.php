@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Cron;
+namespace ProactiveSiteAdvisor\Cron;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Utils\Logger;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Utils\Logger;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages scheduled tasks/cron jobs.
  *
- * @package SiteAlerts\Cron
+ * @package ProactiveSiteAdvisor\Cron
  * @version 1.0.0
  */
 class CronManager extends AbstractSingleton
@@ -50,7 +50,7 @@ class CronManager extends AbstractSingleton
         add_action('init', [$this, 'scheduleAll']);
 
         // Also listen to activation event (for future activations)
-        add_action('site_alerts_schedule_events', [$this, 'scheduleAll']);
+        add_action('proactive_site_advisor_schedule_events', [$this, 'scheduleAll']);
     }
 
     /**
@@ -91,29 +91,29 @@ class CronManager extends AbstractSingleton
     {
         // Add common custom intervals
         $defaults = [
-            'site_alerts_every_minute'     => [
+            'proactive_site_advisor_every_minute'     => [
                 'interval' => MINUTE_IN_SECONDS,
-                'display'  => __('Every Minute', 'site-alerts'),
+                'display'  => __('Every Minute', 'proactive-site-advisor'),
             ],
-            'site_alerts_every_5_minutes'  => [
+            'proactive_site_advisor_every_5_minutes'  => [
                 'interval' => 5 * MINUTE_IN_SECONDS,
-                'display'  => __('Every 5 Minutes', 'site-alerts'),
+                'display'  => __('Every 5 Minutes', 'proactive-site-advisor'),
             ],
-            'site_alerts_every_15_minutes' => [
+            'proactive_site_advisor_every_15_minutes' => [
                 'interval' => 15 * MINUTE_IN_SECONDS,
-                'display'  => __('Every 15 Minutes', 'site-alerts'),
+                'display'  => __('Every 15 Minutes', 'proactive-site-advisor'),
             ],
-            'site_alerts_every_30_minutes' => [
+            'proactive_site_advisor_every_30_minutes' => [
                 'interval' => 30 * MINUTE_IN_SECONDS,
-                'display'  => __('Every 30 Minutes', 'site-alerts'),
+                'display'  => __('Every 30 Minutes', 'proactive-site-advisor'),
             ],
-            'site_alerts_weekly'           => [
+            'proactive_site_advisor_weekly'           => [
                 'interval' => WEEK_IN_SECONDS,
-                'display'  => __('Once Weekly', 'site-alerts'),
+                'display'  => __('Once Weekly', 'proactive-site-advisor'),
             ],
-            'site_alerts_monthly'          => [
+            'proactive_site_advisor_monthly'          => [
                 'interval' => MONTH_IN_SECONDS,
-                'display'  => __('Once Monthly', 'site-alerts'),
+                'display'  => __('Once Monthly', 'proactive-site-advisor'),
             ],
         ];
 
@@ -206,7 +206,7 @@ class CronManager extends AbstractSingleton
          *
          * @param CronTask[] $tasks Cron tasks.
          */
-        $tasks = apply_filters('site_alerts_cron_tasks', $this->tasks);
+        $tasks = apply_filters('proactive_site_advisor_cron_tasks', $this->tasks);
 
         foreach ($tasks as $task) {
             if ($task->isEnabled()) {
@@ -314,7 +314,7 @@ class CronManager extends AbstractSingleton
              *
              * @param CronTask $task The task.
              */
-            do_action('site_alerts_before_cron_task', $task);
+            do_action('proactive_site_advisor_before_cron_task', $task);
 
             call_user_func_array($task->getCallback(), $task->getArgs());
 
@@ -323,7 +323,7 @@ class CronManager extends AbstractSingleton
              *
              * @param CronTask $task The task.
              */
-            do_action('site_alerts_after_cron_task', $task);
+            do_action('proactive_site_advisor_after_cron_task', $task);
 
             Logger::debug('Cron task completed', ['hook' => $hook]);
 
@@ -339,7 +339,7 @@ class CronManager extends AbstractSingleton
              * @param CronTask $task The task.
              * @param \Exception $e The exception.
              */
-            do_action('site_alerts_cron_task_failed', $task, $e);
+            do_action('proactive_site_advisor_cron_task_failed', $task, $e);
         }
     }
 

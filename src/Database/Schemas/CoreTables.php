@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Database\Schemas;
+namespace ProactiveSiteAdvisor\Database\Schemas;
 
-use SiteAlerts\Database\DatabaseManager;
-use SiteAlerts\Database\TableSchema;
+use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\TableSchema;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
 /**
  * Class CoreTables
  *
- * Defines core database tables for the Site Alerts plugin.
+ * Defines core database tables for the Proactive Site Advisor plugin.
  *
- * @package SiteAlerts\Database\Schemas
+ * @package ProactiveSiteAdvisor\Database\Schemas
  * @version 1.0.0
  */
 class CoreTables
@@ -26,7 +26,7 @@ class CoreTables
      */
     public static function register(): void
     {
-        add_action('site_alerts_create_tables', [self::class, 'createTables']);
+        add_action('proactive_site_advisor_create_tables', [self::class, 'createTables']);
     }
 
     /**

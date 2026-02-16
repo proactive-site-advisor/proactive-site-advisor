@@ -1,12 +1,12 @@
 <?php
 
-namespace SiteAlerts\AdminUI\Assets;
+namespace ProactiveSiteAdvisor\AdminUI\Assets;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Components\AssetsComponent;
-use SiteAlerts\Config\PrefixConfig;
-use SiteAlerts\Components\AjaxComponent;
-use SiteAlerts\AdminUI\Theme\ThemeManager;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Components\AssetsComponent;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Components\AjaxComponent;
+use ProactiveSiteAdvisor\AdminUI\Theme\ThemeManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Handles the registration and enqueueing of AdminUI assets including
  * core styles/scripts and third-party vendor libraries.
  *
- * @package SiteAlerts\AdminUI\Assets
+ * @package ProactiveSiteAdvisor\AdminUI\Assets
  * @version 1.0.0
  */
 class AdminUIAssets extends AbstractSingleton
@@ -87,7 +87,7 @@ class AdminUIAssets extends AbstractSingleton
      */
     private function registerVendors(): void
     {
-        $libsUrl = SA_URL . 'libs/';
+        $libsUrl = PROACTIVE_SITE_ADVISOR_URL . 'libs/';
 
         $this->vendors = [];
 
@@ -112,7 +112,7 @@ class AdminUIAssets extends AbstractSingleton
          *
          * @param array $vendors Vendor configurations.
          */
-        $this->vendors = apply_filters('site_alerts_admin_ui_vendors', $this->vendors);
+        $this->vendors = apply_filters('proactive_site_advisor_admin_ui_vendors', $this->vendors);
     }
 
     /**
@@ -180,7 +180,7 @@ class AdminUIAssets extends AbstractSingleton
         AssetsComponent::localizeScript(self::CORE_HANDLE, PrefixConfig::CONFIG_OBJECT, [
             'ajaxUrl'   => admin_url('admin-ajax.php'),
             'nonce'     => AjaxComponent::createNonce(),
-            'restUrl'   => rest_url('site-alerts/v1/'),
+            'restUrl'   => rest_url('proactive-site-advisor/v1/'),
             'restNonce' => wp_create_nonce('wp_rest'),
             'theme'     => $this->getCurrentTheme(),
         ]);
@@ -206,7 +206,7 @@ class AdminUIAssets extends AbstractSingleton
         }
 
         $config     = $this->vendors[$vendor];
-        $baseHandle = PrefixConfig::HANDLE_PREFIX . 'vendor-' . $vendor;
+        $baseHandle = PrefixConfig::handle('vendor-' . $vendor);
 
         // Enqueue CSS files
         if (!empty($config['css'])) {
@@ -214,7 +214,7 @@ class AdminUIAssets extends AbstractSingleton
                 $handle = $baseHandle . ($index > 0 ? "-{$index}" : '') . '-css';
 
                 if (!wp_style_is($handle, 'enqueued')) {
-                    wp_enqueue_style($handle, $url, [], SA_VERSION);
+                    wp_enqueue_style($handle, $url, [], PROACTIVE_SITE_ADVISOR_VERSION);
                 }
             }
         }
@@ -227,7 +227,7 @@ class AdminUIAssets extends AbstractSingleton
                 $handle = $baseHandle . ($index > 0 ? "-{$index}" : '') . '-js';
 
                 if (!wp_script_is($handle, 'enqueued')) {
-                    wp_enqueue_script($handle, $url, $deps, SA_VERSION, true);
+                    wp_enqueue_script($handle, $url, $deps, PROACTIVE_SITE_ADVISOR_VERSION, true);
                 }
             }
         }

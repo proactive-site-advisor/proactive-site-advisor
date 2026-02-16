@@ -1,10 +1,10 @@
 <?php
 
-namespace SiteAlerts\CLI;
+namespace ProactiveSiteAdvisor\CLI;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\CLI\Commands\SeedCommand;
-use SiteAlerts\CLI\Commands\TruncateCommand;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\CLI\Commands\SeedCommand;
+use ProactiveSiteAdvisor\CLI\Commands\TruncateCommand;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages WP-CLI command registration.
  *
- * @package SiteAlerts\CLI
+ * @package ProactiveSiteAdvisor\CLI
  * @version 1.0.0
  */
 class CLIManager extends AbstractSingleton
@@ -25,7 +25,7 @@ class CLIManager extends AbstractSingleton
      *
      * @var string
      */
-    private string $namespace = 'site-alerts';
+    private string $namespace = 'proactive-site-advisor';
 
     /**
      * Registered commands.
@@ -54,7 +54,7 @@ class CLIManager extends AbstractSingleton
          * @param array $commands Array of command name => class mappings.
          * @param string $namespace Command namespace.
          */
-        $commands = apply_filters('site_alerts_cli_commands', $this->commands, $this->namespace);
+        $commands = apply_filters('proactive_site_advisor_cli_commands', $this->commands, $this->namespace);
 
         foreach ($commands as $name => $class) {
             if (!class_exists($class)) {

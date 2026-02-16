@@ -1,6 +1,8 @@
 <?php
 
-namespace SiteAlerts\Admin;
+namespace ProactiveSiteAdvisor\Admin;
+
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Represents a single admin notice with configuration options.
  *
- * @package SiteAlerts\Admin
+ * @package ProactiveSiteAdvisor\Admin
  * @version 1.0.0
  */
 class Notice
@@ -211,21 +213,23 @@ class Notice
         $classes = array_merge([
             'notice',
             'notice-' . $this->type,
-            'sa-notice',
+            PrefixConfig::css('notice'),
         ], $this->classes);
 
         if ($this->dismissible) {
             $classes[] = 'is-dismissible';
-            $classes[] = 'sa-dismissible-notice';
+            $classes[] = PrefixConfig::css('dismissible-notice');
         }
 
         $classStr = implode(' ', array_map('esc_attr', $classes));
 
+        $noticeIdAttr = PrefixConfig::dataAttr('notice-id');
+
         $html = sprintf(
-            '<div id="%s" class="%s" data-sa-notice-id="%s">',
+            '<div id="%1$s" class="%2$s" %3$s="%1$s">',
             esc_attr($this->id),
             $classStr,
-            esc_attr($this->id)
+            esc_attr($noticeIdAttr)
         );
 
         $html .= '<p>' . wp_kses_post($this->message) . '</p>';

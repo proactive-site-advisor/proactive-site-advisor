@@ -1,10 +1,10 @@
 <?php
 
-namespace SiteAlerts\Database;
+namespace ProactiveSiteAdvisor\Database;
 
-use SiteAlerts\Utils\Logger;
-use SiteAlerts\Utils\OptionUtils;
-use SiteAlerts\Config\PluginMeta;
+use ProactiveSiteAdvisor\Utils\Logger;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Config\PluginMeta;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages custom database table creation and updates using dbDelta().
  *
- * @package SiteAlerts\Database
+ * @package ProactiveSiteAdvisor\Database
  * @version 1.0.0
  */
 class DatabaseManager
@@ -132,7 +132,7 @@ class DatabaseManager
          *
          * @param TableSchema[] $tables Registered table schemas.
          */
-        $tables = apply_filters('site_alerts_database_tables', self::$tables);
+        $tables = apply_filters('proactive_site_advisor_database_tables', self::$tables);
 
         if (empty($tables)) {
             return [];
@@ -154,7 +154,7 @@ class DatabaseManager
          *
          * @param array $results Creation results.
          */
-        do_action('site_alerts_database_tables_created', $results);
+        do_action('proactive_site_advisor_database_tables_created', $results);
 
         return $results;
     }

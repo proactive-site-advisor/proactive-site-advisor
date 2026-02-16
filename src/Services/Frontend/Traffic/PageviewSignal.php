@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
  * it represents a fixed domain rule used for anomaly detection,
  * * not a customizable tracking behavior.
  *
- * @package SiteAlerts\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
 class PageviewSignal

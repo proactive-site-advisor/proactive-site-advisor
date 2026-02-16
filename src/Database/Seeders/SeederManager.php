@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Database\Seeders;
+namespace ProactiveSiteAdvisor\Database\Seeders;
 
-use SiteAlerts\Abstracts\AbstractSeeder;
-use SiteAlerts\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Abstracts\AbstractSeeder;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages and orchestrates database seeders.
  *
- * @package SiteAlerts\Database\Seeders
+ * @package ProactiveSiteAdvisor\Database\Seeders
  * @version 1.0.0
  */
 class SeederManager extends AbstractSingleton
@@ -81,7 +81,7 @@ class SeederManager extends AbstractSingleton
          *
          * @param array $seeders Array of seeder class names.
          */
-        return apply_filters('site_alerts_seeders', $this->seeders);
+        return apply_filters('proactive_site_advisor_seeders', $this->seeders);
     }
 
     /**

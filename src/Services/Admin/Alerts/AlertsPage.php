@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Services\Admin\Alerts;
+namespace ProactiveSiteAdvisor\Services\Admin\Alerts;
 
-use SiteAlerts\Abstracts\AbstractAdminPage;
-use SiteAlerts\Admin\PromoBanner;
+use ProactiveSiteAdvisor\Abstracts\AbstractAdminPage;
+use ProactiveSiteAdvisor\Admin\PromoBanner;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
 /**
  * Class AlertsPage
  *
- * Admin page for displaying site alerts dashboard.
+ * Admin page for displaying dashboard.
  *
- * @package SiteAlerts\Services\Admin\Alerts
+ * @package ProactiveSiteAdvisor\Services\Admin\Alerts
  * @version 1.0.0
  */
 class AlertsPage extends AbstractAdminPage
@@ -44,8 +44,8 @@ class AlertsPage extends AbstractAdminPage
         $showPromoBanner = PromoBanner::shouldShowBanner();
 
         return [
-            'pageTitle'       => __('Site Alerts', 'site-alerts'),
-            'pageSubtitle'    => __('Unusual activity on your site — with recommended actions.', 'site-alerts'),
+            'pageTitle'       => __('Proactive Site Advisor', 'proactive-site-advisor'),
+            'pageSubtitle'    => __('Unusual activity on your site — with recommended actions.', 'proactive-site-advisor'),
             'statusLine'      => $context->getStatusLine(),
             'statusSummary'   => $context->getStatusSummary(),
             'digestCards'     => $context->getDigestCards(),

@@ -9,12 +9,11 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('Helpers requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('Helpers requires global namespace.');
-
-    var cssPrefix = PREFIX_CONFIG.cssPrefix;
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('Helpers requires global namespace.');
 
     var Helpers = {
+
         resolveEl: function (el) {
             if (!el) return null;
             return (typeof el === 'string') ? document.querySelector(el) : el;
@@ -34,23 +33,25 @@
         show: function (el) {
             el = Helpers.resolveEl(el);
             if (!el) return;
-            el.classList.remove(cssPrefix + 'd-none');
-            el.classList.add(cssPrefix + 'd-block');
+
+            el.classList.remove(ProactiveSiteAdvisor.cssClass('d-none'));
+            el.classList.add(ProactiveSiteAdvisor.cssClass('d-block'));
         },
 
         hide: function (el) {
             el = Helpers.resolveEl(el);
             if (!el) return;
-            el.classList.remove(cssPrefix + 'd-block');
-            el.classList.add(cssPrefix + 'd-none');
+
+            el.classList.remove(ProactiveSiteAdvisor.cssClass('d-block'));
+            el.classList.add(ProactiveSiteAdvisor.cssClass('d-none'));
         },
 
         toggle: function (el) {
             el = Helpers.resolveEl(el);
             if (!el) return;
 
-            var hidden = cssPrefix + 'd-none';
-            var block = cssPrefix + 'd-block';
+            var hidden = ProactiveSiteAdvisor.cssClass('d-none');
+            var block = ProactiveSiteAdvisor.cssClass('d-block');
 
             if (el.classList.contains(hidden)) {
                 el.classList.remove(hidden);
@@ -79,6 +80,7 @@
         siblings: function (el) {
             el = Helpers.resolveEl(el);
             if (!el || !el.parentNode) return [];
+
             return Array.prototype.filter.call(el.parentNode.children, function (c) {
                 return c !== el;
             });
@@ -86,6 +88,7 @@
 
         debounce: function (fn, wait, immediate) {
             var t;
+
             return function () {
                 var ctx = this, args = arguments;
 
@@ -95,18 +98,23 @@
                 };
 
                 var callNow = immediate && !t;
+
                 clearTimeout(t);
                 t = setTimeout(later, wait);
+
                 if (callNow) fn.apply(ctx, args);
             };
         },
 
         throttle: function (fn, limit) {
             var inThrottle = false;
+
             return function () {
                 if (inThrottle) return;
+
                 fn.apply(this, arguments);
                 inThrottle = true;
+
                 setTimeout(function () {
                     inThrottle = false;
                 }, limit);
@@ -119,11 +127,15 @@
         },
 
         uniqueId: function (prefix) {
-            prefix = prefix || cssPrefix;
+            prefix = prefix || ProactiveSiteAdvisor.cssClass('');
+
             if (window.crypto && typeof window.crypto.randomUUID === 'function') {
                 return prefix + window.crypto.randomUUID();
             }
-            return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+            return prefix +
+                Date.now().toString(36) +
+                Math.random().toString(36).slice(2);
         },
 
         escapeHtml: function (text) {
@@ -134,12 +146,14 @@
 
         merge: function (target, source) {
             target = target || {};
+
             if (!Helpers.isPlainObject(source)) return target;
 
             for (var k in source) {
                 if (!Object.prototype.hasOwnProperty.call(source, k)) continue;
 
                 var v = source[k];
+
                 if (Helpers.isPlainObject(v)) {
                     target[k] = target[k] || {};
                     Helpers.merge(target[k], v);
@@ -147,18 +161,16 @@
                     target[k] = v;
                 }
             }
+
             return target;
         },
 
         prefixClass: function (name) {
-            return cssPrefix + name;
-        },
-
-        getCssPrefix: function () {
-            return cssPrefix;
+            return ProactiveSiteAdvisor.cssClass(name);
         }
+
     };
 
-    SA.Helpers = Helpers;
+    ProactiveSiteAdvisor.Helpers = Helpers;
 
 })(window, document);

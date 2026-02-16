@@ -1,10 +1,12 @@
 <?php
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 /**
  * Class Logger
@@ -12,7 +14,7 @@ if (!defined('ABSPATH')) {
  * Plugin-specific logging utility with multiple log levels
  * and file-based output.
  *
- * @package SiteAlerts\Utils
+ * @package ProactiveSiteAdvisor\Utils
  * @version 1.0.0
  */
 class Logger
@@ -215,7 +217,10 @@ class Logger
     public static function getLogPath(): string
     {
         $uploadDir = wp_upload_dir();
-        return $uploadDir['basedir'] . '/sa-logs/plugin.log';
+
+        $directory = $uploadDir['basedir'] . '/' . PrefixConfig::handle('logs');
+
+        return $directory . '/' . PrefixConfig::handle('plugin') . '.log';
     }
 
     /**
@@ -226,7 +231,7 @@ class Logger
     public static function getLogDirectory(): string
     {
         $uploadDir = wp_upload_dir();
-        return $uploadDir['basedir'] . '/sa-logs';
+        return $uploadDir['basedir'] . '/' . PrefixConfig::handle('logs');
     }
 
     /**
@@ -369,7 +374,7 @@ class Logger
      */
     private static function writeToErrorLog(string $level, string $message, array $context): void
     {
-        $prefix     = '[Site Alerts]';
+        $prefix     = '[Proactive Site Advisor]';
         $contextStr = !empty($context) ? ' | ' . wp_json_encode($context) : '';
 
         // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log

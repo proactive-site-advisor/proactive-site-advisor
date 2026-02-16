@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * Handles rendering of plugin templates with variable injection.
  *
- * @package SiteAlerts\Utils
+ * @package ProactiveSiteAdvisor\Utils
  * @version 1.0.0
  */
 class TemplateUtils
@@ -20,8 +20,8 @@ class TemplateUtils
      * Render a template file with variables.
      *
      * Search order:
-     *  1. Child theme: /site-alerts/templates/
-     *  2. Parent theme: /site-alerts/templates/
+     *  1. Child theme: /proactive-site-advisor/templates/
+     *  2. Parent theme: /proactive-site-advisor/templates/
      *  3. Plugin default: /templates/
      *
      * @param string $templateName Template filename (e.g., 'example-notice.php').
@@ -37,9 +37,9 @@ class TemplateUtils
         }
 
         $paths = [
-            get_stylesheet_directory() . "/site-alerts/templates/{$templateName}",
-            get_template_directory() . "/site-alerts/templates/{$templateName}",
-            SA_TEMPLATES_PATH . $templateName,
+            get_stylesheet_directory() . "/proactive-site-advisor/templates/{$templateName}",
+            get_template_directory() . "/proactive-site-advisor/templates/{$templateName}",
+            PROACTIVE_SITE_ADVISOR_TEMPLATES_PATH . $templateName,
         ];
 
         // Locate first existing template
@@ -47,11 +47,11 @@ class TemplateUtils
 
         if (!$located) {
             /**
-             * Fires when a SiteAlerts template cannot be found.
+             * Fires when a ProactiveSiteAdvisor template cannot be found.
              *
              * @param string $templateName Name of the missing template file.
              */
-            do_action('site_alerts_template_missing', $templateName);
+            do_action('proactive_site_advisor_template_missing', $templateName);
 
             return false;
         }

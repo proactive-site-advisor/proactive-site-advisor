@@ -1,35 +1,23 @@
 <?php
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+use ProactiveSiteAdvisor\Config\PluginOptions;
 
 /**
  * Class OptionUtils
  *
  * A helper class to manage plugin options and user meta in WordPress.
  *
- * @package SiteAlerts\Utils
+ * @package ProactiveSiteAdvisor\Utils
  * @version 1.0.0
  */
 class OptionUtils
 {
-    /**
-     * Main option name in wp_options table
-     *
-     * @var string
-     */
-    protected const OPTION_NAME = 'site_alerts';
-
-    /**
-     * Prefix for individual option keys
-     *
-     * @var string
-     */
-    protected const META_PREFIX = 'site_alerts_';
-
     /**
      * Get full option key with prefix
      *
@@ -38,7 +26,7 @@ class OptionUtils
      */
     public static function getMetaOptionName(string $key): string
     {
-        return self::META_PREFIX . $key;
+        return PluginOptions::META_PREFIX . $key;
     }
 
     /**
@@ -60,7 +48,7 @@ class OptionUtils
      */
     public static function getAllOptions(): array
     {
-        $options = get_option(self::OPTION_NAME, self::getDefaults());
+        $options = get_option(PluginOptions::OPTION_NAME, self::getDefaults());
         return array_merge(self::getDefaults(), is_array($options) ? $options : []);
     }
 
@@ -85,9 +73,9 @@ class OptionUtils
      */
     public static function setOption(string $key, $value): void
     {
-        $options       = get_option(self::OPTION_NAME, self::getDefaults());
+        $options       = get_option(PluginOptions::OPTION_NAME, self::getDefaults());
         $options[$key] = $value;
-        update_option(self::OPTION_NAME, $options);
+        update_option(PluginOptions::OPTION_NAME, $options);
     }
 
     /**
@@ -97,10 +85,10 @@ class OptionUtils
      */
     public static function deleteOption(string $key): void
     {
-        $options = get_option(self::OPTION_NAME, []);
+        $options = get_option(PluginOptions::OPTION_NAME, []);
         if (isset($options[$key])) {
             unset($options[$key]);
-            update_option(self::OPTION_NAME, $options);
+            update_option(PluginOptions::OPTION_NAME, $options);
         }
     }
 
@@ -109,7 +97,7 @@ class OptionUtils
      */
     public static function resetOptions(): void
     {
-        update_option(self::OPTION_NAME, self::getDefaults());
+        update_option(PluginOptions::OPTION_NAME, self::getDefaults());
     }
 
     /**
@@ -126,7 +114,7 @@ class OptionUtils
             return $default;
         }
 
-        $options = get_user_meta($userId, self::OPTION_NAME, true) ?: [];
+        $options = get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
         return $options[$key] ?? $default;
     }
 
@@ -143,9 +131,9 @@ class OptionUtils
             return;
         }
 
-        $options       = get_user_meta($userId, self::OPTION_NAME, true) ?: [];
+        $options       = get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
         $options[$key] = $value;
-        update_user_meta($userId, self::OPTION_NAME, $options);
+        update_user_meta($userId, PluginOptions::OPTION_NAME, $options);
     }
 
     /**
@@ -160,10 +148,10 @@ class OptionUtils
             return;
         }
 
-        $options = get_user_meta($userId, self::OPTION_NAME, true) ?: [];
+        $options = get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
         if (isset($options[$key])) {
             unset($options[$key]);
-            update_user_meta($userId, self::OPTION_NAME, $options);
+            update_user_meta($userId, PluginOptions::OPTION_NAME, $options);
         }
     }
 
@@ -177,7 +165,7 @@ class OptionUtils
             return;
         }
 
-        update_user_meta($userId, self::OPTION_NAME, []);
+        update_user_meta($userId, PluginOptions::OPTION_NAME, []);
     }
 
     /**

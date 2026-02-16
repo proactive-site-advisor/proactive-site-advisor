@@ -9,8 +9,8 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('App requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('App requires global namespace.');
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('App requires global namespace.');
 
     var App = {
         version: '1.0.0',
@@ -18,25 +18,37 @@
 
         init: function () {
             if (this.initialized) return;
+
             this.bindGlobalEvents();
             this.initialized = true;
-            SA.dispatch('ready', {version: this.version}, document);
+
+            ProactiveSiteAdvisor.dispatch('ready', {version: this.version}, document);
         },
 
         bindGlobalEvents: function () {
             var self = this;
-            document.addEventListener(PREFIX_CONFIG.eventPrefix + ':contentLoaded', function (e) {
-                self.initializeContainer(e.detail && e.detail.container);
-            });
+
+            document.addEventListener(
+                ProactiveSiteAdvisor.event('contentLoaded'),
+                function (e) {
+                    self.initializeContainer(e.detail && e.detail.container);
+                }
+            );
         },
 
         initializeContainer: function (container) {
             container = container || document;
-            if (SA.AdminNotices && typeof SA.AdminNotices.init === 'function') SA.AdminNotices.init(container);
+
+            if (
+                ProactiveSiteAdvisor.AdminNotices &&
+                typeof ProactiveSiteAdvisor.AdminNotices.init === 'function'
+            ) {
+                ProactiveSiteAdvisor.AdminNotices.init(container);
+            }
         },
 
         contentLoaded: function (container) {
-            SA.dispatch('contentLoaded', {container: container}, document);
+            ProactiveSiteAdvisor.dispatch('contentLoaded', {container: container}, document);
         }
     };
 
@@ -48,6 +60,6 @@
         App.init();
     }
 
-    SA.App = App;
+    ProactiveSiteAdvisor.App = App;
 
 })(window, document);

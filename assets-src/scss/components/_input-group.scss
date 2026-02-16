@@ -5,16 +5,16 @@
 @use "../prefix" as *;
 @use "../base/variables" as *;
 
-.#{$prefix}-input-group {
+.#{css-class('input-group')} {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   width: 100%;
-  border-radius: $sa-input-border-radius;
+  border-radius: $input-border-radius;
 
-  > .#{$prefix}-form-control,
-  > .#{$prefix}-form-select {
+  > .#{css-class('form-control')},
+  > .#{css-class('form-select')} {
     position: relative;
     flex: 1 1 auto;
     width: 1%;
@@ -23,25 +23,25 @@
 
   // Focus state for entire group
   &:focus-within {
-    box-shadow: 0 0 0 $sa-input-border-width #{css-var('primary')};
+    box-shadow: 0 0 0 $input-border-width css-var(primary);
 
     &::before {
-      box-shadow: 0 0.125rem 0.375rem 0 rgba(#{css-var('primary-rgb')}, 0.3);
+      box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
     }
 
-    .#{$prefix}-input-group-text,
-    .#{$prefix}-form-control,
-    .#{$prefix}-form-select {
-      border-color: #{css-var('primary')};
+    .#{css-class('input-group-text')},
+    .#{css-class('form-control')},
+    .#{css-class('form-select')} {
+      border-color: css-var(primary);
     }
   }
 
   // Hover state
   &:hover:not(:focus-within) {
-    .#{$prefix}-input-group-text,
-    .#{$prefix}-form-control,
-    .#{$prefix}-form-select {
-      border-color: $sa-input-hover-border-color;
+    .#{css-class('input-group-text')},
+    .#{css-class('form-control')},
+    .#{css-class('form-select')} {
+      border-color: $input-hover-border-color;
     }
   }
 
@@ -54,90 +54,90 @@
     top: 0;
     left: 0;
     content: "";
-    border-radius: $sa-input-border-radius;
+    border-radius: $input-border-radius;
     pointer-events: none;
   }
 
   // Input group sizing
-  &.#{$prefix}-input-group-lg {
+  &.#{css-class('input-group-lg')} {
     &,
     &::before {
-      border-radius: $sa-input-border-radius-lg;
+      border-radius: $input-border-radius-lg;
     }
 
-    > .#{$prefix}-form-control,
-    > .#{$prefix}-form-select {
-      min-height: $sa-input-height-lg;
-      padding: $sa-input-padding-y-lg $sa-input-padding-x-lg;
-      font-size: $sa-input-font-size-lg;
-      border-radius: $sa-input-border-radius-lg;
+    > .#{css-class('form-control')},
+    > .#{css-class('form-select')} {
+      min-height: $input-height-lg;
+      padding: $input-padding-y-lg $input-padding-x-lg;
+      font-size: $input-font-size-lg;
+      border-radius: $input-border-radius-lg;
     }
 
-    > .#{$prefix}-input-group-text {
-      padding: $sa-input-padding-y-lg $sa-input-padding-x-lg;
-      font-size: $sa-input-font-size-lg;
+    > .#{css-class('input-group-text')} {
+      padding: $input-padding-y-lg $input-padding-x-lg;
+      font-size: $input-font-size-lg;
     }
   }
 
-  &.#{$prefix}-input-group-sm {
+  &.#{css-class('input-group-sm')} {
     &,
     &::before {
-      border-radius: $sa-input-border-radius-sm;
+      border-radius: $input-border-radius-sm;
     }
 
-    > .#{$prefix}-form-control,
-    > .#{$prefix}-form-select {
-      min-height: $sa-input-height-sm;
-      padding: $sa-input-padding-y-sm $sa-input-padding-x-sm;
-      font-size: $sa-input-font-size-sm;
-      border-radius: $sa-input-border-radius-sm;
+    > .#{css-class('form-control')},
+    > .#{css-class('form-select')} {
+      min-height: $input-height-sm;
+      padding: $input-padding-y-sm $input-padding-x-sm;
+      font-size: $input-font-size-sm;
+      border-radius: $input-border-radius-sm;
     }
 
-    > .#{$prefix}-input-group-text {
-      padding: $sa-input-padding-y-sm $sa-input-padding-x-sm;
-      font-size: $sa-input-font-size-sm;
+    > .#{css-class('input-group-text')} {
+      padding: $input-padding-y-sm $input-padding-x-sm;
+      font-size: $input-font-size-sm;
     }
   }
 
   // Rounded corners handling
-  > :not(:first-child):not(.#{$prefix}-dropdown-menu):not(.#{$prefix}-valid-tooltip):not(.#{$prefix}-valid-feedback):not(.#{$prefix}-invalid-tooltip):not(.#{$prefix}-invalid-feedback) {
-    margin-left: calc(#{$sa-input-border-width} * -1);
+  > :not(:first-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
+    margin-left: calc(#{$input-border-width} * -1);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
 
-  > :not(:last-child):not(.#{$prefix}-dropdown-menu):not(.#{$prefix}-valid-tooltip):not(.#{$prefix}-valid-feedback):not(.#{$prefix}-invalid-tooltip):not(.#{$prefix}-invalid-feedback) {
+  > :not(:last-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
 
   // Prevent double focus styling
-  > .#{$prefix}-form-control,
-  > .#{$prefix}-form-select,
-  > .#{$prefix}-input-group-text {
+  > .#{css-class('form-control')},
+  > .#{css-class('form-select')},
+  > .#{css-class('input-group-text')} {
     &:focus,
     &:focus-within {
-      border-width: $sa-input-border-width;
+      border-width: $input-border-width;
       box-shadow: none;
     }
   }
 }
 
 // Input Group Text (addon)
-.#{$prefix}-input-group-text {
+.#{css-class('input-group-text')} {
   display: flex;
   align-items: center;
-  padding: calc(#{$sa-input-padding-y} - #{$sa-input-border-width}) calc(#{$sa-input-padding-x} - #{$sa-input-border-width});
-  font-size: $sa-input-font-size;
-  font-weight: $sa-font-weight-normal;
-  line-height: $sa-input-line-height;
-  color: #{css-var('body-color')};
+  padding: calc(#{$input-padding-y} - #{$input-border-width}) calc(#{$input-padding-x} - #{$input-border-width});
+  font-size: $input-font-size;
+  font-weight: $font-weight-normal;
+  line-height: $input-line-height;
+  color: css-var(body-color);
   text-align: center;
   white-space: nowrap;
   background-color: transparent;
   background-clip: padding-box;
-  border: $sa-input-border-width solid #{css-var('border-color')};
-  border-radius: $sa-input-border-radius;
+  border: $input-border-width solid css-var(border-color);
+  border-radius: $input-border-radius;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   // Icon sizing
@@ -151,10 +151,10 @@
 }
 
 // Merged Input Group (no visible borders between elements)
-.#{$prefix}-input-group-merge {
-  .#{$prefix}-input-group-text,
-  .#{$prefix}-form-control,
-  .#{$prefix}-form-select {
+.#{css-class('input-group-merge')} {
+  .#{css-class('input-group-text')},
+  .#{css-class('form-control')},
+  .#{css-class('form-select')} {
     &:first-child {
       border-right: 0;
     }
@@ -175,73 +175,73 @@
 }
 
 // Disabled Input Group
-.#{$prefix}-input-group.disabled,
-.#{$prefix}-input-group[disabled] {
-  .#{$prefix}-input-group-text,
-  .#{$prefix}-form-control,
-  .#{$prefix}-form-select {
-    border-color: #{css-var('input-disabled-border')};
-    background-color: #{css-var('input-disabled-bg')};
-    color: #{css-var('secondary-color')};
+.#{css-class('input-group')}.disabled,
+.#{css-class('input-group')}[disabled] {
+  .#{css-class('input-group-text')},
+  .#{css-class('form-control')},
+  .#{css-class('form-select')} {
+    border-color: css-var(input-disabled-border);
+    background-color: css-var(input-disabled-bg);
+    color: css-var(secondary-color);
     pointer-events: none;
   }
 }
 
 // Rounded pill style
-.#{$prefix}-input-group.#{$prefix}-rounded-pill {
-  .#{$prefix}-input-group-text,
-  .#{$prefix}-form-control,
-  .#{$prefix}-form-select,
+.#{css-class('input-group')}.#{css-class('rounded-pill')} {
+  .#{css-class('input-group-text')},
+  .#{css-class('form-control')},
+  .#{css-class('form-select')},
   &::before {
-    border-radius: $sa-border-radius-pill;
+    border-radius: $border-radius-pill;
   }
 
-  > :not(:first-child):not(.#{$prefix}-dropdown-menu):not(.#{$prefix}-valid-tooltip):not(.#{$prefix}-valid-feedback):not(.#{$prefix}-invalid-tooltip):not(.#{$prefix}-invalid-feedback) {
+  > :not(:first-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
 
-  > :not(:last-child):not(.#{$prefix}-dropdown-menu):not(.#{$prefix}-valid-tooltip):not(.#{$prefix}-valid-feedback):not(.#{$prefix}-invalid-tooltip):not(.#{$prefix}-invalid-feedback) {
+  > :not(:last-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
 }
 
 // Input Group with Validation
-.#{$prefix}-input-group:has(.#{$prefix}-is-invalid) {
-  box-shadow: 0 0 0 $sa-input-border-width $sa-form-feedback-invalid-color;
+.#{css-class('input-group')}:has(.#{css-class('is-invalid')}) {
+  box-shadow: 0 0 0 $input-border-width $form-feedback-invalid-color;
 
-  .#{$prefix}-input-group-text,
-  .#{$prefix}-form-control,
-  .#{$prefix}-form-select {
-    border-color: $sa-form-feedback-invalid-color;
+  .#{css-class('input-group-text')},
+  .#{css-class('form-control')},
+  .#{css-class('form-select')} {
+    border-color: $form-feedback-invalid-color;
   }
 
   &::before {
-    box-shadow: 0 0.125rem 0.375rem 0 rgba($sa-form-feedback-invalid-color, 0.3);
+    box-shadow: 0 0.125rem 0.375rem 0 rgba($form-feedback-invalid-color, 0.3);
   }
 
-  ~ .#{$prefix}-invalid-feedback,
-  ~ .#{$prefix}-invalid-tooltip {
+  ~ .#{css-class('invalid-feedback')},
+  ~ .#{css-class('invalid-tooltip')} {
     display: block;
   }
 }
 
-.#{$prefix}-input-group:has(.#{$prefix}-is-valid) {
-  box-shadow: 0 0 0 $sa-input-border-width $sa-form-feedback-valid-color;
+.#{css-class('input-group')}:has(.#{css-class('is-valid')}) {
+  box-shadow: 0 0 0 $input-border-width $form-feedback-valid-color;
 
-  .#{$prefix}-input-group-text,
-  .#{$prefix}-form-control,
-  .#{$prefix}-form-select {
-    border-color: $sa-form-feedback-valid-color;
+  .#{css-class('input-group-text')},
+  .#{css-class('form-control')},
+  .#{css-class('form-select')} {
+    border-color: $form-feedback-valid-color;
   }
 
   &::before {
-    box-shadow: 0 0.125rem 0.375rem 0 rgba($sa-form-feedback-valid-color, 0.3);
+    box-shadow: 0 0.125rem 0.375rem 0 rgba($form-feedback-valid-color, 0.3);
   }
 
-  ~ .#{$prefix}-valid-feedback,
-  ~ .#{$prefix}-valid-tooltip {
+  ~ .#{css-class('valid-feedback')},
+  ~ .#{css-class('valid-tooltip')} {
     display: block;
   }
 }

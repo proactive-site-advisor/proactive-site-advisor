@@ -1,15 +1,15 @@
 <?php
 
-namespace SiteAlerts\Services\Cron;
+namespace ProactiveSiteAdvisor\Services\Cron;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Cache\CacheManager;
-use SiteAlerts\Config\PluginMeta;
-use SiteAlerts\Models\DailyStats;
-use SiteAlerts\Services\Insights\AlertEngine;
-use SiteAlerts\Utils\DateTimeUtils;
-use SiteAlerts\Utils\CacheKeys;
-use SiteAlerts\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Cache\CacheKeys;
+use ProactiveSiteAdvisor\Cache\CacheManager;
+use ProactiveSiteAdvisor\Config\PluginMeta;
+use ProactiveSiteAdvisor\Models\DailyStats;
+use ProactiveSiteAdvisor\Services\Insights\AlertEngine;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
  * Flushes transient counters (pageviews, 404s) to the database.
  * Runs daily via DailyCronHandler.
  *
- * @package SiteAlerts\Services\Cron
+ * @package ProactiveSiteAdvisor\Services\Cron
  * @version 1.0.0
  */
 class DailyStatsFlusher extends AbstractSingleton

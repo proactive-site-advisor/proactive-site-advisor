@@ -1,11 +1,12 @@
 <?php
 
-namespace SiteAlerts\DataProviders;
+namespace ProactiveSiteAdvisor\DataProviders;
 
-use SiteAlerts\Abstracts\AbstractDataProvider;
-use SiteAlerts\Models\Alert;
-use SiteAlerts\Utils\OptionUtils;
-use SiteAlerts\Config\UserOptions;
+use ProactiveSiteAdvisor\Abstracts\AbstractDataProvider;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Models\Alert;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Config\UserOptions;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +15,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class AlertsDataProvider
  *
- * @package SiteAlerts\DataProviders
+ * @package ProactiveSiteAdvisor\DataProviders
  * @version 1.0.0
  */
 class AlertsDataProvider extends AbstractDataProvider
@@ -230,13 +231,13 @@ class AlertsDataProvider extends AbstractDataProvider
     {
         switch ($type) {
             case 'traffic_drop':
-                return 'sa-icon--traffic-drop';
+                return PrefixConfig::css('icon--traffic-drop');
             case 'traffic_spike':
-                return 'sa-icon--traffic-spike';
+                return PrefixConfig::css('icon--traffic-spike');
             case 'error_404_spike':
-                return 'sa-icon--error-404';
+                return PrefixConfig::css('icon--error-404');
             default:
-                return 'sa-icon--alert';
+                return PrefixConfig::css('icon--alert');
         }
     }
 
@@ -250,11 +251,11 @@ class AlertsDataProvider extends AbstractDataProvider
     {
         switch ($severity) {
             case 'warning':
-                return 'sa-badge--warning';
+                return PrefixConfig::css('badge--warning');
             case 'critical':
-                return 'sa-badge--danger';
+                return PrefixConfig::css('badge--danger');
             default:
-                return 'sa-badge--info';
+                return PrefixConfig::css('badge--info');
         }
     }
 
@@ -268,13 +269,13 @@ class AlertsDataProvider extends AbstractDataProvider
     {
         switch ($type) {
             case 'traffic_drop':
-                return __('Traffic Drop', 'site-alerts');
+                return __('Traffic Drop', 'proactive-site-advisor');
             case 'traffic_spike':
-                return __('Traffic Spike', 'site-alerts');
+                return __('Traffic Spike', 'proactive-site-advisor');
             case 'error_404_spike':
-                return __('404 Spike', 'site-alerts');
+                return __('404 Spike', 'proactive-site-advisor');
             default:
-                return __('Alert', 'site-alerts');
+                return __('Alert', 'proactive-site-advisor');
         }
     }
 

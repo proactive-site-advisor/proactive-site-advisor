@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Plugin Name:         Site Alerts
- * Plugin URI:          https://github.com/site-alerts/site-alerts
- * Description:         Displays admin dashboard alerts when unusual site activity is detected.
+ * Plugin Name:         Proactive Site Advisor – Insights & Actionable Recommendations
+ * Plugin URI:          https://github.com/proactive-site-advisor/proactive-site-advisor
+ * Description:         Provides proactive insights and actionable recommendations for WordPress sites, alerting you to potential issues before they impact your site.
  * Version:             1.0.0
  * Author:              Mohammad Yari
- * Author URI:          https://github.com/site-alerts
- * Text Domain:         site-alerts
+ * Author URI:          https://github.com/proactive-site-advisor
+ * Text Domain:         proactive-site-advisor
  * Domain Path:         /languages
  * Requires at least:   6.1
  * Requires PHP:        7.4
@@ -23,10 +23,10 @@ defined('ABSPATH') || exit;
  *
  * Used for text domains, options, or unique identifiers.
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_SLUG')) {
-    define('SA_SLUG', 'site-alerts');
+if (!defined('PROACTIVE_SITE_ADVISOR_SLUG')) {
+    define('PROACTIVE_SITE_ADVISOR_SLUG', 'proactive-site-advisor');
 }
 
 /**
@@ -34,10 +34,10 @@ if (!defined('SA_SLUG')) {
  *
  * Stores the absolute path to the plugin's main file.
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_PLUGIN_FILE')) {
-    define('SA_PLUGIN_FILE', __FILE__);
+if (!defined('PROACTIVE_SITE_ADVISOR_PLUGIN_FILE')) {
+    define('PROACTIVE_SITE_ADVISOR_PLUGIN_FILE', __FILE__);
 }
 
 /**
@@ -45,10 +45,10 @@ if (!defined('SA_PLUGIN_FILE')) {
  *
  * Absolute path to the plugin root folder.
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_PATH')) {
-    define('SA_PATH', plugin_dir_path(SA_PLUGIN_FILE));
+if (!defined('PROACTIVE_SITE_ADVISOR_PATH')) {
+    define('PROACTIVE_SITE_ADVISOR_PATH', plugin_dir_path(PROACTIVE_SITE_ADVISOR_PLUGIN_FILE));
 }
 
 /**
@@ -56,10 +56,10 @@ if (!defined('SA_PATH')) {
  *
  * Stores the absolute URL to the plugin folder.
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_URL')) {
-    define('SA_URL', plugin_dir_url(SA_PLUGIN_FILE));
+if (!defined('PROACTIVE_SITE_ADVISOR_URL')) {
+    define('PROACTIVE_SITE_ADVISOR_URL', plugin_dir_url(PROACTIVE_SITE_ADVISOR_PLUGIN_FILE));
 }
 
 /**
@@ -67,10 +67,10 @@ if (!defined('SA_URL')) {
  *
  * Absolute path to the plugin templates folder.
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_TEMPLATES_PATH')) {
-    define('SA_TEMPLATES_PATH', SA_PATH . 'templates/');
+if (!defined('PROACTIVE_SITE_ADVISOR_TEMPLATES_PATH')) {
+    define('PROACTIVE_SITE_ADVISOR_TEMPLATES_PATH', PROACTIVE_SITE_ADVISOR_PATH . 'templates/');
 }
 
 /**
@@ -78,10 +78,10 @@ if (!defined('SA_TEMPLATES_PATH')) {
  *
  * Stores the URL to the plugin's assets folder (CSS, JS, images, etc.).
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_ASSETS')) {
-    define('SA_ASSETS', SA_URL . 'assets/');
+if (!defined('PROACTIVE_SITE_ADVISOR_ASSETS')) {
+    define('PROACTIVE_SITE_ADVISOR_ASSETS', PROACTIVE_SITE_ADVISOR_URL . 'assets/');
 }
 
 /**
@@ -89,10 +89,10 @@ if (!defined('SA_ASSETS')) {
  *
  * Used for cache-busting scripts/styles and version checks.
  *
- * @var string
+ * @const string
  */
-if (!defined('SA_VERSION')) {
-    define('SA_VERSION', '1.0.0');
+if (!defined('PROACTIVE_SITE_ADVISOR_VERSION')) {
+    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.0.0');
 }
 
 /**
@@ -100,9 +100,9 @@ if (!defined('SA_VERSION')) {
  */
 require_once __DIR__ . '/vendor/autoload.php';
 
-use SiteAlerts\Core;
-use SiteAlerts\Lifecycle\ActivationHandler;
-use SiteAlerts\Lifecycle\DeactivationHandler;
+use ProactiveSiteAdvisor\Core;
+use ProactiveSiteAdvisor\Lifecycle\ActivationHandler;
+use ProactiveSiteAdvisor\Lifecycle\DeactivationHandler;
 
 /**
  * Register activation hook.
@@ -127,8 +127,8 @@ DeactivationHandler::register();
  *
  * @return Core Main plugin instance.
  */
-if (!function_exists('siteAlerts')) {
-    function siteAlerts(): ?Core
+if (!function_exists('proactiveSiteAdvisor')) {
+    function proactiveSiteAdvisor(): ?Core
     {
         return Core::getInstance();
     }
@@ -139,4 +139,4 @@ if (!function_exists('siteAlerts')) {
  *
  * The actual init logic should be handled inside Core class.
  */
-siteAlerts();
+proactiveSiteAdvisor();

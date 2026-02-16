@@ -1,51 +1,56 @@
 <?php
 
-namespace SiteAlerts\Cache;
+namespace ProactiveSiteAdvisor\Cache;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Utils\DateTimeUtils;
-use SiteAlerts\Utils\Logger;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Utils\Logger;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class CacheManager
+ * Central cache manager for the plugin.
  *
- * Professional caching system for WordPress plugins.
- * Supports transients, object cache, and file-based caching.
+ * Provides a unified abstraction layer over:
+ * - WordPress Object Cache (if available)
+ * - WordPress Transients (fallback)
+ * - In-memory runtime cache (per request)
  *
- * @package SiteAlerts\Cache
+ * Features:
+ * - Versioned cache keys
+ * - Multisite-safe key generation
+ * - Group-based separation
+ * - Automatic fallback strategy
+ *
+ * @package ProactiveSiteAdvisor\Cache
  * @version 1.0.0
  */
 class CacheManager extends AbstractSingleton
 {
     /**
-     * Cache group name
-     *
-     * @var string
+     * Cache version for global invalidation.
      */
-    private string $group = 'site_alerts_cache';
+    private const VERSION = 'v1';
 
     /**
-     * Default cache expiration (1 hour)
-     *
-     * @var int
+     * Default cache group.
+     */
+    private string $group;
+
+    /**
+     * Default expiration time in seconds.
      */
     private int $defaultExpiration = HOUR_IN_SECONDS;
 
     /**
-     * Whether object cache is available
-     *
-     * @var bool
+     * Whether external object cache is available.
      */
-    private ?bool $objectCacheAvailable;
+    private bool $objectCacheAvailable;
 
     /**
-     * Cache statistics
-     *
-     * @var array
+     * Runtime statistics.
      */
     private array $stats = [
         'hits'   => 0,
@@ -54,43 +59,29 @@ class CacheManager extends AbstractSingleton
     ];
 
     /**
-     * Local runtime cache
-     *
-     * @var array
+     * Per-request in-memory cache.
      */
     private array $localCache = [];
 
-    /**
-     * Initialize the cache manager.
-     */
     protected function __construct()
     {
         parent::__construct();
-        $this->objectCacheAvailable = wp_using_ext_object_cache();
 
-        // Add non-persistent groups if using object cache
-        if ($this->objectCacheAvailable) {
-            wp_cache_add_non_persistent_groups([$this->group . '_temp']);
-        }
+        $this->objectCacheAvailable = (bool)wp_using_ext_object_cache();
+        $this->group                = CacheGroups::DEFAULT;
     }
 
     /**
-     * Register hooks.
-     *
-     * @return void
+     * Register automatic flush hooks.
      */
     public function register(): void
     {
-        // Clear cache on certain events
         add_action('switch_theme', [$this, 'flush']);
         add_action('upgrader_process_complete', [$this, 'flush']);
     }
 
     /**
-     * Set the cache group.
-     *
-     * @param string $group Cache group name.
-     * @return self
+     * Set active cache group.
      */
     public function setGroup(string $group): self
     {
@@ -98,72 +89,63 @@ class CacheManager extends AbstractSingleton
         return $this;
     }
 
+    /* =====================================================
+       Core Storage Methods
+    ===================================================== */
+
     /**
-     * Get a cached value.
-     *
-     * @param string $key Cache key.
-     * @param mixed $default Default value if not found.
-     * @param string|null $group Optional cache group.
-     * @return mixed
+     * Retrieve a cached value.
      */
     public function get(string $key, $default = null, ?string $group = null)
     {
-        $group   = $group ?? $this->group;
-        $fullKey = $this->buildKey($key, $group);
+        $group      = $group ?? $this->group;
+        $storageKey = $this->buildKey($key);
 
-        // Check local cache first
-        if (isset($this->localCache[$fullKey])) {
+        // Runtime cache
+        if (isset($this->localCache[$storageKey])) {
             $this->stats['hits']++;
-            return $this->localCache[$fullKey];
+            return $this->localCache[$storageKey];
         }
 
-        // Try object cache
+        // Object cache
         if ($this->objectCacheAvailable) {
-            $value = wp_cache_get($key, $group, false, $found);
+            $cachedValue = wp_cache_get($storageKey, $group, false, $found);
+
             if ($found) {
                 $this->stats['hits']++;
-                $this->localCache[$fullKey] = $value;
-                return $value;
+                return $this->localCache[$storageKey] = $cachedValue;
             }
         }
 
-        // Fall back to transients
-        $transientValue = get_transient($fullKey);
+        // Transient fallback
+        $transientValue = get_transient($storageKey);
+
         if ($transientValue !== false) {
             $this->stats['hits']++;
-            $this->localCache[$fullKey] = $transientValue;
-            return $transientValue;
+            return $this->localCache[$storageKey] = $transientValue;
         }
 
         $this->stats['misses']++;
+
         return $default;
     }
 
     /**
-     * Set a cached value.
-     *
-     * @param string $key Cache key.
-     * @param mixed $value Value to cache.
-     * @param int|null $expiration Expiration in seconds.
-     * @param string|null $group Optional cache group.
-     * @return bool
+     * Store a value in cache.
      */
     public function set(string $key, $value, ?int $expiration = null, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
         $expiration = $expiration ?? $this->defaultExpiration;
-        $fullKey    = $this->buildKey($key, $group);
+        $storageKey = $this->buildKey($key);
 
-        // Store in local cache
-        $this->localCache[$fullKey] = $value;
+        $this->localCache[$storageKey] = $value;
 
-        // Store in object cache
         if ($this->objectCacheAvailable) {
-            wp_cache_set($key, $value, $group, $expiration);
+            wp_cache_set($storageKey, $value, $group, $expiration);
         }
 
-        // Store in transients for persistence
-        $result = set_transient($fullKey, $value, $expiration);
+        $result = set_transient($storageKey, $value, $expiration);
 
         if ($result) {
             $this->stats['writes']++;
@@ -174,274 +156,162 @@ class CacheManager extends AbstractSingleton
 
     /**
      * Delete a cached value.
-     *
-     * @param string $key Cache key.
-     * @param string|null $group Optional cache group.
-     * @return bool
      */
     public function delete(string $key, ?string $group = null): bool
     {
-        $group   = $group ?? $this->group;
-        $fullKey = $this->buildKey($key, $group);
+        $group      = $group ?? $this->group;
+        $storageKey = $this->buildKey($key);
 
-        // Remove from local cache
-        unset($this->localCache[$fullKey]);
+        unset($this->localCache[$storageKey]);
 
-        // Remove from object cache
         if ($this->objectCacheAvailable) {
-            wp_cache_delete($key, $group);
+            wp_cache_delete($storageKey, $group);
         }
 
-        // Remove from transients
-        return delete_transient($fullKey);
+        return delete_transient($storageKey);
     }
 
     /**
      * Check if a cache key exists.
-     *
-     * @param string $key Cache key.
-     * @param string|null $group Optional cache group.
-     * @return bool
      */
     public function has(string $key, ?string $group = null): bool
     {
-        $group   = $group ?? $this->group;
-        $fullKey = $this->buildKey($key, $group);
+        $group      = $group ?? $this->group;
+        $storageKey = $this->buildKey($key);
 
-        // Check local cache
-        if (isset($this->localCache[$fullKey])) {
+        if (isset($this->localCache[$storageKey])) {
             return true;
         }
 
-        // Check object cache
         if ($this->objectCacheAvailable) {
-            wp_cache_get($key, $group, false, $found);
+            wp_cache_get($storageKey, $group, false, $found);
             if ($found) {
                 return true;
             }
         }
 
-        // Check transients
-        return get_transient($fullKey) !== false;
+        return get_transient($storageKey) !== false;
     }
 
     /**
-     * Get or set a cached value using a callback.
+     * Increment a cached numeric value.
+     *
+     * If the key does not exist, it will be initialized with 0
+     * before applying the increment.
+     *
+     * Note: This method resets the expiration time if provided.
+     * If no expiration is given, the default cache expiration is used.
      *
      * @param string $key Cache key.
-     * @param callable $callback Callback to generate value.
-     * @param int|null $expiration Expiration in seconds.
+     * @param int $amount Amount to increment (default: 1).
+     * @param int|null $expiration Optional expiration time in seconds.
      * @param string|null $group Optional cache group.
-     * @return mixed
-     */
-    public function remember(string $key, callable $callback, ?int $expiration = null, ?string $group = null)
-    {
-        $value = $this->get($key, null, $group);
-
-        if ($value !== null) {
-            return $value;
-        }
-
-        $value = $callback();
-
-        if ($value !== null) {
-            $this->set($key, $value, $expiration, $group);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get or set a cached value, storing forever.
      *
-     * @param string $key Cache key.
-     * @param callable $callback Callback to generate value.
-     * @param string|null $group Optional cache group.
-     * @return mixed
+     * @return int The updated numeric value.
      */
-    public function rememberForever(string $key, callable $callback, ?string $group = null)
-    {
-        return $this->remember($key, $callback, 0, $group);
-    }
-
-    /**
-     * Increment a cached integer value.
-     *
-     * @param string $key Cache key.
-     * @param int $amount Amount to increment.
-     * @param int|null $expiration Expiration in seconds.
-     * @param string|null $group Optional cache group.
-     * @return int|false
-     */
-    public function increment(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null)
+    public function increment(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
         $value = $this->get($key, 0, $group);
 
         if (!is_numeric($value)) {
-            return false;
+            $value = 0;
         }
 
         $newValue = (int)$value + $amount;
+
         $this->set($key, $newValue, $expiration, $group);
 
         return $newValue;
     }
 
     /**
-     * Decrement a cached integer value.
+     * Decrement a cached numeric value.
+     *
+     * This is a wrapper around increment() using a negative amount.
      *
      * @param string $key Cache key.
-     * @param int $amount Amount to decrement.
-     * @param int|null $expiration Expiration in seconds.
+     * @param int $amount Amount to decrement (default: 1).
+     * @param int|null $expiration Optional expiration time in seconds.
      * @param string|null $group Optional cache group.
-     * @return int|false
+     *
+     * @return int The updated numeric value.
      */
-    public function decrement(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null)
+    public function decrement(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
         return $this->increment($key, -$amount, $expiration, $group);
     }
 
+    /* =====================================================
+       Helpers
+    ===================================================== */
+
     /**
-     * Get multiple cached values.
+     * Build a fully qualified cache key.
      *
-     * @param array $keys Cache keys.
-     * @param string|null $group Optional cache group.
-     * @return array
+     * Structure:
+     * prefix:version:blog_id:key
      */
-    public function getMultiple(array $keys, ?string $group = null): array
+    private function buildKey(string $key): string
     {
-        $results = [];
+        $blogId = is_multisite() ? get_current_blog_id() : 1;
 
-        foreach ($keys as $key) {
-            $results[$key] = $this->get($key, null, $group);
-        }
-
-        return $results;
+        return PrefixConfig::PREFIX
+            . ':'
+            . self::VERSION
+            . ':'
+            . $blogId
+            . ':'
+            . $key;
     }
 
     /**
-     * Set multiple cached values.
-     *
-     * @param array $values Key-value pairs.
-     * @param int|null $expiration Expiration in seconds.
-     * @param string|null $group Optional cache group.
-     * @return bool
+     * Generate a stable hashed cache key segment.
      */
-    public function setMultiple(array $values, ?int $expiration = null, ?string $group = null): bool
+    public static function makeKey(string $prefix, ...$args): string
     {
-        $success = true;
-
-        foreach ($values as $key => $value) {
-            if (!$this->set($key, $value, $expiration, $group)) {
-                $success = false;
-            }
+        if (!empty($args)) {
+            sort($args);
         }
 
-        return $success;
+        $hash = md5(wp_json_encode($args));
+
+        return $prefix . '_' . $hash;
     }
 
     /**
-     * Delete multiple cached values.
-     *
-     * @param array $keys Cache keys.
-     * @param string|null $group Optional cache group.
-     * @return bool
-     */
-    public function deleteMultiple(array $keys, ?string $group = null): bool
-    {
-        $success = true;
-
-        foreach ($keys as $key) {
-            if (!$this->delete($key, $group)) {
-                $success = false;
-            }
-        }
-
-        return $success;
-    }
-
-    /**
-     * Flush all plugin caches.
-     *
-     * @return bool
+     * Flush all plugin-related cache entries.
      */
     public function flush(): bool
     {
         global $wpdb;
 
-        // Clear local cache
         $this->localCache = [];
 
-        // Clear object cache group
         if ($this->objectCacheAvailable && function_exists('wp_cache_flush_group')) {
             wp_cache_flush_group($this->group);
         }
 
-        // Clear transients with our prefix
-        $prefix        = '_transient_' . $this->group;
-        $timeoutPrefix = '_transient_timeout_' . $this->group;
+        $like = PrefixConfig::PREFIX . ':%';
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Clearing transients requires direct query
         $wpdb->query(
             $wpdb->prepare(
-                "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-                $prefix . '%',
-                $timeoutPrefix . '%'
+                "DELETE FROM {$wpdb->options}
+                 WHERE option_name LIKE %s
+                 OR option_name LIKE %s",
+                '_transient_' . $like,
+                '_transient_timeout_' . $like
             )
         );
 
         Logger::info('Plugin cache flushed');
 
-        /**
-         * Action fired after cache is flushed.
-         */
-        do_action('site_alerts_cache_flushed');
+        do_action('proactive_site_advisor_cache_flushed');
 
         return true;
     }
 
     /**
-     * Flush expired transients.
-     *
-     * @return int Number of transients deleted.
-     */
-    public function flushExpired(): int
-    {
-        global $wpdb;
-
-        $time = DateTimeUtils::timestamp();
-
-        // Get expired transients
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Optimizing transients requires direct query
-        $expired = $wpdb->get_col(
-            $wpdb->prepare(
-                "SELECT option_name FROM {$wpdb->options}
-                WHERE option_name LIKE %s
-                AND option_value < %d",
-                '_transient_timeout_' . $this->group . '%',
-                $time
-            )
-        );
-
-        $count = 0;
-
-        foreach ($expired as $transient) {
-            $key = str_replace('_transient_timeout_', '', $transient);
-            delete_transient($key);
-            $count++;
-        }
-
-        if ($count > 0) {
-            Logger::debug('Expired transients cleared', ['count' => $count]);
-        }
-
-        return $count;
-    }
-
-    /**
-     * Get cache statistics.
-     *
-     * @return array
+     * Return runtime cache statistics.
      */
     public function getStats(): array
     {
@@ -449,62 +319,5 @@ class CacheManager extends AbstractSingleton
             'object_cache' => $this->objectCacheAvailable,
             'local_items'  => count($this->localCache),
         ]);
-    }
-
-    /**
-     * Build a full cache key.
-     *
-     * @param string $key Cache key.
-     * @param string $group Cache group.
-     * @return string
-     */
-    private function buildKey(string $key, string $group): string
-    {
-        return $group . '_' . $key;
-    }
-
-    /**
-     * Generate a cache key from arguments.
-     *
-     * @param string $prefix Key prefix.
-     * @param mixed ...$args Arguments to hash.
-     * @return string
-     */
-    public static function makeKey(string $prefix, ...$args): string
-    {
-        $hash = md5(serialize($args));
-        return $prefix . '_' . $hash;
-    }
-
-    /**
-     * Check if object cache is available.
-     *
-     * @return bool
-     */
-    public function isObjectCacheAvailable(): bool
-    {
-        return $this->objectCacheAvailable;
-    }
-
-    /**
-     * Set default expiration time.
-     *
-     * @param int $seconds Expiration in seconds.
-     * @return self
-     */
-    public function setDefaultExpiration(int $seconds): self
-    {
-        $this->defaultExpiration = $seconds;
-        return $this;
-    }
-
-    /**
-     * Get the default expiration time.
-     *
-     * @return int
-     */
-    public function getDefaultExpiration(): int
-    {
-        return $this->defaultExpiration;
     }
 }

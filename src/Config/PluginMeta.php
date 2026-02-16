@@ -1,30 +1,31 @@
 <?php
 
-namespace SiteAlerts\Config;
+namespace ProactiveSiteAdvisor\Config;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * @package SiteAlerts\Config
+ * Plugin metadata keys.
+ *
+ * @package ProactiveSiteAdvisor\Config
  * @version 1.0.0
  */
 class PluginMeta
 {
     /**
-     *
-     * @var string
+     * Current plugin version option key.
      */
     public const VERSION = 'version';
 
     /**
-     * @var string
+     * Database schema version option key.
      */
     public const DB_VERSION = 'db_version';
 
     /**
-     * @var string
+     * Last daily cron execution timestamp key.
      */
     public const LAST_DAILY_RUN = 'last_daily_run';
 }

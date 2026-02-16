@@ -6,7 +6,7 @@
 
 @use "../prefix" as *;
 
-.#{$prefix}-empty-state {
+.#{css-class('empty-state')} {
   text-align: center;
   padding: 2rem 1.5rem;
 
@@ -21,7 +21,7 @@
     position: relative;
     width: 2rem;
     height: 2rem;
-    background-color: #{css-var('success')};
+    background-color: css-var(success);
 
     // Background circle
     &::before {
@@ -32,8 +32,8 @@
       transform: translate(-50%, -50%);
       width: 4rem;
       height: 4rem;
-      border-radius: #{css-var('border-radius-pill')};
-      background-color: rgba(#{css-var('success-rgb')}, 0.16);
+      border-radius: css-var(border-radius-pill);
+      background-color: rgba(css-var(success-rgb), 0.16);
       z-index: -1;
     }
   }
@@ -41,7 +41,7 @@
   &__message {
     margin: 0;
     font-size: 0.9375rem;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
     max-width: 400px;
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Cache;
+namespace ProactiveSiteAdvisor\Cache;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,32 +9,28 @@ if (!defined('ABSPATH')) {
 /**
  * Class QueryCache
  *
- * Specialized caching for database queries.
+ * Specialized caching layer for database queries.
+ * Provides stable key generation and grouped invalidation.
  *
- * @package SiteAlerts\Cache
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Cache
+ * @since 1.0.0
  */
 class QueryCache
 {
     /**
-     * Cache group for queries
-     */
-    public const GROUP = 'site_alerts_query';
-
-    /**
-     * Default expiration (15 minutes)
+     * Default cache expiration (15 minutes).
      */
     public const DEFAULT_EXPIRATION = 900;
 
     /**
-     * Cache manager instance
+     * Cache manager instance.
      *
      * @var CacheManager
      */
     private CacheManager $cache;
 
     /**
-     * QueryCache constructor.
+     * Constructor.
      */
     public function __construct()
     {
@@ -42,188 +38,206 @@ class QueryCache
     }
 
     /**
-     * Get cached query result or execute query.
+     * Cache raw SQL query result.
      *
-     * @param string $sql SQL query.
-     * @param callable $callback Callback to execute query.
-     * @param int|null $expiration Cache expiration in seconds.
+     * @param string $sql
+     * @param callable $callback
+     * @param int|null $expiration
      * @return mixed
      */
     public function remember(string $sql, callable $callback, ?int $expiration = null)
     {
-        $key        = $this->generateKey($sql);
+        $key        = $this->generateSqlKey($sql);
         $expiration = $expiration ?? self::DEFAULT_EXPIRATION;
 
-        return $this->cache->remember($key, $callback, $expiration, self::GROUP);
+        return $this->cache->remember(
+            $key,
+            $callback,
+            $expiration,
+            CacheGroups::QUERY
+        );
     }
 
     /**
-     * Get cached result for a prepared query.
+     * Cache prepared SQL query result.
      *
-     * @param string $sql SQL query template.
-     * @param array $args Query arguments.
-     * @param callable $callback Callback to execute query.
-     * @param int|null $expiration Cache expiration in seconds.
+     * @param string $sql
+     * @param array $args
+     * @param callable $callback
+     * @param int|null $expiration
      * @return mixed
      */
     public function rememberPrepared(string $sql, array $args, callable $callback, ?int $expiration = null)
     {
         global $wpdb;
 
-        // Build the prepared query for the cache key
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is parameterized by caller
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $preparedSql = $wpdb->prepare($sql, ...$args);
-        $key         = $this->generateKey($preparedSql);
-        $expiration  = $expiration ?? self::DEFAULT_EXPIRATION;
 
-        return $this->cache->remember($key, $callback, $expiration, self::GROUP);
+        if ($preparedSql === false) {
+            return $callback();
+        }
+
+        $key        = $this->generateSqlKey($preparedSql);
+        $expiration = $expiration ?? self::DEFAULT_EXPIRATION;
+
+        return $this->cache->remember(
+            $key,
+            $callback,
+            $expiration,
+            CacheGroups::QUERY
+        );
     }
 
     /**
-     * Cache a post query result.
+     * Cache WP_Query result.
      *
-     * @param array $args WP_Query arguments.
-     * @param callable $callback Callback to execute query.
-     * @param int|null $expiration Cache expiration in seconds.
+     * @param array $args
+     * @param callable $callback
+     * @param int|null $expiration
      * @return mixed
      */
     public function rememberPostQuery(array $args, callable $callback, ?int $expiration = null)
     {
-        $key        = 'posts_' . md5(serialize($args));
+        $key        = 'posts_' . $this->hashArgs($args);
         $expiration = $expiration ?? self::DEFAULT_EXPIRATION;
 
-        return $this->cache->remember($key, $callback, $expiration, self::GROUP);
+        return $this->cache->remember(
+            $key,
+            $callback,
+            $expiration,
+            CacheGroups::QUERY
+        );
     }
 
     /**
-     * Cache a term query result.
-     *
-     * @param array $args get_terms arguments.
-     * @param callable $callback Callback to execute query.
-     * @param int|null $expiration Cache expiration in seconds.
-     * @return mixed
+     * Cache term query result.
      */
     public function rememberTermQuery(array $args, callable $callback, ?int $expiration = null)
     {
-        $key        = 'terms_' . md5(serialize($args));
+        $key        = 'terms_' . $this->hashArgs($args);
         $expiration = $expiration ?? self::DEFAULT_EXPIRATION;
 
-        return $this->cache->remember($key, $callback, $expiration, self::GROUP);
+        return $this->cache->remember(
+            $key,
+            $callback,
+            $expiration,
+            CacheGroups::QUERY
+        );
     }
 
     /**
-     * Cache a user query result.
-     *
-     * @param array $args WP_User_Query arguments.
-     * @param callable $callback Callback to execute query.
-     * @param int|null $expiration Cache expiration in seconds.
-     * @return mixed
+     * Cache user query result.
      */
     public function rememberUserQuery(array $args, callable $callback, ?int $expiration = null)
     {
-        $key        = 'users_' . md5(serialize($args));
+        $key        = 'users_' . $this->hashArgs($args);
         $expiration = $expiration ?? self::DEFAULT_EXPIRATION;
 
-        return $this->cache->remember($key, $callback, $expiration, self::GROUP);
+        return $this->cache->remember(
+            $key,
+            $callback,
+            $expiration,
+            CacheGroups::QUERY
+        );
     }
 
     /**
-     * Cache a custom table query result.
-     *
-     * @param string $table Table name (without prefix).
-     * @param array $args Query arguments.
-     * @param callable $callback Callback to execute query.
-     * @param int|null $expiration Cache expiration in seconds.
-     * @return mixed
+     * Cache custom table query result.
      */
     public function rememberTableQuery(string $table, array $args, callable $callback, ?int $expiration = null)
     {
-        $key        = 'table_' . $table . '_' . md5(serialize($args));
+        $key        = 'table_' . $table . '_' . $this->hashArgs($args);
         $expiration = $expiration ?? self::DEFAULT_EXPIRATION;
 
-        return $this->cache->remember($key, $callback, $expiration, self::GROUP);
+        return $this->cache->remember(
+            $key,
+            $callback,
+            $expiration,
+            CacheGroups::QUERY
+        );
     }
 
     /**
-     * Invalidate query cache.
+     * Invalidate entire query cache group.
      *
-     * @param string|null $pattern Optional pattern to match keys.
      * @return bool
      */
-    public function invalidate(?string $pattern = null): bool
+    public function invalidate(): bool
     {
-        if ($pattern === null) {
-            return $this->cache->flush();
-        }
-
-        // For specific patterns, we'd need to track keys
-        // For now, flush all query cache
-        return $this->cache->flush();
+        return $this->cache->flushGroup(CacheGroups::QUERY);
     }
 
     /**
-     * Invalidate post-related cache.
+     * Invalidate all post-related queries.
      *
-     * @param int $postId Post ID.
+     * @param int $postId
      * @return void
      */
     public function invalidatePost(int $postId): void
     {
-        // Clear post query cache
-        // In a more advanced implementation, we'd track which queries
-        // included this post and invalidate only those
-        $this->cache->delete('posts_' . $postId, self::GROUP);
+        $this->invalidate();
     }
 
     /**
-     * Invalidate term-related cache.
+     * Invalidate all term-related queries.
      *
-     * @param int $termId Term ID.
+     * @param int $termId
      * @return void
      */
     public function invalidateTerm(int $termId): void
     {
-        $this->cache->delete('terms_' . $termId, self::GROUP);
+        $this->invalidate();
     }
 
     /**
      * Invalidate table-related cache.
      *
-     * @param string $table Table name.
+     * @param string $table
      * @return void
      */
     public function invalidateTable(string $table): void
     {
-        // Would need key tracking for precise invalidation
-        // For now, this is a placeholder
+        $this->invalidate();
     }
 
     /**
-     * Generate a cache key from SQL.
-     *
-     * @param string $sql SQL query.
-     * @return string
-     */
-    private function generateKey(string $sql): string
-    {
-        return 'sql_' . md5($sql);
-    }
-
-    /**
-     * Register invalidation hooks.
+     * Register WordPress invalidation hooks.
      *
      * @return void
      */
     public function registerInvalidationHooks(): void
     {
-        // Invalidate on post changes
         add_action('save_post', [$this, 'invalidatePost']);
         add_action('delete_post', [$this, 'invalidatePost']);
         add_action('trashed_post', [$this, 'invalidatePost']);
 
-        // Invalidate on term changes
         add_action('created_term', [$this, 'invalidateTerm']);
         add_action('edited_term', [$this, 'invalidateTerm']);
         add_action('delete_term', [$this, 'invalidateTerm']);
+    }
+
+    /**
+     * Generate stable hash from query arguments.
+     *
+     * @param array $args
+     * @return string
+     */
+    private function hashArgs(array $args): string
+    {
+        ksort($args);
+
+        return md5(wp_json_encode($args));
+    }
+
+    /**
+     * Generate SQL cache key.
+     *
+     * @param string $sql
+     * @return string
+     */
+    private function generateSqlKey(string $sql): string
+    {
+        return 'sql_' . md5($sql);
     }
 }

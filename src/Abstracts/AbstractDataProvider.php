@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Abstracts;
+namespace ProactiveSiteAdvisor\Abstracts;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class AbstractDataProvider
  *
- * @package SiteAlerts\Abstracts
+ * @package ProactiveSiteAdvisor\Abstracts
  * @version 1.0.0
  */
 abstract class AbstractDataProvider extends AbstractSingleton

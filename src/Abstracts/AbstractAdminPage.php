@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Abstracts;
+namespace ProactiveSiteAdvisor\Abstracts;
 
-use SiteAlerts\Config\HeaderConfig;
-use SiteAlerts\Utils\TemplateUtils;
+use ProactiveSiteAdvisor\Config\HeaderConfig;
+use ProactiveSiteAdvisor\Utils\TemplateUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
  * - Use HeaderConfig::merge() to extend defaults
  * - Set nav_items/actions to null to disable them
  *
- * @package SiteAlerts\Abstracts
+ * @package ProactiveSiteAdvisor\Abstracts
  * @version 1.0.0
  */
 abstract class AbstractAdminPage extends AbstractSingleton
@@ -64,7 +64,7 @@ abstract class AbstractAdminPage extends AbstractSingleton
                  * @param string $key Section key: 'header', 'body', or 'footer'.
                  * @param object $screen Current screen object (this class instance).
                  */
-                do_action('site_alerts_admin_render_section_missing', $key, $this);
+                do_action('proactive_site_advisor_admin_render_section_missing', $key, $this);
                 continue;
             }
 
@@ -77,7 +77,7 @@ abstract class AbstractAdminPage extends AbstractSingleton
          * @param string $output Full HTML to be printed.
          * @param object $screen Current class instance.
          */
-        $output = apply_filters('site_alerts_admin_render_output', $output, $this);
+        $output = apply_filters('proactive_site_advisor_admin_render_output', $output, $this);
 
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $output;

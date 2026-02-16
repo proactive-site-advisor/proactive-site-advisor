@@ -7,12 +7,12 @@
 
 @use "../prefix" as *;
 
-.#{$prefix}-stat-card {
+.#{css-class('stat-card')} {
   // Explicit card styles (ensure visibility in WP admin)
-  background-color: #{css-var('card-bg')};
-  border-radius: #{css-var('border-radius-lg')};
-  box-shadow: #{css-var('box-shadow-sm')};
-  border: #{css-var('border-width')} solid #{css-var('border-color')};
+  background-color: css-var(card-bg);
+  border-radius: css-var(border-radius-lg);
+  box-shadow: css-var(box-shadow-sm);
+  border: css-var(border-width) solid css-var(border-color);
 
   &__body {
     display: flex;
@@ -27,7 +27,7 @@
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: #{css-var('border-radius')};
+    border-radius: css-var(border-radius);
     flex-shrink: 0;
 
     span {
@@ -37,42 +37,42 @@
 
     // Color variants
     &--primary {
-      background-color: rgba(#{css-var('primary-rgb')}, 0.16);
+      background-color: rgba(css-var(primary-rgb), 0.16);
 
       span {
-        background-color: #{css-var('primary')};
+        background-color: css-var(primary);
       }
     }
 
     &--success {
-      background-color: rgba(#{css-var('success-rgb')}, 0.16);
+      background-color: rgba(css-var(success-rgb), 0.16);
 
       span {
-        background-color: #{css-var('success')};
+        background-color: css-var(success);
       }
     }
 
     &--warning {
-      background-color: rgba(#{css-var('warning-rgb')}, 0.16);
+      background-color: rgba(css-var(warning-rgb), 0.16);
 
       span {
-        background-color: #{css-var('warning')};
+        background-color: css-var(warning);
       }
     }
 
     &--danger {
-      background-color: rgba(#{css-var('danger-rgb')}, 0.16);
+      background-color: rgba(css-var(danger-rgb), 0.16);
 
       span {
-        background-color: #{css-var('danger')};
+        background-color: css-var(danger);
       }
     }
 
     &--info {
-      background-color: rgba(#{css-var('info-rgb')}, 0.16);
+      background-color: rgba(css-var(info-rgb), 0.16);
 
       span {
-        background-color: #{css-var('info')};
+        background-color: css-var(info);
       }
     }
   }
@@ -88,7 +88,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.025em;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
   }
 
   &__value {
@@ -96,12 +96,12 @@
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
-    color: #{css-var('heading-color')};
+    color: css-var(heading-color);
   }
 
   &__subtitle {
     margin: 0.375rem 0 0 0;
     font-size: 0.75rem;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
   }
 }

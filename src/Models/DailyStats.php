@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Models;
+namespace ProactiveSiteAdvisor\Models;
 
-use SiteAlerts\Abstracts\AbstractModel;
-use SiteAlerts\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Abstracts\AbstractModel;
+use ProactiveSiteAdvisor\Database\DatabaseManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Model for daily statistics including pageviews and 404 errors.
  * Stores one record per day with aggregated traffic data.
  *
- * @package SiteAlerts\Models
+ * @package ProactiveSiteAdvisor\Models
  * @version 1.0.0
  */
 class DailyStats extends AbstractModel

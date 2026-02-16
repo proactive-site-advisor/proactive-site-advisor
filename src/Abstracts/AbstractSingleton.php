@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Abstracts;
+namespace ProactiveSiteAdvisor\Abstracts;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  *
  * A base abstract class for creating singleton classes.
  *
- * @package SiteAlerts\Abstracts
+ * @package ProactiveSiteAdvisor\Abstracts
  * @version 1.0.0
  */
 abstract class AbstractSingleton
@@ -35,7 +35,7 @@ abstract class AbstractSingleton
      */
     protected function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'site-alerts'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'proactive-site-advisor'), '1.0.0');
     }
 
     /**
@@ -43,7 +43,7 @@ abstract class AbstractSingleton
      */
     public function __wakeup(): void
     {
-        _doing_it_wrong(__FUNCTION__, esc_html__('Instances of this class cannot be unserialized.', 'site-alerts'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, esc_html__('Instances of this class cannot be unserialized.', 'proactive-site-advisor'), '1.0.0');
     }
 
     /**

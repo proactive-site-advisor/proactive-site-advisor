@@ -1,12 +1,12 @@
 <?php
 
-namespace SiteAlerts\Lifecycle;
+namespace ProactiveSiteAdvisor\Lifecycle;
 
-use SiteAlerts\Cache\CacheManager;
-use SiteAlerts\Database\Schemas\CoreTables;
-use SiteAlerts\Utils\CacheKeys;
-use SiteAlerts\Utils\OptionUtils;
-use SiteAlerts\Config\PluginMeta;
+use ProactiveSiteAdvisor\Cache\CacheKeys;
+use ProactiveSiteAdvisor\Cache\CacheManager;
+use ProactiveSiteAdvisor\Config\PluginMeta;
+use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Handles plugin activation logic including version tracking,
  * database table creation, and initial setup.
  *
- * @package SiteAlerts\Lifecycle
+ * @package ProactiveSiteAdvisor\Lifecycle
  * @version 1.0.0
  */
 class ActivationHandler
@@ -46,7 +46,7 @@ class ActivationHandler
      */
     public static function register(): void
     {
-        register_activation_hook(SA_PLUGIN_FILE, [self::class, 'activate']);
+        register_activation_hook(PROACTIVE_SITE_ADVISOR_PLUGIN_FILE, [self::class, 'activate']);
     }
 
     /**
@@ -95,7 +95,7 @@ class ActivationHandler
          *
          * @param bool $networkWide Whether this was a network-wide activation.
          */
-        do_action('site_alerts_activated', $networkWide);
+        do_action('proactive_site_advisor_activated', $networkWide);
     }
 
     /**
@@ -141,7 +141,7 @@ class ActivationHandler
     public static function runUpgrades(): void
     {
         $currentVersion = OptionUtils::getMeta(PluginMeta::VERSION, '0.0.0');
-        $newVersion     = SA_VERSION;
+        $newVersion     = PROACTIVE_SITE_ADVISOR_VERSION;
 
         if (version_compare($currentVersion, $newVersion, '<')) {
             /**
@@ -150,7 +150,7 @@ class ActivationHandler
              * @param string $currentVersion The version being upgraded from.
              * @param string $newVersion The version being upgraded to.
              */
-            do_action('site_alerts_upgrade', $currentVersion, $newVersion);
+            do_action('proactive_site_advisor_upgrade', $currentVersion, $newVersion);
 
             // Run version-specific upgrades
             self::runVersionUpgrades($currentVersion, $newVersion);
@@ -172,7 +172,7 @@ class ActivationHandler
          * @param string $fromVersion Version upgrading from.
          * @param string $toVersion Version upgrading to.
          */
-        apply_filters('site_alerts_version_upgrades', $fromVersion, $toVersion);
+        apply_filters('proactive_site_advisor_version_upgrades', $fromVersion, $toVersion);
     }
 
     /**
@@ -182,7 +182,7 @@ class ActivationHandler
      */
     public static function setVersion(): void
     {
-        OptionUtils::setMeta(PluginMeta::VERSION, SA_VERSION);
+        OptionUtils::setMeta(PluginMeta::VERSION, PROACTIVE_SITE_ADVISOR_VERSION);
     }
 
     /**
@@ -197,7 +197,7 @@ class ActivationHandler
          *
          * @param array $tableSchemas Array of table schema class names.
          */
-        $schemas = apply_filters('site_alerts_table_schemas', self::$tableSchemas);
+        $schemas = apply_filters('proactive_site_advisor_table_schemas', self::$tableSchemas);
 
         // Register all schema hooks before firing the action
         foreach ($schemas as $schemaClass) {
@@ -210,7 +210,7 @@ class ActivationHandler
          * Fires when database tables should be created.
          * Hook into this to create your custom tables.
          */
-        do_action('site_alerts_create_tables');
+        do_action('proactive_site_advisor_create_tables');
     }
 
     /**
@@ -231,7 +231,7 @@ class ActivationHandler
         /**
          * Fires after default options are set.
          */
-        do_action('site_alerts_set_default_options');
+        do_action('proactive_site_advisor_set_default_options');
     }
 
     /**
@@ -245,7 +245,7 @@ class ActivationHandler
          * Fires when cron events should be scheduled.
          * Hook into this to schedule your custom cron jobs.
          */
-        do_action('site_alerts_schedule_events');
+        do_action('proactive_site_advisor_schedule_events');
     }
 
     /**

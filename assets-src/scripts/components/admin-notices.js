@@ -10,11 +10,11 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('AdminNotices requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('AdminNotices requires global namespace.');
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('AdminNotices requires global namespace.');
 
-    var Helpers = SA.Helpers;
-    var Config = SA.Config;
+    var Helpers = ProactiveSiteAdvisor.Helpers;
+    var Config = ProactiveSiteAdvisor.Config;
     if (!Helpers || !Config) throw new Error('AdminNotices requires helpers.js and config.js.');
 
     function dismissNotice(noticeId) {
@@ -25,7 +25,7 @@
         if (!ajaxUrl || !nonce) return;
 
         var formData = new FormData();
-        formData.append('action', PREFIX_CONFIG.prefix + '_dismiss_notice');
+        formData.append('action', ProactiveSiteAdvisor.ajaxAction('dismiss_notice'));
         formData.append('notice_id', noticeId);
         formData.append('security', nonce);
 
@@ -42,13 +42,21 @@
             var target = Helpers.getElement(e.target);
             if (!target) return;
 
-            var btn = target.closest(SA.selector('dismissible-notice') + ' .notice-dismiss');
+            var btn = target.closest(
+                ProactiveSiteAdvisor.selector('dismissible-notice') + ' .notice-dismiss'
+            );
             if (!btn) return;
 
-            var notice = btn.closest(SA.selector('notice'));
+            var notice = btn.closest(
+                ProactiveSiteAdvisor.selector('notice')
+            );
             if (!notice) return;
 
-            dismissNotice(notice.getAttribute(SA.dataAttr('notice-id')));
+            var noticeId = notice.getAttribute(
+                ProactiveSiteAdvisor.dataAttr('notice-id')
+            );
+
+            dismissNotice(noticeId);
         });
     }
 
@@ -58,6 +66,6 @@
         init();
     }
 
-    SA.AdminNotices = {init: init};
+    ProactiveSiteAdvisor.AdminNotices = {init: init};
 
 })(window, document);

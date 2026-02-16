@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Abstracts;
+namespace ProactiveSiteAdvisor\Abstracts;
 
-use SiteAlerts\Cron\CronManager;
-use SiteAlerts\Cron\CronTask;
+use ProactiveSiteAdvisor\Cron\CronManager;
+use ProactiveSiteAdvisor\Cron\CronTask;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Base class for creating cron tasks with OOP pattern.
  *
- * @package SiteAlerts\Abstracts
+ * @package ProactiveSiteAdvisor\Abstracts
  * @version 1.0.0
  */
 abstract class AbstractCronTask

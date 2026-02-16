@@ -1,17 +1,19 @@
 <?php
 
-namespace SiteAlerts\Database;
+namespace ProactiveSiteAdvisor\Database;
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 /**
  * Class TableSchema
  *
  * Fluent interface for building database table schemas.
  *
- * @package SiteAlerts\Database
+ * @package ProactiveSiteAdvisor\Database
  * @version 1.0.0
  */
 class TableSchema
@@ -461,7 +463,8 @@ class TableSchema
     public function getFullName(): string
     {
         global $wpdb;
-        return $wpdb->prefix . 'sa_' . $this->name;
+
+        return $wpdb->prefix . PrefixConfig::table($this->name);
     }
 
     /**

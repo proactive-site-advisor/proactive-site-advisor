@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Lifecycle;
+namespace ProactiveSiteAdvisor\Lifecycle;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Handles plugin deactivation logic including cleanup of
  * scheduled events and transients.
  *
- * @package SiteAlerts\Lifecycle
+ * @package ProactiveSiteAdvisor\Lifecycle
  * @version 1.0.0
  */
 class DeactivationHandler
@@ -31,7 +31,7 @@ class DeactivationHandler
      */
     public static function register(): void
     {
-        register_deactivation_hook(SA_PLUGIN_FILE, [self::class, 'deactivate']);
+        register_deactivation_hook(PROACTIVE_SITE_ADVISOR_PLUGIN_FILE, [self::class, 'deactivate']);
     }
 
     /**
@@ -69,7 +69,7 @@ class DeactivationHandler
          *
          * @param bool $networkWide Whether this was a network-wide deactivation.
          */
-        do_action('site_alerts_deactivated', $networkWide);
+        do_action('proactive_site_advisor_deactivated', $networkWide);
     }
 
     /**
@@ -113,7 +113,7 @@ class DeactivationHandler
     {
         // Default hooks to clear
         $defaultHooks = [
-            'site_alerts_daily_cron',
+            'proactive_site_advisor_daily_cron',
         ];
 
         /**
@@ -121,7 +121,7 @@ class DeactivationHandler
          *
          * @param array $hooks Array of hook names to clear.
          */
-        $hooks = apply_filters('site_alerts_cron_hooks_to_clear', $defaultHooks);
+        $hooks = apply_filters('proactive_site_advisor_cron_hooks_to_clear', $defaultHooks);
 
         foreach ($hooks as $hook) {
             wp_clear_scheduled_hook($hook);
@@ -130,7 +130,7 @@ class DeactivationHandler
         /**
          * Fires after scheduled events are cleared.
          */
-        do_action('site_alerts_clear_scheduled_events');
+        do_action('proactive_site_advisor_clear_scheduled_events');
     }
 
     /**
@@ -147,15 +147,15 @@ class DeactivationHandler
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-                '_transient_site_alerts_%',
-                '_transient_timeout_site_alerts_%'
+                '_transient_proactive_site_advisor_%',
+                '_transient_timeout_proactive_site_advisor_%'
             )
         );
 
         /**
          * Fires after transients are cleared.
          */
-        do_action('site_alerts_clear_transients');
+        do_action('proactive_site_advisor_clear_transients');
     }
 
     /**
