@@ -6,7 +6,7 @@
 
 @use "../prefix" as *;
 
-.#{$prefix}-badge {
+.#{css-class('badge')} {
   display: inline-flex;
   align-items: center;
   padding: 0.35em 0.65em;
@@ -18,49 +18,49 @@
   letter-spacing: 0.025em;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: #{css-var('border-radius-sm')};
-  background-color: #{css-var('gray-200')};
-  color: #{css-var('body-color')};
+  border-radius: css-var(border-radius-sm);
+  background-color: css-var(gray-200);
+  color: css-var(body-color);
 
   // Color variants
   &--primary {
-    background-color: rgba(#{css-var('primary-rgb')}, 0.16);
-    color: #{css-var('primary')};
+    background-color: rgba(css-var(primary-rgb), 0.16);
+    color: css-var(primary);
   }
 
   &--success {
-    background-color: rgba(#{css-var('success-rgb')}, 0.16);
-    color: #{css-var('success')};
+    background-color: rgba(css-var(success-rgb), 0.16);
+    color: css-var(success);
   }
 
   &--warning {
-    background-color: rgba(#{css-var('warning-rgb')}, 0.16);
-    color: #{css-var('warning')};
+    background-color: rgba(css-var(warning-rgb), 0.16);
+    color: css-var(warning);
   }
 
   &--danger {
-    background-color: rgba(#{css-var('danger-rgb')}, 0.16);
-    color: #{css-var('danger')};
+    background-color: rgba(css-var(danger-rgb), 0.16);
+    color: css-var(danger);
   }
 
   &--info {
-    background-color: rgba(#{css-var('info-rgb')}, 0.16);
-    color: #{css-var('info')};
+    background-color: rgba(css-var(info-rgb), 0.16);
+    color: css-var(info);
   }
 
   &--light {
-    background-color: #{css-var('gray-100')};
-    color: #{css-var('body-color')};
+    background-color: css-var(gray-100);
+    color: css-var(body-color);
   }
 
   &--dark {
-    background-color: #{css-var('dark')};
-    color: #{css-var('white')};
+    background-color: css-var(dark);
+    color: css-var(white);
   }
 
   // Pill variant
   &--pill {
-    border-radius: #{css-var('border-radius-pill')};
+    border-radius: css-var(border-radius-pill);
     padding-left: 0.65em;
     padding-right: 0.65em;
   }

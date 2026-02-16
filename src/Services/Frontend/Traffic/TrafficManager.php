@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages frontend traffic tracking services.
  *
- * @package SiteAlerts\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
 class TrafficManager extends AbstractSingleton

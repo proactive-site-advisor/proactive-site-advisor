@@ -1,5 +1,5 @@
 {
-  "name": "starter/site-alerts",
+  "name": "starter/proactive-site-advisor",
   "description": "A starter plugin template for WordPress development.",
   "type": "project",
   "license": "GPL-3.0-or-later",
@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "SiteAlerts\\": "src/"
+      "ProactiveSiteAdvisor\\": "src/"
     }
   },
   "minimum-stability": "stable",

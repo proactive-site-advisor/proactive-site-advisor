@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Database\Seeders;
+namespace ProactiveSiteAdvisor\Database\Seeders;
 
-use SiteAlerts\Abstracts\AbstractSeeder;
-use SiteAlerts\Database\Factories\DailyStatsFactory;
+use ProactiveSiteAdvisor\Abstracts\AbstractSeeder;
+use ProactiveSiteAdvisor\Database\Factories\DailyStatsFactory;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Seeds the daily_stats table with fake traffic data.
  *
- * @package SiteAlerts\Database\Seeders
+ * @package ProactiveSiteAdvisor\Database\Seeders
  * @version 1.0.0
  */
 class DailyStatsSeeder extends AbstractSeeder

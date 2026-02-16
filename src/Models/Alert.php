@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Models;
+namespace ProactiveSiteAdvisor\Models;
 
-use SiteAlerts\Abstracts\AbstractModel;
-use SiteAlerts\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Abstracts\AbstractModel;
+use ProactiveSiteAdvisor\Database\DatabaseManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,10 +12,10 @@ if (!defined('ABSPATH')) {
 /**
  * Class Alert
  *
- * Model for site alerts including warnings, errors, and notifications.
+ * Model for alerts including warnings, errors, and notifications.
  * Stores one record per date+type combination with severity and messaging.
  *
- * @package SiteAlerts\Models
+ * @package ProactiveSiteAdvisor\Models
  * @version 1.0.0
  */
 class Alert extends AbstractModel

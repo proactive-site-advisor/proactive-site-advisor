@@ -7,16 +7,16 @@
 
 @use "../prefix" as *;
 
-.#{$prefix}-table-card {
+.#{css-class('table-card')} {
   overflow: hidden;
 }
 
-.#{$prefix}-table-responsive {
+.#{css-class('table-responsive')} {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.#{$prefix}-table {
+.#{css-class('table')} {
   width: 100%;
   margin-bottom: 0;
   vertical-align: middle;
@@ -25,14 +25,14 @@
   > thead {
     > tr {
       > th {
-        padding: #{css-var('table-cell-padding-y')} #{css-var('table-cell-padding-x')};
+        padding: css-var(table-cell-padding-y) css-var(table-cell-padding-x);
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: #{css-var('heading-color')};
-        background-color: #{css-var('table-header-bg')};
-        border-bottom: 1px solid #{css-var('border-color')};
+        color: css-var(heading-color);
+        background-color: css-var(table-header-bg);
+        border-bottom: 1px solid css-var(border-color);
         white-space: nowrap;
       }
     }
@@ -41,10 +41,10 @@
   > tbody {
     > tr {
       > td {
-        padding: #{css-var('table-cell-padding-y')} #{css-var('table-cell-padding-x')};
+        padding: css-var(table-cell-padding-y) css-var(table-cell-padding-x);
         font-size: 0.875rem;
-        color: #{css-var('body-color')};
-        border-bottom: 1px solid #{css-var('border-color')};
+        color: css-var(body-color);
+        border-bottom: 1px solid css-var(border-color);
         vertical-align: middle;
       }
 
@@ -53,31 +53,31 @@
       }
 
       &:hover {
-        background-color: #{css-var('table-hover-bg')};
+        background-color: css-var(table-hover-bg);
       }
     }
   }
 
   &__empty {
     text-align: center;
-    color: #{css-var('muted-color')};
-    padding: 2rem #{css-var('table-cell-padding-x')} !important;
+    color: css-var(muted-color);
+    padding: 2rem css-var(table-cell-padding-x) !important;
   }
 
   // Striped variant
   &--striped {
     > tbody > tr:nth-child(even):not(:hover) {
-      background-color: #{css-var('gray-25')};
+      background-color: css-var(gray-25);
     }
   }
 
   // Bordered variant
   &--bordered {
-    border: 1px solid #{css-var('border-color')};
+    border: 1px solid css-var(border-color);
 
     > thead > tr > th,
     > tbody > tr > td {
-      border: 1px solid #{css-var('border-color')};
+      border: 1px solid css-var(border-color);
     }
   }
 

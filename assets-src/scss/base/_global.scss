@@ -5,7 +5,7 @@
 // - WordPress admin style overrides for form controls
 // - Utility classes (text, background, border, display, etc.)
 //
-// Note: Main wrapper (.#{$prefix}-wrap) styles are in
+// Note: Main wrapper (.#{css-class('wrap')}) styles are in
 // layout/_framework.scss
 // =====================================================
 
@@ -16,27 +16,27 @@
 // -----------------------------------------------------
 
 // Override WordPress admin styles for form controls
-.#{$prefix}-form-control,
-.#{$prefix}-form-select {
+.#{css-class('form-control')},
+.#{css-class('form-select')} {
   // Reset WordPress input styles
   background-image: none;
   box-shadow: none;
   outline: none;
-  border-color: #{css-var('border-color')};
+  border-color: css-var(border-color);
 
   &:hover:not(:focus):not(:disabled) {
-    border-color: rgba(#{css-var('primary-rgb')}, 0.5);
+    border-color: rgba(css-var(primary-rgb), 0.5);
   }
 
   &:focus {
-    border-color: #{css-var('primary')};
-    box-shadow: 0 0.125rem 0.375rem 0 rgba(#{css-var('primary-rgb')}, 0.3);
+    border-color: css-var(primary);
+    box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
     outline: none;
   }
 }
 
 // Reset WordPress checkbox/radio styles for components
-.#{$prefix}-form-check-input {
+.#{css-class('form-check-input')} {
   // Override WordPress defaults
   outline: none;
 
@@ -54,7 +54,7 @@
 }
 
 // Reset WordPress styles for switches
-.#{$prefix}-form-switch .#{$prefix}-form-check-input {
+.#{css-class('form-switch')} .#{css-class('form-check-input')} {
   border: 0;
 
   &:not(:checked) {
@@ -63,7 +63,7 @@
   }
 
   &:checked {
-    background-color: #{css-var('primary')};
+    background-color: css-var(primary);
   }
 
   &:focus {
@@ -72,8 +72,8 @@
 }
 
 // Override WordPress button focus styles
-.#{$prefix}-btn:focus {
-  box-shadow: 0 0.125rem 0.375rem 0 rgba(#{css-var('primary-rgb')}, 0.3);
+.#{css-class('btn')}:focus {
+  box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
   outline: none;
 }
 
@@ -81,43 +81,43 @@
 // Text Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-text-primary {
-  color: #{css-var('primary')};
+.#{css-class('text-primary')} {
+  color: css-var(primary);
 }
 
-.#{$prefix}-text-secondary {
-  color: #{css-var('secondary')};
+.#{css-class('text-secondary')} {
+  color: css-var(secondary);
 }
 
-.#{$prefix}-text-success {
-  color: #{css-var('success')};
+.#{css-class('text-success')} {
+  color: css-var(success);
 }
 
-.#{$prefix}-text-info {
-  color: #{css-var('info')};
+.#{css-class('text-info')} {
+  color: css-var(info);
 }
 
-.#{$prefix}-text-warning {
-  color: #{css-var('warning')};
+.#{css-class('text-warning')} {
+  color: css-var(warning);
 }
 
-.#{$prefix}-text-danger {
-  color: #{css-var('danger')};
+.#{css-class('text-danger')} {
+  color: css-var(danger);
 }
 
-.#{$prefix}-text-muted {
-  color: #{css-var('muted-color')};
+.#{css-class('text-muted')} {
+  color: css-var(muted-color);
 }
 
-.#{$prefix}-text-body {
-  color: #{css-var('body-color')};
+.#{css-class('text-body')} {
+  color: css-var(body-color);
 }
 
-.#{$prefix}-text-heading {
-  color: #{css-var('heading-color')};
+.#{css-class('text-heading')} {
+  color: css-var(heading-color);
 }
 
-.#{$prefix}-text-white {
+.#{css-class('text-white')} {
   color: #fff;
 }
 
@@ -125,39 +125,39 @@
 // Background Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-bg-primary {
-  background-color: #{css-var('primary')};
+.#{css-class('bg-primary')} {
+  background-color: css-var(primary);
 }
 
-.#{$prefix}-bg-secondary {
-  background-color: #{css-var('secondary')};
+.#{css-class('bg-secondary')} {
+  background-color: css-var(secondary);
 }
 
-.#{$prefix}-bg-success {
-  background-color: #{css-var('success')};
+.#{css-class('bg-success')} {
+  background-color: css-var(success);
 }
 
-.#{$prefix}-bg-info {
-  background-color: #{css-var('info')};
+.#{css-class('bg-info')} {
+  background-color: css-var(info);
 }
 
-.#{$prefix}-bg-warning {
-  background-color: #{css-var('warning')};
+.#{css-class('bg-warning')} {
+  background-color: css-var(warning);
 }
 
-.#{$prefix}-bg-danger {
-  background-color: #{css-var('danger')};
+.#{css-class('bg-danger')} {
+  background-color: css-var(danger);
 }
 
-.#{$prefix}-bg-body {
-  background-color: #{css-var('body-bg')};
+.#{css-class('bg-body')} {
+  background-color: css-var(body-bg);
 }
 
-.#{$prefix}-bg-paper {
-  background-color: #{css-var('paper-bg')};
+.#{css-class('bg-paper')} {
+  background-color: css-var(paper-bg);
 }
 
-.#{$prefix}-bg-transparent {
+.#{css-class('bg-transparent')} {
   background-color: transparent;
 }
 
@@ -165,48 +165,48 @@
 // Border Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-border {
-  border: #{css-var('border-width')} solid #{css-var('border-color')};
+.#{css-class('border')} {
+  border: css-var(border-width) solid css-var(border-color);
 }
 
-.#{$prefix}-border-0 {
+.#{css-class('border-0')} {
   border: 0;
 }
 
-.#{$prefix}-border-primary {
-  border-color: #{css-var('primary')};
+.#{css-class('border-primary')} {
+  border-color: css-var(primary);
 }
 
-.#{$prefix}-border-success {
-  border-color: #{css-var('success')};
+.#{css-class('border-success')} {
+  border-color: css-var(success);
 }
 
-.#{$prefix}-border-danger {
-  border-color: #{css-var('danger')};
+.#{css-class('border-danger')} {
+  border-color: css-var(danger);
 }
 
 // Border radius
-.#{$prefix}-rounded {
-  border-radius: #{css-var('border-radius')};
+.#{css-class('rounded')} {
+  border-radius: css-var(border-radius);
 }
 
-.#{$prefix}-rounded-sm {
-  border-radius: #{css-var('border-radius-sm')};
+.#{css-class('rounded-sm')} {
+  border-radius: css-var(border-radius-sm);
 }
 
-.#{$prefix}-rounded-lg {
-  border-radius: #{css-var('border-radius-lg')};
+.#{css-class('rounded-lg')} {
+  border-radius: css-var(border-radius-lg);
 }
 
-.#{$prefix}-rounded-pill {
-  border-radius: #{css-var('border-radius-pill')};
+.#{css-class('rounded-pill')} {
+  border-radius: css-var(border-radius-pill);
 }
 
-.#{$prefix}-rounded-circle {
+.#{css-class('rounded-circle')} {
   border-radius: 50%;
 }
 
-.#{$prefix}-rounded-0 {
+.#{css-class('rounded-0')} {
   border-radius: 0;
 }
 
@@ -214,19 +214,19 @@
 // Shadow Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-shadow {
-  box-shadow: #{css-var('box-shadow')};
+.#{css-class('shadow')} {
+  box-shadow: css-var(box-shadow);
 }
 
-.#{$prefix}-shadow-sm {
-  box-shadow: #{css-var('box-shadow-sm')};
+.#{css-class('shadow-sm')} {
+  box-shadow: css-var(box-shadow-sm);
 }
 
-.#{$prefix}-shadow-lg {
-  box-shadow: #{css-var('box-shadow-lg')};
+.#{css-class('shadow-lg')} {
+  box-shadow: css-var(box-shadow-lg);
 }
 
-.#{$prefix}-shadow-none {
+.#{css-class('shadow-none')} {
   box-shadow: none;
 }
 
@@ -234,31 +234,31 @@
 // Display Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-d-none {
+.#{css-class('d-none')} {
   display: none;
 }
 
-.#{$prefix}-d-inline {
+.#{css-class('d-inline')} {
   display: inline;
 }
 
-.#{$prefix}-d-inline-block {
+.#{css-class('d-inline-block')} {
   display: inline-block;
 }
 
-.#{$prefix}-d-block {
+.#{css-class('d-block')} {
   display: block;
 }
 
-.#{$prefix}-d-flex {
+.#{css-class('d-flex')} {
   display: flex;
 }
 
-.#{$prefix}-d-inline-flex {
+.#{css-class('d-inline-flex')} {
   display: inline-flex;
 }
 
-.#{$prefix}-d-grid {
+.#{css-class('d-grid')} {
   display: grid;
 }
 
@@ -266,59 +266,59 @@
 // Flex Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-flex-row {
+.#{css-class('flex-row')} {
   flex-direction: row;
 }
 
-.#{$prefix}-flex-column {
+.#{css-class('flex-column')} {
   flex-direction: column;
 }
 
-.#{$prefix}-flex-wrap {
+.#{css-class('flex-wrap')} {
   flex-wrap: wrap;
 }
 
-.#{$prefix}-flex-nowrap {
+.#{css-class('flex-nowrap')} {
   flex-wrap: nowrap;
 }
 
-.#{$prefix}-flex-grow-0 {
+.#{css-class('flex-grow-0')} {
   flex-grow: 0;
 }
 
-.#{$prefix}-flex-grow-1 {
+.#{css-class('flex-grow-1')} {
   flex-grow: 1;
 }
 
-.#{$prefix}-justify-content-start {
+.#{css-class('justify-content-start')} {
   justify-content: flex-start;
 }
 
-.#{$prefix}-justify-content-end {
+.#{css-class('justify-content-end')} {
   justify-content: flex-end;
 }
 
-.#{$prefix}-justify-content-center {
+.#{css-class('justify-content-center')} {
   justify-content: center;
 }
 
-.#{$prefix}-justify-content-between {
+.#{css-class('justify-content-between')} {
   justify-content: space-between;
 }
 
-.#{$prefix}-align-items-start {
+.#{css-class('align-items-start')} {
   align-items: flex-start;
 }
 
-.#{$prefix}-align-items-end {
+.#{css-class('align-items-end')} {
   align-items: flex-end;
 }
 
-.#{$prefix}-align-items-center {
+.#{css-class('align-items-center')} {
   align-items: center;
 }
 
-.#{$prefix}-align-items-stretch {
+.#{css-class('align-items-stretch')} {
   align-items: stretch;
 }
 
@@ -326,27 +326,27 @@
 // Gap Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-gap-0 {
+.#{css-class('gap-0')} {
   gap: 0;
 }
 
-.#{$prefix}-gap-1 {
+.#{css-class('gap-1')} {
   gap: 0.25rem;
 }
 
-.#{$prefix}-gap-2 {
+.#{css-class('gap-2')} {
   gap: 0.5rem;
 }
 
-.#{$prefix}-gap-3 {
+.#{css-class('gap-3')} {
   gap: 1rem;
 }
 
-.#{$prefix}-gap-4 {
+.#{css-class('gap-4')} {
   gap: 1.5rem;
 }
 
-.#{$prefix}-gap-5 {
+.#{css-class('gap-5')} {
   gap: 2rem;
 }
 
@@ -354,89 +354,89 @@
 // Margin Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-m-0 {
+.#{css-class('m-0')} {
   margin: 0 !important;
 }
 
-.#{$prefix}-m-1 {
+.#{css-class('m-1')} {
   margin: 0.25rem !important;
 }
 
-.#{$prefix}-m-2 {
+.#{css-class('m-2')} {
   margin: 0.5rem !important;
 }
 
-.#{$prefix}-m-3 {
+.#{css-class('m-3')} {
   margin: 1rem !important;
 }
 
-.#{$prefix}-m-4 {
+.#{css-class('m-4')} {
   margin: 1.5rem !important;
 }
 
-.#{$prefix}-m-5 {
+.#{css-class('m-5')} {
   margin: 2rem !important;
 }
 
-.#{$prefix}-m-auto {
+.#{css-class('m-auto')} {
   margin: auto !important;
 }
 
-.#{$prefix}-mt-0 {
+.#{css-class('mt-0')} {
   margin-top: 0 !important;
 }
 
-.#{$prefix}-mt-1 {
+.#{css-class('mt-1')} {
   margin-top: 0.25rem !important;
 }
 
-.#{$prefix}-mt-2 {
+.#{css-class('mt-2')} {
   margin-top: 0.5rem !important;
 }
 
-.#{$prefix}-mt-3 {
+.#{css-class('mt-3')} {
   margin-top: 1rem !important;
 }
 
-.#{$prefix}-mt-4 {
+.#{css-class('mt-4')} {
   margin-top: 1.5rem !important;
 }
 
-.#{$prefix}-mb-0 {
+.#{css-class('mb-0')} {
   margin-bottom: 0 !important;
 }
 
-.#{$prefix}-mb-1 {
+.#{css-class('mb-1')} {
   margin-bottom: 0.25rem !important;
 }
 
-.#{$prefix}-mb-2 {
+.#{css-class('mb-2')} {
   margin-bottom: 0.5rem !important;
 }
 
-.#{$prefix}-mb-3 {
+.#{css-class('mb-3')} {
   margin-bottom: 1rem !important;
 }
 
-.#{$prefix}-mb-4 {
+.#{css-class('mb-4')} {
   margin-bottom: 1.5rem !important;
 }
 
-.#{$prefix}-my-0 {
+.#{css-class('my-0')} {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-.#{$prefix}-my-3 {
+.#{css-class('my-3')} {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
 }
 
-.#{$prefix}-ms-auto {
+.#{css-class('ms-auto')} {
   margin-left: auto !important;
 }
 
-.#{$prefix}-me-auto {
+.#{css-class('me-auto')} {
   margin-right: auto !important;
 }
 
@@ -444,27 +444,27 @@
 // Padding Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-p-0 {
+.#{css-class('p-0')} {
   padding: 0 !important;
 }
 
-.#{$prefix}-p-1 {
+.#{css-class('p-1')} {
   padding: 0.25rem !important;
 }
 
-.#{$prefix}-p-2 {
+.#{css-class('p-2')} {
   padding: 0.5rem !important;
 }
 
-.#{$prefix}-p-3 {
+.#{css-class('p-3')} {
   padding: 1rem !important;
 }
 
-.#{$prefix}-p-4 {
+.#{css-class('p-4')} {
   padding: 1.5rem !important;
 }
 
-.#{$prefix}-p-5 {
+.#{css-class('p-5')} {
   padding: 2rem !important;
 }
 
@@ -472,19 +472,19 @@
 // Size Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-w-100 {
+.#{css-class('w-100')} {
   width: 100%;
 }
 
-.#{$prefix}-w-auto {
+.#{css-class('w-auto')} {
   width: auto;
 }
 
-.#{$prefix}-h-100 {
+.#{css-class('h-100')} {
   height: 100%;
 }
 
-.#{$prefix}-h-auto {
+.#{css-class('h-auto')} {
   height: auto;
 }
 
@@ -492,15 +492,15 @@
 // Position Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-position-relative {
+.#{css-class('position-relative')} {
   position: relative;
 }
 
-.#{$prefix}-position-absolute {
+.#{css-class('position-absolute')} {
   position: absolute;
 }
 
-.#{$prefix}-position-fixed {
+.#{css-class('position-fixed')} {
   position: fixed;
 }
 
@@ -508,20 +508,20 @@
 // Visibility Utilities
 // -----------------------------------------------------
 
-.#{$prefix}-visible {
+.#{css-class('visible')} {
   visibility: visible;
 }
 
-.#{$prefix}-invisible {
+.#{css-class('invisible')} {
   visibility: hidden;
 }
 
-.#{$prefix}-cursor-pointer {
+.#{css-class('cursor-pointer')} {
   cursor: pointer;
 }
 
 // Screen reader only
-.#{$prefix}-visually-hidden {
+.#{css-class('visually-hidden')} {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -539,7 +539,7 @@
 // Override WordPress admin default styles for ul, table elements
 // Uses #wpbody-content to match/beat WordPress specificity
 
-#wpbody-content .#{$prefix}-wrap {
+#wpbody-content .#{css-class('wrap')} {
   ul {
     margin: 0;
     padding: 0;
@@ -547,7 +547,7 @@
   }
 
   // Restore list styles for checklists
-  ul.#{$prefix}-alert-card__checklist {
+  ul.#{css-class('alert-card__checklist')} {
     padding-left: 1.25rem;
     list-style: disc;
   }

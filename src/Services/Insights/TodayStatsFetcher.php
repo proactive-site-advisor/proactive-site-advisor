@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Services\Insights;
+namespace ProactiveSiteAdvisor\Services\Insights;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Database\DatabaseManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Fetches statistics for a specific day from the daily stats table.
  * Provides formatted data for alert generation and analysis.
  *
- * @package SiteAlerts\Services\Insights
+ * @package ProactiveSiteAdvisor\Services\Insights
  * @version 1.0.0
  */
 class TodayStatsFetcher extends AbstractSingleton

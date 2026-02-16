@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Services\Admin\Alerts;
+namespace ProactiveSiteAdvisor\Services\Admin\Alerts;
 
-use SiteAlerts\DataProviders\AlertsDataProvider;
-use SiteAlerts\Utils\MenuUtils;
+use ProactiveSiteAdvisor\DataProviders\AlertsDataProvider;
+use ProactiveSiteAdvisor\Utils\MenuUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages the main alerts admin page and menu registration.
  *
- * @package SiteAlerts\Services\Admin\Alerts
+ * @package ProactiveSiteAdvisor\Services\Admin\Alerts
  * @version 1.0.0
  */
 class AlertsManager
@@ -26,7 +26,7 @@ class AlertsManager
      */
     public function register(): void
     {
-        add_filter('site_alerts_menu_items', [$this, 'addMenuItem']);
+        add_filter('proactive_site_advisor_menu_items', [$this, 'addMenuItem']);
         add_action('admin_init', [$this, 'handleLastSeenUpdate']);
     }
 
@@ -38,7 +38,7 @@ class AlertsManager
     public function handleLastSeenUpdate(): void
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if (isset($_GET['page']) && $_GET['page'] === MenuUtils::getSlug('site-alerts')) {
+        if (isset($_GET['page']) && $_GET['page'] === MenuUtils::getSlug('proactive-site-advisor')) {
             AlertsDataProvider::getInstance()->updateLastSeenAlertId();
         }
     }
@@ -58,18 +58,18 @@ class AlertsManager
          *
          * @return float The possibly modified position after applying filters.
          */
-        $position = apply_filters('site_alerts_plugins_menu_item_position', 65.0);
+        $position = apply_filters('proactive_site_advisor_plugins_menu_item_position', 65.0);
 
         $priority   = AlertsDataProvider::getInstance()->getPriorityCount();
         $count      = $priority['count'];
         $severity   = $priority['severity'];
-        $badgeTitle = esc_html__('Site Alerts', 'site-alerts');
+        $badgeTitle = esc_html__('Site Advisor', 'proactive-site-advisor');
 
         if ($count > 0) {
             $colors = [
-                'critical' => '#ff4c51', // $sa-danger
-                'warning'  => '#ff9f43', // $sa-warning
-                'info'     => '#00bad1', // $sa-info
+                'critical' => '#ff4c51',
+                'warning'  => '#ff9f43',
+                'info'     => '#00bad1',
             ];
 
             $color = $colors[$severity] ?? '#3b82f6';
@@ -82,7 +82,7 @@ class AlertsManager
         }
 
         $items[] = [
-            'id'       => 'site-alerts',
+            'id'       => 'proactive-site-advisor',
             'title'    => $badgeTitle,
             'icon'     => 'dashicons-warning',
             'position' => $position,
@@ -90,9 +90,9 @@ class AlertsManager
         ];
 
         $items[] = [
-            'id'       => 'site-alerts',
-            'title'    => esc_html__('Alerts', 'site-alerts'),
-            'parentId' => 'site-alerts',
+            'id'       => 'proactive-site-advisor',
+            'title'    => esc_html__('Alerts', 'proactive-site-advisor'),
+            'parentId' => 'proactive-site-advisor',
             'callback' => AlertsPage::class,
         ];
 

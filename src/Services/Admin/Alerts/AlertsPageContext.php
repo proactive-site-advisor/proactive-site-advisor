@@ -1,11 +1,12 @@
 <?php
 
-namespace SiteAlerts\Services\Admin\Alerts;
+namespace ProactiveSiteAdvisor\Services\Admin\Alerts;
 
-use SiteAlerts\DataProviders\AlertsDataProvider;
-use SiteAlerts\DataProviders\StatsDataProvider;
-use SiteAlerts\Utils\DateTimeUtils;
-use SiteAlerts\Utils\PluginStatus;
+use ProactiveSiteAdvisor\DataProviders\AlertsDataProvider;
+use ProactiveSiteAdvisor\DataProviders\StatsDataProvider;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\PluginStatus;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Builds all state-aware section data for the Alerts admin page.
  * Centralizes the logic for generating context based on monitoring status.
  *
- * @package SiteAlerts\Services\Admin\Alerts
+ * @package ProactiveSiteAdvisor\Services\Admin\Alerts
  * @version 1.0.0
  */
 class AlertsPageContext
@@ -121,22 +122,22 @@ class AlertsPageContext
             case PluginStatus::STATUS_FRESH:
                 return [
                     'color' => 'info',
-                    'title' => __('Getting started', 'site-alerts'),
-                    'text'  => __("We're collecting baseline data. Your first insights will appear shortly.", 'site-alerts'),
+                    'title' => __('Getting started', 'proactive-site-advisor'),
+                    'text'  => __("We're collecting baseline data. Your first insights will appear shortly.", 'proactive-site-advisor'),
                 ];
 
             case PluginStatus::STATUS_LIMITED:
                 return [
                     'color' => 'info',
-                    'title' => __('Limited history', 'site-alerts'),
-                    'text'  => __('Insights will improve as more data is collected. Check back soon for more accurate detection.', 'site-alerts'),
+                    'title' => __('Limited history', 'proactive-site-advisor'),
+                    'text'  => __('Insights will improve as more data is collected. Check back soon for more accurate detection.', 'proactive-site-advisor'),
                 ];
 
             case PluginStatus::STATUS_ISSUE:
                 return [
                     'color' => 'warning',
-                    'title' => __('Check monitoring', 'site-alerts'),
-                    'text'  => __('Last check was over 24 hours ago. Verify your site cron is running.', 'site-alerts'),
+                    'title' => __('Check monitoring', 'proactive-site-advisor'),
+                    'text'  => __('Last check was over 24 hours ago. Verify your site cron is running.', 'proactive-site-advisor'),
                 ];
 
             default:
@@ -145,14 +146,14 @@ class AlertsPageContext
                 if ($criticalCount > 0) {
                     return [
                         'color' => 'danger',
-                        'title' => __('Critical issues detected', 'site-alerts'),
+                        'title' => __('Critical issues detected', 'proactive-site-advisor'),
                         'text'  => sprintf(
                         /* translators: %d: number of critical alerts */
                             _n(
                                 '%d critical issue detected in the last 7 days that requires immediate attention.',
                                 '%d critical issues detected in the last 7 days that require immediate attention.',
                                 $criticalCount,
-                                'site-alerts'
+                                'proactive-site-advisor'
                             ),
                             $criticalCount
                         ),
@@ -162,14 +163,14 @@ class AlertsPageContext
                 if ($alertCount > 0) {
                     return [
                         'color' => 'warning',
-                        'title' => __('Attention needed', 'site-alerts'),
+                        'title' => __('Attention needed', 'proactive-site-advisor'),
                         'text'  => sprintf(
                         /* translators: %d: number of alerts */
                             _n(
                                 '%d alert detected in the last 7 days that may need your attention.',
                                 '%d alerts detected in the last 7 days that may need your attention.',
                                 $alertCount,
-                                'site-alerts'
+                                'proactive-site-advisor'
                             ),
                             $alertCount
                         ),
@@ -178,8 +179,8 @@ class AlertsPageContext
 
                 return [
                     'color' => 'success',
-                    'title' => __('All clear', 'site-alerts'),
-                    'text'  => __("No unusual activity detected in the last 7 days. We'll keep monitoring and surface issues with recommended actions.", 'site-alerts'),
+                    'title' => __('All clear', 'proactive-site-advisor'),
+                    'text'  => __("No unusual activity detected in the last 7 days. We'll keep monitoring and surface issues with recommended actions.", 'proactive-site-advisor'),
                 ];
         }
     }
@@ -213,23 +214,23 @@ class AlertsPageContext
     {
         return [
             'critical_alerts' => [
-                'iconClass' => 'sa-icon--critical',
-                'label'     => __('Critical Alerts', 'site-alerts'),
+                'iconClass' => PrefixConfig::css('icon--critical'),
+                'label'     => __('Critical Alerts', 'proactive-site-advisor'),
                 'color'     => 'danger',
             ],
             'traffic_alerts'  => [
-                'iconClass' => 'sa-icon--traffic',
-                'label'     => __('Traffic Alerts', 'site-alerts'),
+                'iconClass' => PrefixConfig::css('icon--traffic'),
+                'label'     => __('Traffic Alerts', 'proactive-site-advisor'),
                 'color'     => 'primary',
             ],
             'error_alerts'    => [
-                'iconClass' => 'sa-icon--error-404',
-                'label'     => __('404 Alerts', 'site-alerts'),
+                'iconClass' => PrefixConfig::css('icon--error-404'),
+                'label'     => __('404 Alerts', 'proactive-site-advisor'),
                 'color'     => 'warning',
             ],
             'total_alerts'    => [
-                'iconClass' => 'sa-icon--alert',
-                'label'     => __('Total Alerts', 'site-alerts'),
+                'iconClass' => PrefixConfig::css('icon--alert'),
+                'label'     => __('Total Alerts', 'proactive-site-advisor'),
                 'color'     => 'info',
             ],
         ];
@@ -249,8 +250,8 @@ class AlertsPageContext
             return [
                 'value'    => '—',
                 'subtitle' => $cardKey === 'total_alerts'
-                    ? __('Last 7 days', 'site-alerts')
-                    : __('Collecting data', 'site-alerts'),
+                    ? __('Last 7 days', 'proactive-site-advisor')
+                    : __('Collecting data', 'proactive-site-advisor'),
             ];
         }
 
@@ -258,7 +259,7 @@ class AlertsPageContext
         if ($this->status === PluginStatus::STATUS_LIMITED) {
             return [
                 'value'    => (string)$rawValue,
-                'subtitle' => __('Limited data available', 'site-alerts'),
+                'subtitle' => __('Limited data available', 'proactive-site-advisor'),
             ];
         }
 
@@ -286,13 +287,13 @@ class AlertsPageContext
     {
         switch ($cardKey) {
             case 'traffic_alerts':
-                return __('No unusual traffic detected', 'site-alerts');
+                return __('No unusual traffic detected', 'proactive-site-advisor');
             case 'error_alerts':
-                return __('No 404 issues detected', 'site-alerts');
+                return __('No 404 issues detected', 'proactive-site-advisor');
             case 'critical_alerts':
-                return __('No critical issues detected', 'site-alerts');
+                return __('No critical issues detected', 'proactive-site-advisor');
             default:
-                return __('Last 7 days', 'site-alerts');
+                return __('Last 7 days', 'proactive-site-advisor');
         }
     }
 
@@ -306,13 +307,13 @@ class AlertsPageContext
     {
         switch ($cardKey) {
             case 'traffic_alerts':
-                return __('Unusual traffic changes detected', 'site-alerts');
+                return __('Unusual traffic changes detected', 'proactive-site-advisor');
             case 'error_alerts':
-                return __('Pages returning 404 errors', 'site-alerts');
+                return __('Pages returning 404 errors', 'proactive-site-advisor');
             case 'critical_alerts':
-                return __('Issues needing attention', 'site-alerts');
+                return __('Issues needing attention', 'proactive-site-advisor');
             default:
-                return __('Total in last 7 days', 'site-alerts');
+                return __('Total in last 7 days', 'proactive-site-advisor');
         }
     }
 
@@ -329,18 +330,18 @@ class AlertsPageContext
         if ($this->status === PluginStatus::STATUS_FRESH) {
             return [
                 'type'   => 'message',
-                'title'  => __('Getting started', 'site-alerts'),
-                'text'   => __("We're collecting baseline data for your site. Your first insights will appear shortly.", 'site-alerts'),
-                'helper' => __('Tip: Leave this plugin active to get accurate insights.', 'site-alerts'),
+                'title'  => __('Getting started', 'proactive-site-advisor'),
+                'text'   => __("We're collecting baseline data for your site. Your first insights will appear shortly.", 'proactive-site-advisor'),
+                'helper' => __('Tip: Leave this plugin active to get accurate insights.', 'proactive-site-advisor'),
             ];
         }
 
         if ($this->status === PluginStatus::STATUS_LIMITED) {
             return [
                 'type'   => 'message',
-                'title'  => __('Limited history', 'site-alerts'),
-                'text'   => __('Not enough data yet to reliably detect unusual activity.', 'site-alerts'),
-                'helper' => __('Insights will improve as more data is collected.', 'site-alerts'),
+                'title'  => __('Limited history', 'proactive-site-advisor'),
+                'text'   => __('Not enough data yet to reliably detect unusual activity.', 'proactive-site-advisor'),
+                'helper' => __('Insights will improve as more data is collected.', 'proactive-site-advisor'),
             ];
         }
 
@@ -348,10 +349,10 @@ class AlertsPageContext
         if (empty($this->rawAlerts)) {
             return [
                 'type'   => 'message',
-                'title'  => __('All clear', 'site-alerts'),
-                'text'   => __('No unusual activity detected in the last 7 days.', 'site-alerts'),
-                'helper' => __("We'll keep monitoring and notify you if something changes.", 'site-alerts'),
-                'icon'   => 'sa-icon--check-circle',
+                'title'  => __('All clear', 'proactive-site-advisor'),
+                'text'   => __('No unusual activity detected in the last 7 days.', 'proactive-site-advisor'),
+                'helper' => __("We'll keep monitoring and notify you if something changes.", 'proactive-site-advisor'),
+                'icon'   => PrefixConfig::css('icon--check-circle'),
                 'color'  => 'success',
             ];
         }
@@ -400,13 +401,13 @@ class AlertsPageContext
     {
         switch ($type) {
             case 'traffic_drop':
-                return __('Traffic dropped unexpectedly compared to recent days.', 'site-alerts');
+                return __('Traffic dropped unexpectedly compared to recent days.', 'proactive-site-advisor');
             case 'traffic_spike':
-                return __('Traffic increased significantly compared to recent days.', 'site-alerts');
+                return __('Traffic increased significantly compared to recent days.', 'proactive-site-advisor');
             case 'error_404_spike':
-                return __('Visitors are reaching pages that no longer exist.', 'site-alerts');
+                return __('Visitors are reaching pages that no longer exist.', 'proactive-site-advisor');
             default:
-                return __('Unusual activity was detected.', 'site-alerts');
+                return __('Unusual activity was detected.', 'proactive-site-advisor');
         }
     }
 
@@ -422,21 +423,21 @@ class AlertsPageContext
         switch ($type) {
             case 'traffic_drop':
                 return [
-                    'meaning' => __('Sudden traffic drops are often caused by downtime or recent changes.', 'site-alerts'),
+                    'meaning' => __('Sudden traffic drops are often caused by downtime or recent changes.', 'proactive-site-advisor'),
                     'checks'  => [
-                        __('Check if your site is currently reachable', 'site-alerts'),
-                        __('Review recent plugin or theme changes', 'site-alerts'),
-                        __('Look for increases in 404 errors', 'site-alerts'),
+                        __('Check if your site is currently reachable', 'proactive-site-advisor'),
+                        __('Review recent plugin or theme changes', 'proactive-site-advisor'),
+                        __('Look for increases in 404 errors', 'proactive-site-advisor'),
                     ],
                 ];
 
             case 'traffic_spike':
                 return [
-                    'meaning' => __('Traffic spikes can indicate viral content, marketing success, or bot activity.', 'site-alerts'),
+                    'meaning' => __('Traffic spikes can indicate viral content, marketing success, or bot activity.', 'proactive-site-advisor'),
                     'checks'  => [
-                        __('Check your analytics for traffic sources', 'site-alerts'),
-                        __('Review server performance and load times', 'site-alerts'),
-                        __('Look for unusual referrer patterns', 'site-alerts'),
+                        __('Check your analytics for traffic sources', 'proactive-site-advisor'),
+                        __('Review server performance and load times', 'proactive-site-advisor'),
+                        __('Look for unusual referrer patterns', 'proactive-site-advisor'),
                     ],
                 ];
 
@@ -461,21 +462,21 @@ class AlertsPageContext
                 }
 
                 return [
-                    'meaning' => __('Missing pages can frustrate visitors and affect SEO.', 'site-alerts'),
+                    'meaning' => __('Missing pages can frustrate visitors and affect SEO.', 'proactive-site-advisor'),
                     'checks'  => [
-                        __('Add redirects for missing pages', 'site-alerts'),
-                        __('Fix internal links pointing to missing URLs', 'site-alerts'),
-                        __('Review recent permalink changes', 'site-alerts'),
+                        __('Add redirects for missing pages', 'proactive-site-advisor'),
+                        __('Fix internal links pointing to missing URLs', 'proactive-site-advisor'),
+                        __('Review recent permalink changes', 'proactive-site-advisor'),
                     ],
                     'topUrls' => $topUrls,
                 ];
 
             default:
                 return [
-                    'meaning' => __('This issue may require your attention.', 'site-alerts'),
+                    'meaning' => __('This issue may require your attention.', 'proactive-site-advisor'),
                     'checks'  => [
-                        __('Review recent changes to your site', 'site-alerts'),
-                        __('Check your site for any visible issues', 'site-alerts'),
+                        __('Review recent changes to your site', 'proactive-site-advisor'),
+                        __('Check your site for any visible issues', 'proactive-site-advisor'),
                     ],
                 ];
         }
@@ -495,11 +496,11 @@ class AlertsPageContext
         if ($this->status === PluginStatus::STATUS_FRESH || $daysWithData === 0) {
             return [
                 'showTable'    => false,
-                'title'        => __('Getting started', 'site-alerts'),
-                'icon'         => 'sa-icon--info',
+                'title'        => __('Getting started', 'proactive-site-advisor'),
+                'icon'         => PrefixConfig::css('icon--info'),
                 'average'      => null,
                 'rows'         => [],
-                'emptyMessage' => __("We're collecting baseline data. Your first history will appear shortly.", 'site-alerts'),
+                'emptyMessage' => __("We're collecting baseline data. Your first history will appear shortly.", 'proactive-site-advisor'),
                 'staleWarning' => false,
             ];
         }
@@ -508,11 +509,11 @@ class AlertsPageContext
         if ($daysWithData < 3) {
             return [
                 'showTable'    => false,
-                'title'        => __('Building history', 'site-alerts'),
-                'icon'         => 'sa-icon--traffic',
+                'title'        => __('Building history', 'proactive-site-advisor'),
+                'icon'         => PrefixConfig::css('icon--traffic'),
                 'average'      => null,
                 'rows'         => [],
-                'emptyMessage' => __('Building history — check back in a couple days for meaningful trends.', 'site-alerts'),
+                'emptyMessage' => __('Building history — check back in a couple days for meaningful trends.', 'proactive-site-advisor'),
                 'staleWarning' => false,
             ];
         }
@@ -522,7 +523,7 @@ class AlertsPageContext
             'showTable'    => true,
             'average'      => $this->calculateHistoryAverage(),
             'rows'         => $this->rawHistory,
-            'emptyMessage' => __('No statistics available for the selected period.', 'site-alerts'),
+            'emptyMessage' => __('No statistics available for the selected period.', 'proactive-site-advisor'),
             'staleWarning' => $isStale,
         ];
     }
@@ -562,15 +563,15 @@ class AlertsPageContext
     {
         switch ($this->status) {
             case PluginStatus::STATUS_FRESH:
-                return __('Not checked yet · Monitoring starting', 'site-alerts');
+                return __('Not checked yet · Monitoring starting', 'proactive-site-advisor');
             case PluginStatus::STATUS_LIMITED:
-                return __('Collecting data · Insights will appear soon', 'site-alerts');
+                return __('Collecting data · Insights will appear soon', 'proactive-site-advisor');
             case PluginStatus::STATUS_ISSUE:
-                return __('Last checked: over 24 hours ago · Check monitoring status', 'site-alerts');
+                return __('Last checked: over 24 hours ago · Check monitoring status', 'proactive-site-advisor');
             default:
                 return sprintf(
                 /* translators: %s: time ago (e.g., "2 minutes") */
-                    __('Last checked: %s ago · Range: last 7 days', 'site-alerts'),
+                    __('Last checked: %s ago · Range: last 7 days', 'proactive-site-advisor'),
                     human_time_diff(PluginStatus::getLastRunTimestamp(), DateTimeUtils::timestamp())
                 );
         }

@@ -1,4 +1,4 @@
-=== Site Alerts ===
+=== Proactive Site Advisor ===
 Contributors: sitealerts
 Tags: alerts, monitoring, admin notices, site health, traffic
 Requires at least: 6.1
@@ -12,7 +12,7 @@ Get notified inside your dashboard when something unusual happens on your WordPr
 
 == Description ==
 
-Site Alerts helps you stay aware of important changes on your WordPress site by displaying clear alerts directly in the admin dashboard.
+Proactive Site Advisor helps you stay aware of important changes on your WordPress site by displaying clear alerts directly in the admin dashboard.
 
 The plugin monitors basic site activity and highlights unusual behavior such as sudden drops in site activity, unexpected traffic spikes, or increases in 404 (Not Found) errors.
 
@@ -27,20 +27,20 @@ Key features:
 
 == Installation ==
 
-1. Upload the `site-alerts` folder to the `/wp-content/plugins/` directory.
+1. Upload the `proactive-site-advisor` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
 3. Alerts will appear automatically in the admin dashboard when unusual activity is detected.
 
 == Frequently Asked Questions ==
 
 = Does this plugin require configuration? =
-No. Site Alerts works out of the box and starts monitoring automatically after activation.
+No. Proactive Site Advisor works out of the box and starts monitoring automatically after activation.
 
 = Does this plugin use external services or send data elsewhere? =
 No. All monitoring and alerts are handled locally within your WordPress installation.
 
 = Is this plugin free? =
-Yes. Site Alerts is free software released under the GPL license.
+Yes. Proactive Site Advisor is free software released under the GPL license.
 
 == Changelog ==
 

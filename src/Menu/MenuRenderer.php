@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\Menu;
+namespace ProactiveSiteAdvisor\Menu;
 
-use SiteAlerts\Utils\MenuUtils;
+use ProactiveSiteAdvisor\Utils\MenuUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Decides whether an item should be added as a top-level menu
  * or as a submenu based on its parentId property.
  *
- * @package SiteAlerts\Menu
+ * @package ProactiveSiteAdvisor\Menu
  * @version 1.0.0
  */
 class MenuRenderer

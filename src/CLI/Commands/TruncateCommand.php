@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\CLI\Commands;
+namespace ProactiveSiteAdvisor\CLI\Commands;
 
-use SiteAlerts\Database\Seeders\SeederManager;
+use ProactiveSiteAdvisor\Database\Seeders\SeederManager;
 use WP_CLI;
 
 if (!defined('ABSPATH')) {
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  *
  * WP-CLI command for truncating database tables.
  *
- * @package SiteAlerts\CLI\Commands
+ * @package ProactiveSiteAdvisor\CLI\Commands
  * @version 1.0.0
  */
 class TruncateCommand
@@ -35,16 +35,16 @@ class TruncateCommand
      * ## EXAMPLES
      *
      *     # Truncate all tables
-     *     wp site-alerts truncate
+     *     wp proactive-site-advisor truncate
      *
      *     # Truncate only alerts table
-     *     wp site-alerts truncate --seeder=Alert
+     *     wp proactive-site-advisor truncate --seeder=Alert
      *
      *     # Truncate only stats table
-     *     wp site-alerts truncate --seeder=DailyStats
+     *     wp proactive-site-advisor truncate --seeder=DailyStats
      *
      *     # Skip confirmation
-     *     wp site-alerts truncate --yes
+     *     wp proactive-site-advisor truncate --yes
      *
      * @param array $args Positional arguments.
      * @param array $assocArgs Associative arguments.
@@ -58,7 +58,7 @@ class TruncateCommand
         $skipConfirmation = isset($assocArgs['yes']);
 
         WP_CLI::log('');
-        WP_CLI::log('Site Alerts Database Truncate');
+        WP_CLI::log('Proactive Site Advisor Database Truncate');
         WP_CLI::log('==============================');
         WP_CLI::log('');
 

@@ -1,10 +1,14 @@
 <?php
 
-namespace SiteAlerts\Lifecycle;
+namespace ProactiveSiteAdvisor\Lifecycle;
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+use ProactiveSiteAdvisor\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
+use ProactiveSiteAdvisor\Config\PluginOptions;
 
 /**
  * Class UninstallHandler
@@ -12,11 +16,20 @@ if (!defined('ABSPATH')) {
  * Handles plugin uninstallation logic for complete cleanup.
  * This class provides methods that can be called from uninstall.php.
  *
- * @package SiteAlerts\Lifecycle
+ * @package ProactiveSiteAdvisor\Lifecycle
  * @version 1.0.0
  */
 class UninstallHandler
 {
+    /**
+     * Table schema classes used by the plugin.
+     *
+     * @var array
+     */
+    private static array $tableSchemas = [
+        CoreTables::class,
+    ];
+
     /**
      * Run uninstallation logic.
      *
@@ -79,14 +92,14 @@ class UninstallHandler
         global $wpdb;
 
         // Delete main plugin option
-        delete_option('site_alerts');
+        delete_option(PluginOptions::OPTION_NAME);
 
         // Delete any options with our prefix
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk cleanup on uninstall requires direct query
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-                'site_alerts_%'
+                PluginOptions::META_PREFIX . '%'
             )
         );
     }
@@ -98,8 +111,7 @@ class UninstallHandler
      */
     public static function deleteUserMeta(): void
     {
-        delete_metadata('user', 0, 'site_alerts', '', true);
-        delete_metadata('user', 0, 'sa_dismissed_notices', '', true);
+        delete_metadata('user', 0, PluginOptions::OPTION_NAME, '', true);
     }
 
     /**
@@ -111,15 +123,29 @@ class UninstallHandler
     {
         global $wpdb;
 
+        $schemas        = self::$tableSchemas;
+        $fullTableNames = [];
+
+        foreach ($schemas as $schemaClass) {
+            if (class_exists($schemaClass) && method_exists($schemaClass, 'getSchemas')) {
+                $tables = $schemaClass::getSchemas();
+
+                foreach ($tables as $table) {
+                    $fullTableNames[] = $table->getFullName();
+                }
+            }
+        }
+
         /**
          * Filter the list of tables to delete on uninstall.
          *
-         * @param array $tables Array of table names (without prefix).
+         * @param array $tables Array of full table names (with prefix).
          */
-        $tables = apply_filters('site_alerts_tables_to_delete', []);
+        $tablesToDelete = apply_filters('proactive_site_advisor_tables_to_delete', $fullTableNames);
 
-        foreach ($tables as $table) {
-            $tableName = $wpdb->prefix . sanitize_key($table);
+        foreach ($tablesToDelete as $tableName) {
+            $tableName = esc_sql($tableName);
+
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized above
             $wpdb->query("DROP TABLE IF EXISTS {$tableName}");
         }
@@ -138,8 +164,8 @@ class UninstallHandler
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-                '_transient_site_alerts_%',
-                '_transient_timeout_site_alerts_%'
+                '_transient_' . PluginOptions::META_PREFIX . '%',
+                '_transient_timeout_' . PluginOptions::META_PREFIX . '%'
             )
         );
     }
@@ -152,7 +178,7 @@ class UninstallHandler
     public static function deleteUploads(): void
     {
         $uploadDir        = wp_upload_dir();
-        $pluginUploadsDir = $uploadDir['basedir'] . '/sa-logs';
+        $pluginUploadsDir = $uploadDir['basedir'] . '/' . PrefixConfig::handle('logs');
 
         if (is_dir($pluginUploadsDir)) {
             self::deleteDirectory($pluginUploadsDir);
@@ -171,8 +197,8 @@ class UninstallHandler
          *
          * @param array $hooks Array of hook names to clear.
          */
-        $hooks = apply_filters('site_alerts_cron_hooks_to_clear', [
-            'site_alerts_daily_cron',
+        $hooks = apply_filters('proactive_site_advisor_cron_hooks_to_clear', [
+            'proactive_site_advisor_daily_cron',
         ]);
 
         foreach ($hooks as $hook) {

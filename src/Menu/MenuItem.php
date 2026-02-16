@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Menu;
+namespace ProactiveSiteAdvisor\Menu;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Each item can define its own capability, icon, position, parent,
  * callback function, and optional visibility conditions.
  *
- * @package SiteAlerts\Menu
+ * @package ProactiveSiteAdvisor\Menu
  * @version 1.0.0
  */
 class MenuItem

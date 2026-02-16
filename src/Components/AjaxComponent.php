@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\Components;
+namespace ProactiveSiteAdvisor\Components;
 
-use SiteAlerts\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 use Throwable;
 
 if (!defined('ABSPATH')) {
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Supports authenticated and unauthenticated requests, nonce verification,
  * multiple callbacks per action, and standardized JSON responses.
  *
- * @package SiteAlerts\Components
+ * @package ProactiveSiteAdvisor\Components
  * @version 1.0.0
  */
 class AjaxComponent
@@ -43,7 +43,7 @@ class AjaxComponent
                 $callback();
 
             } catch (Throwable $e) {
-                self::sendError(esc_html__('AJAX error: ', 'site-alerts') . $e->getMessage());
+                self::sendError(esc_html__('AJAX error: ', 'proactive-site-advisor') . $e->getMessage());
             }
 
             // Intentionally terminate AJAX execution (required for WordPress AJAX)
@@ -72,8 +72,8 @@ class AjaxComponent
     /**
      * Verify the WordPress AJAX nonce.
      *
-     * @param string $nonceAction Nonce action name (default: 'sa_nonce').
-     * @param string $nonceField Field name from $_REQUEST (default: 'security').
+     * @param string $nonceAction Nonce action name.
+     * @param string $nonceField Field name from $_REQUEST.
      *
      * @return void
      */
@@ -81,7 +81,7 @@ class AjaxComponent
     {
         $nonceAction = self::getNonceAction($nonceAction);
         if (!check_ajax_referer($nonceAction, $nonceField, false)) {
-            self::sendError(esc_html__('Invalid security token.', 'site-alerts'), 403);
+            self::sendError(esc_html__('Invalid security token.', 'proactive-site-advisor'), 403);
         }
     }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\Abstracts;
+namespace ProactiveSiteAdvisor\Abstracts;
 
-use SiteAlerts\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\DatabaseManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Base class for database seeders.
  *
- * @package SiteAlerts\Abstracts
+ * @package ProactiveSiteAdvisor\Abstracts
  * @version 1.0.0
  */
 abstract class AbstractSeeder

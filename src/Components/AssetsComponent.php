@@ -1,19 +1,19 @@
 <?php
 
-namespace SiteAlerts\Components;
-
-use SiteAlerts\Config\PrefixConfig;
+namespace ProactiveSiteAdvisor\Components;
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 /**
  * Class AssetsComponent
  *
  * Handles registration, enqueueing, and localization of scripts and styles.
  *
- * @package SiteAlerts\Components
+ * @package ProactiveSiteAdvisor\Components
  * @version 1.0.0
  */
 class AssetsComponent
@@ -23,7 +23,7 @@ class AssetsComponent
      *
      * @var string
      */
-    public static string $assetsUrl = SA_ASSETS;
+    public static string $assetsUrl = PROACTIVE_SITE_ADVISOR_ASSETS;
 
     /**
      * Enqueue a JavaScript file.
@@ -37,7 +37,7 @@ class AssetsComponent
     public static function enqueueScript(string $handle, ?string $src = null, array $deps = [], ?string $version = null, bool $inFooter = false): void
     {
         $handle  = self::getHandle($handle);
-        $version = $version ?? SA_VERSION;
+        $version = $version ?? PROACTIVE_SITE_ADVISOR_VERSION;
 
         wp_enqueue_script($handle, self::getSrc($src), $deps, $version, $inFooter);
     }
@@ -54,7 +54,7 @@ class AssetsComponent
     public static function registerScript(string $handle, string $src, array $deps = [], ?string $version = null, bool $inFooter = false): void
     {
         $handle  = self::getHandle($handle);
-        $version = $version ?? SA_VERSION;
+        $version = $version ?? PROACTIVE_SITE_ADVISOR_VERSION;
 
         wp_register_script($handle, self::getSrc($src), $deps, $version, $inFooter);
     }
@@ -71,7 +71,7 @@ class AssetsComponent
     public static function enqueueStyle(string $handle, ?string $src = null, array $deps = [], string $media = 'all', ?string $version = null): void
     {
         $handle  = self::getHandle($handle);
-        $version = $version ?? SA_VERSION;
+        $version = $version ?? PROACTIVE_SITE_ADVISOR_VERSION;
 
         wp_enqueue_style($handle, self::getSrc($src), $deps, $version, $media);
     }
@@ -88,7 +88,7 @@ class AssetsComponent
     public static function registerStyle(string $handle, string $src, array $deps = [], string $media = 'all', ?string $version = null): void
     {
         $handle  = self::getHandle($handle);
-        $version = $version ?? SA_VERSION;
+        $version = $version ?? PROACTIVE_SITE_ADVISOR_VERSION;
 
         wp_register_style($handle, self::getSrc($src), $deps, $version, $media);
     }

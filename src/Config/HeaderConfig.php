@@ -1,8 +1,9 @@
 <?php
 
-namespace SiteAlerts\Config;
+namespace ProactiveSiteAdvisor\Config;
 
-use SiteAlerts\Utils\MenuUtils;
+use ProactiveSiteAdvisor\Utils\MenuUtils;
+use ProactiveSiteAdvisor\AdminUI\Theme\ThemeManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -21,7 +22,7 @@ if (!defined('ABSPATH')) {
  * - Use HeaderConfig::getDefaults() as a base
  * - Merge, extend, or replace specific sections
  *
- * @package SiteAlerts\Config
+ * @package ProactiveSiteAdvisor\Config
  * @version 1.0.0
  */
 final class HeaderConfig
@@ -43,6 +44,7 @@ final class HeaderConfig
             'logoUrl'   => self::getDefaultLogoUrl(),
             'navItems'  => self::getDefaultNavItems(),
             'actions'   => self::getDefaultActions(),
+            'theme'     => self::getDefaultTheme(),
         ];
     }
 
@@ -53,7 +55,7 @@ final class HeaderConfig
      */
     public static function getDefaultTitle(): string
     {
-        return esc_html__('Site Alerts', 'site-alerts');
+        return esc_html__('Proactive Site Advisor', 'proactive-site-advisor');
     }
 
     /**
@@ -63,7 +65,7 @@ final class HeaderConfig
      */
     public static function getDefaultTitleLink(): string
     {
-        return MenuUtils::getUrl(SA_SLUG);
+        return MenuUtils::getUrl(PROACTIVE_SITE_ADVISOR_SLUG);
     }
 
     /**
@@ -73,7 +75,7 @@ final class HeaderConfig
      */
     public static function getDefaultVersion(): string
     {
-        return defined('SA_VERSION') ? SA_VERSION : '1.0.0';
+        return defined('PROACTIVE_SITE_ADVISOR_VERSION') ? PROACTIVE_SITE_ADVISOR_VERSION : '1.0.0';
     }
 
     /**
@@ -106,6 +108,16 @@ final class HeaderConfig
     public static function getDefaultActions(): array
     {
         return [];
+    }
+
+    /**
+     * Get the default theme for the header.
+     *
+     * @return string Theme identifier ('light' or 'dark')
+     */
+    public static function getDefaultTheme(): string
+    {
+        return ThemeManager::getInstance()->getCurrentTheme();
     }
 
     /**

@@ -1,10 +1,10 @@
 <?php
 
-namespace SiteAlerts\Cron;
+namespace ProactiveSiteAdvisor\Cron;
 
-use SiteAlerts\Abstracts\AbstractCronTask;
-use SiteAlerts\Services\Cron\DailyStatsFlusher;
-use SiteAlerts\Utils\Logger;
+use ProactiveSiteAdvisor\Abstracts\AbstractCronTask;
+use ProactiveSiteAdvisor\Services\Cron\DailyStatsFlusher;
+use ProactiveSiteAdvisor\Utils\Logger;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Central cron handler that runs daily at midnight.
  * Executes all registered daily services sequentially.
  *
- * @package SiteAlerts\Cron
+ * @package ProactiveSiteAdvisor\Cron
  * @version 1.0.0
  */
 class DailyCronHandler extends AbstractCronTask
@@ -26,7 +26,7 @@ class DailyCronHandler extends AbstractCronTask
      *
      * @var string
      */
-    protected string $hook = 'site_alerts_daily_cron';
+    protected string $hook = 'proactive_site_advisor_daily_cron';
 
     /**
      * Recurrence interval
@@ -68,14 +68,14 @@ class DailyCronHandler extends AbstractCronTask
          *
          * @param array $services Array of service class names.
          */
-        $services = apply_filters('site_alerts_daily_cron_services', $this->services);
+        $services = apply_filters('proactive_site_advisor_daily_cron_services', $this->services);
 
         Logger::debug('Daily cron started', ['service_count' => count($services)]);
 
         /**
          * Fires before any daily cron services run.
          */
-        do_action('site_alerts_daily_cron_before_dispatch');
+        do_action('proactive_site_advisor_daily_cron_before_dispatch');
 
         $results = [];
 
@@ -89,7 +89,7 @@ class DailyCronHandler extends AbstractCronTask
          *
          * @param array $results Array of service results [class => ['success' => bool, 'duration' => float]].
          */
-        do_action('site_alerts_daily_cron_after_dispatch', $results);
+        do_action('proactive_site_advisor_daily_cron_after_dispatch', $results);
 
         Logger::debug('Daily cron completed', ['results' => $results]);
     }
@@ -110,7 +110,7 @@ class DailyCronHandler extends AbstractCronTask
          * @param bool $enabled Whether the service is enabled.
          * @param string $serviceId The service identifier.
          */
-        $enabled = apply_filters('site_alerts_daily_cron_service_enabled', true, $serviceId);
+        $enabled = apply_filters('proactive_site_advisor_daily_cron_service_enabled', true, $serviceId);
 
         if (!$enabled) {
             Logger::debug("Service skipped (disabled): {$serviceId}");
@@ -128,7 +128,7 @@ class DailyCronHandler extends AbstractCronTask
              *
              * @param string $serviceId The service identifier.
              */
-            do_action('site_alerts_daily_cron_before_service', $serviceId);
+            do_action('proactive_site_advisor_daily_cron_before_service', $serviceId);
 
             $startTime = microtime(true);
             $serviceClass::getInstance()->run();
@@ -141,7 +141,7 @@ class DailyCronHandler extends AbstractCronTask
              * @param bool $success Whether the service succeeded.
              * @param float $duration Execution time in seconds.
              */
-            do_action('site_alerts_daily_cron_after_service', $serviceId, true, $duration);
+            do_action('proactive_site_advisor_daily_cron_after_service', $serviceId, true, $duration);
 
             Logger::debug("Service completed: {$serviceId}", ['duration' => round($duration, 4)]);
 
@@ -162,7 +162,7 @@ class DailyCronHandler extends AbstractCronTask
              * @param bool $success Whether the service succeeded.
              * @param float $duration Execution time in seconds.
              */
-            do_action('site_alerts_daily_cron_after_service', $serviceId, false, $duration);
+            do_action('proactive_site_advisor_daily_cron_after_service', $serviceId, false, $duration);
 
             return ['success' => false, 'duration' => $duration, 'error' => $e->getMessage()];
         }

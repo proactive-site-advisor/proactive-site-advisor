@@ -7,11 +7,11 @@
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are locally scoped via include.
  *
- * @package SiteAlerts
+ * @package ProactiveSiteAdvisor
  * @version 1.0.0
  *
- * @var string $iconClass CSS class for the icon (e.g., 'sa-icon--traffic-drop')
- * @var string $severityClass CSS class for severity badge (e.g., 'sa-badge--warning')
+ * @var string $iconClass CSS class for the icon
+ * @var string $severityClass CSS class for severity badge
  * @var string $typeLabel Human-readable type label (e.g., 'Traffic Drop')
  * @var string $severity Alert severity: 'info', 'warning', 'critical'
  * @var string $title Alert title
@@ -23,9 +23,9 @@
 
 defined('ABSPATH') || exit;
 
-$iconClass     = $iconClass ?? 'sa-icon--alert';
-$severityClass = $severityClass ?? 'sa-badge--info';
-$typeLabel     = $typeLabel ?? __('Alert', 'site-alerts');
+$iconClass     = $iconClass ?? 'proactive-site-advisor-icon--alert';
+$severityClass = $severityClass ?? 'proactive-site-advisor-badge--info';
+$typeLabel     = $typeLabel ?? __('Alert', 'proactive-site-advisor');
 $severity      = $severity ?? 'info';
 $title         = $title ?? '';
 $message       = $message ?? '';
@@ -46,43 +46,43 @@ if (!empty($alertDate)) {
 $hasExpanded = !empty($expanded['meaning']) || !empty($expanded['checks']) || !empty($expanded['topUrls']);
 
 // Generate unique ID for accessibility
-$cardId = 'sa-alert-' . wp_unique_id();
+$cardId = 'proactive-site-advisor-alert-' . wp_unique_id();
 ?>
 
-<div class="sa-card sa-alert-card sa-alert-card--<?php echo esc_attr($severity); ?><?php echo $hasExpanded ? ' sa-alert-card--collapsible' : ''; ?>">
-    <div class="sa-alert-card__body">
-        <div class="sa-alert-card__icon">
+<div class="proactive-site-advisor-card proactive-site-advisor-alert-card proactive-site-advisor-alert-card--<?php echo esc_attr($severity); ?><?php echo $hasExpanded ? ' proactive-site-advisor-alert-card--collapsible' : ''; ?>">
+    <div class="proactive-site-advisor-alert-card__body">
+        <div class="proactive-site-advisor-alert-card__icon">
             <span class="<?php echo esc_attr($iconClass); ?>"></span>
         </div>
-        <div class="sa-alert-card__content">
-            <div class="sa-alert-card__header">
-                <span class="sa-badge <?php echo esc_attr($severityClass); ?>">
+        <div class="proactive-site-advisor-alert-card__content">
+            <div class="proactive-site-advisor-alert-card__header">
+                <span class="proactive-site-advisor-badge <?php echo esc_attr($severityClass); ?>">
                     <?php echo esc_html($typeLabel); ?>
                 </span>
                 <?php if (!empty($formattedDate)) : ?>
-                    <span class="sa-alert-card__date"><?php echo esc_html($formattedDate); ?></span>
+                    <span class="proactive-site-advisor-alert-card__date"><?php echo esc_html($formattedDate); ?></span>
                 <?php endif; ?>
             </div>
             <?php if (!empty($title)) : ?>
-                <h5 class="sa-alert-card__title"><?php echo esc_html($title); ?></h5>
+                <h5 class="proactive-site-advisor-alert-card__title"><?php echo esc_html($title); ?></h5>
             <?php endif; ?>
             <?php if (!empty($shortMessage)) : ?>
-                <p class="sa-alert-card__message"><?php echo esc_html($shortMessage); ?></p>
+                <p class="proactive-site-advisor-alert-card__message"><?php echo esc_html($shortMessage); ?></p>
             <?php endif; ?>
 
             <?php if ($hasExpanded) : ?>
-                <div id="<?php echo esc_attr($cardId); ?>-details" class="sa-alert-card__details" hidden>
+                <div id="<?php echo esc_attr($cardId); ?>-details" class="proactive-site-advisor-alert-card__details" hidden>
                     <?php if (!empty($expanded['meaning'])) : ?>
-                        <div class="sa-alert-card__section">
-                            <h6 class="sa-alert-card__section-title"><?php esc_html_e('What this means', 'site-alerts'); ?></h6>
-                            <p class="sa-alert-card__section-text"><?php echo esc_html($expanded['meaning']); ?></p>
+                        <div class="proactive-site-advisor-alert-card__section">
+                            <h6 class="proactive-site-advisor-alert-card__section-title"><?php esc_html_e('What this means', 'proactive-site-advisor'); ?></h6>
+                            <p class="proactive-site-advisor-alert-card__section-text"><?php echo esc_html($expanded['meaning']); ?></p>
                         </div>
                     <?php endif; ?>
 
                     <?php if (!empty($expanded['checks']) && is_array($expanded['checks'])) : ?>
-                        <div class="sa-alert-card__section">
-                            <h6 class="sa-alert-card__section-title"><?php esc_html_e('What you should check next', 'site-alerts'); ?></h6>
-                            <ul class="sa-alert-card__checklist">
+                        <div class="proactive-site-advisor-alert-card__section">
+                            <h6 class="proactive-site-advisor-alert-card__section-title"><?php esc_html_e('What you should check next', 'proactive-site-advisor'); ?></h6>
+                            <ul class="proactive-site-advisor-alert-card__checklist">
                                 <?php foreach ($expanded['checks'] as $check) : ?>
                                     <li><?php echo esc_html($check); ?></li>
                                 <?php endforeach; ?>
@@ -91,13 +91,13 @@ $cardId = 'sa-alert-' . wp_unique_id();
                     <?php endif; ?>
 
                     <?php if (!empty($expanded['topUrls']) && is_array($expanded['topUrls'])) : ?>
-                        <div class="sa-alert-card__section">
-                            <h6 class="sa-alert-card__section-title"><?php esc_html_e('Top 404 URLs', 'site-alerts'); ?></h6>
-                            <ul class="sa-alert-card__url-list">
+                        <div class="proactive-site-advisor-alert-card__section">
+                            <h6 class="proactive-site-advisor-alert-card__section-title"><?php esc_html_e('Top 404 URLs', 'proactive-site-advisor'); ?></h6>
+                            <ul class="proactive-site-advisor-alert-card__url-list">
                                 <?php foreach ($expanded['topUrls'] as $urlItem) : ?>
                                     <li>
-                                        <code class="sa-alert-card__url-path"><?php echo esc_html($urlItem['path']); ?></code>
-                                        <span class="sa-alert-card__url-count"><?php echo esc_html(number_format_i18n($urlItem['count'])); ?></span>
+                                        <code class="proactive-site-advisor-alert-card__url-path"><?php echo esc_html($urlItem['path']); ?></code>
+                                        <span class="proactive-site-advisor-alert-card__url-count"><?php echo esc_html(number_format_i18n($urlItem['count'])); ?></span>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -109,12 +109,12 @@ $cardId = 'sa-alert-' . wp_unique_id();
         <?php if ($hasExpanded) : ?>
             <button
                 type="button"
-                class="sa-alert-card__toggle"
+                class="proactive-site-advisor-alert-card__toggle"
                 aria-expanded="false"
                 aria-controls="<?php echo esc_attr($cardId); ?>-details"
-                aria-label="<?php esc_attr_e('Toggle details', 'site-alerts'); ?>"
+                aria-label="<?php esc_attr_e('Toggle details', 'proactive-site-advisor'); ?>"
             >
-                <span class="sa-icon--chevron-down"></span>
+                <span class="proactive-site-advisor-icon--chevron-down"></span>
             </button>
         <?php endif; ?>
     </div>

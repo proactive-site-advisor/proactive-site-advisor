@@ -21,7 +21,7 @@ Link related issues if applicable.
 
 ### Test Steps
 
-1. Install & activate the Site Alerts plugin
+1. Install & activate the Proactive Site Advisor plugin
 2.
 3.
 

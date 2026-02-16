@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
 use WP_Error;
 
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * A utility class for managing WordPress plugins programmatically.
  *
- * @package SiteAlerts\Utils
+ * @package ProactiveSiteAdvisor\Utils
  * @version 1.0.0
  */
 class PluginUtils

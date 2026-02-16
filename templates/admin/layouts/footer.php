@@ -4,7 +4,7 @@
  *
  * This file renders the admin footer and closes the wrapper div.
  *
- * @package SiteAlerts
+ * @package ProactiveSiteAdvisor
  * @version 1.0.0
  */
 

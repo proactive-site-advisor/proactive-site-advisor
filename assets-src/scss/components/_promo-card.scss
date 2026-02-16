@@ -12,7 +12,7 @@
 $promo-gold: #F0A500;
 $promo-gold-hover: #D99400;
 
-.#{$prefix}-promo-card {
+.#{css-class('promo-card')} {
   position: relative;
   background: #FFFFFF;
   border: 1px solid #FDE68A;
@@ -43,7 +43,7 @@ $promo-gold-hover: #D99400;
       outline: none;
     }
 
-    [class^="#{$prefix}-icon--"] {
+    [class^="#{css-class('icon--')}"] {
       width: 1rem;
       height: 1rem;
     }
@@ -61,7 +61,7 @@ $promo-gold-hover: #D99400;
     letter-spacing: 0.05em;
     color: #B7791F;
     background-color: #FEF9E7;
-    border-radius: #{css-var('border-radius-sm')};
+    border-radius: css-var(border-radius-sm);
 
     svg {
       width: 0.5rem;
@@ -73,13 +73,13 @@ $promo-gold-hover: #D99400;
     margin: 0 0 0.25rem 0;
     font-size: 1rem;
     font-weight: 600;
-    color: #{css-var('heading-color')};
+    color: css-var(heading-color);
   }
 
   &__description {
     margin: 0 0 0.5rem 0;
     font-size: 0.8125rem;
-    color: #{css-var('muted-color')};
+    color: css-var(muted-color);
   }
 
   // Inline horizontal features
@@ -91,7 +91,7 @@ $promo-gold-hover: #D99400;
     padding: 0;
     list-style: none;
     font-size: 0.8125rem;
-    color: #{css-var('body-color')};
+    color: css-var(body-color);
 
     li {
       display: flex;
@@ -124,11 +124,11 @@ $promo-gold-hover: #D99400;
     gap: .375rem;
     margin: 0;
     font-size: .75rem;
-    color: var(--sa-secondary);
+    color: css-var(secondary);
   }
 
   // Gold button variant
-  .#{$prefix}-btn--gold {
+  .#{css-class('btn--gold')} {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;

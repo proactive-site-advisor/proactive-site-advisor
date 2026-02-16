@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Database;
+namespace ProactiveSiteAdvisor\Database;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Database\Schemas\CoreTables;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Manages database schema registration at boot time.
  * Allows child plugins to register their own schemas via filter.
  *
- * @package SiteAlerts\Database
+ * @package ProactiveSiteAdvisor\Database
  * @version 1.0.0
  */
 class SchemaManager extends AbstractSingleton
@@ -42,7 +42,7 @@ class SchemaManager extends AbstractSingleton
          *
          * @param array $providers Schema provider class names.
          */
-        $providers = apply_filters('site_alerts_schema_providers', $this->providers);
+        $providers = apply_filters('proactive_site_advisor_schema_providers', $this->providers);
 
         foreach ($providers as $providerClass) {
             $this->registerProvider($providerClass);
@@ -79,7 +79,7 @@ class SchemaManager extends AbstractSingleton
      */
     public function getProviders(): array
     {
-        return apply_filters('site_alerts_schema_providers', $this->providers);
+        return apply_filters('proactive_site_advisor_schema_providers', $this->providers);
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Abstracts;
+namespace ProactiveSiteAdvisor\Abstracts;
 
 use Exception;
-use SiteAlerts\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\DatabaseManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Base model class providing CRUD operations and data access.
  * All model classes should extend this class.
  *
- * @package SiteAlerts\Abstracts
+ * @package ProactiveSiteAdvisor\Abstracts
  * @version 1.0.0
  */
 abstract class AbstractModel

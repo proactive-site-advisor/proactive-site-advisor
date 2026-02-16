@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\Services\Insights;
+namespace ProactiveSiteAdvisor\Services\Insights;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Models\Alert;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Models\Alert;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Compares current day statistics against historical baselines
  * to detect anomalies like traffic drops, spikes, and 404 surges.
  *
- * @package SiteAlerts\Services\Insights
+ * @package ProactiveSiteAdvisor\Services\Insights
  * @version 1.0.0
  */
 class AlertEngine extends AbstractSingleton
@@ -103,13 +103,13 @@ class AlertEngine extends AbstractSingleton
             $severity = (abs($changePct) >= 40.0) ? 'critical' : 'warning';
             $title    = sprintf(
             /* translators: %s is percent number */
-                __('Traffic dropped by %s%%', 'site-alerts'),
+                __('Traffic dropped by %s%%', 'proactive-site-advisor'),
                 number_format_i18n(abs($changePct), 0)
             );
 
             $message = __(
                 "Today's traffic is significantly lower than your recent average.\n\nNext steps:\n- Check if your site is reachable\n- Review recent plugin/theme changes\n- Check for increased 404 errors",
-                'site-alerts'
+                'proactive-site-advisor'
             );
 
             $meta = [
@@ -132,13 +132,13 @@ class AlertEngine extends AbstractSingleton
         if ($ratio > 1.5) {
             $title = sprintf(
             /* translators: %s is percent number */
-                __('Traffic increased by %s%%', 'site-alerts'),
+                __('Traffic increased by %s%%', 'proactive-site-advisor'),
                 number_format_i18n(abs($changePct), 0)
             );
 
             $message = __(
                 "Your traffic is significantly higher than your recent average.\n\nNext steps:\n- Check which pages are receiving traffic\n- Verify traffic sources\n- Ensure your site performance is stable",
-                'site-alerts'
+                'proactive-site-advisor'
             );
 
             $meta = [
@@ -187,7 +187,7 @@ class AlertEngine extends AbstractSingleton
             return;
         }
 
-        $title = __('404 errors increased', 'site-alerts');
+        $title = __('404 errors increased', 'proactive-site-advisor');
 
         $topPath = null;
         if (is_array($top404) && !empty($top404) && is_array($top404[0]) && isset($top404[0][0])) {
@@ -196,14 +196,14 @@ class AlertEngine extends AbstractSingleton
 
         $line = $topPath
             /* translators: %s is the URL path */
-            ? sprintf(__('Most affected URL: %s', 'site-alerts'), $topPath)
-            : __('Most affected URL: (not available)', 'site-alerts');
+            ? sprintf(__('Most affected URL: %s', 'proactive-site-advisor'), $topPath)
+            : __('Most affected URL: (not available)', 'proactive-site-advisor');
 
         $message = sprintf(
             "%s\n\n%s",
             __(
                 "Your site is receiving significantly more 404 errors than usual.\n\nNext steps:\n- Add a redirect for missing pages\n- Fix internal links pointing to missing URLs\n- Check recent permalink changes",
-                'site-alerts'
+                'proactive-site-advisor'
             ),
             $line
         );

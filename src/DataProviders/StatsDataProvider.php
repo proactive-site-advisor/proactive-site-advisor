@@ -1,9 +1,9 @@
 <?php
 
-namespace SiteAlerts\DataProviders;
+namespace ProactiveSiteAdvisor\DataProviders;
 
-use SiteAlerts\Abstracts\AbstractDataProvider;
-use SiteAlerts\Models\DailyStats;
+use ProactiveSiteAdvisor\Abstracts\AbstractDataProvider;
+use ProactiveSiteAdvisor\Models\DailyStats;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class StatsDataProvider
  *
- * @package SiteAlerts\DataProviders
+ * @package ProactiveSiteAdvisor\DataProviders
  * @version 1.0.0
  */
 class StatsDataProvider extends AbstractDataProvider

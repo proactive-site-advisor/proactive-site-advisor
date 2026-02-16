@@ -1,19 +1,19 @@
 <?php
 
-namespace SiteAlerts;
+namespace ProactiveSiteAdvisor;
 
-use SiteAlerts\Admin\AdminNotices;
-use SiteAlerts\Admin\PromoBanner;
-use SiteAlerts\AdminUI\Theme\ThemeManager;
-use SiteAlerts\Cache\CacheManager;
-use SiteAlerts\CLI\CLIManager;
-use SiteAlerts\Cron\CronManager;
-use SiteAlerts\Database\SchemaManager;
-use SiteAlerts\Menu\MenuManager;
-use SiteAlerts\Utils\Logger;
+use ProactiveSiteAdvisor\Admin\AdminNotices;
+use ProactiveSiteAdvisor\Admin\PromoBanner;
+use ProactiveSiteAdvisor\AdminUI\Theme\ThemeManager;
+use ProactiveSiteAdvisor\Cache\CacheManager;
+use ProactiveSiteAdvisor\CLI\CLIManager;
+use ProactiveSiteAdvisor\Cron\CronManager;
+use ProactiveSiteAdvisor\Database\SchemaManager;
+use ProactiveSiteAdvisor\Menu\MenuManager;
+use ProactiveSiteAdvisor\Utils\Logger;
 use SiteAlerts\Services\Admin\Alerts\AlertsManager;
-use SiteAlerts\AdminUI\Assets\AdminUIAssets;
-use SiteAlerts\Services\Frontend\Traffic\TrafficManager;
+use ProactiveSiteAdvisor\AdminUI\Assets\AdminUIAssets;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -24,7 +24,7 @@ if (!defined('ABSPATH')) {
  *
  * Main plugin bootstrap class (Singleton pattern).
  *
- * @package SiteAlerts
+ * @package ProactiveSiteAdvisor
  * @version 1.0.0
  */
 final class Core
@@ -88,7 +88,7 @@ final class Core
      */
     protected function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'site-alerts'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'proactive-site-advisor'), '1.0.0');
     }
 
     /**
@@ -98,7 +98,7 @@ final class Core
      */
     public function __wakeup(): void
     {
-        _doing_it_wrong(__FUNCTION__, esc_html__('Instances of this class cannot be unserialized.', 'site-alerts'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, esc_html__('Instances of this class cannot be unserialized.', 'proactive-site-advisor'), '1.0.0');
     }
 
     /**
@@ -154,7 +154,7 @@ final class Core
          *
          * @param Core $core The Core instance.
          */
-        do_action('site_alerts_loaded', $this);
+        do_action('proactive_site_advisor_loaded', $this);
     }
 
     /**
@@ -195,7 +195,7 @@ final class Core
          *
          * @param array $services Core service class names.
          */
-        return apply_filters('site_alerts_core_services', $this->coreServices);
+        return apply_filters('proactive_site_advisor_core_services', $this->coreServices);
     }
 
     /**
@@ -210,7 +210,7 @@ final class Core
          *
          * @param array $services Admin service class names.
          */
-        return apply_filters('site_alerts_admin_services', $this->adminServices);
+        return apply_filters('proactive_site_advisor_admin_services', $this->adminServices);
     }
 
     /**
@@ -225,7 +225,7 @@ final class Core
          *
          * @param array $services Frontend service class names.
          */
-        return apply_filters('site_alerts_frontend_services', $this->frontendServices);
+        return apply_filters('proactive_site_advisor_frontend_services', $this->frontendServices);
     }
 
     /**

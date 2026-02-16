@@ -1,6 +1,6 @@
-# Contributing to Site Alerts
+# Contributing to Proactive Site Advisor
 
-Thank you for your interest in contributing to Site Alerts! 🎉  
+Thank you for your interest in contributing to Proactive Site Advisor! 🎉  
 Contributions of all kinds are welcome, including bug reports, feature requests, and pull requests.
 
 ## How to Contribute
@@ -43,4 +43,4 @@ By contributing to this project, you agree that your contributions will be licen
 
 ---
 
-Thank you for helping improve Site Alerts! 🚀
+Thank you for helping improve Proactive Site Advisor! 🚀

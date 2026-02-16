@@ -1,12 +1,12 @@
 <?php
 
-namespace SiteAlerts\Admin;
+namespace ProactiveSiteAdvisor\Admin;
 
-use SiteAlerts\Cache\CacheManager;
-use SiteAlerts\Components\AjaxComponent;
-use SiteAlerts\Utils\CacheKeys;
-use SiteAlerts\Utils\OptionUtils;
-use SiteAlerts\Config\UserOptions;
+use ProactiveSiteAdvisor\Cache\CacheKeys;
+use ProactiveSiteAdvisor\Cache\CacheManager;
+use ProactiveSiteAdvisor\Components\AjaxComponent;
+use ProactiveSiteAdvisor\Config\UserOptions;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Centralized admin notice management with dismissibility support
  * and transient-based persistence.
  *
- * @package SiteAlerts\Admin
+ * @package ProactiveSiteAdvisor\Admin
  * @version 1.0.0
  */
 class AdminNotices
@@ -184,14 +184,14 @@ class AdminNotices
         $noticeId = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
         if (empty($noticeId)) {
-            AjaxComponent::sendError(__('Invalid notice ID.', 'site-alerts'));
+            AjaxComponent::sendError(__('Invalid notice ID.', 'proactive-site-advisor'));
             return;
         }
 
         self::markDismissed($noticeId);
         self::remove($noticeId);
 
-        AjaxComponent::sendSuccess([], __('Notice dismissed.', 'site-alerts'));
+        AjaxComponent::sendSuccess([], __('Notice dismissed.', 'proactive-site-advisor'));
     }
 
     /**

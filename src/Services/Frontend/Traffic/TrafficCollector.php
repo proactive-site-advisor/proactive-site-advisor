@@ -1,10 +1,10 @@
 <?php
 
-namespace SiteAlerts\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Cache\CacheManager;
-use SiteAlerts\Utils\CacheKeys;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Cache\CacheKeys;
+use ProactiveSiteAdvisor\Cache\CacheManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  * Runs only on legitimate frontend requests, skipping admin, REST, AJAX,
  * cron, feed, and preview requests.
  *
- * @package SiteAlerts\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
 class TrafficCollector extends AbstractSingleton

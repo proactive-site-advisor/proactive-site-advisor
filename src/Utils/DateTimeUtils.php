@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Utils;
+namespace ProactiveSiteAdvisor\Utils;
 
 use DateTimeImmutable;
 use DateTimeZone;

@@ -1,11 +1,11 @@
 <?php
 
-namespace SiteAlerts\Admin;
+namespace ProactiveSiteAdvisor\Admin;
 
-use SiteAlerts\Components\AjaxComponent;
-use SiteAlerts\Utils\DateTimeUtils;
-use SiteAlerts\Utils\OptionUtils;
-use SiteAlerts\Config\UserOptions;
+use ProactiveSiteAdvisor\Components\AjaxComponent;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Config\UserOptions;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  * Handles the promo banner dismissal functionality.
  * Stores dismissal timestamp per user and checks if banner should be shown.
  *
- * @package SiteAlerts\Admin
+ * @package ProactiveSiteAdvisor\Admin
  * @version 1.0.0
  */
 class PromoBanner
@@ -64,7 +64,7 @@ class PromoBanner
 
         // Check user capability
         if (!current_user_can('manage_options')) {
-            AjaxComponent::sendError(__('Unauthorized.', 'site-alerts'), 403);
+            AjaxComponent::sendError(__('Unauthorized.', 'proactive-site-advisor'), 403);
             return;
         }
 
@@ -78,7 +78,7 @@ class PromoBanner
         AjaxComponent::sendSuccess([
             'dismissed_until' => $dismissUntil,
             'days'            => $dismissDays,
-        ], __('Banner dismissed successfully.', 'site-alerts'));
+        ], __('Banner dismissed successfully.', 'proactive-site-advisor'));
     }
 
     /**
@@ -101,14 +101,14 @@ class PromoBanner
 
     /**
      * Get the dismiss duration in days
-     * Filterable via 'site_alerts_promo_dismiss_duration' hook
+     * Filterable via 'proactive_site_advisor_promo_dismiss_duration' hook
      *
      * @return int
      */
     private static function getDismissDuration(): int
     {
         return (int)apply_filters(
-            'site_alerts_promo_dismiss_duration',
+            'proactive_site_advisor_promo_dismiss_duration',
             self::DISMISS_DURATION_DAYS
         );
     }

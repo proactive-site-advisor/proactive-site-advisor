@@ -1,6 +1,6 @@
 <?php
 
-namespace SiteAlerts\Menu;
+namespace ProactiveSiteAdvisor\Menu;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Supports both object-oriented usage (MenuItem instances) and array-based usage
  * for a WordPress-like developer experience.
  *
- * @package SiteAlerts\Menu
+ * @package ProactiveSiteAdvisor\Menu
  * @version 1.1.0
  */
 class MenuManager
@@ -65,7 +65,7 @@ class MenuManager
      */
     private function getFilteredMenuItems(): array
     {
-        return apply_filters('site_alerts_menu_items', $this->menuItems);
+        return apply_filters('proactive_site_advisor_menu_items', $this->menuItems);
     }
 
     /**

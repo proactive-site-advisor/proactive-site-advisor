@@ -1,6 +1,6 @@
-# Site Alerts
+# Proactive Site Advisor
 
-Site Alerts is a WordPress plugin that monitors basic site activity and surfaces important changes directly in the WordPress admin dashboard.
+Proactive Site Advisor is a WordPress plugin that monitors basic site activity and surfaces important changes directly in the WordPress admin dashboard.
 
 It helps site owners become aware of unusual behavior—such as sudden traffic drops, unexpected traffic spikes, or increased 404 errors—using simple, daily insights without external services.
 
@@ -22,11 +22,11 @@ It helps site owners become aware of unusual behavior—such as sudden traffic d
 ### Install from ZIP
 
 1. Download the repository as a ZIP.
-2. Extract it and upload the `site-alerts` directory to `wp-content/plugins/`.
-3. Activate **Site Alerts** from **Plugins → Installed Plugins**.
+2. Extract it and upload the `proactive-site-advisor` directory to `wp-content/plugins/`.
+3. Activate **Proactive Site Advisor** from **Plugins → Installed Plugins**.
 
 ### Development setup
 
 ```bash
-git clone git@github.com:site-alerts/site-alerts.git
-cd site-alerts
+git clone git@github.com:proactive-site-advisor/proactive-site-advisor.git
+cd proactive-site-advisor

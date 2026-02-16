@@ -1,6 +1,6 @@
 <?php
 /**
- * SiteAlerts Uninstall Script
+ * ProactiveSiteAdvisor Uninstall Script
  *
  * This file is executed when the plugin is deleted via WordPress admin.
  * It delegates all cleanup to the UninstallHandler class.
@@ -9,7 +9,7 @@
  * Do not access this file directly. WordPress defines the constant
  * WP_UNINSTALL_PLUGIN when executing this file.
  *
- * @package SiteAlerts
+ * @package ProactiveSiteAdvisor
  * @version 1.0.0
  */
 
@@ -27,4 +27,4 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 // Run uninstall handler
-SiteAlerts\Lifecycle\UninstallHandler::uninstall();
+ProactiveSiteAdvisor\Lifecycle\UninstallHandler::uninstall();

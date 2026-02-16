@@ -9,11 +9,11 @@
     var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
     if (!PREFIX_CONFIG) throw new Error('PromoBanner requires namespace.js (__PREFIX_CONFIG__).');
 
-    var SA = window[PREFIX_CONFIG.namespace];
-    if (!SA) throw new Error('PromoBanner requires global namespace.');
+    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
+    if (!ProactiveSiteAdvisor) throw new Error('PromoBanner requires global namespace.');
 
-    var Helpers = SA.Helpers;
-    var Config = SA.Config;
+    var Helpers = ProactiveSiteAdvisor.Helpers;
+    var Config = ProactiveSiteAdvisor.Config;
     if (!Helpers || !Config) throw new Error('PromoBanner requires helpers.js and config.js.');
 
     function restore(card, btn) {
@@ -23,7 +23,9 @@
     }
 
     function dismiss(btn) {
-        var card = btn.closest(SA.selector('promo-card'));
+        var card = btn.closest(
+            ProactiveSiteAdvisor.selector('promo-card')
+        );
         if (!card || typeof window.fetch !== 'function') return;
 
         var ajaxUrl = Config.getAjaxUrl();
@@ -37,7 +39,10 @@
         card.style.transform = 'translateY(-10px)';
 
         var formData = new FormData();
-        formData.append('action', PREFIX_CONFIG.prefix + '_dismiss_promo_banner');
+        formData.append(
+            'action',
+            ProactiveSiteAdvisor.ajaxAction('dismiss_promo_banner')
+        );
         formData.append('security', nonce);
 
         window.fetch(ajaxUrl, {
@@ -51,7 +56,9 @@
             .then(function (data) {
                 if (data && data.success) {
                     setTimeout(function () {
-                        if (card.parentNode) card.parentNode.removeChild(card);
+                        if (card.parentNode) {
+                            card.parentNode.removeChild(card);
+                        }
                     }, 300);
                 } else {
                     restore(card, btn);
@@ -67,7 +74,9 @@
             var target = Helpers.getElement(e.target);
             if (!target) return;
 
-            var btn = target.closest(SA.dataSelector('action', 'dismiss-promo'));
+            var btn = target.closest(
+                ProactiveSiteAdvisor.dataSelector('action', 'dismiss-promo')
+            );
             if (!btn) return;
 
             e.preventDefault();
@@ -81,6 +90,6 @@
         init();
     }
 
-    SA.PromoBanner = {init: init};
+    ProactiveSiteAdvisor.PromoBanner = {init: init};
 
 })(window, document);

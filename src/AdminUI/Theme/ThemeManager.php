@@ -1,11 +1,12 @@
 <?php
 
-namespace SiteAlerts\AdminUI\Theme;
+namespace ProactiveSiteAdvisor\AdminUI\Theme;
 
-use SiteAlerts\Abstracts\AbstractSingleton;
-use SiteAlerts\Components\AjaxComponent;
-use SiteAlerts\Utils\OptionUtils;
-use SiteAlerts\Config\UserOptions;
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Components\AjaxComponent;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Config\UserOptions;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Manages the admin UI theme (light / dark) on a per-user basis.
  * Handles theme persistence, AJAX-based switching, and UI helpers.
  *
- * @package SiteAlerts\AdminUI\Theme
+ * @package ProactiveSiteAdvisor\AdminUI\Theme
  */
 class ThemeManager extends AbstractSingleton
 {
@@ -130,11 +131,11 @@ class ThemeManager extends AbstractSingleton
         if ($this->setTheme($theme)) {
             AjaxComponent::sendSuccess(
                 ['theme' => $theme],
-                __('Theme switched successfully.', 'site-alerts')
+                __('Theme switched successfully.', 'proactive-site-advisor')
             );
         } else {
             AjaxComponent::sendError(
-                __('Invalid theme.', 'site-alerts'),
+                __('Invalid theme.', 'proactive-site-advisor'),
                 400
             );
         }
@@ -149,17 +150,8 @@ class ThemeManager extends AbstractSingleton
      */
     public function addThemeBodyClass(string $classes): string
     {
-        return $classes . ' sa-theme-' . $this->getCurrentTheme();
-    }
 
-    /**
-     * Get the HTML data attribute representing the current admin theme.
-     *
-     * @return string HTML-safe data attribute string.
-     */
-    public function getThemeAttribute(): string
-    {
-        return 'data-sa-theme="' . esc_attr($this->getCurrentTheme()) . '"';
+        return $classes . PrefixConfig::css('theme-' . $this->getCurrentTheme());
     }
 
     /**

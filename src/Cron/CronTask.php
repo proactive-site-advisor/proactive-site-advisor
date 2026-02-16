@@ -1,8 +1,8 @@
 <?php
 
-namespace SiteAlerts\Cron;
+namespace ProactiveSiteAdvisor\Cron;
 
-use SiteAlerts\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Represents a single cron task configuration.
  *
- * @package SiteAlerts\Cron
+ * @package ProactiveSiteAdvisor\Cron
  * @version 1.0.0
  */
 class CronTask
