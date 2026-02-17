@@ -72,7 +72,7 @@ class FragmentCache
         $cached = $this->cache->get($fullKey, null, CacheGroups::FRAGMENT);
 
         if ($cached !== null) {
-            echo $cached;
+            echo wp_kses_post($cached);
             return;
         }
 
@@ -95,7 +95,7 @@ class FragmentCache
             CacheGroups::FRAGMENT
         );
 
-        echo $content;
+        echo wp_kses_post($content);
     }
 
     /**

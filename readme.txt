@@ -1,4 +1,4 @@
-=== Proactive Site Advisor ===
+=== Proactive Site Advisor - Insights & Actionable Recommendations ===
 Contributors: sitealerts
 Tags: alerts, monitoring, admin notices, site health, traffic
 Requires at least: 6.1
