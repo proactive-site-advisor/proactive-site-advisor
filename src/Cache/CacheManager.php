@@ -293,6 +293,7 @@ class CacheManager extends AbstractSingleton
 
         $like = PrefixConfig::PREFIX . ':%';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- intentional safe query for plugin prefix
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options}

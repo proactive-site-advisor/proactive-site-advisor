@@ -3,7 +3,7 @@
         'name' => 'starter/proactive-site-advisor',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '161d1ed02e9b20e027f01424972f46937bed1d7d',
+        'reference' => '861afe9502cb4ac5b430991f2b37487119f2ea4e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'starter/proactive-site-advisor' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '161d1ed02e9b20e027f01424972f46937bed1d7d',
+            'reference' => '861afe9502cb4ac5b430991f2b37487119f2ea4e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

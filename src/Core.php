@@ -11,7 +11,7 @@ use ProactiveSiteAdvisor\Cron\CronManager;
 use ProactiveSiteAdvisor\Database\SchemaManager;
 use ProactiveSiteAdvisor\Menu\MenuManager;
 use ProactiveSiteAdvisor\Utils\Logger;
-use SiteAlerts\Services\Admin\Alerts\AlertsManager;
+use ProactiveSiteAdvisor\Services\Admin\Alerts\AlertsManager;
 use ProactiveSiteAdvisor\AdminUI\Assets\AdminUIAssets;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficManager;
 
