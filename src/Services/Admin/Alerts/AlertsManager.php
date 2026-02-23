@@ -58,7 +58,7 @@ class AlertsManager
          *
          * @return float The possibly modified position after applying filters.
          */
-        $position = apply_filters('proactive_site_advisor_plugins_menu_item_position', 65.0);
+        $position = apply_filters('proactive_site_advisor_plugins_menu_item_position', 66);
 
         $priority   = AlertsDataProvider::getInstance()->getPriorityCount();
         $count      = $priority['count'];
