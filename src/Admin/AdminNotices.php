@@ -7,6 +7,7 @@ use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Components\AjaxComponent;
 use ProactiveSiteAdvisor\Config\UserOptions;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -49,6 +50,9 @@ class AdminNotices
         }
 
         add_action('admin_notices', [self::class, 'render']);
+
+        // Add this line to clean the room on our pages
+        add_action('admin_head', [self::class, 'sanitizeNotices'], 1);
 
         // Register AJAX handler for dismissing notices
         AjaxComponent::register('dismiss_notice', [self::class, 'handleDismiss'], false, true);
@@ -296,5 +300,29 @@ class AdminNotices
                 unset(self::$notices[$id]);
             }
         }
+    }
+
+    /**
+     * Suppress third-party notices on plugin pages to maintain a clean UI.
+     *
+     * @return void
+     */
+    public static function sanitizeNotices(): void
+    {
+        $screen = get_current_screen();
+
+        // Only target screens belonging to our plugin
+        if (!$screen || strpos($screen->id, PrefixConfig::BASE) === false) {
+            return;
+        }
+
+        // Clear all core and third-party notice hooks
+        remove_all_actions('admin_notices');
+        remove_all_actions('all_admin_notices');
+        remove_all_actions('user_admin_notices');
+        remove_all_actions('network_admin_notices');
+
+        // Re-add our internal notice rendering
+        add_action('admin_notices', [self::class, 'render']);
     }
 }

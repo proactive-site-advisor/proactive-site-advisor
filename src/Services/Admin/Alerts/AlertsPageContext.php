@@ -75,7 +75,7 @@ class AlertsPageContext
 
         $this->status     = PluginStatus::getStatus();
         $this->rawDigest  = $this->alertsProvider->getDigest(7);
-        $this->rawAlerts  = $this->alertsProvider->getLatest(5);
+        $this->rawAlerts  = $this->alertsProvider->getLatest(20, 7);
         $this->rawHistory = $this->statsProvider->getLastDays(7);
     }
 
@@ -249,16 +249,14 @@ class AlertsPageContext
         if ($this->status === PluginStatus::STATUS_FRESH) {
             return [
                 'value'    => '—',
-                'subtitle' => $cardKey === 'total_alerts'
-                    ? __('Last 7 days', 'proactive-site-advisor')
-                    : __('Collecting data', 'proactive-site-advisor'),
+                'subtitle' => __('Collecting data', 'proactive-site-advisor'),
             ];
         }
 
         // Limited data: show actual value with limited notice
         if ($this->status === PluginStatus::STATUS_LIMITED) {
             return [
-                'value'    => (string)$rawValue,
+                'value'    => '—',
                 'subtitle' => __('Limited data available', 'proactive-site-advisor'),
             ];
         }
