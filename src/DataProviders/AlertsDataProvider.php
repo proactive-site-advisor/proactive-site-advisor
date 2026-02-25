@@ -24,22 +24,26 @@ class AlertsDataProvider extends AbstractDataProvider
      * Get the latest alerts with enriched data.
      *
      * @param int $limit Number of alerts to retrieve (1-20).
+     * @param int $days
      * @return array<int, array<string, mixed>>
      */
-    public function getLatest(int $limit = 3): array
+    public function getLatest(int $limit = 7, int $days = 7): array
     {
         global $wpdb;
 
         $limit = max(1, min(20, $limit));
         $table = Alert::getTableName();
+        $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT alert_date, type, severity, title, message, meta_json, created_at
                  FROM {$table}
+                 WHERE alert_date >= %s
                  ORDER BY alert_date DESC, id DESC
                  LIMIT %d",
+                $start,
                 $limit
             ),
             ARRAY_A
@@ -183,14 +187,12 @@ class AlertsDataProvider extends AbstractDataProvider
                 $type     = isset($row['type']) ? (string)$row['type'] : '';
                 $severity = isset($row['severity']) ? strtolower((string)$row['severity']) : '';
 
-                if ($type === 'traffic_drop' || $type === 'traffic_spike') {
+                if ($severity === 'critical') {
+                    $critical++;
+                } elseif ($type === 'traffic_drop' || $type === 'traffic_spike') {
                     $traffic++;
                 } elseif ($type === 'error_404_spike') {
                     $error++;
-                }
-
-                if ($severity === 'critical') {
-                    $critical++;
                 }
             }
         }

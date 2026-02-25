@@ -44,7 +44,7 @@ class AlertsPage extends AbstractAdminPage
         $showPromoBanner = PromoBanner::shouldShowBanner();
 
         return [
-            'pageTitle'       => __('Proactive Site Advisor', 'proactive-site-advisor'),
+            'pageTitle'       => __('Dashboard Alerts', 'proactive-site-advisor'),
             'pageSubtitle'    => __('Unusual activity on your site — with recommended actions.', 'proactive-site-advisor'),
             'statusLine'      => $context->getStatusLine(),
             'statusSummary'   => $context->getStatusSummary(),
