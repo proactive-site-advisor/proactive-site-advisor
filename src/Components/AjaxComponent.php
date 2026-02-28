@@ -30,14 +30,19 @@ class AjaxComponent
      * @param bool $verifyNonce Automatically verify nonce (default: true).
      * @param string $nonceAction
      * @param string $nonceField
+     * @param string $capability The capability to check. Default is 'manage_options'.
      * @return void
      */
-    public static function register(string $action, callable $callback, bool $public = true, bool $verifyNonce = true, string $nonceAction = 'nonce', string $nonceField = 'security'): void
+    public static function register(string $action, callable $callback, bool $public = true, bool $verifyNonce = true, string $nonceAction = 'nonce', string $nonceField = 'security', string $capability = 'manage_options'): void
     {
-        $wrapped = function () use ($callback, $verifyNonce, $nonceAction, $nonceField) {
+        $wrapped = function () use ($callback, $verifyNonce, $nonceAction, $nonceField, $capability) {
             try {
                 if ($verifyNonce) {
                     self::verifyNonce($nonceAction, $nonceField);
+                }
+
+                if ($capability) {
+                    self::checkCapability($capability);
                 }
 
                 $callback();
@@ -82,6 +87,25 @@ class AjaxComponent
         $nonceAction = self::getNonceAction($nonceAction);
         if (!check_ajax_referer($nonceAction, $nonceField, false)) {
             self::sendError(esc_html__('Invalid security token.', 'proactive-site-advisor'), 403);
+        }
+    }
+
+    /**
+     * Check if the current user has the required capability.
+     *
+     * This method verifies that the currently logged-in user
+     * has the specified capability. If the user does not have
+     * the required capability, a JSON error response is sent
+     * with HTTP status 403, and execution is terminated.
+     *
+     * @param string $capability The capability to check. Default is 'manage_options'.
+     *
+     * @return void
+     */
+    public static function checkCapability(string $capability = 'manage_options'): void
+    {
+        if (!current_user_can($capability)) {
+            self::sendError(esc_html__('Unauthorized.', 'proactive-site-advisor'), 403);
         }
     }
 

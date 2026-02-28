@@ -60,13 +60,8 @@ class PromoBanner
      */
     public static function handleDismiss(): void
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by AjaxComponent::register()
-
-        // Check user capability
-        if (!current_user_can('manage_options')) {
-            AjaxComponent::sendError(__('Unauthorized.', 'proactive-site-advisor'), 403);
-            return;
-        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
 
         // Calculate dismissal end timestamp
         $dismissDays  = self::getDismissDuration();

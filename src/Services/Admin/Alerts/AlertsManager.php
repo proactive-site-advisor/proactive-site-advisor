@@ -37,6 +37,7 @@ class AlertsManager
      */
     public function handleLastSeenUpdate(): void
     {
+        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['page']) && $_GET['page'] === MenuUtils::getSlug('proactive-site-advisor')) {
             AlertsDataProvider::getInstance()->updateLastSeenAlertId();

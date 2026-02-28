@@ -51,7 +51,7 @@
   color: css-var(muted-color);
 }
 
-.#{css-class('page-status')} {
+.#{css-class('page-status')}.#{css-class('page-status')} {
   display: flex;
   align-items: center;
   gap: 0.375rem;

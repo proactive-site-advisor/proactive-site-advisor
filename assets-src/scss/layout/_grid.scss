@@ -43,13 +43,15 @@ $gutters: (
 // -----------------------------------------------------
 
 .#{css-class('row')} {
+  // 1. Set a non-zero default so stacking columns have space
+  #{css-var-name(gutter-y)}: #{$grid-gutter-width};
   #{css-var-name(gutter-x)}: #{$grid-gutter-width};
-  #{css-var-name(gutter-y)}: 0;
 
   display: flex;
   flex-wrap: wrap;
 
-  margin-top: -#{css-var(gutter-y)};
+  // 2. Use negative margin-top to cancel the first row's column margin
+  margin-top: calc(-1 * #{css-var(gutter-y)});
   margin-right: calc(#{css-var(gutter-x)} / -2);
   margin-left: calc(#{css-var(gutter-x)} / -2);
 
@@ -57,9 +59,10 @@ $gutters: (
     flex-shrink: 0;
     width: 100%;
     max-width: 100%;
-
     padding-right: calc(#{css-var(gutter-x)} / 2);
     padding-left: calc(#{css-var(gutter-x)} / 2);
+
+    // 3. This provides spacing when columns stack or wrap
     margin-top: css-var(gutter-y);
   }
 }
