@@ -79,8 +79,7 @@ abstract class AbstractAdminPage extends AbstractSingleton
          */
         $output = apply_filters('proactive_site_advisor_admin_render_output', $output, $this);
 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $output;
+        echo wp_kses_post($output);
     }
 
     /**

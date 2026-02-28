@@ -127,10 +127,19 @@ class AlertsPageContext
                 ];
 
             case PluginStatus::STATUS_LIMITED:
+                $daysWithData = PluginStatus::getDaysWithData();
+                $percentage   = min(100, round(($daysWithData / PluginStatus::BASELINE_DAYS) * 100));
+
                 return [
-                    'color' => 'info',
-                    'title' => __('Limited history', 'proactive-site-advisor'),
-                    'text'  => __('Insights will improve as more data is collected. Check back soon for more accurate detection.', 'proactive-site-advisor'),
+                    'color'    => 'info',
+                    'title'    => __('Building history', 'proactive-site-advisor'),
+                    'text'     => sprintf(
+                    /* translators: 1: current day count, 2: total baseline days */
+                        __('Collecting baseline data (Day %1$d of %2$d). Your insights will become more accurate as history grows.', 'proactive-site-advisor'),
+                        $daysWithData,
+                        PluginStatus::BASELINE_DAYS
+                    ),
+                    'progress' => $percentage,
                 ];
 
             case PluginStatus::STATUS_ISSUE:
@@ -519,6 +528,7 @@ class AlertsPageContext
         // 3+ days: show table with averages
         return [
             'showTable'    => true,
+            'isPartial'    => $daysWithData < 7,
             'average'      => $this->calculateHistoryAverage(),
             'rows'         => $this->rawHistory,
             'emptyMessage' => __('No statistics available for the selected period.', 'proactive-site-advisor'),

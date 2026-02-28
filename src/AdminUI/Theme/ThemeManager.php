@@ -55,7 +55,7 @@ class ThemeManager extends AbstractSingleton
         $this->registered = true;
 
         // Register AJAX handler for theme switching.
-        AjaxComponent::register('switch_theme', [$this, 'handleThemeSwitch'], false, true);
+        AjaxComponent::register('switch_theme', [$this, 'handleThemeSwitch'], false);
 
         // Add theme-specific class to the admin body.
         add_action('admin_body_class', [$this, 'addThemeBodyClass']);
@@ -125,6 +125,7 @@ class ThemeManager extends AbstractSingleton
      */
     public function handleThemeSwitch(): void
     {
+        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $theme = isset($_POST['theme']) ? sanitize_text_field(wp_unslash($_POST['theme'])) : '';
 

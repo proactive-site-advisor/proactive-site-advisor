@@ -10,6 +10,7 @@
 .#{css-class('status-summary')} {
   display: flex;
   align-items: flex-start;
+  margin-bottom: 1.5rem;
   padding: 0.875rem 1rem;
   border-radius: css-var(border-radius);
   border-left: 4px solid transparent;
@@ -32,6 +33,22 @@
 
 .#{css-class('status-summary__text')} {
   color: inherit;
+}
+
+.#{css-class('status-summary__progress')} {
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.#{css-class('status-summary__progress-bar')} {
+  height: 100%;
+  background-color: currentColor; // Inherits the variant color (info, success, etc.)
+  border-radius: 10px;
+  transition: width 0.4s ease-in-out;
 }
 
 // Color variants (matching _alert.scss patterns)

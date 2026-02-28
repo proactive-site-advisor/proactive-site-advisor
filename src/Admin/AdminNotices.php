@@ -55,7 +55,7 @@ class AdminNotices
         add_action('admin_head', [self::class, 'sanitizeNotices'], 1);
 
         // Register AJAX handler for dismissing notices
-        AjaxComponent::register('dismiss_notice', [self::class, 'handleDismiss'], false, true);
+        AjaxComponent::register('dismiss_notice', [self::class, 'handleDismiss'], false);
 
         // Load persistent notices from transient
         self::loadFromTransient();
@@ -169,6 +169,7 @@ class AdminNotices
     public static function render(): void
     {
         foreach (self::$notices as $notice) {
+            // Safe: All HTML, classes, and attributes are escaped internally in Notice::render().
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo $notice->render();
         }
@@ -184,7 +185,8 @@ class AdminNotices
      */
     public static function handleDismiss(): void
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by AjaxComponent::register()
+        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $noticeId = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
         if (empty($noticeId)) {

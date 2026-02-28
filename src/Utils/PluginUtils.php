@@ -59,46 +59,6 @@ class PluginUtils
     }
 
     /**
-     * Activate a plugin.
-     *
-     * @param string $pluginFile Plugin file path.
-     * @return bool|WP_Error True on success, WP_Error on failure, false if plugin doesn't exist.
-     */
-    public static function activatePlugin($pluginFile)
-    {
-        if (!self::pluginExists($pluginFile)) {
-            return false;
-        }
-
-        if (!function_exists('activate_plugin')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-
-        $result = activate_plugin($pluginFile);
-        return is_wp_error($result) ? $result : true;
-    }
-
-    /**
-     * Deactivate a plugin.
-     *
-     * @param string $pluginFile Plugin file path.
-     * @return bool True if deactivated successfully, false if plugin doesn't exist.
-     */
-    public static function deactivatePlugin(string $pluginFile): bool
-    {
-        if (!self::pluginExists($pluginFile)) {
-            return false;
-        }
-
-        if (!function_exists('deactivate_plugins')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-
-        deactivate_plugins($pluginFile);
-        return !self::isPluginActive($pluginFile);
-    }
-
-    /**
      * Get information about a plugin.
      *
      * @param string $pluginFile Plugin file path.

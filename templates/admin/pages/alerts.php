@@ -39,7 +39,7 @@ use ProactiveSiteAdvisor\Utils\TemplateUtils;
 ?>
 
 <!-- Page Header -->
-<div class="proactive-site-advisor-page-header proactive-site-advisor-mb-4">
+<div class="proactive-site-advisor-page-header">
     <h1 class="proactive-site-advisor-page-title"><?php echo esc_html($pageTitle); ?></h1>
     <?php if (!empty($pageSubtitle)) : ?>
         <p class="proactive-site-advisor-page-description"><?php echo esc_html($pageSubtitle); ?></p>
@@ -54,7 +54,7 @@ use ProactiveSiteAdvisor\Utils\TemplateUtils;
 
 <!-- Status Summary Box -->
 <?php if (!empty($statusSummary['title']) || !empty($statusSummary['text'])) : ?>
-    <div class="proactive-site-advisor-status-summary proactive-site-advisor-status-summary--<?php echo esc_attr($statusSummary['color'] ?? 'info'); ?> proactive-site-advisor-mb-4">
+    <div class="proactive-site-advisor-status-summary proactive-site-advisor-status-summary--<?php echo esc_attr($statusSummary['color'] ?? 'info'); ?>">
         <div class="proactive-site-advisor-status-summary__content">
             <?php if (!empty($statusSummary['title'])) : ?>
                 <strong class="proactive-site-advisor-status-summary__title"><?php echo esc_html($statusSummary['title']); ?></strong>
@@ -62,6 +62,12 @@ use ProactiveSiteAdvisor\Utils\TemplateUtils;
             <?php endif; ?>
             <?php if (!empty($statusSummary['text'])) : ?>
                 <span class="proactive-site-advisor-status-summary__text"><?php echo esc_html($statusSummary['text']); ?></span>
+            <?php endif; ?>
+
+            <?php if (isset($statusSummary['progress'])) : ?>
+                <div class="proactive-site-advisor-status-summary__progress">
+                    <div class="proactive-site-advisor-status-summary__progress-bar" style="width: <?php echo esc_attr($statusSummary['progress']); ?>%;"></div>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -72,7 +78,7 @@ use ProactiveSiteAdvisor\Utils\TemplateUtils;
     <div class="proactive-site-advisor-section">
         <h3 class="proactive-site-advisor-section__title"><?php esc_html_e('Weekly Digest', 'proactive-site-advisor'); ?></h3>
         <p class="proactive-site-advisor-section__description"><?php esc_html_e('Alert summary for the last 7 days.', 'proactive-site-advisor'); ?></p>
-        <div class="proactive-site-advisor-row proactive-site-advisor-gy-4">
+        <div class="proactive-site-advisor-row">
             <?php foreach ($digestCards as $cardKey => $card) : ?>
                 <div class="proactive-site-advisor-col-12 proactive-site-advisor-col-sm-6 proactive-site-advisor-col-lg-3">
                     <?php
