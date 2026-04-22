@@ -1,84 +1,72 @@
 <?php
 /**
- * Admin Layout: Header
+ * Admin layout: Header.
  *
- * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are locally scoped via include.
+ * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  *
  * @package ProactiveSiteAdvisor
  * @version 1.0.0
+ *
+ * @var string $title
+ * @var string $titleLink
+ * @var string $version
+ * @var string $logoUrl
+ * @var array $navItems
+ * @var array $actions
+ * @var string $theme
  */
 
-// Prevent direct access
-defined('ABSPATH') || exit;
-
-// Set defaults for optional variables
-$logoUrl   = $logoUrl ?? '';
-$title     = $title ?? esc_html__('Proactive Site Advisor', 'proactive-site-advisor');
-$titleLink = $titleLink ?? '';
-$navItems  = $navItems ?? [];
-$actions   = $actions ?? [];
-$version   = $version ?? '';
-$theme     = $theme ?? '';
+if (!defined('ABSPATH')) {
+    exit;
+}
 ?>
 
-<div class="wrap proactive-site-advisor-wrap" data-proactive-site-advisor-theme="<?php echo esc_attr($theme); ?>">
-    <header class="proactive-site-advisor-header">
-        <div class="proactive-site-advisor-header-container">
+<div class="wrap psa-wrap">
+    <header class="psa-header">
+        <div class="psa-header-container">
             <!-- Brand Section (Logo/Title) -->
-            <div class="proactive-site-advisor-header-brand">
-                <?php if (!empty($titleLink)) : ?>
-                <a href="<?php echo esc_url($titleLink); ?>" class="proactive-site-advisor-header-brand-link">
-                    <?php endif; ?>
-
+            <div class="psa-header-brand">
+                <a href="<?php echo esc_url($titleLink); ?>" class="psa-header-brand-link">
                     <?php if (!empty($logoUrl)) : ?>
                         <img
                             src="<?php echo esc_url($logoUrl); ?>"
                             alt="<?php echo esc_attr($title); ?>"
-                            class="proactive-site-advisor-header-logo"
+                            class="psa-header-logo"
                         />
                     <?php endif; ?>
-
-                    <?php if (!empty($title)) : ?>
-                        <span class="proactive-site-advisor-header-title"><?php echo esc_html($title); ?></span>
-                    <?php endif; ?>
-
-                    <?php if (!empty($version)) : ?>
-                        <span class="proactive-site-advisor-badge proactive-site-advisor-badge-secondary proactive-site-advisor-header-version">
+                    <span class="psa-header-title"><?php echo esc_html($title); ?></span>
+                    <span class="psa-badge psa-badge--secondary psa-header-version">
                         v<?php echo esc_html($version); ?>
                     </span>
-                    <?php endif; ?>
-
-                    <?php if (!empty($titleLink)) : ?>
                 </a>
-            <?php endif; ?>
             </div>
 
             <!-- Navigation Section -->
             <?php if (!empty($navItems)) : ?>
                 <!-- Desktop Navigation (visible on large screens) -->
-                <nav class="proactive-site-advisor-header-nav proactive-site-advisor-header-nav-desktop">
-                    <ul class="proactive-site-advisor-header-nav-list">
+                <nav class="psa-header-nav psa-header-nav-desktop">
+                    <ul class="psa-header-nav-list">
                         <?php foreach ($navItems as $navItem) :
-                            $itemClasses = ['proactive-site-advisor-header-nav-item'];
+                            $itemClasses = ['psa-header-nav-item'];
                             if (!empty($navItem['active'])) {
-                                $itemClasses[] = 'proactive-site-advisor-active';
+                                $itemClasses[] = 'psa-active';
                             }
                             ?>
                             <li class="<?php echo esc_attr(implode(' ', $itemClasses)); ?>">
                                 <a
                                     href="<?php echo esc_url($navItem['url'] ?? '#'); ?>"
-                                    class="proactive-site-advisor-header-nav-link"
+                                    class="psa-header-nav-link"
                                 >
                                     <?php if (!empty($navItem['icon'])) : ?>
-                                        <span class="dashicons <?php echo esc_attr($navItem['icon']); ?>"></span>
+                                        <span class="psa-dashicons <?php echo esc_attr($navItem['icon']); ?>"></span>
                                     <?php endif; ?>
 
-                                    <span class="proactive-site-advisor-header-nav-text">
+                                    <span class="psa-header-nav-text">
                                         <?php echo esc_html($navItem['label'] ?? ''); ?>
                                     </span>
 
                                     <?php if (!empty($navItem['badge'])) : ?>
-                                        <span class="proactive-site-advisor-badge proactive-site-advisor-badge-primary proactive-site-advisor-badge-sm">
+                                        <span class="psa-badge psa-badge-primary psa-badge-sm">
                                             <?php echo esc_html($navItem['badge']); ?>
                                         </span>
                                     <?php endif; ?>
@@ -89,44 +77,44 @@ $theme     = $theme ?? '';
                 </nav>
 
                 <!-- Mobile Navigation (toggle + dropdown) -->
-                <div class="proactive-site-advisor-header-nav-wrapper">
+                <div class="psa-header-nav-wrapper">
                     <button
                         type="button"
-                        class="proactive-site-advisor-header-toggle"
+                        class="psa-header-toggle"
                         aria-label="<?php esc_attr_e('Toggle navigation', 'proactive-site-advisor'); ?>"
                         aria-expanded="false"
-                        aria-controls="proactive-site-advisor-header-nav"
+                        aria-controls="psa-header-nav"
                     >
-                        <span class="proactive-site-advisor-header-toggle-icon">
+                        <span class="psa-header-toggle-icon">
                             <span></span>
                             <span></span>
                             <span></span>
                         </span>
                     </button>
 
-                    <nav class="proactive-site-advisor-header-nav" id="proactive-site-advisor-header-nav">
-                        <ul class="proactive-site-advisor-header-nav-list">
+                    <nav class="psa-header-nav" id="psa-header-nav">
+                        <ul class="psa-header-nav-list">
                             <?php foreach ($navItems as $navItem) :
-                                $itemClasses = ['proactive-site-advisor-header-nav-item'];
+                                $itemClasses = ['psa-header-nav-item'];
                                 if (!empty($navItem['active'])) {
-                                    $itemClasses[] = 'proactive-site-advisor-active';
+                                    $itemClasses[] = 'psa-active';
                                 }
                                 ?>
                                 <li class="<?php echo esc_attr(implode(' ', $itemClasses)); ?>">
                                     <a
                                         href="<?php echo esc_url($navItem['url'] ?? '#'); ?>"
-                                        class="proactive-site-advisor-header-nav-link"
+                                        class="psa-header-nav-link"
                                     >
                                         <?php if (!empty($navItem['icon'])) : ?>
-                                            <span class="dashicons <?php echo esc_attr($navItem['icon']); ?>"></span>
+                                            <span class="psa-header-nav-icon <?php echo esc_attr($navItem['icon']); ?>"></span>
                                         <?php endif; ?>
 
-                                        <span class="proactive-site-advisor-header-nav-text">
+                                        <span class="psa-header-nav-text">
                                             <?php echo esc_html($navItem['label'] ?? ''); ?>
                                         </span>
 
                                         <?php if (!empty($navItem['badge'])) : ?>
-                                            <span class="proactive-site-advisor-badge proactive-site-advisor-badge-primary proactive-site-advisor-badge-sm">
+                                            <span class="psa-badge psa-badge-primary psa-badge-sm">
                                                 <?php echo esc_html($navItem['badge']); ?>
                                             </span>
                                         <?php endif; ?>
@@ -140,7 +128,7 @@ $theme     = $theme ?? '';
 
             <!-- Actions Section -->
             <?php if (!empty($actions)) : ?>
-                <div class="proactive-site-advisor-header-actions">
+                <div class="psa-header-actions">
                     <?php foreach ($actions as $action) :
                         $type = $action['type'] ?? 'button';
                         $variant = $action['variant'] ?? 'primary';
@@ -150,7 +138,7 @@ $theme     = $theme ?? '';
                         $attrs = $action['attrs'] ?? [];
 
                         // Build class string
-                        $btnClass = 'proactive-site-advisor-btn proactive-site-advisor-btn-' . esc_attr($variant);
+                        $btnClass = 'psa-btn psa-btn-' . esc_attr($variant);
                         if (!empty($action['class'])) {
                             $btnClass .= ' ' . esc_attr($action['class']);
                         }
@@ -168,9 +156,9 @@ $theme     = $theme ?? '';
                             <?php echo $attrsStr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                         >
                             <?php if (!empty($icon)) : ?>
-                                <span class="dashicons <?php echo esc_attr($icon); ?>"></span>
+                                <span class="psa-dashicons <?php echo esc_attr($icon); ?>"></span>
                             <?php endif; ?>
-                            <span class="proactive-site-advisor-btn-text"><?php echo esc_html($label); ?></span>
+                            <span class="psa-btn-text"><?php echo esc_html($label); ?></span>
                         </a>
                     <?php else : ?>
                         <button
@@ -179,9 +167,9 @@ $theme     = $theme ?? '';
                             <?php echo $attrsStr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                         >
                             <?php if (!empty($icon)) : ?>
-                                <span class="dashicons <?php echo esc_attr($icon); ?>"></span>
+                                <span class="psa-dashicons <?php echo esc_attr($icon); ?>"></span>
                             <?php endif; ?>
-                            <span class="proactive-site-advisor-btn-text"><?php echo esc_html($label); ?></span>
+                            <span class="psa-btn-text"><?php echo esc_html($label); ?></span>
                         </button>
                     <?php endif; ?>
                     <?php endforeach; ?>
@@ -190,4 +178,4 @@ $theme     = $theme ?? '';
         </div>
     </header>
 
-    <div class="proactive-site-advisor-content-wrapper">
+    <div class="psa-content-wrapper">

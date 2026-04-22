@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Utils;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -32,11 +33,12 @@ class DateTimeUtils
      * Get today's date in the WordPress timezone.
      *
      * @param string $format Optional. PHP date format. Default 'Y-m-d'.
+     * @param bool $utc Whether to return UTC time instead of local time. Default true.
      * @return string The formatted date string.
      */
-    public static function today(string $format = self::FORMAT_DATE): string
+    public static function today(string $format = self::FORMAT_DATE, bool $utc = true): string
     {
-        return self::now($format);
+        return self::now($format, $utc);
     }
 
     /**
@@ -48,17 +50,22 @@ class DateTimeUtils
      */
     public static function todayKey(): string
     {
-        return self::today(self::FORMAT_KEY);
+        return self::today(self::FORMAT_KEY, false);
     }
 
     /**
      * Get the current date and time in the WordPress timezone.
      *
      * @param string $format Optional. PHP date format. Default 'Y-m-d H:i:s'.
+     * @param bool $utc Whether to return UTC time instead of local time. Default true.
      * @return string The formatted datetime string.
      */
-    public static function now(string $format = self::FORMAT_DATETIME): string
+    public static function now(string $format = self::FORMAT_DATETIME, bool $utc = true): string
     {
+        if ($utc) {
+            return gmdate($format);
+        }
+
         return current_datetime()->format($format);
     }
 
@@ -143,7 +150,7 @@ class DateTimeUtils
             }
 
             return $datetime->setTimezone($toTimezone)->format($format);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -196,7 +203,7 @@ class DateTimeUtils
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

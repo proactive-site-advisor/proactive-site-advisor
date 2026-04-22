@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Abstracts;
 
+use ProactiveSiteAdvisor\Admin\Notices\AdminNotices;
 use ProactiveSiteAdvisor\Config\HeaderConfig;
 use ProactiveSiteAdvisor\Utils\TemplateUtils;
 
@@ -28,6 +29,15 @@ if (!defined('ABSPATH')) {
 abstract class AbstractAdminPage extends AbstractSingleton
 {
     /**
+     * Runs before the page is rendered.
+     *
+     * @return void
+     */
+    protected function boot(): void
+    {
+    }
+
+    /**
      * Renders the admin page.
      *
      * The page is rendered in three parts:
@@ -39,16 +49,23 @@ abstract class AbstractAdminPage extends AbstractSingleton
      */
     public function render(): void
     {
+        $this->boot();
+
         $sections = [
-            'header' => TemplateUtils::renderTemplate(
+            'header'         => TemplateUtils::renderTemplate(
                 'admin/layouts/header',
                 $this->getHeaderContext()
             ),
-            'body'   => TemplateUtils::renderTemplate(
+            'page_header'    => TemplateUtils::renderTemplate(
+                $this->getPageHeaderTemplate(),
+                $this->getPageHeaderContext()
+            ),
+            'inline_notices' => $this->renderNotices(),
+            'body'           => TemplateUtils::renderTemplate(
                 $this->getTemplate(),
                 $this->getBodyContext()
             ),
-            'footer' => TemplateUtils::renderTemplate(
+            'footer'         => TemplateUtils::renderTemplate(
                 'admin/layouts/footer',
                 $this->getFooterContext()
             ),
@@ -71,16 +88,15 @@ abstract class AbstractAdminPage extends AbstractSingleton
             $output .= $section;
         }
 
-        /**
-         * Filter the full admin page output before printing.
-         *
-         * @param string $output Full HTML to be printed.
-         * @param object $screen Current class instance.
-         */
-        $output = apply_filters('proactive_site_advisor_admin_render_output', $output, $this);
-
-        echo wp_kses_post($output);
+        echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
+
+    /**
+     * Get page header template path.
+     *
+     * @return string
+     */
+    abstract protected function getPageHeaderTemplate(): string;
 
     /**
      * Returns the template path for the body of the page.
@@ -143,6 +159,16 @@ abstract class AbstractAdminPage extends AbstractSingleton
     }
 
     /**
+     * Get page header template context.
+     *
+     * @return array
+     */
+    protected function getPageHeaderContext(): array
+    {
+        return [];
+    }
+
+    /**
      * Returns the context array used for rendering the body template.
      *
      * @return array
@@ -163,12 +189,14 @@ abstract class AbstractAdminPage extends AbstractSingleton
     }
 
     /**
-     * Singleton-aware callback for WordPress menu pages.
+     * Get rendered admin notices as HTML.
      *
-     * @return void
+     * @return string
      */
-    public function renderPage(): void
+    protected function renderNotices(): string
     {
-        $this->render();
+        ob_start();
+        AdminNotices::render();
+        return ob_get_clean();
     }
 }

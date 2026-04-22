@@ -1,6 +1,6 @@
 // AUTO-GENERATED FILE - DO NOT EDIT
 
-$base: 'proactive-site-advisor' !default;
+$base: 'psa' !default;
 
 @function css-class($name) {
     @return $base + '-' + $name;

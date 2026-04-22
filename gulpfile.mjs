@@ -35,11 +35,12 @@ function loadPrefixConfig() {
         console.error('Error loading prefix config:', error);
 
         return {
-            base: 'proactive-site-advisor',
+            slug: 'proactive-site-advisor',
+            base: 'psa',
             basePhp: 'proactive_site_advisor',
-            baseConst: 'PROACTIVE_SITE_ADVISOR',
-            namespace: 'ProactiveSiteAdvisor',
-            configObject: 'proactiveSiteAdvisorConfig',
+            namespace: 'PSA',
+            phpNamespace: 'ProactiveSiteAdvisor',
+            configObject: 'psaConfig',
         };
     }
 }
@@ -64,11 +65,11 @@ const paths = {
             'assets-src/scripts/core/namespace.js',
             'assets-src/scripts/core/config.js',
             'assets-src/scripts/core/helpers.js',
-            'assets-src/scripts/components/theme-switcher.js',
-            'assets-src/scripts/components/alert-card.js',
-            'assets-src/scripts/components/promo-banner.js',
             'assets-src/scripts/components/admin-notices.js',
-            'assets-src/scripts/admin.js',
+            'assets-src/scripts/components/alert-card.js',
+            'assets-src/scripts/components/header.js',
+            'assets-src/scripts/components/promo-notice.js',
+            'assets-src/scripts/components/theme-switcher.js',
         ],
         watch: 'assets-src/scripts/**/*.js',
         dest: 'assets/js/',
@@ -81,10 +82,11 @@ const paths = {
 export async function generatePrefixFiles(cb) {
     const p = await loadPrefixConfig();
 
+    const slug = p.slug;
     const base = p.base;
     const basePhp = p.basePhp;
-    const baseConst = p.baseConst;
     const namespace = p.namespace;
+    const phpNamespace = p.phpNamespace;
     const configObject = p.configObject;
 
     console.log(`\nGenerating prefix files from base: "${base}"\n`);
@@ -124,7 +126,7 @@ $base: '${base}' !default;
     const jsContent = `(function(window){
 'use strict';
 
-var CONFIG = Object.freeze({
+const CONFIG = Object.freeze({
     base: '${base}',
     basePhp: '${basePhp}',
     namespace: '${namespace}',
@@ -133,7 +135,7 @@ var CONFIG = Object.freeze({
 
 window.__PREFIX_CONFIG__ = CONFIG;
 
-var NS = CONFIG.namespace;
+const NS = CONFIG.namespace;
 
 window[NS] = window[NS] || {};
 window[NS].__config = CONFIG;
@@ -151,7 +153,7 @@ window[NS].dataAttr = function(name){
 };
 
 window[NS].dataSelector = function(name,value){
-    var attr = 'data-' + CONFIG.base + '-' + name;
+    const attr = 'data-' + CONFIG.base + '-' + name;
     return value !== undefined
         ? '[' + attr + '="' + value + '"]'
         : '[' + attr + ']';
@@ -162,7 +164,7 @@ window[NS].event = function(name){
 };
 
 window[NS].dispatch = function(name,detail,target){
-    var event = new CustomEvent(
+    const event = new CustomEvent(
         CONFIG.base + ':' + name,
         {
             detail: detail || {},
@@ -195,7 +197,7 @@ window[NS].ajaxAction = function(name){
     // ===============================
     const phpContent = `<?php
 
-namespace ${namespace}\\Config;
+namespace ${phpNamespace}\\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -207,13 +209,18 @@ if (!defined('ABSPATH')) {
  * Provides helper methods to generate prefixed identifiers
  * used across the plugin.
  *
- * @package ${namespace}\\Config
+ * @package ${phpNamespace}\\Config
  * @version 1.0.0
  */
 final class PrefixConfig
 {
     /**
-     * Base slug used for CSS classes and handles (kebab-case).
+     * Used for unique identifiers.
+     */
+    public const SLUG = '${slug}';
+    
+    /**
+     * Used for CSS classes (kebab-case).
      */
     public const BASE = '${base}';
 
@@ -221,11 +228,6 @@ final class PrefixConfig
      * PHP-safe prefix (snake_case).
      */
     public const PREFIX = '${basePhp}';
-
-    /**
-     * Uppercase constant prefix.
-     */
-    public const CONSTANT_PREFIX = '${baseConst}';
 
     /**
      * Global JS config object name.
@@ -236,6 +238,28 @@ final class PrefixConfig
      * Prevent instantiation.
      */
     private function __construct(){}
+    
+    /**
+     * Build a BASE-prefixed string (kebab-case).
+     *
+     * @param string $name Suffix to append.
+     * @return string
+     */
+    public static function base(string $name): string
+    {
+        return self::BASE . '-' . $name;
+    }
+    
+    /**
+     * Build a PREFIX-prefixed string (snake_case).
+     *
+     * @param string $name Suffix to append.
+     * @return string
+     */
+    public static function prefix(string $name): string
+    {
+        return self::PREFIX . '_' . $name;
+    }
 
     /**
      * Generate a prefixed CSS class.
@@ -245,7 +269,7 @@ final class PrefixConfig
      */
     public static function css(string $name): string
     {
-        return self::BASE . '-' . $name;
+        return self::base($name);
     }
 
     /**
@@ -256,7 +280,7 @@ final class PrefixConfig
      */
     public static function dataAttr(string $name): string
     {
-        return 'data-' . self::BASE . '-' . $name;
+        return 'data-' . self::base($name);
     }
 
     /**
@@ -267,7 +291,7 @@ final class PrefixConfig
      */
     public static function handle(string $name): string
     {
-        return self::BASE . '-' . $name;
+        return self::SLUG . '-' . $name;
     }
 
     /**
@@ -278,7 +302,7 @@ final class PrefixConfig
      */
     public static function ajaxAction(string $name): string
     {
-        return self::PREFIX . '_' . $name;
+        return self::prefix($name);
     }
 
     /**
@@ -289,7 +313,7 @@ final class PrefixConfig
      */
     public static function nonce(string $name = 'nonce'): string
     {
-        return self::PREFIX . '_' . $name;
+        return self::prefix($name);
     }
 
     /**
@@ -300,7 +324,7 @@ final class PrefixConfig
      */
     public static function table(string $name): string
     {
-        return self::PREFIX . '_' . $name;
+        return self::prefix($name);
     }
 }
 `;

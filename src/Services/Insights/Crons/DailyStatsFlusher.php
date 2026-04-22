@@ -1,13 +1,13 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Cron;
+namespace ProactiveSiteAdvisor\Services\Insights\Crons;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 use ProactiveSiteAdvisor\Cache\CacheKeys;
 use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Config\PluginMeta;
 use ProactiveSiteAdvisor\Models\DailyStats;
-use ProactiveSiteAdvisor\Services\Insights\AlertEngine;
+use ProactiveSiteAdvisor\Services\Insights\DailyInsightsHandler;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
 
@@ -18,8 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class DailyStatsFlusher
  *
- * Flushes transient counters (pageviews, 404s) to the database.
- * Runs daily via DailyCronHandler.
+ * Executes the daily statistics flush routine.
  *
  * @package ProactiveSiteAdvisor\Services\Cron
  * @version 1.0.0
@@ -27,25 +26,24 @@ if (!defined('ABSPATH')) {
 class DailyStatsFlusher extends AbstractSingleton
 {
     /**
-     * Execute the daily stats flush.
+     * Executes the daily flush routine.
      *
      * @return void
      */
     public function run(): void
     {
-        $cache = CacheManager::getInstance();
+        $cache = CacheManager::instance();
 
-        // Simple lock to avoid double runs
         $lockKey = CacheKeys::dailyLock();
         if ($cache->get($lockKey)) {
             return;
         }
+
         $cache->set($lockKey, 1, MINUTE_IN_SECONDS * 5);
 
         try {
             $now = DateTimeUtils::current();
 
-            // Flush YESTERDAY's data (the completed day when cron runs at midnight)
             $yesterday    = $now->modify('-1 day');
             $yesterdayYmd = $yesterday->format('Y-m-d');
             $yesterdayKey = $yesterday->format('Ymd');
@@ -59,30 +57,31 @@ class DailyStatsFlusher extends AbstractSingleton
             $topJson = $this->buildTop404Json($topMapRaw);
 
             DailyStats::updateDay($yesterdayYmd, $pageviews, $errors404, $topJson);
-            AlertEngine::getInstance()->generateForDay($yesterdayYmd);
 
-            // Delete yesterday's cache keys
+            $dailyInsightsHandler = new DailyInsightsHandler();
+            $dailyInsightsHandler->handle($yesterdayYmd);
+
             $cache->delete(CacheKeys::pageviewsForDate($yesterdayKey));
             $cache->delete(CacheKeys::notFoundTotalForDate($yesterdayKey));
             $cache->delete(CacheKeys::notFoundMapForDate($yesterdayKey));
 
-            // Retention: keep 7 days
-            $sevenDaysAgo = $now->modify('-7 days');
-            $purgeBefore  = $sevenDaysAgo->format('Y-m-d');
-            DailyStats::purgeOlderThan($purgeBefore);
-            AlertEngine::getInstance()->purgeAlertsOlderThan($purgeBefore);
+            OptionUtils::setMeta(
+                PluginMeta::LAST_DAILY_RUN,
+                DateTimeUtils::timestamp(),
+                false
+            );
 
-            OptionUtils::setMeta(PluginMeta::LAST_DAILY_RUN, DateTimeUtils::timestamp(), false);
         } finally {
             $cache->delete($lockKey);
         }
     }
 
     /**
-     * Convert stored map transient (JSON string) into a normalized top-3 JSON.
+     * Normalizes raw 404 path map data into a compact JSON format.
      *
-     * @param mixed $topMapRaw The raw transient value.
-     * @return string|null JSON string or null if invalid.
+     * @param $topMapRaw
+     *
+     * @return string|null
      */
     private function buildTop404Json($topMapRaw): ?string
     {
@@ -96,23 +95,28 @@ class DailyStatsFlusher extends AbstractSingleton
         }
 
         $clean = [];
+
         foreach ($map as $path => $count) {
+
             $path = is_string($path) ? sanitize_text_field($path) : '';
+
             if ($path === '') {
                 continue;
             }
+
             $clean[$path] = max(1, (int)$count);
         }
 
-        if (empty($clean)) {
+        if (!$clean) {
             return null;
         }
 
         arsort($clean);
+
         $top3 = array_slice($clean, 0, 3, true);
 
-        // Store as list of [path, count] to keep order explicit
         $list = [];
+
         foreach ($top3 as $path => $count) {
             $list[] = [$path, $count];
         }

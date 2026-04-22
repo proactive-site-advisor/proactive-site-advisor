@@ -7,6 +7,7 @@ use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Config\PluginMeta;
 use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Config\PluginOptions;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -220,12 +221,10 @@ class ActivationHandler
      */
     public static function setDefaultOptions(): void
     {
-        $defaults = OptionUtils::getDefaults();
+        $optionName = PluginOptions::OPTION_NAME;
 
-        foreach ($defaults as $key => $value) {
-            if (OptionUtils::getOption($key) === null) {
-                OptionUtils::setOption($key, $value);
-            }
+        if (get_option($optionName) === false) {
+            add_option($optionName, OptionUtils::getDefaults());
         }
 
         /**
@@ -256,7 +255,7 @@ class ActivationHandler
     public static function flushRewriteRules(): void
     {
         // Set a cache flag to flush rules on next init
-        CacheManager::getInstance()->set(CacheKeys::flushRewriteRules(), true, 60);
+        CacheManager::instance()->set(CacheKeys::flushRewriteRules(), true, 60);
     }
 
     /**
@@ -283,7 +282,7 @@ class ActivationHandler
      */
     public static function maybeFlushRewriteRules(): void
     {
-        $cache = CacheManager::getInstance();
+        $cache = CacheManager::instance();
 
         if ($cache->get(CacheKeys::flushRewriteRules())) {
             $cache->delete(CacheKeys::flushRewriteRules());

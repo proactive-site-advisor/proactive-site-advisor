@@ -3,7 +3,7 @@
 namespace ProactiveSiteAdvisor\Config;
 
 use ProactiveSiteAdvisor\Utils\MenuUtils;
-use ProactiveSiteAdvisor\AdminUI\Theme\ThemeManager;
+use ProactiveSiteAdvisor\AdminUI\Theme\ThemeSwitcher;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -117,7 +117,7 @@ final class HeaderConfig
      */
     public static function getDefaultTheme(): string
     {
-        return ThemeManager::getInstance()->getCurrentTheme();
+        return ThemeSwitcher::instance()->getCurrentTheme();
     }
 
     /**

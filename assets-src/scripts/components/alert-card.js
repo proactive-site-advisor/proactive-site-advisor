@@ -1,74 +1,90 @@
 /**
- * Alert Card Component
+ * Admin UI - Alert Card Component
  *
- * Handles expand/collapse functionality for alert cards with details sections.
+ * Handles expand/collapse functionality for alert cards with details
  * Requires: namespace.js, helpers.js
  */
 (function (window, document) {
     'use strict';
 
-    var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
-    if (!PREFIX_CONFIG) throw new Error('AlertCard requires namespace.js (__PREFIX_CONFIG__).');
+    const PREFIX_CONFIG = window.__PREFIX_CONFIG__;
+    if (!PREFIX_CONFIG) return;
 
-    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
-    if (!ProactiveSiteAdvisor) throw new Error('AlertCard requires global namespace.');
+    const PSA = window[PREFIX_CONFIG.namespace];
+    if (!PSA) return;
 
-    var Helpers = ProactiveSiteAdvisor.Helpers;
-    if (!Helpers) throw new Error('AlertCard requires helpers.js.');
+    const Helpers = PSA.Helpers;
+    if (!Helpers) return;
 
-    function toggleCard(card) {
-        var toggle = card.querySelector(ProactiveSiteAdvisor.selector('alert-card__toggle'));
-        var details = card.querySelector(ProactiveSiteAdvisor.selector('alert-card__details'));
-        if (!toggle || !details) return;
+    const AlertCard = {
 
-        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        /* ------------------------------------------------------------
+         * Init
+         * ------------------------------------------------------------ */
+        init: function () {
+            this.bindEvents();
+        },
 
-        toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        details.hidden = expanded;
+        /* ------------------------------------------------------------
+         * Bind Events
+         * ------------------------------------------------------------ */
+        bindEvents: function () {
 
-        card.classList.toggle(
-            ProactiveSiteAdvisor.cssClass('alert-card--expanded'),
-            !expanded
-        );
-    }
+            document.addEventListener('click', (e) => {
+                const target = Helpers.getElement(e.target);
+                if (!target) return;
 
-    function init() {
-        document.addEventListener('click', function (e) {
-            var target = Helpers.getElement(e.target);
-            if (!target) return;
+                /* Toggle button click */
+                const toggle = target.closest(PSA.selector('alert-card__toggle'));
+                if (toggle) {
+                    const card = toggle.closest(PSA.selector('alert-card--collapsible'));
+                    if (card) this.toggleCard(card);
+                    return;
+                }
 
-            var toggle = target.closest(
-                ProactiveSiteAdvisor.selector('alert-card__toggle')
+                /* Card body click (not interactive elements) */
+                const body = target.closest(PSA.selector('alert-card__body'));
+                if (!body) return;
+
+                if (target.closest('a, button, input, select, textarea')) return;
+
+                const card = body.closest(PSA.selector('alert-card--collapsible'));
+                if (card) this.toggleCard(card);
+            });
+        },
+
+        /* ------------------------------------------------------------
+         * Toggle card open/close
+         * ------------------------------------------------------------ */
+        toggleCard: function (card) {
+
+            const toggle = card.querySelector(PSA.selector('alert-card__toggle'));
+            const details = card.querySelector(PSA.selector('alert-card__details'));
+            if (!toggle || !details) return;
+
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+
+            toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            details.hidden = expanded;
+
+            card.classList.toggle(
+                PSA.cssClass('alert-card--expanded'),
+                !expanded
             );
+        }
+    };
 
-            if (toggle) {
-                var cardFromToggle = toggle.closest(
-                    ProactiveSiteAdvisor.selector('alert-card--collapsible')
-                );
-                if (cardFromToggle) toggleCard(cardFromToggle);
-                return;
-            }
-
-            var body = target.closest(
-                ProactiveSiteAdvisor.selector('alert-card__body')
-            );
-            if (!body) return;
-
-            if (target.closest('a, button, input, select, textarea')) return;
-
-            var cardFromBody = body.closest(
-                ProactiveSiteAdvisor.selector('alert-card--collapsible')
-            );
-            if (cardFromBody) toggleCard(cardFromBody);
-        });
-    }
-
+    /* ------------------------------------------------------------
+     * Init Component
+     * ------------------------------------------------------------ */
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => {
+            AlertCard.init();
+        });
     } else {
-        init();
+        AlertCard.init();
     }
 
-    ProactiveSiteAdvisor.AlertCard = {init: init};
+    PSA.AlertCard = AlertCard;
 
 })(window, document);

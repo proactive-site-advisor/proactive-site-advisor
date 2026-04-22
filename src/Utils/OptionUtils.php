@@ -2,11 +2,11 @@
 
 namespace ProactiveSiteAdvisor\Utils;
 
+use ProactiveSiteAdvisor\Config\PluginOptions;
+
 if (!defined('ABSPATH')) {
     exit;
 }
-
-use ProactiveSiteAdvisor\Config\PluginOptions;
 
 /**
  * Class OptionUtils
@@ -36,9 +36,7 @@ class OptionUtils
      */
     public static function getDefaults(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     /**
@@ -48,8 +46,12 @@ class OptionUtils
      */
     public static function getAllOptions(): array
     {
-        $options = get_option(PluginOptions::OPTION_NAME, self::getDefaults());
-        return array_merge(self::getDefaults(), is_array($options) ? $options : []);
+        $options = get_option(PluginOptions::OPTION_NAME, []);
+
+        return array_replace_recursive(
+            self::getDefaults(),
+            is_array($options) ? $options : []
+        );
     }
 
     /**
@@ -62,7 +64,18 @@ class OptionUtils
     public static function getOption(string $key, $default = null)
     {
         $options = self::getAllOptions();
-        return $options[$key] ?? $default;
+
+        $keys = explode('.', $key);
+
+        foreach ($keys as $segment) {
+            if (!is_array($options) || !array_key_exists($segment, $options)) {
+                return $default;
+            }
+
+            $options = $options[$segment];
+        }
+
+        return $options;
     }
 
     /**
@@ -73,9 +86,11 @@ class OptionUtils
      */
     public static function setOption(string $key, $value): void
     {
-        $options       = get_option(PluginOptions::OPTION_NAME, self::getDefaults());
-        $options[$key] = $value;
-        update_option(PluginOptions::OPTION_NAME, $options);
+        $options = self::getAllOptions();
+
+        self::put($options, $key, $value);
+
+        self::updateAll($options);
     }
 
     /**
@@ -86,10 +101,25 @@ class OptionUtils
     public static function deleteOption(string $key): void
     {
         $options = get_option(PluginOptions::OPTION_NAME, []);
-        if (isset($options[$key])) {
-            unset($options[$key]);
-            update_option(PluginOptions::OPTION_NAME, $options);
+
+        $keys = explode('.', $key);
+        $last = array_pop($keys);
+
+        $ref = &$options;
+
+        foreach ($keys as $segment) {
+            if (!isset($ref[$segment]) || !is_array($ref[$segment])) {
+                return;
+            }
+
+            $ref = &$ref[$segment];
         }
+
+        if (isset($ref[$last])) {
+            unset($ref[$last]);
+        }
+
+        self::updateAll($options);
     }
 
     /**
@@ -200,5 +230,78 @@ class OptionUtils
     public static function deleteMeta(string $key): void
     {
         delete_option(self::getMetaOptionName($key));
+    }
+
+    /**
+     * Set a value in a nested array using dot notation.
+     *
+     * @param array $array
+     * @param string $key
+     * @param $value
+     * @return void
+     */
+    private static function put(array &$array, string $key, $value): void
+    {
+        $keys = explode('.', $key);
+        $ref  = &$array;
+
+        while (count($keys) > 1) {
+            $segment = array_shift($keys);
+
+            if (!isset($ref[$segment]) || !is_array($ref[$segment])) {
+                $ref[$segment] = [];
+            }
+
+            $ref = &$ref[$segment];
+        }
+
+        $ref[array_shift($keys)] = $value;
+    }
+
+    /**
+     * Get all options for a specific section.
+     *
+     * @param string $section
+     * @return array
+     */
+    public static function getSection(string $section): array
+    {
+        return self::getOption($section, []);
+    }
+
+    /**
+     * Build a dot notation key for a section option
+     *
+     * @param string $section
+     * @param string $key
+     * @return string
+     */
+    public static function makeKey(string $section, string $key): string
+    {
+        return $section . '.' . $key;
+    }
+
+    /**
+     * Set a value in a nested array using dot notation.
+     *
+     * @param array $array
+     * @param string $key
+     * @param $value
+     * @return void
+     */
+    public static function setNestedValue(array &$array, string $key, $value): void
+    {
+        self::put($array, $key, $value);
+    }
+
+    /**
+     * Persist all plugin settings to the database.
+     *
+     * @param array $settings
+     * @return bool
+     */
+    public static function updateAll(array $settings): bool
+    {
+        return update_option(PluginOptions::OPTION_NAME, $settings);
     }
 }

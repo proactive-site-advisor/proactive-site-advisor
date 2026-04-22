@@ -5,6 +5,7 @@ namespace ProactiveSiteAdvisor\CLI;
 use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 use ProactiveSiteAdvisor\CLI\Commands\SeedCommand;
 use ProactiveSiteAdvisor\CLI\Commands\TruncateCommand;
+use WP_CLI;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -61,7 +62,7 @@ class CLIManager extends AbstractSingleton
                 continue;
             }
 
-            \WP_CLI::add_command("{$this->namespace} {$name}", $class);
+            WP_CLI::add_command("{$this->namespace} {$name}", $class);
         }
     }
 

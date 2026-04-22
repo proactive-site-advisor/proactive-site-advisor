@@ -3,16 +3,21 @@
  *
  * Requires: namespace.js
  */
+
 (function (window, document) {
     'use strict';
 
-    var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
-    if (!PREFIX_CONFIG) throw new Error('Helpers requires namespace.js (__PREFIX_CONFIG__).');
+    const PREFIX_CONFIG = window.__PREFIX_CONFIG__;
+    if (!PREFIX_CONFIG) return;
 
-    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
-    if (!ProactiveSiteAdvisor) throw new Error('Helpers requires global namespace.');
+    const PSA = window[PREFIX_CONFIG.namespace];
+    if (!PSA) return;
 
-    var Helpers = {
+    const Helpers = {
+
+        /* -----------------------------------------
+         * Element Utilities
+         * ----------------------------------------- */
 
         resolveEl: function (el) {
             if (!el) return null;
@@ -34,24 +39,24 @@
             el = Helpers.resolveEl(el);
             if (!el) return;
 
-            el.classList.remove(ProactiveSiteAdvisor.cssClass('d-none'));
-            el.classList.add(ProactiveSiteAdvisor.cssClass('d-block'));
+            el.classList.remove(PSA.cssClass('d-none'));
+            el.classList.add(PSA.cssClass('d-block'));
         },
 
         hide: function (el) {
             el = Helpers.resolveEl(el);
             if (!el) return;
 
-            el.classList.remove(ProactiveSiteAdvisor.cssClass('d-block'));
-            el.classList.add(ProactiveSiteAdvisor.cssClass('d-none'));
+            el.classList.remove(PSA.cssClass('d-block'));
+            el.classList.add(PSA.cssClass('d-none'));
         },
 
         toggle: function (el) {
             el = Helpers.resolveEl(el);
             if (!el) return;
 
-            var hidden = ProactiveSiteAdvisor.cssClass('d-none');
-            var block = ProactiveSiteAdvisor.cssClass('d-block');
+            const hidden = PSA.cssClass('d-none');
+            const block = PSA.cssClass('d-block');
 
             if (el.classList.contains(hidden)) {
                 el.classList.remove(hidden);
@@ -86,18 +91,23 @@
             });
         },
 
+
+        /* -----------------------------------------
+         * Timing Utilities
+         * ----------------------------------------- */
+
         debounce: function (fn, wait, immediate) {
-            var t;
+            let t;
 
             return function () {
-                var ctx = this, args = arguments;
+                const ctx = this, args = arguments;
 
-                var later = function () {
+                const later = function () {
                     t = null;
                     if (!immediate) fn.apply(ctx, args);
                 };
 
-                var callNow = immediate && !t;
+                const callNow = immediate && !t;
 
                 clearTimeout(t);
                 t = setTimeout(later, wait);
@@ -107,7 +117,7 @@
         },
 
         throttle: function (fn, limit) {
-            var inThrottle = false;
+            let inThrottle = false;
 
             return function () {
                 if (inThrottle) return;
@@ -121,38 +131,44 @@
             };
         },
 
+
+        /* -----------------------------------------
+         * General Utilities
+         * ----------------------------------------- */
+
         formatNumber: function (num) {
             if (num === null || num === undefined) return '';
             return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         },
 
         uniqueId: function (prefix) {
-            prefix = prefix || ProactiveSiteAdvisor.cssClass('');
+            prefix = prefix || PSA.cssClass('');
 
             if (window.crypto && typeof window.crypto.randomUUID === 'function') {
                 return prefix + window.crypto.randomUUID();
             }
 
-            return prefix +
+            return (
+                prefix +
                 Date.now().toString(36) +
-                Math.random().toString(36).slice(2);
+                Math.random().toString(36).slice(2)
+            );
         },
 
         escapeHtml: function (text) {
-            var div = document.createElement('div');
+            const div = document.createElement('div');
             div.textContent = (text === null || text === undefined) ? '' : String(text);
             return div.innerHTML;
         },
 
         merge: function (target, source) {
             target = target || {};
-
             if (!Helpers.isPlainObject(source)) return target;
 
-            for (var k in source) {
+            for (const k in source) {
                 if (!Object.prototype.hasOwnProperty.call(source, k)) continue;
 
-                var v = source[k];
+                let v = source[k];
 
                 if (Helpers.isPlainObject(v)) {
                     target[k] = target[k] || {};
@@ -161,16 +177,79 @@
                     target[k] = v;
                 }
             }
-
             return target;
         },
 
-        prefixClass: function (name) {
-            return ProactiveSiteAdvisor.cssClass(name);
+
+        /* -----------------------------------------
+         * Storage Utilities
+         * ----------------------------------------- */
+
+        storageGet: function (key) {
+            try {
+                return window.localStorage.getItem(key);
+            } catch (e) {
+                return null;
+            }
+        },
+
+        storageSet: function (key, value) {
+            try {
+                window.localStorage.setItem(key, value);
+            } catch (e) {
+            }
         }
 
     };
 
-    ProactiveSiteAdvisor.Helpers = Helpers;
+    /* -----------------------------------------
+     * URL Helpers
+     * ----------------------------------------- */
+    Helpers.URL = {
+
+        getParam: function (key) {
+            return new URLSearchParams(window.location.search).get(key);
+        },
+
+        setParam: function (key, value) {
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
+
+            if (value === null || value === undefined || value === '') {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
+
+            url.search = params.toString();
+            window.location.href = url.toString();
+        },
+
+        removeParam: function (key) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(key);
+            window.location.href = url.toString();
+        },
+
+        updateParams: function (obj) {
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
+
+            for (const key in obj) {
+                const value = obj[key];
+
+                if (value === null || value === undefined || value === '') {
+                    params.delete(key);
+                } else {
+                    params.set(key, value);
+                }
+            }
+
+            url.search = params.toString();
+            window.location.href = url.toString();
+        }
+    };
+
+    PSA.Helpers = Helpers;
 
 })(window, document);

@@ -1,0 +1,121 @@
+// =====================================================
+// Admin UI - Page Header Component
+// =====================================================
+
+@use "../prefix" as *;
+
+.#{css-class('wrap')} {
+
+  .#{css-class('page-header')} {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .#{css-class('title-description-wrapper')} {
+    display: flex;
+    flex-direction: column;
+    max-width: 60%;
+  }
+
+  .#{css-class('page-title')} {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: css-var('heading-color');
+  }
+
+  .#{css-class('page-description')} {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.875rem;
+    color: css-var('muted-color');
+  }
+
+  .#{css-class('actions-wrapper')} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    max-width: 35%;
+  }
+
+  .#{css-class('page-meta')} {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0;
+    font-size: 0.75rem;
+    color: css-var('secondary');
+
+    [class^="#{css-class('icon--')}"] {
+      width: 0.875rem;
+      height: 0.875rem;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .#{css-class('page-header')} {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .#{css-class('title-description-wrapper')} {
+      max-width: 100%;
+    }
+
+    .#{css-class('actions-wrapper')} {
+      width: 100%;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 0.5rem;
+      max-width: 100%;
+      flex-direction: row;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .#{css-class('title-description-wrapper')} {
+      max-width: 70%;
+    }
+    .#{css-class('actions-wrapper')} {
+      max-width: 28%;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .#{css-class('page-header')} {
+      gap: 1rem;
+    }
+    .#{css-class('title-description-wrapper')} {
+      max-width: 100%;
+    }
+    .#{css-class('actions-wrapper')} {
+      max-width: 100%;
+      flex-direction: row;
+      justify-content: flex-start;
+      margin-top: 0.5rem;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .#{css-class('page-header')} {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .#{css-class('actions-wrapper')} {
+      width: 100%;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+}

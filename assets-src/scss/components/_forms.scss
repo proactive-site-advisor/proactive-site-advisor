@@ -3,407 +3,411 @@
 // =====================================================
 
 @use "../prefix" as *;
-@use "../base/variables" as *;
 
-// Form Label
-.#{css-class('form-label')} {
-  display: inline-block;
-  margin-bottom: 0.25rem;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: css-var(heading-color);
-}
+.#{css-class('wrap')} {
 
-.#{css-class('form-label-lg')} {
-  font-size: $input-font-size-lg;
-}
-
-.#{css-class('form-label-sm')} {
-  font-size: $input-font-size-sm;
-}
-
-// Form Control (Input/Textarea)
-.#{css-class('form-control')}[type=date],
-.#{css-class('form-control')}[type=datetime-local],
-.#{css-class('form-control')}[type=datetime],
-.#{css-class('form-control')}[type=email],
-.#{css-class('form-control')}[type=month],
-.#{css-class('form-control')}[type=number],
-.#{css-class('form-control')}[type=password],
-.#{css-class('form-control')}[type=search],
-.#{css-class('form-control')}[type=tel],
-.#{css-class('form-control')}[type=text],
-.#{css-class('form-control')}[type=time],
-.#{css-class('form-control')}[type=url],
-.#{css-class('form-control')}[type=week],
-textarea.#{css-class('form-control')} {
-  display: block;
-  width: 100%;
-  min-height: $input-height;
-  padding: calc(#{$input-padding-y} - #{$input-border-width}) calc(#{$input-padding-x} - #{$input-border-width});
-  font-family: inherit;
-  font-size: $input-font-size;
-  font-weight: $font-weight-normal;
-  line-height: $input-line-height;
-  color: css-var(body-color);
-  appearance: none;
-  background-color: css-var(paper-bg);
-  background-clip: padding-box;
-  border: $input-border-width solid css-var(border-color);
-  border-radius: $input-border-radius;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-  &::placeholder {
-    color: $input-placeholder-color;
-    opacity: 1;
-    transition: transform 0.2s ease;
-  }
-
-  &:hover:not(:focus):not(:disabled) {
-    border-color: $input-hover-border-color;
-  }
-
-  &:focus {
-    border-width: $input-focus-border-width;
-    padding: calc(#{$input-padding-y} - #{$input-focus-border-width}) calc(#{$input-padding-x} - #{$input-focus-border-width});
+  // Form Label
+  .#{css-class('form-label')} {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    font-size: css-var(font-size-sm);
+    font-weight: css-var(font-weight-medium);
     color: css-var(heading-color);
-    background-color: css-var(paper-bg);
-    border-color: css-var(primary);
-    outline: 0;
-    box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
-
-    &::placeholder {
-      transform: translateX(4px);
-    }
   }
 
-  &:disabled,
-  &[readonly] {
-    background-color: css-var(input-disabled-bg);
-    border-color: css-var(input-disabled-border);
-    opacity: 1;
-    cursor: not-allowed;
+  .#{css-class('form-label-lg')} {
+    font-size: css-var(input-font-size-lg);
   }
 
-  // Sizes
-  &.#{css-class('form-control-sm')} {
-    min-height: $input-height-sm;
-    padding: calc(#{$input-padding-y-sm} - #{$input-border-width}) calc(#{$input-padding-x-sm} - #{$input-border-width});
-    font-size: $input-font-size-sm;
-    border-radius: $input-border-radius-sm;
-
-    &:focus {
-      padding: calc(#{$input-padding-y-sm} - #{$input-focus-border-width}) calc(#{$input-padding-x-sm} - #{$input-focus-border-width});
-    }
+  .#{css-class('form-label-sm')} {
+    font-size: css-var(input-font-size-sm);
   }
 
-  &.#{css-class('form-control-lg')} {
-    min-height: $input-height-lg;
-    padding: calc(#{$input-padding-y-lg} - #{$input-border-width}) calc(#{$input-padding-x-lg} - #{$input-border-width});
-    font-size: $input-font-size-lg;
-    border-radius: $input-border-radius-lg;
-
-    &:focus {
-      padding: calc(#{$input-padding-y-lg} - #{$input-focus-border-width}) calc(#{$input-padding-x-lg} - #{$input-focus-border-width});
-    }
-  }
-
-  // Plaintext variant
-  &.#{css-class('form-control-plaintext')} {
+  // Form Control (Input/Textarea)
+  .#{css-class('form-control')}[type=date],
+  .#{css-class('form-control')}[type=datetime-local],
+  .#{css-class('form-control')}[type=datetime],
+  .#{css-class('form-control')}[type=email],
+  .#{css-class('form-control')}[type=month],
+  .#{css-class('form-control')}[type=number],
+  .#{css-class('form-control')}[type=password],
+  .#{css-class('form-control')}[type=search],
+  .#{css-class('form-control')}[type=tel],
+  .#{css-class('form-control')}[type=text],
+  .#{css-class('form-control')}[type=time],
+  .#{css-class('form-control')}[type=url],
+  .#{css-class('form-control')}[type=week],
+  textarea.#{css-class('form-control')} {
     display: block;
     width: 100%;
-    padding: $input-padding-y 0;
-    margin-bottom: 0;
-    line-height: $input-line-height;
+    max-width: 18.75rem;
+    min-height: css-var(input-height);
+    padding: calc(css-var(input-padding-y) - css-var(input-border-width)) calc(css-var(input-padding-x) - css-var(input-border-width));
+    font-family: inherit;
+    font-size: css-var(input-font-size);
+    font-weight: css-var(font-weight-normal);
+    line-height: css-var(input-line-height);
     color: css-var(body-color);
-    background-color: transparent;
-    border: solid transparent;
-    border-width: $input-border-width 0;
-
-    &:focus {
-      outline: 0;
-    }
-  }
-
-  // Color input
-  &[type="color"] {
-    width: 3rem;
-    height: $input-height;
-    padding: 0.25rem;
-
-    &::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-
-    &::-webkit-color-swatch {
-      border: 0;
-      border-radius: $input-border-radius-sm;
-    }
-  }
-}
-
-// Textarea specific
-textarea.#{css-class('form-control')} {
-  min-height: calc(#{$input-line-height} * 1em + #{$input-padding-y} * 2 + #{$input-border-width} * 2);
-  resize: vertical;
-
-  &.#{css-class('autosize')} {
-    field-sizing: content;
-    min-height: 5rem;
-    overflow-x: hidden;
-    resize: none;
-  }
-}
-
-// Form Select
-select.#{css-class('form-select')} {
-  #{css-var-name(form-select-bg-img)}: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 22' fill='none'%3e%3cpath d='M10.9999 12.0743L15.5374 7.53676L16.8336 8.83292L10.9999 14.6666L5.16626 8.83292L6.46243 7.53676L10.9999 12.0743Z' fill='%236d6b77' fill-opacity='0.9'/%3e%3c/svg%3e");
-
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  min-height: $input-height;
-  padding: calc(#{$form-select-padding-y} - #{$input-border-width}) calc(#{$form-select-indicator-padding} - #{$input-border-width}) calc(#{$form-select-padding-y} - #{$input-border-width}) calc(#{$form-select-padding-x} - #{$input-border-width});
-  font-family: inherit;
-  font-size: $input-font-size;
-  font-weight: $font-weight-normal;
-  line-height: $input-line-height;
-  color: css-var(body-color);
-  appearance: none;
-  background-color: css-var(paper-bg);
-  background-image: css-var(form-select-bg-img);
-  background-repeat: no-repeat;
-  background-position: right $form-select-padding-x center;
-  background-size: 22px 24px;
-  background-clip: padding-box;
-  border: $input-border-width solid css-var(border-color);
-  border-radius: $input-border-radius;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-  optgroup,
-  option {
+    appearance: none;
     background-color: css-var(paper-bg);
+    background-clip: padding-box;
+    border: css-var(input-border-width) solid css-var(border-color);
+    border-radius: css-var(input-border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &::placeholder {
+      color: css-var(input-placeholder-color);
+      opacity: 1;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover:not(:focus):not(:disabled) {
+      border-color: css-var(input-hover-border-color);
+    }
+
+    &:focus {
+      border-width: css-var(input-focus-border-width);
+      padding: calc(css-var(input-padding-y) - css-var(input-focus-border-width)) calc(css-var(input-padding-x) - css-var(input-focus-border-width));
+      color: css-var(heading-color);
+      background-color: css-var(paper-bg);
+      border-color: css-var(primary);
+      outline: 0;
+      box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
+
+      &::placeholder {
+        transform: translateX(4px);
+      }
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: css-var(input-disabled-bg);
+      border-color: css-var(input-disabled-border-color);
+      opacity: 1;
+      cursor: not-allowed;
+    }
+
+    // Sizes
+    &.#{css-class('form-control-sm')} {
+      min-height: css-var(input-height-sm);
+      padding: calc(css-var(input-padding-y-sm) - css-var(input-border-width)) calc(css-var(input-padding-x-sm) - css-var(input-border-width));
+      font-size: css-var(input-font-size-sm);
+      border-radius: css-var(input-border-radius-sm);
+
+      &:focus {
+        padding: calc(css-var(input-padding-y-sm) - css-var(input-focus-border-width)) calc(css-var(input-padding-x-sm) - css-var(input-focus-border-width));
+      }
+    }
+
+    &.#{css-class('form-control-lg')} {
+      min-height: css-var(input-height-lg);
+      padding: calc(css-var(input-padding-y-lg) - css-var(input-border-width)) calc(css-var(input-padding-x-lg) - css-var(input-border-width));
+      font-size: css-var(input-font-size-lg);
+      border-radius: css-var(input-border-radius-lg);
+
+      &:focus {
+        padding: calc(css-var(input-padding-y-lg) - css-var(input-focus-border-width)) calc(css-var(input-padding-x-lg) - css-var(input-focus-border-width));
+      }
+    }
+
+    // Plaintext variant
+    &.#{css-class('form-control-plaintext')} {
+      display: block;
+      width: 100%;
+      padding: css-var(input-padding-y) 0;
+      margin-bottom: 0;
+      line-height: css-var(input-line-height);
+      color: css-var(body-color);
+      background-color: transparent;
+      border: solid transparent;
+      border-width: css-var(input-border-width) 0;
+
+      &:focus {
+        outline: 0;
+      }
+    }
+
+    // Color input
+    &[type="color"] {
+      width: 3rem;
+      height: css-var(input-height);
+      padding: 0.25rem;
+
+      &::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      &::-webkit-color-swatch {
+        border: 0;
+        border-radius: css-var(input-border-radius-sm);
+      }
+    }
   }
 
-  &[multiple],
-  &[size]:not([size="1"]) {
-    padding-right: $form-select-padding-x;
-    background-image: none;
+  // Textarea specific
+  textarea.#{css-class('form-control')} {
+    min-height: calc(css-var(input-line-height) * 1em + css-var(input-padding-y) * 2 + css-var(input-border-width) * 2);
+    resize: vertical;
+
+    &.#{css-class('autosize')} {
+      field-sizing: content;
+      min-height: 5rem;
+      overflow-x: hidden;
+      resize: none;
+    }
   }
 
-  &:hover:not(:focus):not(:disabled) {
-    border-color: $input-hover-border-color;
-  }
+  // Form Select
+  select.#{css-class('form-select')} {
+    #{css-var-name(form-select-bg-img)}: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 22' fill='none'%3e%3cpath d='M10.9999 12.0743L15.5374 7.53676L16.8336 8.83292L10.9999 14.6666L5.16626 8.83292L6.46243 7.53676L10.9999 12.0743Z' fill='%236d6b77' fill-opacity='0.9'/%3e%3c/svg%3e");
 
-  &:focus {
-    border-width: $input-focus-border-width;
-    padding: calc(#{$form-select-padding-y} - #{$input-focus-border-width}) calc(#{$form-select-indicator-padding} - #{$input-focus-border-width}) calc(#{$form-select-padding-y} - #{$input-focus-border-width}) calc(#{$form-select-padding-x} - #{$input-focus-border-width});
-    background-position: right calc(#{$form-select-padding-x} - 1px) center;
-    border-color: css-var(primary);
+    display: block;
+    width: 100%;
+    max-width: 18.75rem;
+    min-height: css-var(input-height);
+    padding: calc(css-var(form-select-padding-y) - css-var(input-border-width)) calc(css-var(form-select-indicator-padding) - css-var(input-border-width)) calc(css-var(form-select-padding-y) - css-var(input-border-width)) calc(css-var(form-select-padding-x) - css-var(input-border-width));
+    font-family: inherit;
+    font-size: css-var(input-font-size);
+    font-weight: css-var(font-weight-normal);
+    line-height: css-var(input-line-height);
     color: css-var(body-color);
-    outline: 0;
-    box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
+    appearance: none;
+    background-color: css-var(paper-bg);
+    background-image: css-var(form-select-bg-img);
+    background-repeat: no-repeat;
+    background-position: right css-var(form-select-padding-x) center;
+    background-size: 22px 24px;
+    background-clip: padding-box;
+    border: css-var(input-border-width) solid css-var(border-color);
+    border-radius: css-var(input-border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    optgroup,
+    option {
+      background-color: css-var(paper-bg);
+    }
+
+    &[multiple],
+    &[size]:not([size="1"]) {
+      padding-right: css-var(form-select-padding-x);
+      background-image: none;
+    }
+
+    &:hover:not(:focus):not(:disabled) {
+      border-color: css-var(input-hover-border-color);
+    }
+
+    &:focus {
+      border-width: css-var(input-focus-border-width);
+      padding: calc(css-var(form-select-padding-y) - css-var(input-focus-border-width)) calc(css-var(form-select-indicator-padding) - css-var(input-focus-border-width)) calc(css-var(form-select-padding-y) - css-var(input-focus-border-width)) calc(css-var(form-select-padding-x) - css-var(input-focus-border-width));
+      background-position: right calc(css-var(form-select-padding-x) - 1px) center;
+      border-color: css-var(primary);
+      color: css-var(body-color);
+      outline: 0;
+      box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
+    }
+
+    &:hover {
+      color: css-var(body-color);
+    }
+
+    &:disabled {
+      color: css-var(secondary-color);
+      background-color: css-var(input-disabled-bg);
+      border-color: css-var(input-disabled-border-color);
+      cursor: not-allowed;
+    }
+
+    // Sizes
+    &.#{css-class('form-select-sm')} {
+      min-height: css-var(input-height-sm);
+      padding: calc(css-var(input-padding-y-sm) - css-var(input-border-width)) calc(css-var(form-select-indicator-padding) - css-var(input-border-width)) calc(css-var(input-padding-y-sm) - css-var(input-border-width)) calc(css-var(input-padding-x-sm) - css-var(input-border-width));
+      font-size: css-var(input-font-size-sm);
+      background-size: 20px 20px;
+      border-radius: css-var(input-border-radius-sm);
+
+      &:focus {
+        padding: calc(css-var(input-padding-y-sm) - css-var(input-focus-border-width)) calc(css-var(form-select-indicator-padding) - css-var(input-focus-border-width)) calc(css-var(input-padding-y-sm) - css-var(input-focus-border-width)) calc(css-var(input-padding-x-sm) - css-var(input-focus-border-width));
+      }
+    }
+
+    &.#{css-class('form-select-lg')} {
+      min-height: css-var(input-height-lg);
+      padding: calc(css-var(input-padding-y-lg) - css-var(input-border-width)) calc(css-var(form-select-indicator-padding) - css-var(input-border-width)) calc(css-var(input-padding-y-lg) - css-var(input-border-width)) calc(css-var(input-padding-x-lg) - css-var(input-border-width));
+      font-size: css-var(input-font-size-lg);
+      background-size: 26px 26px;
+      border-radius: css-var(input-border-radius-lg);
+
+      &:focus {
+        padding: calc(css-var(input-padding-y-lg) - css-var(input-focus-border-width)) calc(css-var(form-select-indicator-padding) - css-var(input-focus-border-width)) calc(css-var(input-padding-y-lg) - css-var(input-focus-border-width)) calc(css-var(input-padding-x-lg) - css-var(input-focus-border-width));
+      }
+    }
+
+    // Width variants
+    &.#{css-class('form-select-auto')} {
+      width: auto;
+      max-width: 100%;
+    }
   }
 
-  &:hover {
-    color: css-var(body-color);
-  }
-
-  &:disabled {
+  // Form Text (Help text)
+  .#{css-class('form-text')} {
+    margin-top: 0.25rem;
+    font-size: css-var(font-size-sm);
     color: css-var(secondary-color);
-    background-color: css-var(input-disabled-bg);
-    border-color: css-var(input-disabled-border);
-    cursor: not-allowed;
   }
 
-  // Sizes
-  &.#{css-class('form-select-sm')} {
-    min-height: $input-height-sm;
-    padding: calc(#{$input-padding-y-sm} - #{$input-border-width}) calc(#{$form-select-indicator-padding} - #{$input-border-width}) calc(#{$input-padding-y-sm} - #{$input-border-width}) calc(#{$input-padding-x-sm} - #{$input-border-width});
-    font-size: $input-font-size-sm;
-    background-size: 20px 20px;
-    border-radius: $input-border-radius-sm;
+  // Form Floating Labels
+  .#{css-class('form-floating')} {
+    position: relative;
 
-    &:focus {
-      padding: calc(#{$input-padding-y-sm} - #{$input-focus-border-width}) calc(#{$form-select-indicator-padding} - #{$input-focus-border-width}) calc(#{$input-padding-y-sm} - #{$input-focus-border-width}) calc(#{$input-padding-x-sm} - #{$input-focus-border-width});
+    > .#{css-class('form-control')},
+    > .#{css-class('form-select')} {
+      height: calc(3.5rem + css-var(input-border-width) * 2);
+      min-height: calc(3.5rem + css-var(input-border-width) * 2);
+      padding: 1rem css-var(input-padding-x);
+    }
+
+    > label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      height: 100%;
+      padding: 1rem css-var(input-padding-x);
+      overflow: hidden;
+      text-align: start;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      pointer-events: none;
+      border: css-var(input-border-width) solid transparent;
+      transform-origin: 0 0;
+      transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+      color: css-var(input-placeholder-color);
+    }
+
+    > .#{css-class('form-control')}:focus,
+    > .#{css-class('form-control')}:not(:placeholder-shown),
+    > .#{css-class('form-select')} {
+      padding-top: 1.625rem;
+      padding-bottom: 0.625rem;
+
+      ~ label {
+        color: css-var(primary);
+        transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+      }
+    }
+
+    > .#{css-class('form-control')}::placeholder {
+      color: transparent;
+    }
+
+    > .#{css-class('form-control')}:focus::placeholder {
+      color: css-var(input-placeholder-color);
     }
   }
 
-  &.#{css-class('form-select-lg')} {
-    min-height: $input-height-lg;
-    padding: calc(#{$input-padding-y-lg} - #{$input-border-width}) calc(#{$form-select-indicator-padding} - #{$input-border-width}) calc(#{$input-padding-y-lg} - #{$input-border-width}) calc(#{$input-padding-x-lg} - #{$input-border-width});
-    font-size: $input-font-size-lg;
-    background-size: 26px 26px;
-    border-radius: $input-border-radius-lg;
+  // Form Validation States
+  .#{css-class('is-valid')} {
+    border-color: css-var(form-feedback-valid-color);
 
     &:focus {
-      padding: calc(#{$input-padding-y-lg} - #{$input-focus-border-width}) calc(#{$form-select-indicator-padding} - #{$input-focus-border-width}) calc(#{$input-padding-y-lg} - #{$input-focus-border-width}) calc(#{$input-padding-x-lg} - #{$input-focus-border-width});
+      border-color: css-var(form-feedback-valid-color);
+      box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(form-feedback-valid-color), 0.3);
     }
   }
 
-  // Width variants
-  &.#{css-class('form-select-auto')} {
-    width: auto;
-    max-width: 100%;
-  }
-}
+  .#{css-class('is-invalid')} {
+    border-color: css-var(form-feedback-invalid-color);
 
-// Form Text (Help text)
-.#{css-class('form-text')} {
-  margin-top: 0.25rem;
-  font-size: $font-size-sm;
-  color: css-var(secondary-color);
-}
-
-// Form Floating Labels
-.#{css-class('form-floating')} {
-  position: relative;
-
-  > .#{css-class('form-control')},
-  > .#{css-class('form-select')} {
-    height: calc(3.5rem + #{$input-border-width} * 2);
-    min-height: calc(3.5rem + #{$input-border-width} * 2);
-    padding: 1rem $input-padding-x;
+    &:focus {
+      border-color: css-var(form-feedback-invalid-color);
+      box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(form-feedback-invalid-color), 0.3);
+    }
   }
 
-  > label {
+  .#{css-class('valid-feedback')},
+  .#{css-class('invalid-feedback')} {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: css-var(font-size-sm);
+  }
+
+  .#{css-class('valid-feedback')} {
+    color: css-var(form-feedback-valid-color);
+  }
+
+  .#{css-class('invalid-feedback')} {
+    color: css-var(form-feedback-invalid-color);
+  }
+
+  .#{css-class('valid-tooltip')},
+  .#{css-class('invalid-tooltip')} {
     position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    height: 100%;
-    padding: 1rem $input-padding-x;
-    overflow: hidden;
-    text-align: start;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    pointer-events: none;
-    border: $input-border-width solid transparent;
-    transform-origin: 0 0;
-    transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
-    color: $input-placeholder-color;
+    top: 100%;
+    z-index: 5;
+    display: none;
+    max-width: 100%;
+    padding: 0.25rem 0.5rem;
+    margin-top: 0.1rem;
+    font-size: css-var(font-size-sm);
+    color: css-var(white);
+    border-radius: css-var(border-radius);
   }
 
-  > .#{css-class('form-control')}:focus,
-  > .#{css-class('form-control')}:not(:placeholder-shown),
-  > .#{css-class('form-select')} {
-    padding-top: 1.625rem;
-    padding-bottom: 0.625rem;
+  .#{css-class('valid-tooltip')} {
+    background-color: rgba(css-var(form-feedback-valid-color), 0.9);
+  }
 
-    ~ label {
-      color: css-var(primary);
-      transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+  .#{css-class('invalid-tooltip')} {
+    background-color: rgba(css-var(form-feedback-invalid-color), 0.9);
+  }
+
+  // Show feedback when input has validation class
+  .#{css-class('is-valid')} ~ .#{css-class('valid-feedback')},
+  .#{css-class('is-valid')} ~ .#{css-class('valid-tooltip')},
+  .#{css-class('is-invalid')} ~ .#{css-class('invalid-feedback')},
+  .#{css-class('is-invalid')} ~ .#{css-class('invalid-tooltip')} {
+    display: block;
+  }
+
+  // Form Row
+  .#{css-class('form-row')} {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+
+    > .#{css-class('col')},
+    > [class*="#{css-class('col-')}"] {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
     }
   }
 
-  > .#{css-class('form-control')}::placeholder {
-    color: transparent;
+  // Horizontal Form
+  .#{css-class('col-form-label')} {
+    padding-top: calc(css-var(input-padding-y) + css-var(input-border-width));
+    padding-bottom: calc(css-var(input-padding-y) + css-var(input-border-width));
+    margin-bottom: 0;
+    font-size: inherit;
+    font-weight: css-var(font-weight-medium);
+    line-height: css-var(input-line-height);
+    color: css-var(heading-color);
+    white-space: nowrap;
   }
 
-  > .#{css-class('form-control')}:focus::placeholder {
-    color: $input-placeholder-color;
+  .#{css-class('col-form-label-lg')} {
+    padding-top: calc(css-var(input-padding-y-lg) + css-var(input-border-width));
+    padding-bottom: calc(css-var(input-padding-y-lg) + css-var(input-border-width));
+    font-size: css-var(input-font-size-lg);
   }
-}
 
-// Form Validation States
-.#{css-class('is-valid')} {
-  border-color: $form-feedback-valid-color;
-
-  &:focus {
-    border-color: $form-feedback-valid-color;
-    box-shadow: 0 0.125rem 0.375rem 0 rgba($form-feedback-valid-color, 0.3);
+  .#{css-class('col-form-label-sm')} {
+    padding-top: calc(css-var(input-padding-y-sm) + css-var(input-border-width));
+    padding-bottom: calc(css-var(input-padding-y-sm) + css-var(input-border-width));
+    font-size: css-var(input-font-size-sm);
   }
-}
 
-.#{css-class('is-invalid')} {
-  border-color: $form-feedback-invalid-color;
-
-  &:focus {
-    border-color: $form-feedback-invalid-color;
-    box-shadow: 0 0.125rem 0.375rem 0 rgba($form-feedback-invalid-color, 0.3);
-  }
-}
-
-.#{css-class('valid-feedback')},
-.#{css-class('invalid-feedback')} {
-  display: none;
-  width: 100%;
-  margin-top: 0.25rem;
-  font-size: $font-size-sm;
-}
-
-.#{css-class('valid-feedback')} {
-  color: $form-feedback-valid-color;
-}
-
-.#{css-class('invalid-feedback')} {
-  color: $form-feedback-invalid-color;
-}
-
-.#{css-class('valid-tooltip')},
-.#{css-class('invalid-tooltip')} {
-  position: absolute;
-  top: 100%;
-  z-index: 5;
-  display: none;
-  max-width: 100%;
-  padding: 0.25rem 0.5rem;
-  margin-top: 0.1rem;
-  font-size: $font-size-sm;
-  color: $white;
-  border-radius: $border-radius;
-}
-
-.#{css-class('valid-tooltip')} {
-  background-color: rgba($form-feedback-valid-color, 0.9);
-}
-
-.#{css-class('invalid-tooltip')} {
-  background-color: rgba($form-feedback-invalid-color, 0.9);
-}
-
-// Show feedback when input has validation class
-.#{css-class('is-valid')} ~ .#{css-class('valid-feedback')},
-.#{css-class('is-valid')} ~ .#{css-class('valid-tooltip')},
-.#{css-class('is-invalid')} ~ .#{css-class('invalid-feedback')},
-.#{css-class('is-invalid')} ~ .#{css-class('invalid-tooltip')} {
-  display: block;
-}
-
-// Form Row
-.#{css-class('form-row')} {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -0.5rem;
-  margin-left: -0.5rem;
-
-  > .#{css-class('col')},
-  > [class*="#{css-class('col-')}"] {
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-  }
-}
-
-// Horizontal Form
-.#{css-class('col-form-label')} {
-  padding-top: calc(#{$input-padding-y} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y} + #{$input-border-width});
-  margin-bottom: 0;
-  font-size: inherit;
-  font-weight: $font-weight-medium;
-  line-height: $input-line-height;
-  color: css-var(heading-color);
-  white-space: nowrap;
-}
-
-.#{css-class('col-form-label-lg')} {
-  padding-top: calc(#{$input-padding-y-lg} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y-lg} + #{$input-border-width});
-  font-size: $input-font-size-lg;
-}
-
-.#{css-class('col-form-label-sm')} {
-  padding-top: calc(#{$input-padding-y-sm} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y-sm} + #{$input-border-width});
-  font-size: $input-font-size-sm;
 }

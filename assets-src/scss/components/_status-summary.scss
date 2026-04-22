@@ -1,77 +1,77 @@
 // =====================================================
 // Admin UI - Status Summary Component
 // =====================================================
-// Page-level status banner with color variants.
-// Used on alerts dashboard to show overall status.
-// =====================================================
 
 @use "../prefix" as *;
 
-.#{css-class('status-summary')} {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  padding: 0.875rem 1rem;
-  border-radius: css-var(border-radius);
-  border-left: 4px solid transparent;
-}
+.#{css-class('wrap')} {
 
-.#{css-class('status-summary__content')} {
-  flex: 1;
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
+  .#{css-class('status-summary')} {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding: 0.875rem 1rem;
+    border-radius: css-var(border-radius);
+    border-left: 4px solid transparent;
+  }
 
-.#{css-class('status-summary__title')} {
-  font-weight: 600;
-}
+  .#{css-class('status-summary__content')} {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
 
-.#{css-class('status-summary__separator')} {
-  margin: 0 0.375rem;
-  opacity: 0.6;
-}
+  .#{css-class('status-summary__title')} {
+    font-weight: 600;
+  }
 
-.#{css-class('status-summary__text')} {
-  color: inherit;
-}
+  .#{css-class('status-summary__separator')} {
+    margin: 0 0.375rem;
+    opacity: 0.6;
+  }
 
-.#{css-class('status-summary__progress')} {
-  height: 6px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin-top: 0.75rem;
-  overflow: hidden;
-  width: 100%;
-}
+  .#{css-class('status-summary__text')} {
+    color: inherit;
+  }
 
-.#{css-class('status-summary__progress-bar')} {
-  height: 100%;
-  background-color: currentColor; // Inherits the variant color (info, success, etc.)
-  border-radius: 10px;
-  transition: width 0.4s ease-in-out;
-}
+  .#{css-class('status-summary__progress')} {
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+  }
 
-// Color variants (matching _alert.scss patterns)
-.#{css-class('status-summary--info')} {
-  color: #007a88;
-  background-color: #d6f4f8;
-  border-left-color: css-var(info);
-}
+  .#{css-class('status-summary__progress-bar')} {
+    height: 100%;
+    background-color: currentColor;
+    border-radius: 10px;
+    transition: width 0.4s ease-in-out;
+  }
 
-.#{css-class('status-summary--success')} {
-  color: #1a824a;
-  background-color: #ddf6e8;
-  border-left-color: css-var(success);
-}
+  .#{css-class('status-summary--info')} {
+    color: #007a88;
+    background-color: #d6f4f8;
+    border-left-color: css-var(info);
+  }
 
-.#{css-class('status-summary--warning')} {
-  color: #a66829;
-  background-color: #fff0e1;
-  border-left-color: css-var(warning);
-}
+  .#{css-class('status-summary--success')} {
+    color: #1a824a;
+    background-color: #ddf6e8;
+    border-left-color: css-var(success);
+  }
 
-.#{css-class('status-summary--danger')} {
-  color: #a63235;
-  background-color: #ffe2e3;
-  border-left-color: css-var(danger);
+  .#{css-class('status-summary--warning')} {
+    color: #a66829;
+    background-color: #fff0e1;
+    border-left-color: css-var(warning);
+  }
+
+  .#{css-class('status-summary--danger')} {
+    color: #a63235;
+    background-color: #ffe2e3;
+    border-left-color: css-var(danger);
+  }
+
 }

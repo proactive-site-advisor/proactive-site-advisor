@@ -35,17 +35,14 @@ class AlertFactory extends AbstractFactory
         'traffic_drop'    => [
             'severities' => ['warning', 'critical'],
             'title'      => 'Traffic dropped by %d%%',
-            'message'    => 'Today\'s traffic is significantly lower than your 7-day average. This could indicate technical issues, SEO problems, or external factors affecting your site visibility.',
         ],
         'traffic_spike'   => [
             'severities' => ['info'],
             'title'      => 'Traffic increased by %d%%',
-            'message'    => 'Your traffic is significantly higher than your 7-day average. This could be due to viral content, marketing campaigns, or external links to your site.',
         ],
         'error_404_spike' => [
             'severities' => ['warning'],
             'title'      => '404 errors increased significantly',
-            'message'    => 'Your site is receiving more 404 errors than usual. This may indicate broken links, removed pages, or potential crawling issues.',
         ],
     ];
 
@@ -61,7 +58,6 @@ class AlertFactory extends AbstractFactory
             'type'       => 'traffic_drop',
             'severity'   => 'warning',
             'title'      => 'Traffic dropped by 35%',
-            'message'    => $this->alertTypes['traffic_drop']['message'],
             'meta_json'  => null,
         ];
     }
@@ -94,7 +90,6 @@ class AlertFactory extends AbstractFactory
             'type'       => 'traffic_drop',
             'severity'   => $severity,
             'title'      => sprintf($this->alertTypes['traffic_drop']['title'], $percentDrop),
-            'message'    => $this->alertTypes['traffic_drop']['message'],
             'meta_json'  => $metaJson,
         ]);
 
@@ -127,7 +122,6 @@ class AlertFactory extends AbstractFactory
             'type'       => 'traffic_spike',
             'severity'   => 'info',
             'title'      => sprintf($this->alertTypes['traffic_spike']['title'], $percentIncrease),
-            'message'    => $this->alertTypes['traffic_spike']['message'],
             'meta_json'  => $metaJson,
         ]);
 
@@ -167,7 +161,6 @@ class AlertFactory extends AbstractFactory
             'type'       => 'error_404_spike',
             'severity'   => 'warning',
             'title'      => $this->alertTypes['error_404_spike']['title'],
-            'message'    => $this->alertTypes['error_404_spike']['message'],
             'meta_json'  => $metaJson,
         ]);
 

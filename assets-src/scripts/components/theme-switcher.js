@@ -6,164 +6,119 @@
 (function (window, document) {
     'use strict';
 
-    var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
-    if (!PREFIX_CONFIG) throw new Error('ThemeSwitcher requires namespace.js (__PREFIX_CONFIG__).');
+    const PREFIX_CONFIG = window.__PREFIX_CONFIG__;
+    if (!PREFIX_CONFIG) return;
 
-    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
-    if (!ProactiveSiteAdvisor) throw new Error('ThemeSwitcher requires global namespace.');
+    const PSA = window[PREFIX_CONFIG.namespace];
+    if (!PSA) return;
 
-    var Helpers = ProactiveSiteAdvisor.Helpers;
-    var Config = ProactiveSiteAdvisor.Config;
-    if (!Helpers || !Config) throw new Error('ThemeSwitcher requires helpers.js and config.js.');
+    const Helpers = PSA.Helpers;
+    const Config = PSA.Config;
+    if (!Helpers || !Config) return;
 
-    function storageGet(key) {
-        try {
-            return window.localStorage.getItem(key);
-        } catch (e) {
-            return null;
-        }
-    }
+    const ThemeSwitcher = {
 
-    function storageSet(key, value) {
-        try {
-            window.localStorage.setItem(key, value);
-        } catch (e) {
-        }
-    }
-
-    var ThemeSwitcher = {
         wrapper: null,
         storageKey: null,
+        toggleBtn: null,
 
+        /* ------------------------------------------------------------
+         * Init
+         * ------------------------------------------------------------ */
         init: function () {
-            this.storageKey = ProactiveSiteAdvisor.storageKey('theme');
-            this.wrapper = document.querySelector(
-                ProactiveSiteAdvisor.selector('wrap')
-            );
+
+            this.storageKey = PSA.storageKey('theme');
+            this.wrapper = document.querySelector(PSA.selector('ui'));
+            this.toggleBtn = document.getElementById(PSA.cssClass('theme-toggle'));
 
             this.bindEvents();
             this.applyStoredTheme();
         },
 
+        /* ------------------------------------------------------------
+         * Events
+         * ------------------------------------------------------------ */
         bindEvents: function () {
-            var self = this;
 
-            document.addEventListener('click', function (e) {
-                var target = Helpers.getElement(e.target);
-                if (!target) return;
+            if (this.toggleBtn) {
+                this.toggleBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggle();
+                });
+            }
 
-                if (!target.closest(
-                    ProactiveSiteAdvisor.dataSelector('theme-toggle')
-                )) return;
-
-                e.preventDefault();
-                self.toggle();
-            });
         },
 
+        /* ------------------------------------------------------------
+         * Theme Logic
+         * ------------------------------------------------------------ */
         getTheme: function () {
-            var stored = storageGet(this.storageKey);
+
+            const stored = Helpers.storageGet(this.storageKey);
             if (stored === 'light' || stored === 'dark') {
                 return stored;
             }
 
             if (this.wrapper) {
-                var domTheme = this.wrapper.getAttribute(
-                    ProactiveSiteAdvisor.dataAttr('theme')
-                );
-
-                if (domTheme === 'light' || domTheme === 'dark') {
-                    return domTheme;
-                }
+                if (this.wrapper.classList.contains(PSA.cssClass('theme-light'))) return 'light';
+                if (this.wrapper.classList.contains(PSA.cssClass('theme-dark'))) return 'dark';
             }
 
             return 'light';
         },
 
         setTheme: function (theme) {
+
             if (theme !== 'light' && theme !== 'dark') {
                 theme = 'light';
             }
 
             if (this.wrapper) {
-                this.wrapper.setAttribute(
-                    ProactiveSiteAdvisor.dataAttr('theme'),
-                    theme
-                );
+                this.wrapper.classList.remove(PSA.cssClass('theme-light'), PSA.cssClass('theme-dark'));
+                this.wrapper.classList.add(PSA.cssClass(`theme-${theme}`));
             }
 
-            storageSet(this.storageKey, theme);
+            Helpers.storageSet(this.storageKey, theme);
 
             this.saveToServer(theme);
-            this.updateToggleIcons(theme);
 
-            ProactiveSiteAdvisor.dispatch('themeChanged', {theme: theme}, document);
         },
 
         toggle: function () {
-            this.setTheme(
-                this.getTheme() === 'light' ? 'dark' : 'light'
-            );
+            const nextTheme = this.getTheme() === 'light' ? 'dark' : 'light';
+            this.setTheme(nextTheme);
         },
 
+        /* ------------------------------------------------------------
+         * Apply stored theme on load
+         * ------------------------------------------------------------ */
         applyStoredTheme: function () {
-            var stored = storageGet(this.storageKey);
-            var theme = (stored === 'light' || stored === 'dark')
+
+            const stored = Helpers.storageGet(this.storageKey);
+            const theme = (stored === 'light' || stored === 'dark')
                 ? stored
                 : this.getTheme();
 
-            if (stored === 'light' || stored === 'dark') {
-                if (this.wrapper) {
-                    this.wrapper.setAttribute(
-                        ProactiveSiteAdvisor.dataAttr('theme'),
-                        stored
-                    );
-                }
+            if (stored && this.wrapper) {
+                this.wrapper.classList.remove(PSA.cssClass('theme-light'), PSA.cssClass('theme-dark'));
+                this.wrapper.classList.add(PSA.cssClass(`theme-${theme}`));
             }
 
-            this.updateToggleIcons(theme);
         },
 
-        updateToggleIcons: function (theme) {
-            var toggles = document.querySelectorAll(
-                ProactiveSiteAdvisor.dataSelector('theme-toggle')
-            );
-
-            for (var i = 0; i < toggles.length; i++) {
-                var toggle = toggles[i];
-
-                var lightIcon = toggle.querySelector(
-                    ProactiveSiteAdvisor.selector('theme-icon-light')
-                );
-
-                var darkIcon = toggle.querySelector(
-                    ProactiveSiteAdvisor.selector('theme-icon-dark')
-                );
-
-                if (!lightIcon || !darkIcon) continue;
-
-                if (theme === 'dark') {
-                    lightIcon.style.display = 'inline-block';
-                    darkIcon.style.display = 'none';
-                } else {
-                    lightIcon.style.display = 'none';
-                    darkIcon.style.display = 'inline-block';
-                }
-            }
-        },
-
+        /* ------------------------------------------------------------
+         * Save Theme to Server
+         * ------------------------------------------------------------ */
         saveToServer: function (theme) {
+
             if (typeof window.fetch !== 'function') return;
 
-            var ajaxUrl = Config.getAjaxUrl();
-            var nonce = Config.getNonce();
+            const ajaxUrl = Config.getAjaxUrl();
+            const nonce = Config.getNonce();
             if (!ajaxUrl || !nonce) return;
 
-            var formData = new FormData();
-            formData.append(
-                'action',
-                ProactiveSiteAdvisor.ajaxAction('switch_theme')
-            );
+            const formData = new FormData();
+            formData.append('action', PSA.ajaxAction('switch_theme'));
             formData.append('security', nonce);
             formData.append('theme', theme);
 
@@ -171,19 +126,22 @@
                 method: 'POST',
                 body: formData,
                 credentials: 'same-origin'
-            }).catch(function () {
+            }).catch(() => {
             });
         }
     };
 
+    /* ------------------------------------------------------------
+     * Init component
+     * ------------------------------------------------------------ */
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             ThemeSwitcher.init();
         });
     } else {
         ThemeSwitcher.init();
     }
 
-    ProactiveSiteAdvisor.ThemeSwitcher = ThemeSwitcher;
+    PSA.ThemeSwitcher = ThemeSwitcher;
 
 })(window, document);

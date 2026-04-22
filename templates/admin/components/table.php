@@ -1,75 +1,136 @@
 <?php
+
 /**
- * Table Component
- *
- * Displays data in a responsive table format.
- * Based on Sneat/Vuexy table design.
+ * Component: Table.
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are locally scoped via include.
  *
  * @package ProactiveSiteAdvisor
  * @version 1.0.0
  *
- * @var array $columns Array of column definitions: [['key' => 'column_key', 'label' => 'Column Label'], ...]
- * @var array $rows Array of row data: [['column_key' => 'value', ...], ...]
- * @var string $tableClass Additional CSS classes for the table
- * @var string $emptyMessage Message to display when there are no rows
+ * @var array $columns
+ * @var array $rows
+ * @var string $class
  */
 
-defined('ABSPATH') || exit;
-
-$columns      = $columns ?? [];
-$rows         = $rows ?? [];
-$tableClass   = $tableClass ?? '';
-$emptyMessage = $emptyMessage ?? __('No data available.', 'proactive-site-advisor');
+if (!defined('ABSPATH')) {
+    exit;
+}
 ?>
 
-<div class="proactive-site-advisor-card proactive-site-advisor-table-card">
-    <div class="proactive-site-advisor-table-responsive">
-        <table class="proactive-site-advisor-table <?php echo esc_attr($tableClass); ?>">
-            <?php if (!empty($columns)) : ?>
-                <thead>
-                    <tr>
-                        <?php foreach ($columns as $column) : ?>
-                            <th><?php echo esc_html($column['label'] ?? ''); ?></th>
-                        <?php endforeach; ?>
-                    </tr>
-                </thead>
-            <?php endif; ?>
-            <tbody>
-                <?php if (!empty($rows)) : ?>
-                    <?php foreach ($rows as $row) : ?>
-                        <tr>
-                            <?php foreach ($columns as $column) : ?>
-                                <?php
-                                $key   = $column['key'] ?? '';
-                                $value = $row[$key] ?? '';
+<table class="psa-table <?php echo esc_attr($class); ?>">
+    <thead>
+    <tr>
+        <?php foreach ($columns as $column) : ?>
+            <th class="<?php echo esc_attr($column['class'] ?? ''); ?>"><?php echo esc_html($column['label'] ?? ''); ?></th>
+        <?php endforeach; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($rows as $row) : ?>
+        <tr>
+            <?php foreach ($columns as $column) :
 
-                                // Format date columns
-                                if (isset($column['type']) && $column['type'] === 'date' && !empty($value)) {
-                                    $timestamp = strtotime($value);
-                                    if ($timestamp !== false) {
-                                        $value = wp_date(get_option('date_format'), $timestamp);
-                                    }
-                                }
+                $key = $column['key'] ?? '';
+                $type = $column['type'] ?? 'text';
+                $value = $row[$key] ?? null;
+                $formatter = $column['formatter'] ?? null;
+                $decimals = $column['decimals'] ?? 2;
+                $suffix = $column['suffix'] ?? '';
+                $class = $column['class'] ?? '';
+                $labels = $column['labels'] ?? [];
 
-                                // Format number columns
-                                if (isset($column['type']) && $column['type'] === 'number') {
-                                    $value = number_format_i18n((int) $value);
+                ?>
+                <td class="<?php echo esc_attr($class); ?>">
+
+                    <?php
+                    /**
+                     * Formatter has highest priority
+                     */
+                    if (is_callable($formatter)) {
+                        echo wp_kses_post($formatter($value, $row));
+                        continue;
+                    }
+
+                    /**
+                     * Type-based render
+                     */
+                    switch ($type) {
+
+                        case 'link':
+                            if (is_array($value)) {
+                                $label = $value['label'] ?? '';
+                                $link  = $value['link'] ?? '#';
+
+                                echo '<a href="' . esc_url($link) . '">';
+                                echo wp_kses_post($label);
+                                echo '</a>';
+                            }
+                            break;
+
+                        case 'number':
+
+                            $intValue = (int)$value;
+
+                            if ($intValue < 0 && isset($labels['negative'])) {
+                                echo '<span class="psa-negative">';
+                                echo esc_html($intValue) . ' (' . esc_html($labels['negative']) . ')';
+                                echo '</span>';
+                            } else {
+                                echo esc_html($intValue);
+                            }
+
+                            break;
+
+                        case 'decimal':
+
+                            $floatVal = (float)$value;
+
+                            if ($floatVal <= 0 && isset($labels['zero'])) {
+                                echo esc_html($labels['zero']);
+                            } else {
+                                echo esc_html(number_format_i18n($floatVal, (int)$decimals));
+                                echo esc_html($suffix);
+                            }
+
+                            break;
+
+                        case 'days':
+
+                            if ($value === null) {
+                                echo '—';
+                            } elseif ($value <= 0 && isset($labels['empty'])) {
+                                echo esc_html($labels['empty']);
+                            } else {
+                                echo esc_html((int)$value);
+
+                                if (isset($labels['unit'])) {
+                                    echo ' ' . esc_html($labels['unit']);
                                 }
-                                ?>
-                                <td><?php echo esc_html($value); ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <tr>
-                        <td colspan="<?php echo esc_attr(count($columns)); ?>" class="proactive-site-advisor-table__empty">
-                            <?php echo esc_html($emptyMessage); ?>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+                            }
+
+                            break;
+
+                        case 'badge':
+
+                            if (is_array($value)) {
+                                $label = $value['label'] ?? '';
+                                $class = $value['class'] ?? '';
+
+                                echo '<span class="' . esc_attr($class) . '">';
+                                echo esc_html($label);
+                                echo '</span>';
+                            }
+
+                            break;
+
+                        default:
+                            echo esc_html((string)$value);
+                    }
+                    ?>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -3,8 +3,8 @@
 namespace ProactiveSiteAdvisor\Cron;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractCronTask;
-use ProactiveSiteAdvisor\Services\Cron\DailyStatsFlusher;
 use ProactiveSiteAdvisor\Utils\Logger;
+use Throwable;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -37,13 +37,11 @@ class DailyCronHandler extends AbstractCronTask
 
     /**
      * Services to run daily.
-     * Each service must have getInstance() and run() methods.
+     * Each service must have instance() and run() methods.
      *
      * @var array<class-string>
      */
-    private array $services = [
-        DailyStatsFlusher::class,
-    ];
+    private array $services = [];
 
     /**
      * Configure the cron task.
@@ -53,7 +51,7 @@ class DailyCronHandler extends AbstractCronTask
      */
     protected function configure(CronTask $task): void
     {
-        $task->startTodayAt(0, 0); // Midnight
+        $task->startTodayAt(0); // Midnight
     }
 
     /**
@@ -131,7 +129,8 @@ class DailyCronHandler extends AbstractCronTask
             do_action('proactive_site_advisor_daily_cron_before_service', $serviceId);
 
             $startTime = microtime(true);
-            $serviceClass::getInstance()->run();
+            $service   = method_exists($serviceClass, 'instance') ? $serviceClass::instance() : new $serviceClass();
+            $service->run();
             $duration = microtime(true) - $startTime;
 
             /**
@@ -146,7 +145,7 @@ class DailyCronHandler extends AbstractCronTask
             Logger::debug("Service completed: {$serviceId}", ['duration' => round($duration, 4)]);
 
             return ['success' => true, 'duration' => $duration];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $duration = microtime(true) - ($startTime ?? microtime(true));
 
             Logger::error("Service failed: {$serviceId}", [

@@ -18,9 +18,14 @@ if (!defined('ABSPATH')) {
 final class PrefixConfig
 {
     /**
-     * Base slug used for CSS classes and handles (kebab-case).
+     * Used for unique identifiers.
      */
-    public const BASE = 'proactive-site-advisor';
+    public const SLUG = 'proactive-site-advisor';
+    
+    /**
+     * Used for CSS classes (kebab-case).
+     */
+    public const BASE = 'psa';
 
     /**
      * PHP-safe prefix (snake_case).
@@ -28,19 +33,36 @@ final class PrefixConfig
     public const PREFIX = 'proactive_site_advisor';
 
     /**
-     * Uppercase constant prefix.
-     */
-    public const CONSTANT_PREFIX = 'PROACTIVE_SITE_ADVISOR';
-
-    /**
      * Global JS config object name.
      */
-    public const CONFIG_OBJECT = 'proactiveSiteAdvisorConfig';
+    public const CONFIG_OBJECT = 'psaConfig';
 
     /**
      * Prevent instantiation.
      */
     private function __construct(){}
+    
+    /**
+     * Build a BASE-prefixed string (kebab-case).
+     *
+     * @param string $name Suffix to append.
+     * @return string
+     */
+    public static function base(string $name): string
+    {
+        return self::BASE . '-' . $name;
+    }
+    
+    /**
+     * Build a PREFIX-prefixed string (snake_case).
+     *
+     * @param string $name Suffix to append.
+     * @return string
+     */
+    public static function prefix(string $name): string
+    {
+        return self::PREFIX . '_' . $name;
+    }
 
     /**
      * Generate a prefixed CSS class.
@@ -50,7 +72,7 @@ final class PrefixConfig
      */
     public static function css(string $name): string
     {
-        return self::BASE . '-' . $name;
+        return self::base($name);
     }
 
     /**
@@ -61,7 +83,7 @@ final class PrefixConfig
      */
     public static function dataAttr(string $name): string
     {
-        return 'data-' . self::BASE . '-' . $name;
+        return 'data-' . self::base($name);
     }
 
     /**
@@ -72,7 +94,7 @@ final class PrefixConfig
      */
     public static function handle(string $name): string
     {
-        return self::BASE . '-' . $name;
+        return self::SLUG . '-' . $name;
     }
 
     /**
@@ -83,7 +105,7 @@ final class PrefixConfig
      */
     public static function ajaxAction(string $name): string
     {
-        return self::PREFIX . '_' . $name;
+        return self::prefix($name);
     }
 
     /**
@@ -94,7 +116,7 @@ final class PrefixConfig
      */
     public static function nonce(string $name = 'nonce'): string
     {
-        return self::PREFIX . '_' . $name;
+        return self::prefix($name);
     }
 
     /**
@@ -105,6 +127,6 @@ final class PrefixConfig
      */
     public static function table(string $name): string
     {
-        return self::PREFIX . '_' . $name;
+        return self::prefix($name);
     }
 }

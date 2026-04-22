@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-02-28 04:43+0330\n"
+"POT-Creation-Date: 2026-04-20 17:17+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,560 +17,204 @@ msgstr ""
 "X-Poedit-WPHeader: proactive-site-advisor.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: src/Abstracts/AbstractSingleton.php:38 src/Core.php:91
+#: src/Abstracts/AbstractSingleton.php:38 src/Core.php:97
 msgid "Cloning is not allowed."
 msgstr ""
 
-#: src/Abstracts/AbstractSingleton.php:46 src/Core.php:101
+#: src/Abstracts/AbstractSingleton.php:46 src/Core.php:107
 msgid "Instances of this class cannot be unserialized."
 msgstr ""
 
-#: src/Admin/AdminNotices.php:193
+#: src/Admin/Notices/AdminNotices.php:211
 msgid "Invalid notice ID."
 msgstr ""
 
-#: src/Admin/AdminNotices.php:200
+#: src/Admin/Notices/AdminNotices.php:216
+#: src/Admin/Notices/AdminNotices.php:222
 msgid "Notice dismissed."
 msgstr ""
 
-#: src/Admin/PromoBanner.php:76
-msgid "Banner dismissed successfully."
+#: src/Admin/Notices/PromoNotice.php:73
+msgid "Promo notice dismissed successfully."
 msgstr ""
 
-#: src/AdminUI/Theme/ThemeManager.php:135
+#: src/AdminUI/Theme/ThemeSwitcher.php:136
 msgid "Theme switched successfully."
 msgstr ""
 
-#: src/AdminUI/Theme/ThemeManager.php:139
+#: src/AdminUI/Theme/ThemeSwitcher.php:139
 msgid "Invalid theme."
 msgstr ""
 
-#: src/Components/AjaxComponent.php:51
+#: src/Components/AjaxComponent.php:52
 msgid "AJAX error: "
 msgstr ""
 
-#: src/Components/AjaxComponent.php:89
+#: src/Components/AjaxComponent.php:92
 msgid "Invalid security token."
 msgstr ""
 
-#: src/Components/AjaxComponent.php:108
+#: src/Components/AjaxComponent.php:114
 msgid "Unauthorized."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-#: src/Config/HeaderConfig.php:58 templates/admin/layouts/header.php:16
-#: templates/admin/pages/alerts.php:26
+#: src/Config/HeaderConfig.php:58
 msgid "Proactive Site Advisor"
 msgstr ""
 
-#: src/Cron/CronManager.php:96
+#: src/Cron/CronManager.php:97
 msgid "Every Minute"
 msgstr ""
 
-#: src/Cron/CronManager.php:100
+#: src/Cron/CronManager.php:101
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: src/Cron/CronManager.php:104
+#: src/Cron/CronManager.php:105
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: src/Cron/CronManager.php:108
+#: src/Cron/CronManager.php:109
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: src/Cron/CronManager.php:112
+#: src/Cron/CronManager.php:113
 msgid "Once Weekly"
 msgstr ""
 
-#: src/Cron/CronManager.php:116
+#: src/Cron/CronManager.php:117
 msgid "Once Monthly"
 msgstr ""
 
-#: src/DataProviders/AlertsDataProvider.php:274
-msgid "Traffic Drop"
-msgstr ""
-
-#: src/DataProviders/AlertsDataProvider.php:276
-msgid "Traffic Spike"
-msgstr ""
-
-#: src/DataProviders/AlertsDataProvider.php:278
-msgid "404 Spike"
-msgstr ""
-
-#: src/DataProviders/AlertsDataProvider.php:280
-#: templates/admin/components/alert-card.php:28
-#: templates/admin/pages/alerts.php:125
-msgid "Alert"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsManager.php:67
+#: src/Services/Admin/Dashboard/DashboardManager.php:59
 msgid "Site Advisor"
 msgstr ""
 
-#: src/Services/Admin/Alerts/AlertsManager.php:95
+#: src/Services/Admin/Dashboard/DashboardManager.php:67
 msgid "Alerts"
 msgstr ""
 
-#: src/Services/Admin/Alerts/AlertsPage.php:47
-msgid "Dashboard Alerts"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPage.php:48
-msgid "Unusual activity on your site — with recommended actions."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:125
-#: src/Services/Admin/Alerts/AlertsPageContext.php:340
-#: src/Services/Admin/Alerts/AlertsPageContext.php:506
-msgid "Getting started"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:126
-msgid ""
-"We're collecting baseline data. Your first insights will appear shortly."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:135
-#: src/Services/Admin/Alerts/AlertsPageContext.php:519
-#: templates/admin/pages/alerts.php:184
-msgid "Building history"
-msgstr ""
-
-#. translators: 1: current day count, 2: total baseline days
-#: src/Services/Admin/Alerts/AlertsPageContext.php:138
-#, php-format
-msgid ""
-"Collecting baseline data (Day %1$d of %2$d). Your insights will become more "
-"accurate as history grows."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:148
-msgid "Check monitoring"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:149
-msgid "Last check was over 24 hours ago. Verify your site cron is running."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:158
-msgid "Critical issues detected"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:162
-#, php-format
-msgid ""
-"%d critical issue detected in the last 7 days that requires immediate "
-"attention."
-msgid_plural ""
-"%d critical issues detected in the last 7 days that require immediate "
-"attention."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:175
-msgid "Attention needed"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:179
-#, php-format
-msgid "%d alert detected in the last 7 days that may need your attention."
-msgid_plural ""
-"%d alerts detected in the last 7 days that may need your attention."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:191
-#: src/Services/Admin/Alerts/AlertsPageContext.php:359
-msgid "All clear"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:192
-msgid ""
-"No unusual activity detected in the last 7 days. We'll keep monitoring and "
-"surface issues with recommended actions."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:227
-msgid "Critical Alerts"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:232
-msgid "Traffic Alerts"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:237
-msgid "404 Alerts"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:242
-msgid "Total Alerts"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:261
-msgid "Collecting data"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:269
-msgid "Limited data available"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:297
-msgid "No unusual traffic detected"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:299
-msgid "No 404 issues detected"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:301
-msgid "No critical issues detected"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:303
-msgid "Last 7 days"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:317
-msgid "Unusual traffic changes detected"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:319
-msgid "Pages returning 404 errors"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:321
-msgid "Issues needing attention"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:323
-msgid "Total in last 7 days"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:341
-msgid ""
-"We're collecting baseline data for your site. Your first insights will "
-"appear shortly."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:342
-msgid "Tip: Leave this plugin active to get accurate insights."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:349
-msgid "Limited history"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:350
-msgid "Not enough data yet to reliably detect unusual activity."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:351
-msgid "Insights will improve as more data is collected."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:360
-msgid "No unusual activity detected in the last 7 days."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:361
-msgid "We'll keep monitoring and notify you if something changes."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:411
-msgid "Traffic dropped unexpectedly compared to recent days."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:413
-msgid "Traffic increased significantly compared to recent days."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:415
-msgid "Visitors are reaching pages that no longer exist."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:417
-msgid "Unusual activity was detected."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:433
-msgid "Sudden traffic drops are often caused by downtime or recent changes."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:435
-msgid "Check if your site is currently reachable"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:436
-msgid "Review recent plugin or theme changes"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:437
-msgid "Look for increases in 404 errors"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:443
-msgid ""
-"Traffic spikes can indicate viral content, marketing success, or bot "
-"activity."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:445
-msgid "Check your analytics for traffic sources"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:446
-msgid "Review server performance and load times"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:447
-msgid "Look for unusual referrer patterns"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:472
-msgid "Missing pages can frustrate visitors and affect SEO."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:474
-msgid "Add redirects for missing pages"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:475
-msgid "Fix internal links pointing to missing URLs"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:476
-msgid "Review recent permalink changes"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:483
-msgid "This issue may require your attention."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:485
-msgid "Review recent changes to your site"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:486
-msgid "Check your site for any visible issues"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:510
-msgid "We're collecting baseline data. Your first history will appear shortly."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:523
-msgid "Building history — check back in a couple days for meaningful trends."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:534
-msgid "No statistics available for the selected period."
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:574
-msgid "Not checked yet · Monitoring starting"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:576
-msgid "Collecting data · Insights will appear soon"
-msgstr ""
-
-#: src/Services/Admin/Alerts/AlertsPageContext.php:578
-msgid "Last checked: over 24 hours ago · Check monitoring status"
-msgstr ""
-
-#. translators: %s: time ago (e.g., "2 minutes")
-#: src/Services/Admin/Alerts/AlertsPageContext.php:582
-#, php-format
-msgid "Last checked: %s ago · Range: last 7 days"
-msgstr ""
-
-#. translators: %s is percent number
-#: src/Services/Insights/AlertEngine.php:106
+#: src/Services/Insights/AlertEngine.php:97
 #, php-format
 msgid "Traffic dropped by %s%%"
 msgstr ""
 
-#: src/Services/Insights/AlertEngine.php:111
-msgid ""
-"Today's traffic is significantly lower than your recent average.\n"
-"\n"
-"Next steps:\n"
-"- Check if your site is reachable\n"
-"- Review recent plugin/theme changes\n"
-"- Check for increased 404 errors"
-msgstr ""
-
-#. translators: %s is percent number
-#: src/Services/Insights/AlertEngine.php:135
+#: src/Services/Insights/AlertEngine.php:98
 #, php-format
 msgid "Traffic increased by %s%%"
 msgstr ""
 
-#: src/Services/Insights/AlertEngine.php:140
-msgid ""
-"Your traffic is significantly higher than your recent average.\n"
-"\n"
-"Next steps:\n"
-"- Check which pages are receiving traffic\n"
-"- Verify traffic sources\n"
-"- Ensure your site performance is stable"
-msgstr ""
-
-#: src/Services/Insights/AlertEngine.php:190
+#: src/Services/Insights/AlertEngine.php:144
 msgid "404 errors increased"
 msgstr ""
 
-#. translators: %s is the URL path
-#: src/Services/Insights/AlertEngine.php:199
+#: src/Services/Insights/AlertEngine.php:145
 #, php-format
 msgid "Most affected URL: %s"
 msgstr ""
 
-#: src/Services/Insights/AlertEngine.php:200
-msgid "Most affected URL: (not available)"
-msgstr ""
-
-#: src/Services/Insights/AlertEngine.php:205
-msgid ""
-"Your site is receiving significantly more 404 errors than usual.\n"
-"\n"
-"Next steps:\n"
-"- Add a redirect for missing pages\n"
-"- Fix internal links pointing to missing URLs\n"
-"- Check recent permalink changes"
-msgstr ""
-
-#: templates/admin/components/alert-card.php:77
+#: templates/admin/components/alert-card.php:42
 msgid "What this means"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:84
+#: templates/admin/components/alert-card.php:47
 msgid "What you should check next"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:95
+#: templates/admin/components/alert-card.php:56
 msgid "Top 404 URLs"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:115
+#: templates/admin/components/alert-card.php:73
 msgid "Toggle details"
 msgstr ""
 
-#: templates/admin/components/list-card.php:25
-#: templates/admin/components/table.php:24
-msgid "No data available."
-msgstr ""
-
-#: templates/admin/components/promo-card.php:25
-#: templates/admin/pages/alerts.php:201
-msgid "Pro"
-msgstr ""
-
-#: templates/admin/components/promo-card.php:26
-msgid "Proactive Site Advisor Pro"
-msgstr ""
-
-#: templates/admin/components/promo-card.php:30
-msgid "Upgrade to Pro"
-msgstr ""
-
-#: templates/admin/components/promo-card.php:41
+#: templates/admin/components/notices/promo-notice.php:21
 msgid "Dismiss"
 msgstr ""
 
-#: templates/admin/layouts/header.php:96
-msgid "Toggle navigation"
+#: templates/admin/components/notices/promo-notice.php:30
+msgid "Pro"
 msgstr ""
 
-#: templates/admin/pages/alerts.php:27
-msgid "Get actionable insights and proactive alerts for your site."
-msgstr ""
-
-#: templates/admin/pages/alerts.php:79
-msgid "Weekly Digest"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:80
-msgid "Alert summary for the last 7 days."
-msgstr ""
-
-#: templates/admin/pages/alerts.php:102
-msgid "Latest Alerts"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:103
-msgid "Most recent alerts triggered on your site."
-msgstr ""
-
-#: templates/admin/pages/alerts.php:141
-msgid "7-Day History"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:142
-msgid "Daily traffic and error statistics."
-msgstr ""
-
-#: templates/admin/pages/alerts.php:148
-msgid "Data may be outdated. Last checked over 24 hours ago."
-msgstr ""
-
-#. translators: 1: average pageviews, 2: average 404 errors
-#: templates/admin/pages/alerts.php:158
-#, php-format
-msgid "Average per day: %1$s pageviews · %2$s page errors (404)"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:170
-msgid "Date"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:171
-msgid "Pageviews"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:172
-msgid "404 Errors"
-msgstr ""
-
-#: templates/admin/pages/alerts.php:202
+#: templates/admin/components/notices/promo-notice.php:32
 msgid "Never miss a critical issue"
 msgstr ""
 
-#: templates/admin/pages/alerts.php:203
+#: templates/admin/components/notices/promo-notice.php:33
 msgid ""
 "Proactive Site Advisor Pro is coming with advanced monitoring and "
 "notification features."
 msgstr ""
 
-#: templates/admin/pages/alerts.php:205
+#: templates/admin/components/notices/promo-notice.php:37
 msgid "Performance slowdown alerting"
 msgstr ""
 
-#: templates/admin/pages/alerts.php:206
+#: templates/admin/components/notices/promo-notice.php:41
 msgid "Email & Slack notifications"
 msgstr ""
 
-#: templates/admin/pages/alerts.php:207
+#: templates/admin/components/notices/promo-notice.php:45
 msgid "Custom alert rules & thresholds"
 msgstr ""
 
-#: templates/admin/pages/alerts.php:208
+#: templates/admin/components/notices/promo-notice.php:49
 msgid "Security alerts for suspicious logins and critical changes"
 msgstr ""
 
-#: templates/admin/pages/alerts.php:210
+#: templates/admin/components/notices/promo-notice.php:53
 msgid "More advanced features are planned for future versions."
 msgstr ""
 
-#: templates/admin/pages/alerts.php:211
+#: templates/admin/components/notices/promo-notice.php:59
 msgid "See what’s coming in Proactive Site Advisor Pro"
+msgstr ""
+
+#: templates/admin/components/notices/simple-notice.php:59
+msgid "Close"
+msgstr ""
+
+#: templates/admin/layouts/header.php:84
+msgid "Toggle navigation"
+msgstr ""
+
+#: templates/admin/pages/dashboard/content.php:41
+msgid "Weekly Digest"
+msgstr ""
+
+#: templates/admin/pages/dashboard/content.php:42
+msgid "Alert summary for the last 7 days."
+msgstr ""
+
+#: templates/admin/pages/dashboard/content.php:66
+msgid "Latest Alerts"
+msgstr ""
+
+#: templates/admin/pages/dashboard/content.php:67
+msgid "Most recent alerts triggered on your site."
+msgstr ""
+
+#: templates/admin/pages/dashboard/content.php:103
+msgid "7-Day History"
+msgstr ""
+
+#: templates/admin/pages/dashboard/content.php:104
+msgid "Daily traffic and error statistics."
+msgstr ""
+
+#: templates/admin/pages/dashboard/header.php:21
+msgid "Dashboard"
+msgstr ""
+
+#: templates/admin/pages/dashboard/header.php:24
+msgid "Unusual activity on your site — with recommended actions."
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -579,8 +223,8 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Provides proactive insights and actionable recommendations for WordPress "
-"sites, alerting you to potential issues before they impact your site."
+"Automatically monitors your WordPress environment and alerts you about "
+"potential issues before they become problems."
 msgstr ""
 
 #. Author of the plugin/theme

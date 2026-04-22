@@ -62,7 +62,7 @@ abstract class AbstractCronTask
 
         $this->configure($this->task);
 
-        CronManager::getInstance()->addTask($this->task);
+        CronManager::instance()->addTask($this->task);
     }
 
     /**
@@ -166,7 +166,7 @@ abstract class AbstractCronTask
             return false;
         }
 
-        return CronManager::getInstance()->schedule($this->task);
+        return CronManager::instance()->schedule($this->task);
     }
 
     /**
@@ -176,6 +176,6 @@ abstract class AbstractCronTask
      */
     public function unschedule(): bool
     {
-        return CronManager::getInstance()->unschedule($this->hook);
+        return CronManager::instance()->unschedule($this->hook);
     }
 }

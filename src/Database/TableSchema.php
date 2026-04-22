@@ -521,7 +521,7 @@ class TableSchema
         $sql = $name . ' ';
 
         // Type with length/precision
-        if (isset($definition['precision']) && isset($definition['scale'])) {
+        if (isset($definition['precision'], $definition['scale'])) {
             $sql .= "{$definition['type']}({$definition['precision']},{$definition['scale']})";
         } elseif (isset($definition['length'])) {
             $sql .= "{$definition['type']}({$definition['length']})";

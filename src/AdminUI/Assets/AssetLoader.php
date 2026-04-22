@@ -6,14 +6,14 @@ use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 use ProactiveSiteAdvisor\Components\AssetsComponent;
 use ProactiveSiteAdvisor\Config\PrefixConfig;
 use ProactiveSiteAdvisor\Components\AjaxComponent;
-use ProactiveSiteAdvisor\AdminUI\Theme\ThemeManager;
+use ProactiveSiteAdvisor\AdminUI\Theme\ThemeSwitcher;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class AdminUIAssets
+ * Class AssetLoader
  *
  * Handles the registration and enqueueing of AdminUI assets including
  * core styles/scripts and third-party vendor libraries.
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
  * @package ProactiveSiteAdvisor\AdminUI\Assets
  * @version 1.0.0
  */
-class AdminUIAssets extends AbstractSingleton
+class AssetLoader extends AbstractSingleton
 {
     /**
      * Registered vendor configurations.
@@ -163,7 +163,7 @@ class AdminUIAssets extends AbstractSingleton
         $handle = AssetsComponent::getHandle(self::CORE_HANDLE);
 
         // Check if already enqueued by WordPress
-        if (wp_style_is($handle, 'enqueued') || wp_script_is($handle, 'enqueued')) {
+        if (wp_style_is($handle) || wp_script_is($handle)) {
             $this->coreEnqueued = true;
             return;
         }
@@ -183,6 +183,7 @@ class AdminUIAssets extends AbstractSingleton
             'restUrl'   => rest_url('proactive-site-advisor/v1/'),
             'restNonce' => wp_create_nonce('wp_rest'),
             'theme'     => $this->getCurrentTheme(),
+            'i18n'      => [],
         ]);
 
         $this->coreEnqueued = true;
@@ -213,7 +214,7 @@ class AdminUIAssets extends AbstractSingleton
             foreach ($config['css'] as $index => $url) {
                 $handle = $baseHandle . ($index > 0 ? "-{$index}" : '') . '-css';
 
-                if (!wp_style_is($handle, 'enqueued')) {
+                if (!wp_style_is($handle)) {
                     wp_enqueue_style($handle, $url, [], PROACTIVE_SITE_ADVISOR_VERSION);
                 }
             }
@@ -226,7 +227,7 @@ class AdminUIAssets extends AbstractSingleton
             foreach ($config['js'] as $index => $url) {
                 $handle = $baseHandle . ($index > 0 ? "-{$index}" : '') . '-js';
 
-                if (!wp_script_is($handle, 'enqueued')) {
+                if (!wp_script_is($handle)) {
                     wp_enqueue_script($handle, $url, $deps, PROACTIVE_SITE_ADVISOR_VERSION, true);
                 }
             }
@@ -242,7 +243,7 @@ class AdminUIAssets extends AbstractSingleton
      */
     public function getCurrentTheme(): string
     {
-        return ThemeManager::getInstance()->getCurrentTheme();
+        return ThemeSwitcher::instance()->getCurrentTheme();
     }
 
     /**
@@ -253,7 +254,7 @@ class AdminUIAssets extends AbstractSingleton
      */
     public static function enqueue($vendors): void
     {
-        self::getInstance()->queue($vendors);
+        self::instance()->queue($vendors);
     }
 
     /**

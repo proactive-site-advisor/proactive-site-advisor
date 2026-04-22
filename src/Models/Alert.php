@@ -10,10 +10,9 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Alert
+ * Alert
  *
- * Model for alerts including warnings, errors, and notifications.
- * Stores one record per date+type combination with severity and messaging.
+ * Represents an alert record stored in the alerts table.
  *
  * @package ProactiveSiteAdvisor\Models
  * @version 1.0.0
@@ -21,52 +20,50 @@ if (!defined('ABSPATH')) {
 class Alert extends AbstractModel
 {
     /**
-     * Table name (without prefix)
+     * Table name (without prefix).
      *
      * @var string
      */
     protected static string $table = 'alerts';
 
     /**
-     * Fillable fields (allowed for mass assignment)
+     * Allowed fields for mass assignment.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected static array $fillable = [
         'alert_date',
         'type',
         'severity',
         'title',
-        'message',
         'meta_json',
     ];
 
     /**
-     * Attribute type casts
+     * Attribute type casting map.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected static array $casts = [
         'meta_json' => 'json',
     ];
 
     /**
-     * Create an alert if it doesn't already exist for the date+type.
+     * Create an alert only if a record for the same date and type does not already exist.
      *
-     * @param string $dateYmd Date in Y-m-d format.
-     * @param string $type Alert type identifier.
-     * @param string $severity Alert severity level.
-     * @param string $title Alert title.
-     * @param string $message Alert message.
-     * @param string|null $metaJson Optional JSON metadata.
-     * @return static|null The created model or null if already exists.
+     * @param string $dateYmd
+     * @param string $type
+     * @param string $severity
+     * @param string $title
+     * @param string|null $metaJson
+     *
+     * @return static|null
      */
     public static function createIfNotExists(
         string  $dateYmd,
         string  $type,
         string  $severity,
         string  $title,
-        string  $message,
         ?string $metaJson = null
     ): ?self
     {
@@ -84,17 +81,17 @@ class Alert extends AbstractModel
             'type'       => $type,
             'severity'   => $severity,
             'title'      => $title,
-            'message'    => $message,
             'meta_json'  => $metaJson,
         ]);
     }
 
     /**
-     * Find alerts by date.
+     * Find alerts by date (Y-m-d format).
      *
-     * @param string $dateYmd Date in Y-m-d format.
-     * @param array $options Additional query options.
-     * @return array Array of Alert instances.
+     * @param string $dateYmd
+     * @param array<string, mixed> $options
+     *
+     * @return array<int, array<string, mixed>>
      */
     public static function findByDate(string $dateYmd, array $options = []): array
     {
@@ -104,9 +101,10 @@ class Alert extends AbstractModel
     /**
      * Find alerts by type.
      *
-     * @param string $type Alert type identifier.
-     * @param array $options Additional query options.
-     * @return array Array of Alert instances.
+     * @param string $type
+     * @param array<string, mixed> $options
+     *
+     * @return array<int, array<string, mixed>>
      */
     public static function findByType(string $type, array $options = []): array
     {
@@ -116,9 +114,10 @@ class Alert extends AbstractModel
     /**
      * Find alerts by severity.
      *
-     * @param string $severity Alert severity level.
-     * @param array $options Additional query options.
-     * @return array Array of Alert instances.
+     * @param string $severity
+     * @param array<string, mixed> $options
+     *
+     * @return array<int, array<string, mixed>>
      */
     public static function findBySeverity(string $severity, array $options = []): array
     {
@@ -126,9 +125,10 @@ class Alert extends AbstractModel
     }
 
     /**
-     * Delete records older than the given date.
+     * Delete alert records older than the given date.
      *
-     * @param string $dateYmd Date in Y-m-d format.
+     * @param string $dateYmd
+     *
      * @return void
      */
     public static function purgeOlderThan(string $dateYmd): void
@@ -142,10 +142,11 @@ class Alert extends AbstractModel
     }
 
     /**
-     * Delete the record for a specific date and type.
+     * Delete an alert record by date and type.
      *
-     * @param string $dateYmd Date in Y-m-d format.
-     * @param string $type Alert type.
+     * @param string $dateYmd
+     * @param string $type
+     *
      * @return void
      */
     public static function deleteByDateAndType(string $dateYmd, string $type): void

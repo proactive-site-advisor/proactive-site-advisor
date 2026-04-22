@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Menu;
 
+use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -16,7 +18,7 @@ if (!defined('ABSPATH')) {
  * @package ProactiveSiteAdvisor\Menu
  * @version 1.1.0
  */
-class MenuManager
+class MenuManager extends AbstractSingleton
 {
     /**
      * @var MenuItem[]|array[] $menuItems List of registered menu items (objects or arrays)
@@ -139,9 +141,9 @@ class MenuManager
      */
     private function wrapClassCallback($callback)
     {
-        if (is_string($callback) && class_exists($callback) && method_exists($callback, 'renderPage')) {
+        if (is_string($callback) && class_exists($callback) && method_exists($callback, 'render')) {
             /** @var class-string $callback */
-            return [$callback::instance(), 'renderPage'];
+            return [$callback::instance(), 'render'];
         }
 
         return $callback;

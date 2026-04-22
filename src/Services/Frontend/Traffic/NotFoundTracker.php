@@ -2,7 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Utils\Request;
 use ProactiveSiteAdvisor\Cache\CacheKeys;
 use ProactiveSiteAdvisor\Cache\CacheManager;
 
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
-class NotFoundTracker extends AbstractSingleton
+class NotFoundTracker
 {
     /**
      * Transient TTL in seconds (10 days).
@@ -32,43 +32,28 @@ class NotFoundTracker extends AbstractSingleton
     private const MAX_PATHS = 30;
 
     /**
-     * Maximum path length to store.
-     */
-    private const MAX_PATH_LENGTH = 180;
-
-    /**
-     * Register WordPress hooks.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        add_action('template_redirect', [$this, 'maybeTrack404'], 1);
-    }
-
-    /**
      * Track 404 if this is a valid 404 request.
      *
      * @return void
      */
     public function maybeTrack404(): void
     {
-        if (!is_404()) {
-            return;
-        }
-        
         if (!PageviewSignal::shouldCollect()) {
             return;
         }
+        
+        if (!is_404()) {
+            return;
+        }
 
-        $cache = CacheManager::getInstance();
+        $cache = CacheManager::instance();
 
         // Increase total 404 count
         $totalKey = CacheKeys::notFoundTotalToday();
         $cache->increment($totalKey, 1, self::TRANSIENT_TTL);
 
         // Track top paths
-        $path = $this->getRequestPath();
+        $path = Request::getRequestPath();
         if ($path === '') {
             return;
         }
@@ -84,40 +69,6 @@ class NotFoundTracker extends AbstractSingleton
     }
 
     /**
-     * Get the request path without query parameters.
-     *
-     * @return string The sanitized path, or empty string if invalid.
-     */
-    private function getRequestPath(): string
-    {
-        $uri = isset($_SERVER['REQUEST_URI']) ? (string)esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
-        if ($uri === '') {
-            return '';
-        }
-
-        $path = wp_parse_url($uri, PHP_URL_PATH);
-        if (!is_string($path) || $path === '') {
-            return '';
-        }
-
-        // Normalize
-        $path = rawurldecode($path);
-        $path = sanitize_text_field($path);
-
-        // Remove trailing slash except root
-        if ($path !== '/' && str_ends_with($path, '/')) {
-            $path = rtrim($path, '/');
-        }
-
-        // Limit length to avoid abuse
-        if (strlen($path) > self::MAX_PATH_LENGTH) {
-            $path = substr($path, 0, self::MAX_PATH_LENGTH);
-        }
-
-        return $path;
-    }
-
-    /**
      * Get the path map from cache.
      *
      * @param string $mapKey The cache key.
@@ -125,7 +76,7 @@ class NotFoundTracker extends AbstractSingleton
      */
     private function getMap(string $mapKey): array
     {
-        $raw = CacheManager::getInstance()->get($mapKey);
+        $raw = CacheManager::instance()->get($mapKey);
         if (!is_string($raw) || $raw === '') {
             return [];
         }

@@ -6,122 +6,139 @@
 (function (window, document) {
     'use strict';
 
-    var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
-    if (!PREFIX_CONFIG) throw new Error('Header requires namespace.js (__PREFIX_CONFIG__).');
+    const PREFIX_CONFIG = window.__PREFIX_CONFIG__;
+    if (!PREFIX_CONFIG) return;
 
-    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
-    if (!ProactiveSiteAdvisor) throw new Error('Header requires global namespace.');
+    const PSA = window[PREFIX_CONFIG.namespace];
+    if (!PSA) return;
 
-    var Helpers = ProactiveSiteAdvisor.Helpers;
-    if (!Helpers) throw new Error('Header requires helpers.js.');
+    const Helpers = PSA.Helpers;
+    if (!Helpers) return;
 
-    var Header = {
+    const Header = {
+
         toggleBtn: null,
         nav: null,
         wrapper: null,
         isOpen: false,
 
+        /* ------------------------------------------------------------
+         * Init
+         * ------------------------------------------------------------ */
         init: function () {
-            this.toggleBtn = document.querySelector(
-                ProactiveSiteAdvisor.selector('header-toggle')
-            );
-            this.nav = document.querySelector(
-                ProactiveSiteAdvisor.selector('header-nav')
-            );
-            this.wrapper = document.querySelector(
-                ProactiveSiteAdvisor.selector('header-nav-wrapper')
-            );
+
+            this.toggleBtn = document.querySelector(PSA.selector('header-toggle'));
+            this.nav = document.getElementById(PSA.cssClass('header-nav'));
+            this.wrapper = document.querySelector(PSA.selector('header-nav-wrapper'));
 
             if (!this.toggleBtn || !this.nav) return;
 
             this.bindEvents();
         },
 
+        /* ------------------------------------------------------------
+         * Bind Events
+         * ------------------------------------------------------------ */
         bindEvents: function () {
-            var self = this;
 
-            this.toggleBtn.addEventListener('click', function (e) {
+            /* Toggle button click */
+            this.toggleBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                self.toggle();
+                this.toggle();
             });
 
-            document.addEventListener('click', function (e) {
-                if (!self.isOpen) return;
+            /* Close on outside click */
+            document.addEventListener('click', (e) => {
 
-                var target = Helpers.getElement(e.target) || e.target;
+                if (!this.isOpen) return;
 
-                var inside =
-                    (self.wrapper && self.wrapper.contains(target)) ||
-                    (self.toggleBtn && self.toggleBtn.contains(target));
+                const target = Helpers.getElement(e.target);
 
-                if (!inside) self.close();
+                const inside =
+                    (this.wrapper && this.wrapper.contains(target)) ||
+                    (this.toggleBtn && this.toggleBtn.contains(target));
+
+                if (!inside) this.close();
             });
 
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && self.isOpen) {
-                    self.close();
-                    self.toggleBtn.focus();
+            /* ESC key closes menu */
+            document.addEventListener('keydown', (e) => {
+
+                if (e.key === 'Escape' && this.isOpen) {
+                    this.close();
+                    this.toggleBtn.focus();
                 }
             });
 
-            this.nav.addEventListener('click', function (e) {
-                var target = Helpers.getElement(e.target) || e.target;
+            /* Clicking a nav link closes menu */
+            this.nav.addEventListener('click', (e) => {
+                const target = Helpers.getElement(e.target);
 
-                if (target && target.closest(
-                    ProactiveSiteAdvisor.selector('header-nav-link')
-                )) {
-                    self.close();
+                if (target && target.closest(PSA.selector('header-nav-link'))) {
+                    this.close();
                 }
             });
 
-            var onResize = Helpers.debounce(function () {
-                if (window.innerWidth > 991.98 && self.isOpen) {
-                    self.close();
+            /* On resize close header on desktop */
+            const onResize = Helpers.debounce(() => {
+                if (window.innerWidth > 991.98 && this.isOpen) {
+                    this.close();
                 }
             }, 100);
 
             window.addEventListener('resize', onResize);
         },
 
+        /* ------------------------------------------------------------
+         * Toggle
+         * ------------------------------------------------------------ */
         toggle: function () {
             this.isOpen ? this.close() : this.open();
         },
 
+        /* ------------------------------------------------------------
+         * Open navigation
+         * ------------------------------------------------------------ */
         open: function () {
+
             this.toggleBtn.setAttribute('aria-expanded', 'true');
-            this.nav.classList.add(
-                ProactiveSiteAdvisor.cssClass('show')
-            );
+
+            this.nav.classList.add(PSA.cssClass('show'));
             this.isOpen = true;
 
-            var first = this.nav.querySelector(
+            /* focus first focusable */
+            const first = this.nav.querySelector(
                 'a, button, [tabindex]:not([tabindex="-1"])'
             );
             if (first) first.focus();
 
-            ProactiveSiteAdvisor.dispatch('header:opened', {nav: this.nav}, document);
         },
 
+        /* ------------------------------------------------------------
+         * Close navigation
+         * ------------------------------------------------------------ */
         close: function () {
+
             this.toggleBtn.setAttribute('aria-expanded', 'false');
-            this.nav.classList.remove(
-                ProactiveSiteAdvisor.cssClass('show')
-            );
+
+            this.nav.classList.remove(PSA.cssClass('show'));
             this.isOpen = false;
 
-            ProactiveSiteAdvisor.dispatch('header:closed', {nav: this.nav}, document);
         }
     };
 
+    /* ------------------------------------------------------------
+     * Init Component
+     * ------------------------------------------------------------ */
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             Header.init();
         });
     } else {
         Header.init();
     }
 
-    ProactiveSiteAdvisor.Header = Header;
+    PSA.Header = Header;
 
 })(window, document);

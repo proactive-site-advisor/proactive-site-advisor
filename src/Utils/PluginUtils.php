@@ -2,7 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Utils;
 
-use WP_Error;
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -87,5 +87,46 @@ class PluginUtils
         }
 
         return $missing;
+    }
+
+    /**
+     * Determine whether the current admin screen belongs to this plugin.
+     *
+     * @return bool
+     */
+    public static function isPluginScreen(): bool
+    {
+        if (!function_exists('get_current_screen')) {
+            return false;
+        }
+
+        $screen = get_current_screen();
+
+        if (!$screen || empty($screen->id)) {
+            return false;
+        }
+
+        return strpos($screen->id, PrefixConfig::SLUG) !== false;
+    }
+
+
+    /**
+     * Determine whether the current admin request is for one of the plugin's pages.
+     *
+     * @return bool
+     */
+    public static function isPluginAdminRequest(): bool
+    {
+        if (!is_admin()) {
+            return false;
+        }
+
+        if (!isset($_GET['page'])) {
+            return false;
+        }
+
+        $page = sanitize_key(wp_unslash($_GET['page']));
+
+        return str_starts_with($page, PrefixConfig::SLUG);
     }
 }

@@ -1,46 +1,42 @@
 // =====================================================
 // Admin UI - Main Entry File
 // =====================================================
-// Prefix Configuration: See config/prefix.config.cjs
-// Regenerate prefix: npm run build
-// =====================================================
 
-// 0) PREFIX CONFIGURATION (must be first)
-// Auto-generated from config/prefix.config.cjs
+// 0) Prefix configuration
 @use "prefix" as *;
 
 // 1) Bootstrap utilities
 @use "bootstrap/functions";
 
-// 2) Base - Variables and CSS Custom Properties
+// 2) Base
 @use "base/variables";
 @use "base/variables-dark";
 @use "base/root";
 @use "base/typography";
 @use "base/global";
 
-// 3) UI Components (prefix-aware)
-@use "components/card";
-@use "components/buttons";
-@use "components/alert";
-@use "components/badge";
-@use "components/icons";
-@use "components/stat-card";
-@use "components/alert-card";
-@use "components/table";
-@use "components/empty-state";
-@use "components/message-card";
-@use "components/list-card";
-@use "components/promo-card";
-@use "components/status-summary";
-
-// 4) Form Components
-@use "components/forms";
-@use "components/form-check";
-@use "components/input-group";
-
-// 5) Layout
+// 3) Layout
 @use "layout/framework";
 @use "layout/header";
 @use "layout/grid";
 @use "layout/section";
+
+// 4) Form components
+@use "components/forms";
+@use "components/form-check";
+@use "components/input-group";
+
+// 5) Components
+@use "components/icons";
+@use "components/card";
+@use "components/buttons";
+@use "components/notice";
+@use "components/badge";
+@use "components/table";
+@use "components/stat-card";
+@use "components/page-header";
+@use "components/message-card";
+@use "components/alert-card";
+@use "components/empty-state";
+@use "components/promo-card";
+@use "components/status-summary";

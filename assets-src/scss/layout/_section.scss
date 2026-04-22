@@ -1,82 +1,36 @@
 // =====================================================
-// Admin UI - Section Layout
+// Admin UI - Section Layout (Scoped)
 // =====================================================
 // Page section containers with titles.
-// Nested within .#{css-class('wrap')} for higher CSS specificity
-// to override WordPress admin default heading styles.
+// Entirely scoped within .#{css-class('wrap')} to ensure
+// full isolation from WordPress admin styles.
 // =====================================================
 
 @use "../prefix" as *;
 
-// Section container
-.#{css-class('section')} {
-  margin-bottom: 1.5rem;
+.#{css-class('wrap')} {
 
-  &:last-child {
-    margin-bottom: 0;
+  // Section container
+  .#{css-class('section')} {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
-}
 
-// Double selector for higher specificity over WP admin CSS
-.#{css-class('section__title')}.#{css-class('section__title')} {
-  margin: 0 0 1rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.4;
-  color: css-var(heading-color);
-}
-
-.#{css-class('section__description')} {
-  margin: -0.5rem 0 1rem 0;
-  font-size: 0.875rem;
-  color: css-var(muted-color);
-}
-
-// Page header styles
-.#{css-class('page-header')} {
-  margin-bottom: 1.5rem;
-}
-
-// Double selector for higher specificity over WP admin CSS
-.#{css-class('page-title')}.#{css-class('page-title')} {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: css-var(heading-color);
-}
-
-.#{css-class('page-description')} {
-  margin: 0 0 0.25rem 0;
-  font-size: 0.875rem;
-  color: css-var(muted-color);
-}
-
-.#{css-class('page-status')}.#{css-class('page-status')} {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  margin: 0;
-  font-size: 0.75rem;
-  color: css-var(secondary);
-
-  [class^="#{css-class('icon--')}"] {
-    width: 0.875rem;
-    height: 0.875rem;
-    flex-shrink: 0;
+  .#{css-class('section__title')} {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: css-var(heading-color);
   }
-}
 
-.#{css-class('history-average')} {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  margin: 0;
-  font-size: 0.75rem;
-  color: css-var(secondary);
-
-  [class^="#{css-class('icon--')}"] {
-    width: 0.875rem;
-    height: 0.875rem;
-    flex-shrink: 0;
+  .#{css-class('section__description')} {
+    margin: -0.5rem 0 1rem 0;
+    font-size: 0.875rem;
+    color: css-var(muted-color);
   }
+
 }

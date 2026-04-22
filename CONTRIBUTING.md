@@ -1,46 +1,58 @@
 # Contributing to Proactive Site Advisor
 
-Thank you for your interest in contributing to Proactive Site Advisor! 🎉  
-Contributions of all kinds are welcome, including bug reports, feature requests, and pull requests.
+Thank you for your interest in contributing to **Proactive Site Advisor**! 🎉  
+We welcome all contributions, including bug reports, feature ideas, improvements, and pull requests.
 
 ## How to Contribute
 
 ### Reporting Bugs
 
-If you find a bug, please open an issue and include:
+If you discover a bug, please open an issue and include:
 
-- A clear and descriptive title
-- Steps to reproduce the issue
-- Expected behavior
-- Actual behavior
-- WordPress and PHP versions (if relevant)
+- A clear and descriptive title  
+- Steps to reproduce the issue  
+- Expected vs. actual behavior  
+- WordPress version  
+- PHP version  
+- Any relevant plugins, themes, or conflicts  
 
 ### Suggesting Features
 
-Feature requests are welcome.  
-Please open an issue and clearly describe the use case and expected behavior.
+Feature suggestions are always welcome.
+
+When submitting a feature request, please describe:
+
+- The problem or use case  
+- Why the feature is helpful for site owners  
+- How the feature should behave  
+- UI examples or notes (if applicable)
 
 ### Submitting Pull Requests
 
-1. Fork the repository
-2. Create a new branch for your feature or fix
-3. Follow the existing code style and structure
-4. Make sure your code is well-documented
-5. Submit a pull request with a clear description of your changes
+1. Fork the repository  
+2. Create a new branch for your fix or feature  
+3. Follow WordPress coding standards  
+4. Document code where appropriate  
+5. Test your changes before submitting  
+6. Open a pull request with a clear explanation of what you changed  
 
 ## Development Guidelines
 
-- Follow WordPress coding standards where applicable
-- Keep changes focused and minimal
-- Avoid introducing breaking changes without discussion
-- Ensure compatibility with supported WordPress and PHP versions
-- **This plugin is intentionally lightweight; please avoid adding heavy analytics, external services, or real-time tracking without prior discussion**
-- **Small, focused pull requests are preferred**
+- Keep all checks lightweight and optimized  
+- Avoid heavy background scans or expensive queries  
+- Maintain a clean, simple admin UI consistent with WordPress styling  
+- Keep contributions focused — avoid large, multi-purpose PRs  
+- Ensure backward compatibility where possible  
+
+## Monitoring & Check System Guidelines
+
+If your contribution affects the monitoring engine, please ensure:
+
+- Checks remain efficient and performant  
+- Daily scan logic stays lightweight  
+- Admin notices remain clear, actionable, and non-intrusive  
+- Future extensibility is preserved  
 
 ## License
 
-By contributing to this project, you agree that your contributions will be licensed under the same license as the project (GPL-2.0-or-later).
-
----
-
-Thank you for helping improve Proactive Site Advisor! 🚀
+By contributing to this project, you agree that your contributions will be licensed under the same license as the project (GPL‑2.0‑or‑later).

@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Database\Seeders;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractSeeder;
 use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ReflectionClass;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -42,7 +43,7 @@ class SeederManager extends AbstractSingleton
     /**
      * Register a seeder class.
      *
-     * @param string $seederClass Seeder class name.
+     * @param string $seederClass
      * @return self
      */
     public function addSeeder(string $seederClass): self
@@ -57,7 +58,7 @@ class SeederManager extends AbstractSingleton
     /**
      * Remove a seeder class.
      *
-     * @param string $seederClass Seeder class name.
+     * @param string $seederClass
      * @return self
      */
     public function removeSeeder(string $seederClass): self
@@ -79,7 +80,7 @@ class SeederManager extends AbstractSingleton
         /**
          * Filter the registered seeders.
          *
-         * @param array $seeders Array of seeder class names.
+         * @param array $seeders
          */
         return apply_filters('proactive_site_advisor_seeders', $this->seeders);
     }
@@ -87,7 +88,7 @@ class SeederManager extends AbstractSingleton
     /**
      * Set seeding options.
      *
-     * @param array $options Options array.
+     * @param array $options
      * @return self
      */
     public function setOptions(array $options): self
@@ -110,8 +111,8 @@ class SeederManager extends AbstractSingleton
     /**
      * Run all registered seeders.
      *
-     * @param array $options Seeding options.
-     * @return array Results keyed by seeder class.
+     * @param array $options
+     * @return array
      */
     public function runAll(array $options = []): array
     {
@@ -131,9 +132,9 @@ class SeederManager extends AbstractSingleton
     /**
      * Run a specific seeder by short name.
      *
-     * @param string $shortName Short seeder name (e.g., 'DailyStats' or 'Alert').
-     * @param array $options Seeding options.
-     * @return int|null Number of records created, or null if seeder not found.
+     * @param string $shortName
+     * @param array $options
+     * @return int|null
      */
     public function run(string $shortName, array $options = []): ?int
     {
@@ -154,14 +155,14 @@ class SeederManager extends AbstractSingleton
     /**
      * Clean all tables before seeding.
      *
-     * @return array Results keyed by seeder class.
+     * @return array
      */
     public function cleanAll(): array
     {
         $seeders = $this->getSortedSeeders();
         $results = [];
 
-        // Clean in reverse order (alerts before stats)
+        // Clean in reverse order
         $seeders = array_reverse($seeders);
 
         foreach ($seeders as $seeder) {
@@ -209,7 +210,7 @@ class SeederManager extends AbstractSingleton
     /**
      * Find a seeder by short name.
      *
-     * @param string $shortName Short name (e.g., 'DailyStats').
+     * @param string $shortName
      * @return AbstractSeeder|null
      */
     private function findSeederByShortName(string $shortName): ?AbstractSeeder
@@ -222,7 +223,7 @@ class SeederManager extends AbstractSingleton
                 continue;
             }
 
-            $className      = (new \ReflectionClass($class))->getShortName();
+            $className      = (new ReflectionClass($class))->getShortName();
             $classShortName = str_replace('Seeder', '', $className);
 
             if (strtolower($classShortName) === $normalizedName) {
@@ -251,7 +252,7 @@ class SeederManager extends AbstractSingleton
                 continue;
             }
 
-            $className = (new \ReflectionClass($class))->getShortName();
+            $className = (new ReflectionClass($class))->getShortName();
             $names[]   = str_replace('Seeder', '', $className);
         }
 
