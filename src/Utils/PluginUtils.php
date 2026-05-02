@@ -121,10 +121,14 @@ class PluginUtils
             return false;
         }
 
+        // Nonce verification is not required for simply checking if the page parameter exists.
+        // This is for navigation detection only, not form processing.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!isset($_GET['page'])) {
             return false;
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $page = sanitize_key(wp_unslash($_GET['page']));
 
         return str_starts_with($page, PrefixConfig::SLUG);

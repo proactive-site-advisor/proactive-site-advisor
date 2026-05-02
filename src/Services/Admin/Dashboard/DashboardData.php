@@ -111,10 +111,8 @@ class DashboardData
         $now     = DateTimeUtils::timestamp();
         $timeAgo = human_time_diff($lastRun, $now);
 
-        return sprintf(
-            __('Last checked: %s ago · Range: last 7 days', 'proactive-site-advisor'),
-            $timeAgo
-        );
+        /* translators: %s: Time ago string */
+        return sprintf(__('Last checked: %s ago · Range: last 7 days', 'proactive-site-advisor'), $timeAgo);
     }
 
     /**
@@ -155,10 +153,12 @@ class DashboardData
                 $days       = $this->daysWithData;
                 $percentage = min(100, round(($days / PluginStatus::BASELINE_DAYS) * 100));
 
+
                 return [
                     'color'    => 'info',
                     'title'    => __('Building history', 'proactive-site-advisor'),
                     'text'     => sprintf(
+                    /* translators: 1: Current day number, 2: Total number of baseline days required */
                         __('Collecting baseline data (Day %1$d of %2$d). Your insights will become more accurate as history grows.', 'proactive-site-advisor'),
                         $days,
                         PluginStatus::BASELINE_DAYS
@@ -197,6 +197,7 @@ class DashboardData
                 'color' => 'error',
                 'title' => __('Critical issues detected', 'proactive-site-advisor'),
                 'text'  => sprintf(
+                /* translators: %d: Number of critical issues detected in the last 7 days */
                     _n('%d critical issue detected in the last 7 days.',
                         '%d critical issues detected in the last 7 days.',
                         $critical,
@@ -211,6 +212,7 @@ class DashboardData
                 'color' => 'warning',
                 'title' => __('Warnings detected', 'proactive-site-advisor'),
                 'text'  => sprintf(
+                /* translators: %d: Number of warnings detected in the last 7 days */
                     _n('%d warning detected in the last 7 days.',
                         '%d warnings detected in the last 7 days.',
                         $warning,
@@ -225,6 +227,7 @@ class DashboardData
                 'color' => 'info',
                 'title' => __('Notices detected', 'proactive-site-advisor'),
                 'text'  => sprintf(
+                /* translators: %d: Number of notices recorded in the last 7 days */
                     _n('%d notice recorded in the last 7 days.',
                         '%d notices recorded in the last 7 days.',
                         $info,

@@ -1,8 +1,8 @@
 === Proactive Site Advisor ===  
 Contributors: yourname  
 Tags: admin, monitoring, site health, notifications, tools  
-Requires at least: 5.8  
-Tested up to: 6.5  
+Requires at least: 6.1
+Tested up to: 6.9
 Requires PHP: 7.4  
 Stable tag: 1.0.0  
 License: GPL-2.0-or-later  

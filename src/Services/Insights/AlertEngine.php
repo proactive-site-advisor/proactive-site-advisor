@@ -107,9 +107,13 @@ class AlertEngine
             return;
         }
 
-        $title = $r['type'] === 'traffic_drop'
-            ? sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), abs($r['change_pct']))
-            : sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
+        if ($r['type'] === 'traffic_drop') {
+            /* translators: %s: The percentage value of traffic drop */
+            $title = sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
+        } else {
+            /* translators: %s: The percentage value of traffic increase */
+            $title = sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
+        }
 
         $meta = [
             'today'      => $today,
@@ -142,7 +146,7 @@ class AlertEngine
         if (!$r['trigger']) {
             return;
         }
-        
+
         $meta = [
             'today'      => $today,
             'avg7'       => (int)round($avg),

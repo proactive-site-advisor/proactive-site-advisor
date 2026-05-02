@@ -36,9 +36,10 @@ class AlertsDataProvider extends AbstractDataProvider
         $table = Alert::getTableName();
         $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT id, alert_date, type, severity, title, message, meta_json, created_at
+                "SELECT id, alert_date, type, severity, title, meta_json, created_at
                  FROM {$table}
                  WHERE alert_date >= %s
                  ORDER BY alert_date DESC, id DESC
@@ -48,6 +49,7 @@ class AlertsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($rows)) {
             return [];
@@ -71,6 +73,7 @@ class AlertsDataProvider extends AbstractDataProvider
         $table = Alert::getTableName();
         $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $sql = $wpdb->prepare(
             "
             SELECT
@@ -84,7 +87,9 @@ class AlertsDataProvider extends AbstractDataProvider
             $start,
             $lastSeenId
         );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $row = $wpdb->get_row($sql, ARRAY_A) ?? [];
 
         return [
@@ -108,6 +113,7 @@ class AlertsDataProvider extends AbstractDataProvider
         $table = Alert::getTableName();
         $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT type, severity
@@ -117,6 +123,7 @@ class AlertsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($rows)) {
             return [];
@@ -139,7 +146,8 @@ class AlertsDataProvider extends AbstractDataProvider
         $table = Alert::getTableName();
         $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
-        return $wpdb->get_results(
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
+        $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT meta_json
                  FROM {$table}
@@ -150,6 +158,13 @@ class AlertsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        return $rows;
     }
 
     /**
@@ -163,6 +178,7 @@ class AlertsDataProvider extends AbstractDataProvider
 
         $table = Alert::getTableName();
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         return (int)$wpdb->get_var("SELECT MAX(id) FROM {$table}");
     }
 }

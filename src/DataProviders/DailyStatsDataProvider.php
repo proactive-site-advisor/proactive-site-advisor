@@ -31,7 +31,8 @@ class DailyStatsDataProvider extends AbstractDataProvider
         $days  = max(1, min(90, $days));
         $table = DailyStats::getTableName();
 
-        return $wpdb->get_results(
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
+        $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT stats_date, pageviews, errors_404
                  FROM {$table}
@@ -41,6 +42,13 @@ class DailyStatsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        return $rows;
     }
 
     /**
@@ -57,7 +65,8 @@ class DailyStatsDataProvider extends AbstractDataProvider
 
         $table = DailyStats::getTableName();
 
-        return $wpdb->get_results(
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
+        $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT pageviews, errors_404
              FROM {$table}
@@ -69,6 +78,13 @@ class DailyStatsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        return $rows;
     }
 
     /**
@@ -84,7 +100,8 @@ class DailyStatsDataProvider extends AbstractDataProvider
 
         $table = DailyStats::getTableName();
 
-        return $wpdb->get_row(
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
+        $row = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT pageviews, errors_404, top_404_json
              FROM {$table}
@@ -94,6 +111,13 @@ class DailyStatsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if (!is_array($row)) {
+            return [];
+        }
+
+        return $row;
     }
 
     /**
