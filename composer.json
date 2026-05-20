@@ -3,7 +3,6 @@
   "description": "A WordPress plugin that provides proactive insights and actionable recommendations to detect potential issues before they impact the site.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
-  "version": "1.0.0",
   "authors": [
     {
       "name": "Mohammad Yari",
