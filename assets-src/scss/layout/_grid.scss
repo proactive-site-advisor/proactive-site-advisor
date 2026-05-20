@@ -1,185 +1,185 @@
 // =====================================================
-// Admin UI - Grid System (Final - No Deprecations)
+// Admin UI - Grid System (Scoped, Final)
 // =====================================================
 
 @use "sass:math";
 @use "sass:map";
 @use "../prefix" as *;
 
-// -----------------------------------------------------
-// Grid Variables
-// -----------------------------------------------------
+.#{css-class('wrap')} {
 
-$grid-columns: 12 !default;
-$grid-gutter-width: 1.5rem !default;
+  // -----------------------------------------------------
+  // Grid Variables
+  // -----------------------------------------------------
 
-$breakpoints: (
-        sm: 576px,
-        md: 768px,
-        lg: 992px,
-        xl: 1200px,
-        xxl: 1400px
-);
+  $grid-columns: 12 !default;
+  $grid-gutter-width: 1.5rem !default;
 
-$container-widths: (
-        sm: 540px,
-        md: 720px,
-        lg: 960px,
-        xl: 1140px,
-        xxl: 1320px
-);
+  $breakpoints: (
+          sm: 576px,
+          md: 768px,
+          lg: 992px,
+          xl: 1200px,
+          xxl: 1400px
+  );
 
-$gutters: (
-        0: 0,
-        1: 0.25rem,
-        2: 0.5rem,
-        3: 1rem,
-        4: 1.5rem,
-        5: 3rem
-);
+  $container-widths: (
+          sm: 540px,
+          md: 720px,
+          lg: 960px,
+          xl: 1140px,
+          xxl: 1320px
+  );
 
-// -----------------------------------------------------
-// Row
-// -----------------------------------------------------
+  $gutters: (
+          0: 0,
+          1: 0.25rem,
+          2: 0.5rem,
+          3: 1rem,
+          4: 1.5rem,
+          5: 3rem
+  );
 
-.#{css-class('row')} {
-  // 1. Set a non-zero default so stacking columns have space
-  #{css-var-name(gutter-y)}: #{$grid-gutter-width};
-  #{css-var-name(gutter-x)}: #{$grid-gutter-width};
+  // -----------------------------------------------------
+  // Row
+  // -----------------------------------------------------
 
-  display: flex;
-  flex-wrap: wrap;
+  .#{css-class('row')} {
+    #{css-var-name(gutter-y)}: #{$grid-gutter-width};
+    #{css-var-name(gutter-x)}: #{$grid-gutter-width};
 
-  // 2. Use negative margin-top to cancel the first row's column margin
-  margin-top: calc(-1 * #{css-var(gutter-y)});
-  margin-right: calc(#{css-var(gutter-x)} / -2);
-  margin-left: calc(#{css-var(gutter-x)} / -2);
+    display: flex;
+    flex-wrap: wrap;
 
-  > * {
-    flex-shrink: 0;
-    width: 100%;
-    max-width: 100%;
-    padding-right: calc(#{css-var(gutter-x)} / 2);
-    padding-left: calc(#{css-var(gutter-x)} / 2);
+    margin-top: calc(-1 * css-var(gutter-y));
+    margin-right: calc(css-var(gutter-x) / -2);
+    margin-left: calc(css-var(gutter-x) / -2);
 
-    // 3. This provides spacing when columns stack or wrap
-    margin-top: css-var(gutter-y);
+    > * {
+      flex-shrink: 0;
+      width: 100%;
+      max-width: 100%;
+      padding-right: calc(css-var(gutter-x) / 2);
+      padding-left: calc(css-var(gutter-x) / 2);
+      margin-top: css-var(gutter-y);
+    }
   }
-}
 
-// -----------------------------------------------------
-// Base Columns
-// -----------------------------------------------------
+  // -----------------------------------------------------
+  // Base Columns
+  // -----------------------------------------------------
 
-.#{css-class('col')} {
-  flex: 1 0 0;
-}
+  .#{css-class('col')} {
+    flex: 1 0 0;
+  }
 
-.#{css-class('col-auto')} {
-  flex: 0 0 auto;
-  width: auto;
-}
-
-@for $i from 1 through $grid-columns {
-  .#{css-class('col-#{$i}')} {
+  .#{css-class('col-auto')} {
     flex: 0 0 auto;
-    width: math.percentage(math.div($i, $grid-columns));
+    width: auto;
   }
-}
 
-// -----------------------------------------------------
-// Responsive Columns
-// -----------------------------------------------------
-
-@each $name, $size in $breakpoints {
-  @media (min-width: $size) {
-
-    .#{css-class('col-#{$name}')} {
-      flex: 1 0 0;
-    }
-
-    .#{css-class('col-#{$name}-auto')} {
+  @for $i from 1 through $grid-columns {
+    .#{css-class('col-#{$i}')} {
       flex: 0 0 auto;
-      width: auto;
+      width: math.percentage(math.div($i, $grid-columns));
     }
+  }
 
-    @for $i from 1 through $grid-columns {
-      .#{css-class('col-#{$name}-#{$i}')} {
+  // -----------------------------------------------------
+  // Responsive Columns
+  // -----------------------------------------------------
+
+  @each $name, $size in $breakpoints {
+    @media (min-width: $size) {
+
+      .#{css-class('col-#{$name}')} {
+        flex: 1 0 0;
+      }
+
+      .#{css-class('col-#{$name}-auto')} {
         flex: 0 0 auto;
-        width: math.percentage(math.div($i, $grid-columns));
+        width: auto;
+      }
+
+      @for $i from 1 through $grid-columns {
+        .#{css-class('col-#{$name}-#{$i}')} {
+          flex: 0 0 auto;
+          width: math.percentage(math.div($i, $grid-columns));
+        }
       }
     }
   }
-}
 
-// -----------------------------------------------------
-// Gutter Utilities
-// -----------------------------------------------------
+  // -----------------------------------------------------
+  // Gutter Utilities
+  // -----------------------------------------------------
 
-@each $key, $value in $gutters {
-  .#{css-class('g-#{$key}')},
-  .#{css-class('gx-#{$key}')} {
-    #{css-var-name(gutter-x)}: #{$value};
-  }
-
-  .#{css-class('g-#{$key}')},
-  .#{css-class('gy-#{$key}')} {
-    #{css-var-name(gutter-y)}: #{$value};
-  }
-}
-
-// -----------------------------------------------------
-// Flex Utilities
-// -----------------------------------------------------
-
-.#{css-class('flex-row-fluid')} {
-  flex: 1 auto;
-  min-width: 0;
-}
-
-.#{css-class('flex-root')} {
-  flex: 1;
-}
-
-.#{css-class('flex-column-fluid')} {
-  flex: 1 0 auto;
-}
-
-// -----------------------------------------------------
-// Container Base
-// -----------------------------------------------------
-
-.#{css-class('container')},
-.#{css-class('container-fluid')},
-.#{css-class('container-sm')},
-.#{css-class('container-md')},
-.#{css-class('container-lg')},
-.#{css-class('container-xl')},
-.#{css-class('container-xxl')} {
-
-  #{css-var-name(gutter-x)}: #{$grid-gutter-width};
-  #{css-var-name(gutter-y)}: 0;
-
-  width: 100%;
-  padding-right: calc(#{css-var(gutter-x)} / 2);
-  padding-left: calc(#{css-var(gutter-x)} / 2);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-// -----------------------------------------------------
-// Container Max Widths
-// -----------------------------------------------------
-
-@each $name, $container-width in $container-widths {
-  @media (min-width: map.get($breakpoints, $name)) {
-
-    .#{css-class('container')} {
-      max-width: $container-width;
+  @each $key, $value in $gutters {
+    .#{css-class('g-#{$key}')},
+    .#{css-class('gx-#{$key}')} {
+      #{css-var-name(gutter-x)}: #{$value};
     }
 
-    .#{css-class('container-#{$name}')} {
-      max-width: $container-width;
+    .#{css-class('g-#{$key}')},
+    .#{css-class('gy-#{$key}')} {
+      #{css-var-name(gutter-y)}: #{$value};
     }
   }
+
+  // -----------------------------------------------------
+  // Flex Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('flex-row-fluid')} {
+    flex: 1 auto;
+    min-width: 0;
+  }
+
+  .#{css-class('flex-root')} {
+    flex: 1;
+  }
+
+  .#{css-class('flex-column-fluid')} {
+    flex: 1 0 auto;
+  }
+
+  // -----------------------------------------------------
+  // Container Base
+  // -----------------------------------------------------
+
+  .#{css-class('container')},
+  .#{css-class('container-fluid')},
+  .#{css-class('container-sm')},
+  .#{css-class('container-md')},
+  .#{css-class('container-lg')},
+  .#{css-class('container-xl')},
+  .#{css-class('container-xxl')} {
+
+    #{css-var-name(gutter-x)}: #{$grid-gutter-width};
+    #{css-var-name(gutter-y)}: 0;
+
+    width: 100%;
+    padding-right: calc(css-var(gutter-x) / 2);
+    padding-left: calc(css-var(gutter-x) / 2);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  // -----------------------------------------------------
+  // Container Max-widths
+  // -----------------------------------------------------
+
+  @each $name, $container-width in $container-widths {
+    @media (min-width: map.get($breakpoints, $name)) {
+
+      .#{css-class('container')} {
+        max-width: $container-width;
+      }
+
+      .#{css-class('container-#{$name}')} {
+        max-width: $container-width;
+      }
+    }
+  }
+  
 }

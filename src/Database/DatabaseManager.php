@@ -5,6 +5,8 @@ namespace ProactiveSiteAdvisor\Database;
 use ProactiveSiteAdvisor\Utils\Logger;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
 use ProactiveSiteAdvisor\Config\PluginMeta;
+use Exception;
+use mysqli_result;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -254,22 +256,46 @@ class DatabaseManager
      * Get table row count.
      *
      * @param string $name Table name (without prefix).
+     * @param array $where
+     *
      * @return int
      */
-    public static function getRowCount(string $name): int
+    public static function getRowCount(string $name, array $where = []): int
     {
         global $wpdb;
 
         $schema = self::getTable($name);
-
         if (!$schema) {
             return 0;
         }
 
         $tableName = $schema->getFullName();
+        $sql       = "SELECT COUNT(*) FROM {$tableName}";
+        $values    = [];
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
-        return (int)$wpdb->get_var("SELECT COUNT(*) FROM {$tableName}");
+        if (!empty($where)) {
+            $conditions = [];
+            foreach ($where as $column => $value) {
+                if (is_array($value)) {
+                    $placeholders = array_fill(0, count($value), '%s');
+                    $conditions[] = "`" . esc_sql($column) . "` IN (" . implode(', ', $placeholders) . ")";
+                    $values       = array_merge($values, $value);
+                } else {
+                    $conditions[] = "`" . esc_sql($column) . "` = %s";
+                    $values[]     = $value;
+                }
+            }
+
+            $sql .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        if (!empty($values)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared with values
+            $sql = $wpdb->prepare($sql, ...$values);
+        }
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
+        return (int)$wpdb->get_var($sql);
     }
 
     /**
@@ -365,7 +391,7 @@ class DatabaseManager
         try {
             $callback();
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Logger::error('Database migration failed', [
                 'from_version' => $fromVersion,
                 'error'        => $e->getMessage(),
@@ -378,7 +404,7 @@ class DatabaseManager
      * Execute a raw query.
      *
      * @param string $sql SQL query.
-     * @return bool|int|\mysqli_result|null Query result.
+     * @return bool|int|mysqli_result|null Query result.
      */
     public static function query(string $sql)
     {
@@ -421,7 +447,7 @@ class DatabaseManager
     {
         global $wpdb;
 
-        return (int)$wpdb->insert_id;
+        return $wpdb->insert_id;
     }
 
     /**
@@ -429,7 +455,7 @@ class DatabaseManager
      *
      * @param string $sql SQL query with placeholders.
      * @param mixed ...$args Values to substitute.
-     * @return bool|int|\mysqli_result|null Query result.
+     * @return bool|int|mysqli_result|null Query result.
      */
     public static function preparedQuery(string $sql, ...$args)
     {

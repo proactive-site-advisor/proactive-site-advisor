@@ -1,23 +1,24 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Admin\Alerts;
+namespace ProactiveSiteAdvisor\Services\Admin\Dashboard;
 
+use ProactiveSiteAdvisor\Config\UserOptions;
 use ProactiveSiteAdvisor\DataProviders\AlertsDataProvider;
-use ProactiveSiteAdvisor\Utils\MenuUtils;
+use ProactiveSiteAdvisor\Utils\DisplayUtils;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Utils\PluginUtils;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class AlertsManager
+ * Class DashboardManager
  *
- * Manages the main alerts admin page and menu registration.
- *
- * @package ProactiveSiteAdvisor\Services\Admin\Alerts
+ * @package ProactiveSiteAdvisor\Services\Admin\Dashboard
  * @version 1.0.0
  */
-class AlertsManager
+class DashboardManager
 {
     /**
      * Register hooks and filters.
@@ -31,23 +32,30 @@ class AlertsManager
     }
 
     /**
-     * Update the last seen alert ID when visiting the alerts page.
+     * Update the last seen alert ID when visiting the dashboard page.
      *
      * @return void
      */
     public function handleLastSeenUpdate(): void
     {
-        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if (isset($_GET['page']) && $_GET['page'] === MenuUtils::getSlug('proactive-site-advisor')) {
-            AlertsDataProvider::getInstance()->updateLastSeenAlertId();
+        if (!PluginUtils::isPluginAdminRequest()) {
+            return;
         }
+
+        $latestId = (new AlertsDataProvider())->getLatestAlertId();
+
+        if ($latestId <= 0) {
+            return;
+        }
+
+        OptionUtils::setUserOption(UserOptions::LAST_SEEN_ALERT_ID, $latestId);
     }
 
     /**
-     * Add alerts menu items.
+     * Add dashboard menu items.
      *
      * @param array $items Existing menu items.
+     *
      * @return array Modified menu items.
      */
     public function addMenuItem(array $items): array
@@ -61,25 +69,21 @@ class AlertsManager
          */
         $position = apply_filters('proactive_site_advisor_plugins_menu_item_position', 66);
 
-        $priority   = AlertsDataProvider::getInstance()->getPriorityCount();
-        $count      = $priority['count'];
-        $severity   = $priority['severity'];
+        $dashboardData = new DashboardData();
+
+        $lastSeenId = OptionUtils::getUserOption(UserOptions::LAST_SEEN_ALERT_ID, 0);
+
+        $summary = $dashboardData->getTopSeveritySummary(7, $lastSeenId);
+
+        $count    = $summary['count'];
+        $severity = $summary['severity'];
+
         $badgeTitle = esc_html__('Site Advisor', 'proactive-site-advisor');
 
-        if ($count > 0) {
-            $colors = [
-                'critical' => '#ff4c51',
-                'warning'  => '#ff9f43',
-                'info'     => '#00bad1',
-            ];
+        $badge = DisplayUtils::renderSeverityBadge($count, $severity);
 
-            $color = $colors[$severity] ?? '#3b82f6';
-
-            $badgeTitle .= sprintf(
-                ' <span class="update-plugins count-%1$d" style="background-color: %2$s;"><span class="plugin-count">%1$d</span></span>',
-                $count,
-                esc_attr($color)
-            );
+        if (!empty($badge)) {
+            $badgeTitle .= ' ' . $badge;
         }
 
         $items[] = [
@@ -87,14 +91,14 @@ class AlertsManager
             'title'    => $badgeTitle,
             'icon'     => 'dashicons-warning',
             'position' => $position,
-            'callback' => AlertsPage::class,
+            'callback' => DashboardPage::class,
         ];
 
         $items[] = [
             'id'       => 'proactive-site-advisor',
-            'title'    => esc_html__('Alerts', 'proactive-site-advisor'),
+            'title'    => esc_html__('Dashboard', 'proactive-site-advisor'),
             'parentId' => 'proactive-site-advisor',
-            'callback' => AlertsPage::class,
+            'callback' => DashboardPage::class,
         ];
 
         return $items;

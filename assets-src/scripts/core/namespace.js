@@ -1,16 +1,16 @@
 (function(window){
 'use strict';
 
-var CONFIG = Object.freeze({
-    base: 'proactive-site-advisor',
+const CONFIG = Object.freeze({
+    base: 'psa',
     basePhp: 'proactive_site_advisor',
-    namespace: 'ProactiveSiteAdvisor',
-    configObject: 'proactiveSiteAdvisorConfig'
+    namespace: 'PSA',
+    configObject: 'psaConfig'
 });
 
 window.__PREFIX_CONFIG__ = CONFIG;
 
-var NS = CONFIG.namespace;
+const NS = CONFIG.namespace;
 
 window[NS] = window[NS] || {};
 window[NS].__config = CONFIG;
@@ -28,7 +28,7 @@ window[NS].dataAttr = function(name){
 };
 
 window[NS].dataSelector = function(name,value){
-    var attr = 'data-' + CONFIG.base + '-' + name;
+    const attr = 'data-' + CONFIG.base + '-' + name;
     return value !== undefined
         ? '[' + attr + '="' + value + '"]'
         : '[' + attr + ']';
@@ -39,7 +39,7 @@ window[NS].event = function(name){
 };
 
 window[NS].dispatch = function(name,detail,target){
-    var event = new CustomEvent(
+    const event = new CustomEvent(
         CONFIG.base + ':' + name,
         {
             detail: detail || {},

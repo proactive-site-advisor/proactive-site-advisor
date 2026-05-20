@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Cron;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 use ProactiveSiteAdvisor\Utils\Logger;
+use Exception;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -327,7 +328,7 @@ class CronManager extends AbstractSingleton
 
             Logger::debug('Cron task completed', ['hook' => $hook]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Logger::error('Cron task failed', [
                 'hook'  => $hook,
                 'error' => $e->getMessage(),
@@ -337,7 +338,7 @@ class CronManager extends AbstractSingleton
              * Action fired when a cron task fails.
              *
              * @param CronTask $task The task.
-             * @param \Exception $e The exception.
+             * @param Exception $e The exception.
              */
             do_action('proactive_site_advisor_cron_task_failed', $task, $e);
         }

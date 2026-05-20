@@ -1,92 +1,116 @@
 // =====================================================
 // Admin UI - Table Component
 // =====================================================
-// Responsive data table with card wrapper.
-// Based on Sneat/Vuexy table design.
-// =====================================================
 
 @use "../prefix" as *;
 
-.#{css-class('table-card')} {
-  overflow: hidden;
-}
+.#{css-class('wrap')} {
 
-.#{css-class('table-responsive')} {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.#{css-class('table')} {
-  width: 100%;
-  margin-bottom: 0;
-  vertical-align: middle;
-  border-collapse: collapse;
-
-  > thead {
-    > tr {
-      > th {
-        padding: css-var(table-cell-padding-y) css-var(table-cell-padding-x);
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: css-var(heading-color);
-        background-color: css-var(table-header-bg);
-        border-bottom: 1px solid css-var(border-color);
-        white-space: nowrap;
-      }
-    }
+  .#{css-class('table-card')} {
+    overflow: hidden;
   }
 
-  > tbody {
-    > tr {
-      > td {
-        padding: css-var(table-cell-padding-y) css-var(table-cell-padding-x);
-        font-size: 0.875rem;
-        color: css-var(body-color);
-        border-bottom: 1px solid css-var(border-color);
-        vertical-align: middle;
+  .#{css-class('table-responsive')} {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .#{css-class('table')} {
+    width: 100%;
+    margin-bottom: 0;
+    vertical-align: middle;
+    border-collapse: collapse;
+
+    > thead {
+      > tr {
+        > th {
+          padding: css-var(table-cell-padding-y) css-var(table-cell-padding-x);
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: css-var(heading-color);
+          background-color: css-var(table-header-bg);
+          border-bottom: 1px solid css-var(border-color);
+          white-space: nowrap;
+        }
+      }
+    }
+
+    > tbody {
+
+      // normal rows
+      > tr:not(.#{css-class('table__row--empty')}) {
+
+        > td {
+          padding: css-var(table-cell-padding-y) css-var(table-cell-padding-x);
+          font-size: 0.875rem;
+          color: css-var(body-color);
+          border-bottom: 1px solid css-var(border-color);
+          vertical-align: middle;
+        }
+
+        &:last-child > td {
+          border-bottom: 0;
+        }
+
+        &:hover {
+          background-color: css-var(table-hover-bg);
+        }
       }
 
-      &:last-child > td {
-        border-bottom: 0;
+      // empty row
+      > tr.#{css-class('table__row--empty')} {
+
+        > td {
+          padding: 0;
+          border-bottom: 0;
+        }
       }
+    }
+
+    a {
+      color: css-var(body-color);
+      font-weight: css-var(font-weight-medium);
+      transition: color 0.15s ease;
 
       &:hover {
-        background-color: css-var(table-hover-bg);
+        color: css-var(primary);
+      }
+    }
+
+    &__empty-inner {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.85rem;
+      color: css-var(muted-color);
+    }
+
+    // Striped variant
+    &--striped {
+      > tbody > tr:nth-child(even):not(.#{css-class('table__row--empty')}):not(:hover) {
+        background-color: css-var(gray-25);
+      }
+    }
+
+    // Bordered variant
+    &--bordered {
+      border: 1px solid css-var(border-color);
+
+      > thead > tr > th,
+      > tbody > tr > td {
+        border: 1px solid css-var(border-color);
+      }
+    }
+
+    // Compact variant
+    &--sm {
+      > thead > tr > th,
+      > tbody > tr > td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8125rem;
       }
     }
   }
 
-  &__empty {
-    text-align: center;
-    color: css-var(muted-color);
-    padding: 2rem css-var(table-cell-padding-x) !important;
-  }
-
-  // Striped variant
-  &--striped {
-    > tbody > tr:nth-child(even):not(:hover) {
-      background-color: css-var(gray-25);
-    }
-  }
-
-  // Bordered variant
-  &--bordered {
-    border: 1px solid css-var(border-color);
-
-    > thead > tr > th,
-    > tbody > tr > td {
-      border: 1px solid css-var(border-color);
-    }
-  }
-
-  // Compact variant
-  &--sm {
-    > thead > tr > th,
-    > tbody > tr > td {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8125rem;
-    }
-  }
 }

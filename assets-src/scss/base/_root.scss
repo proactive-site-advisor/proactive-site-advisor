@@ -1,186 +1,451 @@
 // =====================================================
-// Admin UI - CSS Custom Properties (Root)
-// =====================================================
-// Uses prefix from _prefix.scss (auto-generated)
+// Theme Variables
 // =====================================================
 
 @use "../prefix" as *;
-@use "variables" as *;
-@use "variables-dark" as *;
+@use "variables" as light;
+@use "variables-dark" as dark;
+@use "sass:color";
 
-// Light theme (default)
-:root,
-#{data-attr('theme', 'light')} {
-  // Brand Colors
-  #{css-var-name(primary)}: #{$primary};
-  #{css-var-name(secondary)}: #{$secondary};
-  #{css-var-name(success)}: #{$success};
-  #{css-var-name(info)}: #{$info};
-  #{css-var-name(warning)}: #{$warning};
-  #{css-var-name(danger)}: #{$danger};
-  #{css-var-name(light)}: #{$light};
-  #{css-var-name(dark)}: #{$dark};
+// =====================================================
+// BASE
+// =====================================================
+.#{css-class('ui')} {
 
-  // RGB versions for rgba() usage
-  #{css-var-name(primary-rgb)}: 115, 103, 240;
-  #{css-var-name(secondary-rgb)}: 128, 131, 144;
-  #{css-var-name(success-rgb)}: 40, 199, 111;
-  #{css-var-name(info-rgb)}: 0, 186, 209;
-  #{css-var-name(warning-rgb)}: 255, 159, 67;
-  #{css-var-name(danger-rgb)}: 255, 76, 81;
-
-  // Light variants
-  #{css-var-name(primary-light)}: rgba(115, 103, 240, 0.12);
-  #{css-var-name(secondary-light)}: rgba(128, 131, 144, 0.12);
-  #{css-var-name(success-light)}: rgba(40, 199, 111, 0.12);
-  #{css-var-name(info-light)}: rgba(0, 186, 209, 0.12);
-  #{css-var-name(warning-light)}: rgba(255, 159, 67, 0.12);
-  #{css-var-name(danger-light)}: rgba(255, 76, 81, 0.12);
-
-  // Gray Scale
-  #{css-var-name(white)}: #{$white};
-  #{css-var-name(black)}: #{$black};
-  #{css-var-name(gray-25)}: #{$gray-25};
-  #{css-var-name(gray-50)}: #{$gray-50};
-  #{css-var-name(gray-100)}: #{$gray-100};
-  #{css-var-name(gray-200)}: #{$gray-200};
-  #{css-var-name(gray-300)}: #{$gray-300};
-  #{css-var-name(gray-400)}: #{$gray-400};
-  #{css-var-name(gray-500)}: #{$gray-500};
-  #{css-var-name(gray-600)}: #{$gray-600};
-  #{css-var-name(gray-700)}: #{$gray-700};
-  #{css-var-name(gray-800)}: #{$gray-800};
-  #{css-var-name(gray-900)}: #{$gray-900};
-
-  // Background & Surface
-  #{css-var-name(body-bg)}: #{$body-bg};
-  #{css-var-name(body-bg-rgb)}: 248, 247, 250;
-  #{css-var-name(paper-bg)}: #{$paper-bg};
-  #{css-var-name(card-bg)}: #{$card-bg};
-
-  // Text Colors
-  #{css-var-name(body-color)}: #{$body-color};
-  #{css-var-name(heading-color)}: #{$heading-color};
-  #{css-var-name(muted-color)}: #{$muted-color};
-  #{css-var-name(secondary-color)}: #{$gray-500};
-
-  // Borders
-  #{css-var-name(border-color)}: #{$border-color};
-  #{css-var-name(border-width)}: #{$border-width};
-  #{css-var-name(border-radius)}: #{$border-radius};
-  #{css-var-name(border-radius-sm)}: #{$border-radius-sm};
-  #{css-var-name(border-radius-lg)}: #{$border-radius-lg};
-  #{css-var-name(border-radius-xl)}: #{$border-radius-xl};
-  #{css-var-name(border-radius-pill)}: #{$border-radius-pill};
-
-  // Links
-  #{css-var-name(link-color)}: #{$link-color};
-  #{css-var-name(link-hover-color)}: #{$link-hover-color};
-
+  // -----------------------------------------------------
   // Typography
-  #{css-var-name(font-family)}: #{$font-family-sans-serif};
-  #{css-var-name(font-sans-serif)}: #{$font-family-sans-serif};
-  #{css-var-name(font-monospace)}: #{$font-family-monospace};
-  #{css-var-name(font-size-base)}: #{$font-size-base};
-  #{css-var-name(font-size-sm)}: #{$font-size-sm};
-  #{css-var-name(font-size-lg)}: #{$font-size-lg};
-  #{css-var-name(line-height-base)}: #{$line-height-base};
-  #{css-var-name(font-weight-normal)}: #{$font-weight-normal};
-  #{css-var-name(font-weight-medium)}: #{$font-weight-medium};
-  #{css-var-name(font-weight-semibold)}: #{$font-weight-semibold};
-  #{css-var-name(font-weight-bold)}: #{$font-weight-bold};
+  // -----------------------------------------------------
+  #{css-var-name(font-family)}: #{light.$font-family-sans-serif};
+  #{css-var-name(font-sans-serif)}: #{light.$font-family-sans-serif};
+  #{css-var-name(font-monospace)}: #{light.$font-family-monospace};
 
-  // Heading Font Sizes
-  #{css-var-name(h1-font-size)}: #{$h1-font-size};
-  #{css-var-name(h2-font-size)}: #{$h2-font-size};
-  #{css-var-name(h3-font-size)}: #{$h3-font-size};
-  #{css-var-name(h4-font-size)}: #{$h4-font-size};
-  #{css-var-name(h5-font-size)}: #{$h5-font-size};
-  #{css-var-name(h6-font-size)}: #{$h6-font-size};
+  #{css-var-name(font-size-base)}: #{light.$font-size-base};
+  #{css-var-name(font-size-sm)}: #{light.$font-size-sm};
+  #{css-var-name(font-size-lg)}: #{light.$font-size-lg};
+  #{css-var-name(font-size-xs)}: #{light.$font-size-xs};
 
-  // Shadows
-  #{css-var-name(box-shadow)}: #{$box-shadow};
-  #{css-var-name(box-shadow-sm)}: #{$box-shadow-sm};
-  #{css-var-name(box-shadow-lg)}: #{$box-shadow-lg};
+  #{css-var-name(font-weight-light)}: #{light.$font-weight-light};
+  #{css-var-name(font-weight-normal)}: #{light.$font-weight-normal};
+  #{css-var-name(font-weight-medium)}: #{light.$font-weight-medium};
+  #{css-var-name(font-weight-semibold)}: #{light.$font-weight-semibold};
+  #{css-var-name(font-weight-bold)}: #{light.$font-weight-bold};
+  #{css-var-name(line-height-base)}: #{light.$line-height-base};
 
-  // Transitions
-  #{css-var-name(transition-base)}: #{$transition-base};
-  #{css-var-name(transition-fade)}: #{$transition-fade};
+  #{css-var-name(h1-font-size)}: #{light.$h1-font-size};
+  #{css-var-name(h2-font-size)}: #{light.$h2-font-size};
+  #{css-var-name(h3-font-size)}: #{light.$h3-font-size};
+  #{css-var-name(h4-font-size)}: #{light.$h4-font-size};
+  #{css-var-name(h5-font-size)}: #{light.$h5-font-size};
+  #{css-var-name(h6-font-size)}: #{light.$h6-font-size};
 
+  // -----------------------------------------------------
+  // Spacing
+  // -----------------------------------------------------
+  #{css-var-name(spacer)}: #{light.$spacer};
+
+  // -----------------------------------------------------
+  // Borders / Radius
+  // -----------------------------------------------------
+  #{css-var-name(border-width)}: #{light.$border-width};
+  #{css-var-name(border-style)}: #{light.$border-style};
+
+  #{css-var-name(border-radius)}: #{light.$border-radius};
+  #{css-var-name(border-radius-sm)}: #{light.$border-radius-sm};
+  #{css-var-name(border-radius-lg)}: #{light.$border-radius-lg};
+  #{css-var-name(border-radius-xl)}: #{light.$border-radius-xl};
+  #{css-var-name(border-radius-pill)}: #{light.$border-radius-pill};
+
+  // -----------------------------------------------------
+  // Z-index
+  // -----------------------------------------------------
+  #{css-var-name(zindex-dropdown)}: #{light.$zindex-dropdown};
+  #{css-var-name(zindex-sticky)}: #{light.$zindex-sticky};
+  #{css-var-name(zindex-fixed)}: #{light.$zindex-fixed};
+  #{css-var-name(zindex-modal-backdrop)}: #{light.$zindex-modal-backdrop};
+  #{css-var-name(zindex-modal)}: #{light.$zindex-modal};
+  #{css-var-name(zindex-tooltip)}: #{light.$zindex-tooltip};
+  #{css-var-name(zindex-toast)}: #{light.$zindex-toast};
+
+  // -----------------------------------------------------
+  // Card (metrics)
+  // -----------------------------------------------------
+  #{css-var-name(card-border-radius)}: #{light.$card-border-radius};
+  #{css-var-name(card-spacer-y)}: #{light.$card-spacer-y};
+  #{css-var-name(card-spacer-x)}: #{light.$card-spacer-x};
+
+  // -----------------------------------------------------
+  // Buttons
+  // -----------------------------------------------------
+  #{css-var-name(btn-padding-y)}: #{light.$btn-padding-y};
+  #{css-var-name(btn-padding-x)}: #{light.$btn-padding-x};
+  #{css-var-name(btn-border-radius)}: #{light.$btn-border-radius};
+
+  // -----------------------------------------------------
+  // Inputs (metrics only)
+  // -----------------------------------------------------
+  #{css-var-name(input-padding-y)}: #{light.$input-padding-y};
+  #{css-var-name(input-padding-x)}: #{light.$input-padding-x};
+  #{css-var-name(input-padding-y-sm)}: #{light.$input-padding-y-sm};
+  #{css-var-name(input-padding-x-sm)}: #{light.$input-padding-x-sm};
+  #{css-var-name(input-padding-y-lg)}: #{light.$input-padding-y-lg};
+  #{css-var-name(input-padding-x-lg)}: #{light.$input-padding-x-lg};
+
+  #{css-var-name(input-font-size)}: #{light.$input-font-size};
+  #{css-var-name(input-font-size-sm)}: #{light.$input-font-size-sm};
+  #{css-var-name(input-font-size-lg)}: #{light.$input-font-size-lg};
+
+  #{css-var-name(input-line-height)}: #{light.$input-line-height};
+  #{css-var-name(input-border-width)}: #{light.$input-border-width};
+  #{css-var-name(input-focus-border-width)}: #{light.$input-focus-border-width};
+
+  #{css-var-name(input-border-radius)}: #{light.$input-border-radius};
+  #{css-var-name(input-border-radius-sm)}: #{light.$input-border-radius-sm};
+  #{css-var-name(input-border-radius-lg)}: #{light.$input-border-radius-lg};
+
+  #{css-var-name(input-height)}: #{light.$input-height};
+  #{css-var-name(input-height-sm)}: #{light.$input-height-sm};
+  #{css-var-name(input-height-lg)}: #{light.$input-height-lg};
+
+  // -----------------------------------------------------
+  // Form Select
+  // -----------------------------------------------------
+  #{css-var-name(form-select-padding-y)}: #{light.$form-select-padding-y};
+  #{css-var-name(form-select-padding-x)}: #{light.$form-select-padding-x};
+  #{css-var-name(form-select-indicator-padding)}: #{light.$form-select-indicator-padding};
+
+  // -----------------------------------------------------
+  // Form Check
+  // -----------------------------------------------------
+  #{css-var-name(form-check-input-width)}: #{light.$form-check-input-width};
+  #{css-var-name(form-check-padding-start)}: #{light.$form-check-padding-start};
+  #{css-var-name(form-check-margin-bottom)}: #{light.$form-check-margin-bottom};
+
+  // -----------------------------------------------------
+  // Form Switch
+  // -----------------------------------------------------
+  #{css-var-name(form-switch-width)}: #{light.$form-switch-width};
+  #{css-var-name(form-switch-height)}: #{light.$form-switch-height};
+  #{css-var-name(form-switch-padding-start)}: #{light.$form-switch-padding-start};
+
+  // -----------------------------------------------------
+  // Modal (metrics)
+  // -----------------------------------------------------
+  #{css-var-name(modal-content-border-radius)}: #{light.$modal-content-border-radius};
+
+  // -----------------------------------------------------
+  // Badge
+  // -----------------------------------------------------
+  #{css-var-name(badge-padding-y)}: #{light.$badge-padding-y};
+  #{css-var-name(badge-padding-x)}: #{light.$badge-padding-x};
+
+  // -----------------------------------------------------
+  // Progress
+  // -----------------------------------------------------
+  #{css-var-name(progress-height)}: #{light.$progress-height};
+
+  // -----------------------------------------------------
+  // Spinner
+  // -----------------------------------------------------
+  #{css-var-name(spinner-width)}: #{light.$spinner-width};
+
+  // -----------------------------------------------------
+  // Stepper
+  // -----------------------------------------------------
+  #{css-var-name(stepper-step-size)}: #{light.$stepper-step-size};
+
+  // -----------------------------------------------------
   // Table
-  #{css-var-name(table-cell-padding-y)}: #{$table-cell-padding-y};
-  #{css-var-name(table-cell-padding-x)}: #{$table-cell-padding-x};
-  #{css-var-name(table-header-bg)}: transparent;
-  #{css-var-name(table-hover-bg)}: #{$gray-100};
+  // -----------------------------------------------------
+  #{css-var-name(table-cell-padding-y)}: #{light.$table-cell-padding-y};
+  #{css-var-name(table-cell-padding-x)}: #{light.$table-cell-padding-x};
 
-  // Form Check Colors (for unchecked state)
-  #{css-var-name(form-check-bg)}: #{$paper-bg};
-  #{css-var-name(form-check-border)}: #{$gray-400};
-  #{css-var-name(form-switch-bg)}: #{$gray-300};
-
-  // Form Disabled States
-  #{css-var-name(input-disabled-bg)}: #{$gray-100};
-  #{css-var-name(input-disabled-border)}: #{$gray-200};
+  // -----------------------------------------------------
+  // Transitions
+  // -----------------------------------------------------
+  #{css-var-name(transition-base)}: #{light.$transition-base};
+  #{css-var-name(transition-fade)}: #{light.$transition-fade};
+  #{css-var-name(transition-collapse)}: #{light.$transition-collapse};
 }
 
-// Dark theme
-#{data-attr('theme', 'dark')} {
-  color-scheme: dark;
 
-  // Background & Surface
-  #{css-var-name(body-bg)}: #{$dark-body-bg};
-  #{css-var-name(body-bg-rgb)}: 37, 41, 60;
-  #{css-var-name(paper-bg)}: #{$dark-paper-bg};
-  #{css-var-name(card-bg)}: #{$dark-card-bg};
+// =====================================================
+// LIGHT THEME (DEFAULT)
+// =====================================================
+.#{css-class('theme-light')} {
 
-  // Text Colors
-  #{css-var-name(body-color)}: #{$dark-body-color};
-  #{css-var-name(heading-color)}: #{$dark-heading-color};
-  #{css-var-name(muted-color)}: #{$dark-muted-color};
-  #{css-var-name(secondary-color)}: #{$dark-muted-color};
+  // Colors (Brand)
+  #{css-var-name(primary)}: #{light.$primary};
+  #{css-var-name(secondary)}: #{light.$secondary};
+  #{css-var-name(success)}: #{light.$success};
+  #{css-var-name(info)}: #{light.$info};
+  #{css-var-name(warning)}: #{light.$warning};
+  #{css-var-name(error)}: #{light.$error};
+  #{css-var-name(light)}: #{light.$light};
+  #{css-var-name(dark)}: #{light.$dark};
 
-  // Borders
-  #{css-var-name(border-color)}: #{$dark-border-color};
+  // RGB Fallbacks
+  #{css-var-name(primary-rgb)}: #{color.channel(light.$primary, "red", $space: rgb)},
+  #{color.channel(light.$primary, "green", $space: rgb)},
+  #{color.channel(light.$primary, "blue", $space: rgb)};
+
+  #{css-var-name(secondary-rgb)}: #{color.channel(light.$secondary, "red", $space: rgb)},
+  #{color.channel(light.$secondary, "green", $space: rgb)},
+  #{color.channel(light.$secondary, "blue", $space: rgb)};
+
+  #{css-var-name(success-rgb)}: #{color.channel(light.$success, "red", $space: rgb)},
+  #{color.channel(light.$success, "green", $space: rgb)},
+  #{color.channel(light.$success, "blue", $space: rgb)};
+
+  #{css-var-name(info-rgb)}: #{color.channel(light.$info, "red", $space: rgb)},
+  #{color.channel(light.$info, "green", $space: rgb)},
+  #{color.channel(light.$info, "blue", $space: rgb)};
+
+  #{css-var-name(warning-rgb)}: #{color.channel(light.$warning, "red", $space: rgb)},
+  #{color.channel(light.$warning, "green", $space: rgb)},
+  #{color.channel(light.$warning, "blue", $space: rgb)};
+
+  #{css-var-name(error-rgb)}: #{color.channel(light.$error, "red", $space: rgb)},
+  #{color.channel(light.$error, "green", $space: rgb)},
+  #{color.channel(light.$error, "blue", $space: rgb)};
+
+  // Light variants
+  #{css-var-name(primary-light)}: #{color.mix(light.$primary, transparent, 12%)};
+  #{css-var-name(secondary-light)}: #{color.mix(light.$secondary, transparent, 12%)};
+  #{css-var-name(success-light)}: #{color.mix(light.$success, transparent, 12%)};
+  #{css-var-name(info-light)}: #{color.mix(light.$info, transparent, 12%)};
+  #{css-var-name(warning-light)}: #{color.mix(light.$warning, transparent, 12%)};
+  #{css-var-name(error-light)}: #{color.mix(light.$error, transparent, 12%)};
+
+  // Gray Scale
+  #{css-var-name(white)}: #{light.$white};
+  #{css-var-name(black)}: #{light.$black};
+  #{css-var-name(gray-25)}: #{light.$gray-25};
+  #{css-var-name(gray-50)}: #{light.$gray-50};
+  #{css-var-name(gray-100)}: #{light.$gray-100};
+  #{css-var-name(gray-200)}: #{light.$gray-200};
+  #{css-var-name(gray-300)}: #{light.$gray-300};
+  #{css-var-name(gray-400)}: #{light.$gray-400};
+  #{css-var-name(gray-500)}: #{light.$gray-500};
+  #{css-var-name(gray-600)}: #{light.$gray-600};
+  #{css-var-name(gray-700)}: #{light.$gray-700};
+  #{css-var-name(gray-800)}: #{light.$gray-800};
+  #{css-var-name(gray-900)}: #{light.$gray-900};
+
+  // Background & Surfaces
+  #{css-var-name(body-bg)}: #{light.$body-bg};
+  #{css-var-name(body-bg-rgb)}: #{color.channel(light.$body-bg, "red", $space: rgb)},
+  #{color.channel(light.$body-bg, "green", $space: rgb)},
+  #{color.channel(light.$body-bg, "blue", $space: rgb)};
+
+  #{css-var-name(paper-bg)}: #{light.$paper-bg};
+  #{css-var-name(card-bg)}: #{light.$card-bg};
+
+  // Text
+  #{css-var-name(body-color)}: #{light.$body-color};
+  #{css-var-name(heading-color)}: #{light.$heading-color};
+  #{css-var-name(muted-color)}: #{light.$muted-color};
+  #{css-var-name(secondary-color)}: #{light.$gray-500};
 
   // Links
-  #{css-var-name(link-color)}: #{$dark-link-color};
-  #{css-var-name(link-hover-color)}: #{$dark-link-hover-color};
+  #{css-var-name(link-color)}: #{light.$link-color};
+  #{css-var-name(link-hover-color)}: #{light.$link-hover-color};
 
-  // Light variants for dark theme
-  #{css-var-name(primary-light)}: rgba(115, 103, 240, 0.16);
-  #{css-var-name(secondary-light)}: rgba(128, 131, 144, 0.16);
-  #{css-var-name(success-light)}: rgba(40, 199, 111, 0.16);
-  #{css-var-name(info-light)}: rgba(0, 186, 209, 0.16);
-  #{css-var-name(warning-light)}: rgba(255, 159, 67, 0.16);
-  #{css-var-name(danger-light)}: rgba(255, 76, 81, 0.16);
+  // Borders (color only)
+  #{css-var-name(border-color)}: #{light.$border-color};
 
-  // Adjusted shadows for dark theme
-  #{css-var-name(box-shadow)}: 0 0.1875rem 0.75rem 0 #{$dark-shadow-color};
-  #{css-var-name(box-shadow-sm)}: 0 0.125rem 0.5rem 0 #{$dark-shadow-color};
-  #{css-var-name(box-shadow-lg)}: 0 0.25rem 1.125rem 0 #{$dark-shadow-color};
+  // Shadows
+  #{css-var-name(shadow-color)}: #{light.$shadow-color};
+  #{css-var-name(box-shadow)}: #{light.$box-shadow};
+  #{css-var-name(box-shadow-sm)}: #{light.$box-shadow-sm};
+  #{css-var-name(box-shadow-lg)}: #{light.$box-shadow-lg};
 
-  // Form Check Colors for dark theme
-  #{css-var-name(form-check-bg)}: #{$dark-paper-bg};
-  #{css-var-name(form-check-border)}: #{$dark-border-color};
-  #{css-var-name(form-switch-bg)}: #464b65;
+  // Table (colors)
+  #{css-var-name(table-header-bg)}: transparent;
+  #{css-var-name(table-hover-bg)}: #{light.$gray-100};
 
-  // Form Disabled States for dark theme
-  #{css-var-name(input-disabled-bg)}: #3b3f5c;
-  #{css-var-name(input-disabled-border)}: #434968;
+  // Form Inputs (colors only)
+  #{css-var-name(input-border-color)}: #{light.$input-border-color};
+  #{css-var-name(input-hover-border-color)}: #{light.$input-hover-border-color};
+  #{css-var-name(input-focus-border-color)}: #{light.$input-focus-border-color};
+  #{css-var-name(input-disabled-bg)}: #{light.$input-disabled-bg};
+  #{css-var-name(input-disabled-border-color)}: #{light.$input-disabled-border-color};
+  #{css-var-name(input-placeholder-color)}: #{light.$input-placeholder-color};
 
-  // Gray scale adjustments for dark theme
-  #{css-var-name(gray-25)}: #3f4356;
-  #{css-var-name(gray-50)}: #434968;
-  #{css-var-name(gray-100)}: #3b3f5c;
-  #{css-var-name(gray-200)}: #434968;
-  #{css-var-name(gray-300)}: #4d5274;
-  #{css-var-name(gray-400)}: #5d6385;
-  #{css-var-name(gray-500)}: #7983bb;
-  #{css-var-name(gray-600)}: #9199c8;
-  #{css-var-name(gray-700)}: #a9b0d5;
-  #{css-var-name(gray-800)}: #c1c7e2;
-  #{css-var-name(gray-900)}: #d9deef;
+  // Form Check (colors)
+  #{css-var-name(form-check-input-bg)}: #{light.$form-check-input-bg};
+  #{css-var-name(form-check-input-border-color)}: #{light.$form-check-input-border-color};
+  #{css-var-name(form-check-input-checked-bg)}: #{light.$form-check-input-checked-bg};
+  #{css-var-name(form-check-input-checked-border-color)}: #{light.$form-check-input-checked-border-color};
+  #{css-var-name(form-check-input-disabled-bg)}: #{light.$form-check-input-disabled-bg};
 
-  // Table - dark theme
-  #{css-var-name(table-hover-bg)}: #4d5274;
+  #{css-var-name(form-check-bg)}: #{light.$paper-bg};
+  #{css-var-name(form-check-border)}: #{light.$gray-400};
+
+  // Form Switch (colors)
+  #{css-var-name(form-switch-bg)}: #{light.$form-switch-bg};
+
+  // Validation
+  #{css-var-name(form-feedback-valid-color)}: #{light.$form-feedback-valid-color};
+  #{css-var-name(form-feedback-invalid-color)}: #{light.$form-feedback-invalid-color};
+
+  // Tooltip
+  #{css-var-name(tooltip-bg)}: #{light.$tooltip-bg};
+  #{css-var-name(tooltip-color)}: #{light.$tooltip-color};
+}
+
+
+// =====================================================
+// DARK THEME
+// =====================================================
+.#{css-class('theme-dark')} {
+  color-scheme: dark;
+
+  // -----------------------------------------------------
+  // Brand Colors
+  // -----------------------------------------------------
+  #{css-var-name(primary)}: #{dark.$primary};
+  #{css-var-name(secondary)}: #{dark.$secondary};
+  #{css-var-name(success)}: #{dark.$success};
+  #{css-var-name(info)}: #{dark.$info};
+  #{css-var-name(warning)}: #{dark.$warning};
+  #{css-var-name(error)}: #{dark.$error};
+  #{css-var-name(light)}: #{dark.$light};
+  #{css-var-name(dark)}: #{dark.$dark};
+
+  // -----------------------------------------------------
+  // RGB Fallbacks
+  // -----------------------------------------------------
+  #{css-var-name(primary-rgb)}: #{color.channel(dark.$primary, "red", $space: rgb)},
+  #{color.channel(dark.$primary, "green", $space: rgb)},
+  #{color.channel(dark.$primary, "blue", $space: rgb)};
+
+  #{css-var-name(secondary-rgb)}: #{color.channel(dark.$secondary, "red", $space: rgb)},
+  #{color.channel(dark.$secondary, "green", $space: rgb)},
+  #{color.channel(dark.$secondary, "blue", $space: rgb)};
+
+  #{css-var-name(success-rgb)}: #{color.channel(dark.$success, "red", $space: rgb)},
+  #{color.channel(dark.$success, "green", $space: rgb)},
+  #{color.channel(dark.$success, "blue", $space: rgb)};
+
+  #{css-var-name(info-rgb)}: #{color.channel(dark.$info, "red", $space: rgb)},
+  #{color.channel(dark.$info, "green", $space: rgb)},
+  #{color.channel(dark.$info, "blue", $space: rgb)};
+
+  #{css-var-name(warning-rgb)}: #{color.channel(dark.$warning, "red", $space: rgb)},
+  #{color.channel(dark.$warning, "green", $space: rgb)},
+  #{color.channel(dark.$warning, "blue", $space: rgb)};
+
+  #{css-var-name(error-rgb)}: #{color.channel(dark.$error, "red", $space: rgb)},
+  #{color.channel(dark.$error, "green", $space: rgb)},
+  #{color.channel(dark.$error, "blue", $space: rgb)};
+
+  // -----------------------------------------------------
+  // Light Variants (same logic as LIGHT)
+  // -----------------------------------------------------
+  #{css-var-name(primary-light)}: #{color.mix(dark.$primary, transparent, 12%)};
+  #{css-var-name(secondary-light)}: #{color.mix(dark.$secondary, transparent, 12%)};
+  #{css-var-name(success-light)}: #{color.mix(dark.$success, transparent, 12%)};
+  #{css-var-name(info-light)}: #{color.mix(dark.$info, transparent, 12%)};
+  #{css-var-name(warning-light)}: #{color.mix(dark.$warning, transparent, 12%)};
+  #{css-var-name(error-light)}: #{color.mix(dark.$error, transparent, 12%)};
+
+  // -----------------------------------------------------
+  // Gray Scale
+  // -----------------------------------------------------
+  #{css-var-name(white)}: #{dark.$white};
+  #{css-var-name(black)}: #{dark.$black};
+  #{css-var-name(gray-25)}: #{dark.$gray-25};
+  #{css-var-name(gray-50)}: #{dark.$gray-50};
+  #{css-var-name(gray-100)}: #{dark.$gray-100};
+  #{css-var-name(gray-200)}: #{dark.$gray-200};
+  #{css-var-name(gray-300)}: #{dark.$gray-300};
+  #{css-var-name(gray-400)}: #{dark.$gray-400};
+  #{css-var-name(gray-500)}: #{dark.$gray-500};
+  #{css-var-name(gray-600)}: #{dark.$gray-600};
+  #{css-var-name(gray-700)}: #{dark.$gray-700};
+  #{css-var-name(gray-800)}: #{dark.$gray-800};
+  #{css-var-name(gray-900)}: #{dark.$gray-900};
+
+  // -----------------------------------------------------
+  // Background & Surfaces
+  // -----------------------------------------------------
+  #{css-var-name(body-bg)}: #{dark.$body-bg};
+  #{css-var-name(body-bg-rgb)}: #{color.channel(dark.$body-bg, "red", $space: rgb)},
+  #{color.channel(dark.$body-bg, "green", $space: rgb)},
+  #{color.channel(dark.$body-bg, "blue", $space: rgb)};
+
+  #{css-var-name(paper-bg)}: #{dark.$paper-bg};
+  #{css-var-name(card-bg)}: #{dark.$card-bg};
+
+  // -----------------------------------------------------
+  // Text
+  // -----------------------------------------------------
+  #{css-var-name(body-color)}: #{dark.$body-color};
+  #{css-var-name(heading-color)}: #{dark.$heading-color};
+  #{css-var-name(muted-color)}: #{dark.$muted-color};
+  #{css-var-name(secondary-color)}: #{dark.$muted-color};
+
+  // -----------------------------------------------------
+  // Links
+  // -----------------------------------------------------
+  #{css-var-name(link-color)}: #{dark.$link-color};
+  #{css-var-name(link-hover-color)}: #{dark.$link-hover-color};
+
+  // -----------------------------------------------------
+  // Borders
+  // -----------------------------------------------------
+  #{css-var-name(border-color)}: #{dark.$border-color};
+
+  // -----------------------------------------------------
+  // Shadows
+  // -----------------------------------------------------
+  #{css-var-name(shadow-color)}: #{dark.$shadow-color};
+  #{css-var-name(box-shadow)}: 0 0.1875rem 0.75rem 0 #{dark.$shadow-color};
+  #{css-var-name(box-shadow-sm)}: 0 0.125rem 0.5rem 0 #{dark.$shadow-color};
+  #{css-var-name(box-shadow-lg)}: 0 0.25rem 1.125rem 0 #{dark.$shadow-color};
+
+  // -----------------------------------------------------
+  // Table
+  // -----------------------------------------------------
+  #{css-var-name(table-header-bg)}: transparent;
+  #{css-var-name(table-hover-bg)}: #{dark.$gray-300};
+
+  // -----------------------------------------------------
+  // Inputs (colors only)
+  // -----------------------------------------------------
+  #{css-var-name(input-border-color)}: #{dark.$border-color};
+  #{css-var-name(input-hover-border-color)}: #{dark.$gray-600};
+  #{css-var-name(input-focus-border-color)}: #{dark.$primary};
+  #{css-var-name(input-disabled-bg)}: #{dark.$gray-100};
+  #{css-var-name(input-disabled-border-color)}: #{dark.$gray-200};
+  #{css-var-name(input-placeholder-color)}: #{dark.$muted-color};
+
+  // -----------------------------------------------------
+  // Form Check (colors)
+  // -----------------------------------------------------
+  #{css-var-name(form-check-input-bg)}: #{dark.$paper-bg};
+  #{css-var-name(form-check-input-border-color)}: #{dark.$border-color};
+  #{css-var-name(form-check-input-checked-bg)}: #{dark.$primary};
+  #{css-var-name(form-check-input-checked-border-color)}: #{dark.$primary};
+  #{css-var-name(form-check-input-disabled-bg)}: #{dark.$gray-200};
+
+  #{css-var-name(form-check-bg)}: #{dark.$paper-bg};
+  #{css-var-name(form-check-border)}: #{dark.$border-color};
+
+  // -----------------------------------------------------
+  // Form Switch
+  // -----------------------------------------------------
+  #{css-var-name(form-switch-bg)}: #{dark.$gray-300};
+
+  // -----------------------------------------------------
+  // Validation
+  // -----------------------------------------------------
+  #{css-var-name(form-feedback-valid-color)}: #{dark.$form-feedback-valid-color};
+  #{css-var-name(form-feedback-invalid-color)}: #{dark.$form-feedback-invalid-color};
+
+  // -----------------------------------------------------
+  // Tooltip
+  // -----------------------------------------------------
+  #{css-var-name(tooltip-bg)}: #{dark.$tooltip-bg};
+  #{css-var-name(tooltip-color)}: #{dark.$tooltip-color};
 }

@@ -1,210 +1,215 @@
 // =====================================================
-// Admin UI - Typography Utilities
-// =====================================================
-// This file contains typography utility classes only.
-//
-// Note: Base typography for .#{css-class('wrap')} (font-family,
-// font-size, line-height, heading resets) is defined in
-// layout/_framework.scss
+// Admin UI - Typography Utilities (Scoped)
 // =====================================================
 
 @use "../prefix" as *;
 
 // -----------------------------------------------------
-// Heading Utility Classes
-// -----------------------------------------------------
-// For applying heading styles to non-heading elements
-
-.#{css-class('h1')} {
-  font-size: css-var(h1-font-size);
-}
-
-.#{css-class('h2')} {
-  font-size: css-var(h2-font-size);
-}
-
-.#{css-class('h3')} {
-  font-size: css-var(h3-font-size);
-}
-
-.#{css-class('h4')} {
-  font-size: css-var(h4-font-size);
-}
-
-.#{css-class('h5')} {
-  font-size: css-var(h5-font-size);
-}
-
-.#{css-class('h6')} {
-  font-size: css-var(h6-font-size);
-}
-
-.#{css-class('h1')}, .#{css-class('h2')}, .#{css-class('h3')},
-.#{css-class('h4')}, .#{css-class('h5')}, .#{css-class('h6')} {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-weight: css-var(font-weight-semibold);
-  line-height: 1.2;
-  color: css-var(heading-color);
-}
-
-// -----------------------------------------------------
-// Display Headings
+// Scope whole utility system into plugin root
 // -----------------------------------------------------
 
-.#{css-class('display-1')} {
-  font-size: 4rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
+.#{css-class('wrap')} {
 
-.#{css-class('display-2')} {
-  font-size: 3.5rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
+  // -----------------------------------------------------
+  // Heading Utility Classes
+  // -----------------------------------------------------
 
-.#{css-class('display-3')} {
-  font-size: 3rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
+  .#{css-class('h1')} {
+    font-size: css-var(h1-font-size);
+  }
 
-.#{css-class('display-4')} {
-  font-size: 2.5rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
+  .#{css-class('h2')} {
+    font-size: css-var(h2-font-size);
+  }
 
-.#{css-class('display-5')} {
-  font-size: 2rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
+  .#{css-class('h3')} {
+    font-size: css-var(h3-font-size);
+  }
 
-.#{css-class('display-6')} {
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
+  .#{css-class('h4')} {
+    font-size: css-var(h4-font-size);
+  }
 
-// -----------------------------------------------------
-// Text Size Utilities
-// -----------------------------------------------------
+  .#{css-class('h5')} {
+    font-size: css-var(h5-font-size);
+  }
 
-.#{css-class('lead')} {
-  font-size: 1.125rem;
-  font-weight: 400;
-}
+  .#{css-class('h6')} {
+    font-size: css-var(h6-font-size);
+  }
 
-.#{css-class('small')} {
-  font-size: 0.8125rem;
-}
+  .#{css-class('h1')},
+  .#{css-class('h2')},
+  .#{css-class('h3')},
+  .#{css-class('h4')},
+  .#{css-class('h5')},
+  .#{css-class('h6')} {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: css-var(font-weight-semibold);
+    line-height: 1.2;
+    color: css-var(heading-color);
+  }
 
-// -----------------------------------------------------
-// Font Weight Utilities
-// -----------------------------------------------------
+  // -----------------------------------------------------
+  // Display Headings
+  // -----------------------------------------------------
 
-.#{css-class('fw-light')} {
-  font-weight: 300;
-}
+  .#{css-class('display-1')} {
+    font-size: 4rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
-.#{css-class('fw-normal')} {
-  font-weight: 400;
-}
+  .#{css-class('display-2')} {
+    font-size: 3.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
-.#{css-class('fw-medium')} {
-  font-weight: 500;
-}
+  .#{css-class('display-3')} {
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
-.#{css-class('fw-semibold')} {
-  font-weight: 600;
-}
+  .#{css-class('display-4')} {
+    font-size: 2.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
-.#{css-class('fw-bold')} {
-  font-weight: 700;
-}
+  .#{css-class('display-5')} {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
-// -----------------------------------------------------
-// Text Alignment Utilities
-// -----------------------------------------------------
+  .#{css-class('display-6')} {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
-.#{css-class('text-start')} {
-  text-align: left;
-}
+  // -----------------------------------------------------
+  // Text Size Utilities
+  // -----------------------------------------------------
 
-.#{css-class('text-center')} {
-  text-align: center;
-}
+  .#{css-class('lead')} {
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
 
-.#{css-class('text-end')} {
-  text-align: right;
-}
+  .#{css-class('small')} {
+    font-size: 0.8125rem;
+  }
 
-// -----------------------------------------------------
-// Text Transform Utilities
-// -----------------------------------------------------
+  // -----------------------------------------------------
+  // Font Weight Utilities
+  // -----------------------------------------------------
 
-.#{css-class('text-lowercase')} {
-  text-transform: lowercase;
-}
+  .#{css-class('fw-light')} {
+    font-weight: 300;
+  }
 
-.#{css-class('text-uppercase')} {
-  text-transform: uppercase;
-}
+  .#{css-class('fw-normal')} {
+    font-weight: 400;
+  }
 
-.#{css-class('text-capitalize')} {
-  text-transform: capitalize;
-}
+  .#{css-class('fw-medium')} {
+    font-weight: 500;
+  }
 
-// -----------------------------------------------------
-// Text Decoration Utilities
-// -----------------------------------------------------
+  .#{css-class('fw-semibold')} {
+    font-weight: 600;
+  }
 
-.#{css-class('text-decoration-none')} {
-  text-decoration: none;
-}
+  .#{css-class('fw-bold')} {
+    font-weight: 700;
+  }
 
-.#{css-class('text-decoration-underline')} {
-  text-decoration: underline;
-}
+  // -----------------------------------------------------
+  // Text Alignment Utilities
+  // -----------------------------------------------------
 
-// -----------------------------------------------------
-// Text Wrapping Utilities
-// -----------------------------------------------------
+  .#{css-class('text-start')} {
+    text-align: left;
+  }
 
-.#{css-class('text-wrap')} {
-  white-space: normal;
-}
+  .#{css-class('text-center')} {
+    text-align: center;
+  }
 
-.#{css-class('text-nowrap')} {
-  white-space: nowrap;
-}
+  .#{css-class('text-end')} {
+    text-align: right;
+  }
 
-.#{css-class('text-truncate')} {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  // -----------------------------------------------------
+  // Text Transform Utilities
+  // -----------------------------------------------------
 
-// -----------------------------------------------------
-// List Utilities
-// -----------------------------------------------------
+  .#{css-class('text-lowercase')} {
+    text-transform: lowercase;
+  }
 
-.#{css-class('list-unstyled')} {
-  padding-left: 0;
-  list-style: none;
-}
+  .#{css-class('text-uppercase')} {
+    text-transform: uppercase;
+  }
 
-.#{css-class('list-inline')} {
-  padding-left: 0;
-  list-style: none;
+  .#{css-class('text-capitalize')} {
+    text-transform: capitalize;
+  }
 
-  .#{css-class('list-inline-item')} {
-    display: inline-block;
+  // -----------------------------------------------------
+  // Text Decoration Utilities
+  // -----------------------------------------------------
 
-    &:not(:last-child) {
-      margin-right: 0.5rem;
+  .#{css-class('text-decoration-none')} {
+    text-decoration: none;
+  }
+
+  .#{css-class('text-decoration-underline')} {
+    text-decoration: underline;
+  }
+
+  // -----------------------------------------------------
+  // Text Wrapping Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('text-wrap')} {
+    white-space: normal;
+  }
+
+  .#{css-class('text-nowrap')} {
+    white-space: nowrap;
+  }
+
+  .#{css-class('text-truncate')} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // -----------------------------------------------------
+  // List Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('list-unstyled')} {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .#{css-class('list-inline')} {
+    padding-left: 0;
+    list-style: none;
+
+    .#{css-class('list-inline-item')} {
+      display: inline-block;
+
+      &:not(:last-child) {
+        margin-right: 0.5rem;
+      }
     }
   }
+
 }

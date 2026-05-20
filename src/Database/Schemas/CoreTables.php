@@ -89,7 +89,6 @@ class CoreTables
             ->varchar('type', 40)
             ->varchar('severity', 12)
             ->varchar('title', 190)
-            ->text('message')
             ->json('meta_json')
             ->timestamps()
             ->unique('alerts_unique', ['alert_date', 'type']);

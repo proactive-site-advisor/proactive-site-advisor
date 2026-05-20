@@ -6,24 +6,24 @@
 (function (window, document) {
     'use strict';
 
-    var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
-    if (!PREFIX_CONFIG) throw new Error('Config requires namespace.js (__PREFIX_CONFIG__).');
+    const PREFIX_CONFIG = window.__PREFIX_CONFIG__;
+    if (!PREFIX_CONFIG) return;
 
-    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
-    if (!ProactiveSiteAdvisor) throw new Error('Config requires global namespace.');
+    const PSA = window[PREFIX_CONFIG.namespace];
+    if (!PSA) return;
 
-    var configObject = PREFIX_CONFIG.configObject;
+    const configObject = PREFIX_CONFIG.configObject;
 
-    var Config = {
+    PSA.Config = {
 
         getCssVar: function (name) {
             return getComputedStyle(document.documentElement)
-                .getPropertyValue(ProactiveSiteAdvisor.cssVar(name))
+                .getPropertyValue(PSA.cssVar(name))
                 .trim();
         },
 
         getColor: function (name) {
-            var cfg = window[configObject] || {};
+            const cfg = window[configObject] || {};
             return this.getCssVar(name) || (cfg.colors && cfg.colors[name]) || '';
         },
 
@@ -34,17 +34,17 @@
                 success: this.getColor('success'),
                 info: this.getColor('info'),
                 warning: this.getColor('warning'),
-                danger: this.getColor('danger'),
+                error: this.getColor('error'),
                 light: this.getColor('light'),
                 dark: this.getColor('dark')
             };
         },
 
         getTheme: function () {
-            var wrap = document.querySelector('.' + ProactiveSiteAdvisor.cssClass('wrap'));
+            const wrap = document.querySelector('.' + PSA.cssClass('wrap'));
 
-            return (wrap && wrap.getAttribute(ProactiveSiteAdvisor.dataAttr('theme'))) ||
-                document.documentElement.getAttribute(ProactiveSiteAdvisor.dataAttr('theme')) ||
+            return (wrap && wrap.getAttribute(PSA.dataAttr('theme'))) ||
+                document.documentElement.getAttribute(PSA.dataAttr('theme')) ||
                 'light';
         },
 
@@ -53,20 +53,29 @@
         },
 
         getAjaxUrl: function () {
-            var cfg = window[configObject] || {};
+            const cfg = window[configObject] || {};
             return cfg.ajaxUrl || window.ajaxurl || '/wp-admin/admin-ajax.php';
         },
 
         getNonce: function () {
-            var cfg = window[configObject] || {};
+            const cfg = window[configObject] || {};
             return cfg.nonce || '';
         },
 
         getPrefixConfig: function () {
             return PREFIX_CONFIG;
+        },
+
+        getI18n: function (key = null, fallback = '') {
+            const cfg = window[configObject] || {};
+            const i18n = cfg.i18n || {};
+
+            if (key === null) {
+                return i18n;
+            }
+
+            return key in i18n ? i18n[key] : (fallback || key);
         }
     };
-
-    ProactiveSiteAdvisor.Config = Config;
 
 })(window, document);

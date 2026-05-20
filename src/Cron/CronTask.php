@@ -177,7 +177,7 @@ class CronTask
     public function startTodayAt(int $hour, int $minute = 0): self
     {
         $now         = DateTimeUtils::current();
-        $todayTarget = $now->setTime($hour, $minute, 0);
+        $todayTarget = $now->setTime($hour, $minute);
 
         if ($todayTarget->getTimestamp() < $now->getTimestamp()) {
             $todayTarget = $todayTarget->modify('+1 day');

@@ -1,560 +1,670 @@
 // =====================================================
-// Admin UI - Global Styles & Utilities
-// =====================================================
-// This file contains:
-// - WordPress admin style overrides for form controls
-// - Utility classes (text, background, border, display, etc.)
-//
-// Note: Main wrapper (.#{css-class('wrap')}) styles are in
-// layout/_framework.scss
+// Admin UI - Global Styles & Utilities (Scoped)
 // =====================================================
 
 @use "../prefix" as *;
 
-// -----------------------------------------------------
-// WordPress Admin Form Control Overrides
-// -----------------------------------------------------
+.#{css-class('wrap')} {
 
-// Override WordPress admin styles for form controls
-.#{css-class('form-control')},
-.#{css-class('form-select')} {
-  // Reset WordPress input styles
-  background-image: none;
-  box-shadow: none;
-  outline: none;
-  border-color: css-var(border-color);
+  // -----------------------------------------------------
+  // WordPress Admin Form Control Overrides
+  // -----------------------------------------------------
 
-  &:hover:not(:focus):not(:disabled) {
-    border-color: rgba(css-var(primary-rgb), 0.5);
+  .#{css-class('form-control')},
+  .#{css-class('form-select')} {
+    background-image: none;
+    box-shadow: none;
+    outline: none;
+    border-color: css-var(border-color);
+
+    &:hover:not(:focus):not(:disabled) {
+      border-color: rgba(css-var(primary-rgb), 0.5);
+    }
+
+    &:focus {
+      border-color: css-var(primary);
+      box-shadow: 0 0.125rem 0.375rem rgba(css-var(primary-rgb), 0.3);
+      outline: none;
+    }
   }
 
-  &:focus {
-    border-color: css-var(primary);
-    box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
+  .#{css-class('form-check-input')} {
+    outline: none;
+
+    &:before {
+      content: none;
+    }
+
+    &:checked:before {
+      content: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .#{css-class('form-switch')} .#{css-class('form-check-input')} {
+    border: 0;
+
+    &:not(:checked) {
+      background-color: rgba(172, 170, 177, 0.4);
+      box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.16) inset;
+    }
+
+    &:checked {
+      background-color: css-var(primary);
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .#{css-class('btn')}:focus {
+    box-shadow: 0 0.125rem 0.375rem rgba(css-var(primary-rgb), 0.3);
     outline: none;
   }
-}
 
-// Reset WordPress checkbox/radio styles for components
-.#{css-class('form-check-input')} {
-  // Override WordPress defaults
-  outline: none;
+  // -----------------------------------------------------
+  // Text Utilities
+  // -----------------------------------------------------
 
-  &:before {
-    content: none;
+  .#{css-class('text-primary')} {
+    color: css-var(primary);
   }
 
-  &:checked:before {
-    content: none;
+  .#{css-class('text-secondary')} {
+    color: css-var(secondary);
   }
 
-  &:focus {
-    outline: none;
-  }
-}
-
-// Reset WordPress styles for switches
-.#{css-class('form-switch')} .#{css-class('form-check-input')} {
-  border: 0;
-
-  &:not(:checked) {
-    background-color: rgba(172, 170, 177, 0.4);
-    box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.16) inset;
+  .#{css-class('text-success')} {
+    color: css-var(success);
   }
 
-  &:checked {
+  .#{css-class('text-info')} {
+    color: css-var(info);
+  }
+
+  .#{css-class('text-warning')} {
+    color: css-var(warning);
+  }
+
+  .#{css-class('text-error')} {
+    color: css-var(error);
+  }
+
+  .#{css-class('text-muted')} {
+    color: css-var(muted-color);
+  }
+
+  .#{css-class('text-body')} {
+    color: css-var(body-color);
+  }
+
+  .#{css-class('text-heading')} {
+    color: css-var(heading-color);
+  }
+
+  .#{css-class('text-white')} {
+    color: #fff;
+  }
+
+  // -----------------------------------------------------
+  // Background Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('bg-primary')} {
     background-color: css-var(primary);
   }
 
-  &:focus {
+  .#{css-class('bg-secondary')} {
+    background-color: css-var(secondary);
+  }
+
+  .#{css-class('bg-success')} {
+    background-color: css-var(success);
+  }
+
+  .#{css-class('bg-info')} {
+    background-color: css-var(info);
+  }
+
+  .#{css-class('bg-warning')} {
+    background-color: css-var(warning);
+  }
+
+  .#{css-class('bg-error')} {
+    background-color: css-var(error);
+  }
+
+  .#{css-class('bg-body')} {
+    background-color: css-var(body-bg);
+  }
+
+  .#{css-class('bg-paper')} {
+    background-color: css-var(paper-bg);
+  }
+
+  .#{css-class('bg-transparent')} {
+    background-color: transparent;
+  }
+
+  // -----------------------------------------------------
+  // Border Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('border')} {
+    border: css-var(border-width) solid css-var(border-color);
+  }
+
+  .#{css-class('border-0')} {
+    border: 0;
+  }
+
+  .#{css-class('border-primary')} {
+    border-color: css-var(primary);
+  }
+
+  .#{css-class('border-success')} {
+    border-color: css-var(success);
+  }
+
+  .#{css-class('border-error')} {
+    border-color: css-var(error);
+  }
+
+  .#{css-class('rounded')} {
+    border-radius: css-var(border-radius);
+  }
+
+  .#{css-class('rounded-sm')} {
+    border-radius: css-var(border-radius-sm);
+  }
+
+  .#{css-class('rounded-lg')} {
+    border-radius: css-var(border-radius-lg);
+  }
+
+  .#{css-class('rounded-pill')} {
+    border-radius: css-var(border-radius-pill);
+  }
+
+  .#{css-class('rounded-circle')} {
+    border-radius: 50%;
+  }
+
+  .#{css-class('rounded-0')} {
+    border-radius: 0;
+  }
+
+  // -----------------------------------------------------
+  // Shadow Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('shadow')} {
+    box-shadow: css-var(box-shadow);
+  }
+
+  .#{css-class('shadow-sm')} {
+    box-shadow: css-var(box-shadow-sm);
+  }
+
+  .#{css-class('shadow-lg')} {
+    box-shadow: css-var(box-shadow-lg);
+  }
+
+  .#{css-class('shadow-none')} {
     box-shadow: none;
   }
-}
-
-// Override WordPress button focus styles
-.#{css-class('btn')}:focus {
-  box-shadow: 0 0.125rem 0.375rem 0 rgba(css-var(primary-rgb), 0.3);
-  outline: none;
-}
-
-// -----------------------------------------------------
-// Text Utilities
-// -----------------------------------------------------
-
-.#{css-class('text-primary')} {
-  color: css-var(primary);
-}
-
-.#{css-class('text-secondary')} {
-  color: css-var(secondary);
-}
-
-.#{css-class('text-success')} {
-  color: css-var(success);
-}
-
-.#{css-class('text-info')} {
-  color: css-var(info);
-}
-
-.#{css-class('text-warning')} {
-  color: css-var(warning);
-}
-
-.#{css-class('text-danger')} {
-  color: css-var(danger);
-}
-
-.#{css-class('text-muted')} {
-  color: css-var(muted-color);
-}
-
-.#{css-class('text-body')} {
-  color: css-var(body-color);
-}
-
-.#{css-class('text-heading')} {
-  color: css-var(heading-color);
-}
-
-.#{css-class('text-white')} {
-  color: #fff;
-}
-
-// -----------------------------------------------------
-// Background Utilities
-// -----------------------------------------------------
-
-.#{css-class('bg-primary')} {
-  background-color: css-var(primary);
-}
-
-.#{css-class('bg-secondary')} {
-  background-color: css-var(secondary);
-}
-
-.#{css-class('bg-success')} {
-  background-color: css-var(success);
-}
-
-.#{css-class('bg-info')} {
-  background-color: css-var(info);
-}
-
-.#{css-class('bg-warning')} {
-  background-color: css-var(warning);
-}
-
-.#{css-class('bg-danger')} {
-  background-color: css-var(danger);
-}
-
-.#{css-class('bg-body')} {
-  background-color: css-var(body-bg);
-}
-
-.#{css-class('bg-paper')} {
-  background-color: css-var(paper-bg);
-}
-
-.#{css-class('bg-transparent')} {
-  background-color: transparent;
-}
-
-// -----------------------------------------------------
-// Border Utilities
-// -----------------------------------------------------
-
-.#{css-class('border')} {
-  border: css-var(border-width) solid css-var(border-color);
-}
-
-.#{css-class('border-0')} {
-  border: 0;
-}
-
-.#{css-class('border-primary')} {
-  border-color: css-var(primary);
-}
-
-.#{css-class('border-success')} {
-  border-color: css-var(success);
-}
-
-.#{css-class('border-danger')} {
-  border-color: css-var(danger);
-}
-
-// Border radius
-.#{css-class('rounded')} {
-  border-radius: css-var(border-radius);
-}
-
-.#{css-class('rounded-sm')} {
-  border-radius: css-var(border-radius-sm);
-}
-
-.#{css-class('rounded-lg')} {
-  border-radius: css-var(border-radius-lg);
-}
-
-.#{css-class('rounded-pill')} {
-  border-radius: css-var(border-radius-pill);
-}
-
-.#{css-class('rounded-circle')} {
-  border-radius: 50%;
-}
-
-.#{css-class('rounded-0')} {
-  border-radius: 0;
-}
-
-// -----------------------------------------------------
-// Shadow Utilities
-// -----------------------------------------------------
-
-.#{css-class('shadow')} {
-  box-shadow: css-var(box-shadow);
-}
-
-.#{css-class('shadow-sm')} {
-  box-shadow: css-var(box-shadow-sm);
-}
-
-.#{css-class('shadow-lg')} {
-  box-shadow: css-var(box-shadow-lg);
-}
-
-.#{css-class('shadow-none')} {
-  box-shadow: none;
-}
-
-// -----------------------------------------------------
-// Display Utilities
-// -----------------------------------------------------
-
-.#{css-class('d-none')} {
-  display: none;
-}
-
-.#{css-class('d-inline')} {
-  display: inline;
-}
-
-.#{css-class('d-inline-block')} {
-  display: inline-block;
-}
-
-.#{css-class('d-block')} {
-  display: block;
-}
-
-.#{css-class('d-flex')} {
-  display: flex;
-}
-
-.#{css-class('d-inline-flex')} {
-  display: inline-flex;
-}
-
-.#{css-class('d-grid')} {
-  display: grid;
-}
-
-// -----------------------------------------------------
-// Flex Utilities
-// -----------------------------------------------------
-
-.#{css-class('flex-row')} {
-  flex-direction: row;
-}
-
-.#{css-class('flex-column')} {
-  flex-direction: column;
-}
-
-.#{css-class('flex-wrap')} {
-  flex-wrap: wrap;
-}
-
-.#{css-class('flex-nowrap')} {
-  flex-wrap: nowrap;
-}
-
-.#{css-class('flex-grow-0')} {
-  flex-grow: 0;
-}
-
-.#{css-class('flex-grow-1')} {
-  flex-grow: 1;
-}
-
-.#{css-class('justify-content-start')} {
-  justify-content: flex-start;
-}
-
-.#{css-class('justify-content-end')} {
-  justify-content: flex-end;
-}
-
-.#{css-class('justify-content-center')} {
-  justify-content: center;
-}
-
-.#{css-class('justify-content-between')} {
-  justify-content: space-between;
-}
-
-.#{css-class('align-items-start')} {
-  align-items: flex-start;
-}
-
-.#{css-class('align-items-end')} {
-  align-items: flex-end;
-}
-
-.#{css-class('align-items-center')} {
-  align-items: center;
-}
-
-.#{css-class('align-items-stretch')} {
-  align-items: stretch;
-}
-
-// -----------------------------------------------------
-// Gap Utilities
-// -----------------------------------------------------
-
-.#{css-class('gap-0')} {
-  gap: 0;
-}
-
-.#{css-class('gap-1')} {
-  gap: 0.25rem;
-}
-
-.#{css-class('gap-2')} {
-  gap: 0.5rem;
-}
-
-.#{css-class('gap-3')} {
-  gap: 1rem;
-}
-
-.#{css-class('gap-4')} {
-  gap: 1.5rem;
-}
-
-.#{css-class('gap-5')} {
-  gap: 2rem;
-}
-
-// -----------------------------------------------------
-// Margin Utilities
-// -----------------------------------------------------
-
-.#{css-class('m-0')} {
-  margin: 0 !important;
-}
-
-.#{css-class('m-1')} {
-  margin: 0.25rem !important;
-}
-
-.#{css-class('m-2')} {
-  margin: 0.5rem !important;
-}
-
-.#{css-class('m-3')} {
-  margin: 1rem !important;
-}
-
-.#{css-class('m-4')} {
-  margin: 1.5rem !important;
-}
-
-.#{css-class('m-5')} {
-  margin: 2rem !important;
-}
-
-.#{css-class('m-auto')} {
-  margin: auto !important;
-}
-
-.#{css-class('mt-0')} {
-  margin-top: 0 !important;
-}
-
-.#{css-class('mt-1')} {
-  margin-top: 0.25rem !important;
-}
-
-.#{css-class('mt-2')} {
-  margin-top: 0.5rem !important;
-}
-
-.#{css-class('mt-3')} {
-  margin-top: 1rem !important;
-}
-
-.#{css-class('mt-4')} {
-  margin-top: 1.5rem !important;
-}
-
-.#{css-class('mb-0')} {
-  margin-bottom: 0 !important;
-}
-
-.#{css-class('mb-1')} {
-  margin-bottom: 0.25rem !important;
-}
-
-.#{css-class('mb-2')} {
-  margin-bottom: 0.5rem !important;
-}
-
-.#{css-class('mb-3')} {
-  margin-bottom: 1rem !important;
-}
-
-.#{css-class('mb-4')} {
-  margin-bottom: 1.5rem !important;
-}
-
-.#{css-class('my-0')} {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.#{css-class('my-3')} {
-  margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
-}
-
-.#{css-class('ms-auto')} {
-  margin-left: auto !important;
-}
-
-.#{css-class('me-auto')} {
-  margin-right: auto !important;
-}
-
-// -----------------------------------------------------
-// Padding Utilities
-// -----------------------------------------------------
-
-.#{css-class('p-0')} {
-  padding: 0 !important;
-}
-
-.#{css-class('p-1')} {
-  padding: 0.25rem !important;
-}
-
-.#{css-class('p-2')} {
-  padding: 0.5rem !important;
-}
-
-.#{css-class('p-3')} {
-  padding: 1rem !important;
-}
-
-.#{css-class('p-4')} {
-  padding: 1.5rem !important;
-}
-
-.#{css-class('p-5')} {
-  padding: 2rem !important;
-}
-
-// -----------------------------------------------------
-// Size Utilities
-// -----------------------------------------------------
-
-.#{css-class('w-100')} {
-  width: 100%;
-}
-
-.#{css-class('w-auto')} {
-  width: auto;
-}
-
-.#{css-class('h-100')} {
-  height: 100%;
-}
-
-.#{css-class('h-auto')} {
-  height: auto;
-}
-
-// -----------------------------------------------------
-// Position Utilities
-// -----------------------------------------------------
-
-.#{css-class('position-relative')} {
-  position: relative;
-}
-
-.#{css-class('position-absolute')} {
-  position: absolute;
-}
-
-.#{css-class('position-fixed')} {
-  position: fixed;
-}
-
-// -----------------------------------------------------
-// Visibility Utilities
-// -----------------------------------------------------
-
-.#{css-class('visible')} {
-  visibility: visible;
-}
-
-.#{css-class('invisible')} {
-  visibility: hidden;
-}
-
-.#{css-class('cursor-pointer')} {
-  cursor: pointer;
-}
-
-// Screen reader only
-.#{css-class('visually-hidden')} {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-// -----------------------------------------------------
-// WordPress Admin Element Resets
-// -----------------------------------------------------
-// Override WordPress admin default styles for ul, table elements
-// Uses #wpbody-content to match/beat WordPress specificity
-
-#wpbody-content .#{css-class('wrap')} {
-  ul {
-    margin: 0;
+
+  // -----------------------------------------------------
+  // Display Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('d-none')} {
+    display: none !important;
+  }
+
+  .#{css-class('d-inline')} {
+    display: inline !important;
+  }
+
+  .#{css-class('d-inline-block')} {
+    display: inline-block !important;
+  }
+
+  .#{css-class('d-block')} {
+    display: block !important;
+  }
+
+  .#{css-class('d-flex')} {
+    display: flex !important;
+  }
+
+  .#{css-class('d-inline-flex')} {
+    display: inline-flex !important;
+  }
+
+  .#{css-class('d-grid')} {
+    display: grid !important;
+  }
+
+  // -----------------------------------------------------
+  // Responsive Display Utilities
+  // -----------------------------------------------------
+
+  $breakpoints: (
+          sm: 576px,
+          md: 768px,
+          lg: 992px,
+          xl: 1200px,
+          xxl: 1400px
+  );
+
+  $display-values: (
+          none,
+          inline,
+          inline-block,
+          block,
+          flex,
+          inline-flex,
+          grid,
+          table-cell
+  );
+
+  @each $breakpoint, $size in $breakpoints {
+    @media (min-width: $size) {
+
+      @each $display in $display-values {
+        .#{css-class('d-#{$breakpoint}-#{$display}')} {
+          display: $display !important;
+        }
+      }
+
+    }
+  }
+
+  // -----------------------------------------------------
+  // Flex Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('flex-row')} {
+    flex-direction: row;
+  }
+
+  .#{css-class('flex-column')} {
+    flex-direction: column;
+  }
+
+  .#{css-class('flex-wrap')} {
+    flex-wrap: wrap;
+  }
+
+  .#{css-class('flex-nowrap')} {
+    flex-wrap: nowrap;
+  }
+
+  .#{css-class('flex-grow-0')} {
+    flex-grow: 0;
+  }
+
+  .#{css-class('flex-grow-1')} {
+    flex-grow: 1;
+  }
+
+  .#{css-class('justify-content-start')} {
+    justify-content: flex-start;
+  }
+
+  .#{css-class('justify-content-end')} {
+    justify-content: flex-end;
+  }
+
+  .#{css-class('justify-content-center')} {
+    justify-content: center;
+  }
+
+  .#{css-class('justify-content-between')} {
+    justify-content: space-between;
+  }
+
+  .#{css-class('align-items-start')} {
+    align-items: flex-start;
+  }
+
+  .#{css-class('align-items-end')} {
+    align-items: flex-end;
+  }
+
+  .#{css-class('align-items-center')} {
+    align-items: center;
+  }
+
+  .#{css-class('align-items-stretch')} {
+    align-items: stretch;
+  }
+
+  // -----------------------------------------------------
+  // Gap Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('gap-0')} {
+    gap: 0;
+  }
+
+  .#{css-class('gap-1')} {
+    gap: 0.25rem;
+  }
+
+  .#{css-class('gap-2')} {
+    gap: 0.5rem;
+  }
+
+  .#{css-class('gap-3')} {
+    gap: 1rem;
+  }
+
+  .#{css-class('gap-4')} {
+    gap: 1.5rem;
+  }
+
+  .#{css-class('gap-5')} {
+    gap: 2rem;
+  }
+
+  // -----------------------------------------------------
+  // Margin Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('m-0')} {
+    margin: 0 !important;
+  }
+
+  .#{css-class('m-1')} {
+    margin: 0.25rem !important;
+  }
+
+  .#{css-class('m-2')} {
+    margin: 0.5rem !important;
+  }
+
+  .#{css-class('m-3')} {
+    margin: 1rem !important;
+  }
+
+  .#{css-class('m-4')} {
+    margin: 1.5rem !important;
+  }
+
+  .#{css-class('m-5')} {
+    margin: 2rem !important;
+  }
+
+  .#{css-class('m-auto')} {
+    margin: auto !important;
+  }
+
+  .#{css-class('mt-0')} {
+    margin-top: 0 !important;
+  }
+
+  .#{css-class('mt-1')} {
+    margin-top: 0.25rem !important;
+  }
+
+  .#{css-class('mt-2')} {
+    margin-top: 0.5rem !important;
+  }
+
+  .#{css-class('mt-3')} {
+    margin-top: 1rem !important;
+  }
+
+  .#{css-class('mt-4')} {
+    margin-top: 1.5rem !important;
+  }
+
+  .#{css-class('mb-0')} {
+    margin-bottom: 0 !important;
+  }
+
+  .#{css-class('mb-1')} {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .#{css-class('mb-2')} {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .#{css-class('mb-3')} {
+    margin-bottom: 1rem !important;
+  }
+
+  .#{css-class('mb-4')} {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .#{css-class('my-0')} {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .#{css-class('my-3')} {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .#{css-class('ms-auto')} {
+    margin-left: auto !important;
+  }
+
+  .#{css-class('me-auto')} {
+    margin-right: auto !important;
+  }
+
+  // -----------------------------------------------------
+  // Padding Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('p-0')} {
+    padding: 0 !important;
+  }
+
+  .#{css-class('p-1')} {
+    padding: 0.25rem !important;
+  }
+
+  .#{css-class('p-2')} {
+    padding: 0.5rem !important;
+  }
+
+  .#{css-class('p-3')} {
+    padding: 1rem !important;
+  }
+
+  .#{css-class('p-4')} {
+    padding: 1.5rem !important;
+  }
+
+  .#{css-class('p-5')} {
+    padding: 2rem !important;
+  }
+
+  // -----------------------------------------------------
+  // Size Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('w-px-14')} {
+    width: 14px !important;
+  }
+
+  .#{css-class('w-px-18')} {
+    width: 18px !important;
+  }
+
+  .#{css-class('w-px-20')} {
+    width: 20px !important;
+  }
+
+  .#{css-class('w-px-30')} {
+    width: 30px !important;
+  }
+
+  .#{css-class('w-px-40')} {
+    width: 40px !important;
+  }
+
+  .#{css-class('w-px-44')} {
+    width: 44px !important;
+  }
+
+  .#{css-class('w-px-50')} {
+    width: 50px !important;
+  }
+
+  .#{css-class('w-px-52')} {
+    width: 52px !important;
+  }
+
+  .#{css-class('w-px-75')} {
+    width: 75px !important;
+  }
+
+  .#{css-class('w-px-80')} {
+    width: 80px !important;
+  }
+
+  .#{css-class('w-px-100')} {
+    width: 100px !important;
+  }
+
+  .#{css-class('w-px-120')} {
+    width: 120px !important;
+  }
+
+  .#{css-class('w-px-150')} {
+    width: 150px !important;
+  }
+
+  .#{css-class('w-px-160')} {
+    width: 160px !important;
+  }
+
+  .#{css-class('w-px-200')} {
+    width: 200px !important;
+  }
+
+  .#{css-class('w-px-250')} {
+    width: 250px !important;
+  }
+
+  .#{css-class('w-px-300')} {
+    width: 300px !important;
+  }
+
+  .#{css-class('w-px-350')} {
+    width: 350px !important;
+  }
+
+  .#{css-class('w-px-400')} {
+    width: 400px !important;
+  }
+
+  .#{css-class('w-px-500')} {
+    width: 500px !important;
+  }
+
+  .#{css-class('w-px-600')} {
+    width: 600px !important;
+  }
+
+  .#{css-class('w-px-700')} {
+    width: 700px !important;
+  }
+
+  .#{css-class('w-px-800')} {
+    width: 800px !important;
+  }
+
+  .#{css-class('w-auto')} {
+    width: auto !important;
+  }
+
+  .#{css-class('w-20')} {
+    width: 20% !important;
+  }
+
+  .#{css-class('w-25')} {
+    width: 25% !important;
+  }
+
+  .#{css-class('w-50')} {
+    width: 50% !important;
+  }
+
+  .#{css-class('w-60')} {
+    width: 60% !important;
+  }
+
+  .#{css-class('w-75')} {
+    width: 75% !important;
+  }
+
+  .#{css-class('w-100')} {
+    width: 100% !important;
+  }
+
+  .#{css-class('h-100')} {
+    height: 100%;
+  }
+
+  .#{css-class('h-auto')} {
+    height: auto;
+  }
+
+  // -----------------------------------------------------
+  // Position Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('position-relative')} {
+    position: relative;
+  }
+
+  .#{css-class('position-absolute')} {
+    position: absolute;
+  }
+
+  .#{css-class('position-fixed')} {
+    position: fixed;
+  }
+
+  // -----------------------------------------------------
+  // Visibility Utilities
+  // -----------------------------------------------------
+
+  .#{css-class('visible')} {
+    visibility: visible;
+  }
+
+  .#{css-class('invisible')} {
+    visibility: hidden;
+  }
+
+  .#{css-class('cursor-pointer')} {
+    cursor: pointer;
+  }
+
+  .#{css-class('visually-hidden')} {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     padding: 0;
-    list-style: none;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  // Restore list styles for checklists
-  ul.#{css-class('alert-card__checklist')} {
-    padding-left: 1.25rem;
-    list-style: disc;
-  }
-
-  table th,
-  table td {
-    text-align: left;
-    vertical-align: middle;
-  }
 }

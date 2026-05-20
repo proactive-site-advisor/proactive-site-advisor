@@ -12,7 +12,7 @@ $secondary: #808390 !default;
 $success: #28c76f !default;
 $info: #00bad1 !default;
 $warning: #ff9f43 !default;
-$danger: #ff4c51 !default;
+$error: #ff4c51 !default;
 $light: #dfdfe3 !default;
 $dark: #2f3349 !default;
 
@@ -203,7 +203,7 @@ $form-switch-bg: $gray-300 !default;
 // -----------------------------------------------------
 
 $form-feedback-valid-color: $success !default;
-$form-feedback-invalid-color: $danger !default;
+$form-feedback-invalid-color: $error !default;
 
 // -----------------------------------------------------
 // Components - Table
@@ -217,13 +217,6 @@ $table-cell-padding-x: 1rem !default;
 // -----------------------------------------------------
 
 $modal-content-border-radius: $border-radius-lg !default;
-
-// -----------------------------------------------------
-// Components - Alert
-// -----------------------------------------------------
-
-$alert-padding-y: 0.75rem !default;
-$alert-padding-x: 1rem !default;
 
 // -----------------------------------------------------
 // Components - Badge

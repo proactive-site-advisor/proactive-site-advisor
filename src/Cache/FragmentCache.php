@@ -2,26 +2,25 @@
 
 namespace ProactiveSiteAdvisor\Cache;
 
+use Throwable;
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class FragmentCache
+ * Fragment cache for HTML partials.
  *
- * Provides fragment (HTML partial) caching support
- * to improve template rendering performance.
- *
- * Uses CacheManager internally and supports
- * vary-based key generation.
+ * Helps cache template fragments to reduce
+ * repeated rendering overhead.
  *
  * @package ProactiveSiteAdvisor\Cache
- * @since 1.0.0
+ * @version 1.0.0
  */
 class FragmentCache
 {
     /**
-     * Default expiration time in seconds (30 minutes).
+     * Default cache expiration (seconds).
      */
     public const DEFAULT_EXPIRATION = 1800;
 
@@ -33,37 +32,28 @@ class FragmentCache
     private CacheManager $cache;
 
     /**
-     * Currently active fragment key.
+     * Constructor.
      *
-     * @var string|null
-     */
-    private ?string $activeFragment = null;
-
-    /**
-     * Indicates whether output buffering has started.
-     *
-     * @var bool
-     */
-    private bool $bufferStarted = false;
-
-    /**
-     * FragmentCache constructor.
+     * @version 1.0.0
      */
     public function __construct()
     {
-        $this->cache = CacheManager::getInstance();
+        $this->cache = CacheManager::instance();
     }
 
     /**
-     * Render a fragment using a callback.
+     * Render a cached fragment.
      *
-     * @param string $key Fragment key.
-     * @param callable $callback Rendering callback.
-     * @param int|null $expiration Optional expiration.
-     * @param array $vary Context variations.
+     * If cache exists it is returned, otherwise
+     * the callback is executed and stored.
+     *
+     * @param string $key
+     * @param callable $callback
+     * @param int|null $expiration
+     * @param array<string,mixed> $vary
      *
      * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(string $key, callable $callback, ?int $expiration = null, array $vary = []): void
     {
@@ -72,7 +62,7 @@ class FragmentCache
         $cached = $this->cache->get($fullKey, null, CacheGroups::FRAGMENT);
 
         if ($cached !== null) {
-            echo wp_kses_post($cached);
+            echo $cached; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             return;
         }
 
@@ -83,7 +73,7 @@ class FragmentCache
         try {
             $callback();
             $content = (string)ob_get_clean();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ob_end_clean();
             throw $e;
         }
@@ -95,14 +85,14 @@ class FragmentCache
             CacheGroups::FRAGMENT
         );
 
-        echo wp_kses_post($content);
+        echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**
-     * Retrieve a fragment without outputting it.
+     * Get cached fragment without rendering.
      *
-     * @param string $key Fragment key.
-     * @param array $vary Context variations.
+     * @param string $key
+     * @param array<string,mixed> $vary
      *
      * @return string|null
      */
@@ -114,12 +104,12 @@ class FragmentCache
     }
 
     /**
-     * Store a fragment directly.
+     * Store fragment content.
      *
-     * @param string $key Fragment key.
-     * @param string $content HTML content.
-     * @param int|null $expiration Optional expiration.
-     * @param array $vary Context variations.
+     * @param string $key
+     * @param string $content
+     * @param int|null $expiration
+     * @param array<string,mixed> $vary
      *
      * @return bool
      */
@@ -137,10 +127,10 @@ class FragmentCache
     }
 
     /**
-     * Delete a fragment.
+     * Delete cached fragment.
      *
-     * @param string $key Fragment key.
-     * @param array $vary Context variations.
+     * @param string $key
+     * @param array<string,mixed> $vary
      *
      * @return bool
      */
@@ -152,10 +142,10 @@ class FragmentCache
     }
 
     /**
-     * Determine if a fragment exists.
+     * Check if fragment exists.
      *
-     * @param string $key Fragment key.
-     * @param array $vary Context variations.
+     * @param string $key
+     * @param array<string,mixed> $vary
      *
      * @return bool
      */
@@ -167,10 +157,10 @@ class FragmentCache
     }
 
     /**
-     * Build a cache key including variation parameters.
+     * Build fragment cache key with variations.
      *
-     * @param string $key Base key.
-     * @param array $vary Context variations.
+     * @param string $key
+     * @param array<string,mixed> $vary
      *
      * @return string
      */
@@ -186,9 +176,9 @@ class FragmentCache
     }
 
     /**
-     * Vary fragment by current user ID.
+     * Vary by current user ID.
      *
-     * @return array
+     * @return array<string,int>
      */
     public function varyByUser(): array
     {
@@ -196,9 +186,9 @@ class FragmentCache
     }
 
     /**
-     * Vary fragment by user roles.
+     * Vary by user roles.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function varyByRole(): array
     {
@@ -211,9 +201,9 @@ class FragmentCache
     }
 
     /**
-     * Vary fragment by locale.
+     * Vary by locale.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function varyByLocale(): array
     {
@@ -221,9 +211,9 @@ class FragmentCache
     }
 
     /**
-     * Vary fragment by request URL.
+     * Vary by request URL.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function varyByUrl(): array
     {
@@ -237,9 +227,9 @@ class FragmentCache
     }
 
     /**
-     * Vary fragment by device type.
+     * Vary by device type.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function varyByDevice(): array
     {
@@ -253,12 +243,13 @@ class FragmentCache
     /**
      * Combine multiple vary conditions.
      *
-     * @param array ...$conditions Variation arrays.
+     * @param array ...$conditions
      *
      * @return array
      */
     public function combineVary(array ...$conditions): array
     {
-        return array_merge(...$conditions);
+        return $conditions ? array_merge(...$conditions) : [];
     }
 }
+

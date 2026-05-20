@@ -1,0 +1,120 @@
+// =====================================================
+// Admin UI - Notice Component
+// =====================================================
+
+@use "../prefix" as *;
+
+.#{css-class('wrap')} {
+
+  .#{css-class('notice')} {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    border-radius: css-var(border-radius);
+  }
+
+  .#{css-class('notice-icon')} {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .#{css-class('notice-content')} {
+    flex: 1;
+  }
+
+  .#{css-class('notice-title')} {
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+
+  .#{css-class('notice-message')} {
+    font-size: 0.875rem;
+  }
+
+  .#{css-class('notice-close')} {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    padding: 0.25rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    opacity: 0.5;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .#{css-class('notice-dismissible')} {
+    padding-right: 2.5rem;
+  }
+
+  .#{css-class('notice-primary')} {
+    color: #1e40af;
+    background-color: #dbeafe;
+    border-color: #93c5fd;
+
+    .#{css-class('notice-icon')} {
+      color: css-var(primary);
+    }
+  }
+
+  .#{css-class('notice-secondary')} {
+    color: #53555e;
+    background-color: #ebebed;
+    border-color: #cdcfd4;
+
+    .#{css-class('notice-icon')} {
+      color: css-var(secondary);
+    }
+  }
+
+  .#{css-class('notice-success')} {
+    color: #1a824a;
+    background-color: #ddf6e8;
+    border-color: #abe9c7;
+
+    .#{css-class('notice-icon')} {
+      color: css-var(success);
+    }
+  }
+
+  .#{css-class('notice-error')} {
+    color: #a63235;
+    background-color: #ffe2e3;
+    border-color: #ffb9bb;
+
+    .#{css-class('notice-icon')} {
+      color: css-var(error);
+    }
+  }
+
+  .#{css-class('notice-warning')} {
+    color: #a66829;
+    background-color: #fff0e1;
+    border-color: #ffdab6;
+
+    .#{css-class('notice-icon')} {
+      color: css-var(warning);
+    }
+  }
+
+  .#{css-class('notice-info')} {
+    color: #007a88;
+    background-color: #d6f4f8;
+    border-color: #9ce4ed;
+
+    .#{css-class('notice-icon')} {
+      color: css-var(info);
+    }
+  }
+
+}

@@ -210,12 +210,12 @@ class UninstallHandler
      * Recursively delete a directory.
      *
      * @param string $dir Directory path.
-     * @return bool
+     * @return void
      */
-    private static function deleteDirectory(string $dir): bool
+    private static function deleteDirectory(string $dir): void
     {
         if (!is_dir($dir)) {
-            return false;
+            return;
         }
 
         $files = array_diff(scandir($dir), ['.', '..']);
@@ -236,6 +236,6 @@ class UninstallHandler
             WP_Filesystem();
         }
 
-        return $wp_filesystem->rmdir($dir);
+        $wp_filesystem->rmdir($dir);
     }
 }

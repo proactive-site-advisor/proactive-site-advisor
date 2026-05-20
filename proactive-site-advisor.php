@@ -3,7 +3,7 @@
 /**
  * Plugin Name:         Proactive Site Advisor
  * Plugin URI:          https://github.com/proactive-site-advisor/proactive-site-advisor
- * Description:         Provides proactive insights and actionable recommendations for WordPress sites, alerting you to potential issues before they impact your site.
+ * Description:         Automatically monitors your WordPress environment and alerts you about potential issues before they become problems.
  * Version:             1.0.0
  * Author:              Mohammad Yari
  * Author URI:          https://github.com/proactive-site-advisor
@@ -130,7 +130,7 @@ DeactivationHandler::register();
 if (!function_exists('proactiveSiteAdvisor')) {
     function proactiveSiteAdvisor(): ?Core
     {
-        return Core::getInstance();
+        return Core::instance();
     }
 }
 

@@ -2,18 +2,19 @@
 
 namespace ProactiveSiteAdvisor;
 
-use ProactiveSiteAdvisor\Admin\AdminNotices;
-use ProactiveSiteAdvisor\Admin\PromoBanner;
-use ProactiveSiteAdvisor\AdminUI\Theme\ThemeManager;
+use ProactiveSiteAdvisor\Admin\Notices\AdminNotices;
+use ProactiveSiteAdvisor\Admin\Notices\PromoNotice;
+use ProactiveSiteAdvisor\AdminUI\Assets\AssetLoader;
+use ProactiveSiteAdvisor\AdminUI\Theme\ThemeSwitcher;
 use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\CLI\CLIManager;
 use ProactiveSiteAdvisor\Cron\CronManager;
 use ProactiveSiteAdvisor\Database\SchemaManager;
 use ProactiveSiteAdvisor\Menu\MenuManager;
-use ProactiveSiteAdvisor\Utils\Logger;
-use ProactiveSiteAdvisor\Services\Admin\Alerts\AlertsManager;
-use ProactiveSiteAdvisor\AdminUI\Assets\AdminUIAssets;
+use ProactiveSiteAdvisor\Services\Admin\Dashboard\DashboardManager;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficManager;
+use ProactiveSiteAdvisor\Services\Insights\InsightsManager;
+use ProactiveSiteAdvisor\Utils\Logger;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -46,6 +47,7 @@ final class Core
         CacheManager::class,
         CronManager::class,
         CLIManager::class,
+        InsightsManager::class,
     ];
 
     /**
@@ -55,7 +57,11 @@ final class Core
      */
     private array $adminServices = [
         MenuManager::class,
-        AlertsManager::class,
+        AdminNotices::class,
+        PromoNotice::class,
+        AssetLoader::class,
+        ThemeSwitcher::class,
+        DashboardManager::class,
     ];
 
     /**
@@ -72,7 +78,7 @@ final class Core
      *
      * @return Core
      */
-    public static function getInstance(): self
+    public static function instance(): self
     {
         if (is_null(self::$instance)) {
             self::$instance = new self();
@@ -131,19 +137,11 @@ final class Core
         // Initialize logger
         Logger::init();
 
-        // Register admin notices
-        AdminNotices::register();
-
-        // Register promo banner
-        PromoBanner::register();
-
         // Boot core services (always loaded)
         $this->bootServices($this->getCoreServices());
 
         // Boot context-specific services
         if (is_admin()) {
-            AdminUIAssets::getInstance()->register();
-            ThemeManager::getInstance()->register();
             $this->bootServices($this->getAdminServices());
         } else {
             $this->bootServices($this->getFrontendServices());
@@ -171,8 +169,8 @@ final class Core
             }
 
             // Handle singleton services
-            if (method_exists($serviceClass, 'getInstance')) {
-                $service = $serviceClass::getInstance();
+            if (method_exists($serviceClass, 'instance')) {
+                $service = $serviceClass::instance();
             } else {
                 $service = new $serviceClass();
             }

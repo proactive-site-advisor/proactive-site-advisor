@@ -49,7 +49,7 @@ abstract class AbstractSeeder
     /**
      * Set the seeding pattern.
      *
-     * @param string $pattern Pattern name ('realistic' or 'alerts').
+     * @param string $pattern
      * @return self
      */
     public function setPattern(string $pattern): self

@@ -7,20 +7,21 @@ use ProactiveSiteAdvisor\Components\AjaxComponent;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
 use ProactiveSiteAdvisor\Config\UserOptions;
 use ProactiveSiteAdvisor\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Utils\PluginUtils;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class ThemeManager
+ * Class ThemeSwitcher
  *
  * Manages the admin UI theme (light / dark) on a per-user basis.
  * Handles theme persistence, AJAX-based switching, and UI helpers.
  *
  * @package ProactiveSiteAdvisor\AdminUI\Theme
  */
-class ThemeManager extends AbstractSingleton
+class ThemeSwitcher extends AbstractSingleton
 {
     /**
      * Light admin theme identifier.
@@ -135,10 +136,7 @@ class ThemeManager extends AbstractSingleton
                 __('Theme switched successfully.', 'proactive-site-advisor')
             );
         } else {
-            AjaxComponent::sendError(
-                __('Invalid theme.', 'proactive-site-advisor'),
-                400
-            );
+            AjaxComponent::sendError(__('Invalid theme.', 'proactive-site-advisor'));
         }
     }
 
@@ -151,8 +149,11 @@ class ThemeManager extends AbstractSingleton
      */
     public function addThemeBodyClass(string $classes): string
     {
+        if (!PluginUtils::isPluginScreen()) {
+            return $classes;
+        }
 
-        return $classes . PrefixConfig::css('theme-' . $this->getCurrentTheme());
+        return $classes . ' ' . PrefixConfig::css('ui') . ' ' . PrefixConfig::css('theme-' . $this->getCurrentTheme());
     }
 
     /**
@@ -162,7 +163,7 @@ class ThemeManager extends AbstractSingleton
      */
     public static function theme(): string
     {
-        return self::getInstance()->getCurrentTheme();
+        return self::instance()->getCurrentTheme();
     }
 
     /**
@@ -172,6 +173,6 @@ class ThemeManager extends AbstractSingleton
      */
     public static function isDark(): bool
     {
-        return self::getInstance()->isDarkMode();
+        return self::instance()->isDarkMode();
     }
 }

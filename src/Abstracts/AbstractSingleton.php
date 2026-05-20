@@ -61,14 +61,4 @@ abstract class AbstractSingleton
 
         return self::$instances[$class];
     }
-
-    /**
-     * Alias for instance() method.
-     *
-     * @return static The singleton instance.
-     */
-    public static function getInstance(): self
-    {
-        return static::instance();
-    }
 }

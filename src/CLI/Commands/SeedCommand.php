@@ -69,7 +69,7 @@ class SeedCommand
         WP_CLI::log('===========================');
         WP_CLI::log('');
 
-        $manager = SeederManager::getInstance();
+        $manager = SeederManager::instance();
 
         // Show configuration
         WP_CLI::log("Pattern: {$options['pattern']}");

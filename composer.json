@@ -1,8 +1,8 @@
 {
-  "name": "starter/proactive-site-advisor",
-  "description": "A starter plugin template for WordPress development.",
-  "type": "project",
-  "license": "GPL-3.0-or-later",
+  "name": "mohammadyari/proactive-site-advisor",
+  "description": "A WordPress plugin that provides proactive insights and actionable recommendations to detect potential issues before they impact the site.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
       "name": "Mohammad Yari",

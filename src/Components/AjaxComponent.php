@@ -3,6 +3,7 @@
 namespace ProactiveSiteAdvisor\Components;
 
 use ProactiveSiteAdvisor\Config\PrefixConfig;
+use ProactiveSiteAdvisor\Utils\Security;
 use Throwable;
 
 if (!defined('ABSPATH')) {
@@ -35,7 +36,7 @@ class AjaxComponent
      */
     public static function register(string $action, callable $callback, bool $public = true, bool $verifyNonce = true, string $nonceAction = 'nonce', string $nonceField = 'security', string $capability = 'manage_options'): void
     {
-        $wrapped = function () use ($callback, $verifyNonce, $nonceAction, $nonceField, $capability) {
+        $wrapped = static function () use ($callback, $verifyNonce, $nonceAction, $nonceField, $capability) {
             try {
                 if ($verifyNonce) {
                     self::verifyNonce($nonceAction, $nonceField);
@@ -85,8 +86,12 @@ class AjaxComponent
     public static function verifyNonce(string $nonceAction = 'nonce', string $nonceField = 'security'): void
     {
         $nonceAction = self::getNonceAction($nonceAction);
-        if (!check_ajax_referer($nonceAction, $nonceField, false)) {
-            self::sendError(esc_html__('Invalid security token.', 'proactive-site-advisor'), 403);
+
+        if (!Security::verifyAjaxNonce($nonceAction, $nonceField)) {
+            self::sendError(
+                esc_html__('Invalid security token.', 'proactive-site-advisor'),
+                403
+            );
         }
     }
 
@@ -104,8 +109,11 @@ class AjaxComponent
      */
     public static function checkCapability(string $capability = 'manage_options'): void
     {
-        if (!current_user_can($capability)) {
-            self::sendError(esc_html__('Unauthorized.', 'proactive-site-advisor'), 403);
+        if (!Security::hasCapability($capability)) {
+            self::sendError(
+                esc_html__('Unauthorized.', 'proactive-site-advisor'),
+                403
+            );
         }
     }
 

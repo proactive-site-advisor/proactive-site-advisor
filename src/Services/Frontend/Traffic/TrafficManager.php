@@ -2,8 +2,6 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -16,16 +14,36 @@ if (!defined('ABSPATH')) {
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
-class TrafficManager extends AbstractSingleton
+class TrafficManager
 {
     /**
-     * Register all traffic tracking services.
+     * Register all traffic-related hooks.
      *
      * @return void
      */
     public function register(): void
     {
-        TrafficCollector::getInstance()->register();
-        NotFoundTracker::getInstance()->register();
+        add_action('wp', [$this, 'maybeCountPageview'], 20);
+        add_action('template_redirect', [$this, 'maybeTrack404'], 1);
+    }
+
+    /**
+     * Proxy pageview counting.
+     *
+     * @return void
+     */
+    public function maybeCountPageview(): void
+    {
+        (new TrafficCollector())->maybeCountPageview();
+    }
+
+    /**
+     * Proxy 404 tracking.
+     *
+     * @return void
+     */
+    public function maybeTrack404(): void
+    {
+        (new NotFoundTracker())->maybeTrack404();
     }
 }

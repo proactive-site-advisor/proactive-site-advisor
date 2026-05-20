@@ -11,47 +11,28 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Central cache manager for the plugin.
- *
- * Provides a unified abstraction layer over:
- * - WordPress Object Cache (if available)
- * - WordPress Transients (fallback)
- * - In-memory runtime cache (per request)
- *
- * Features:
- * - Versioned cache keys
- * - Multisite-safe key generation
- * - Group-based separation
- * - Automatic fallback strategy
+ * Handles plugin caching using:
+ * - Local runtime cache
+ * - WordPress object cache
+ * - WordPress transients (fallback)
  *
  * @package ProactiveSiteAdvisor\Cache
  * @version 1.0.0
  */
 class CacheManager extends AbstractSingleton
 {
-    /**
-     * Cache version for global invalidation.
-     */
     private const VERSION = 'v1';
 
-    /**
-     * Default cache group.
-     */
+    /** @var string Current cache group */
     private string $group;
 
-    /**
-     * Default expiration time in seconds.
-     */
+    /** @var int Default cache expiration in seconds */
     private int $defaultExpiration = HOUR_IN_SECONDS;
 
-    /**
-     * Whether external object cache is available.
-     */
+    /** @var bool Whether persistent object cache is available */
     private bool $objectCacheAvailable;
 
-    /**
-     * Runtime statistics.
-     */
+    /** @var array Cache statistics */
     private array $stats = [
         'hits'   => 0,
         'misses' => 0,
@@ -59,10 +40,15 @@ class CacheManager extends AbstractSingleton
     ];
 
     /**
-     * Per-request in-memory cache.
+     * Runtime in‑memory cache separated by group.
+     *
+     * @var array
      */
     private array $localCache = [];
 
+    /**
+     * Constructor.
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -72,7 +58,7 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Register automatic flush hooks.
+     * Register WordPress hooks.
      */
     public function register(): void
     {
@@ -82,6 +68,9 @@ class CacheManager extends AbstractSingleton
 
     /**
      * Set active cache group.
+     *
+     * @param string $group
+     * @return self
      */
     public function setGroup(string $group): self
     {
@@ -89,40 +78,38 @@ class CacheManager extends AbstractSingleton
         return $this;
     }
 
-    /* =====================================================
-       Core Storage Methods
-    ===================================================== */
-
     /**
-     * Retrieve a cached value.
+     * Get cached value.
+     *
+     * @param string $key
+     * @param mixed|null $default
+     * @param string|null $group
+     * @return mixed
      */
     public function get(string $key, $default = null, ?string $group = null)
     {
         $group      = $group ?? $this->group;
-        $storageKey = $this->buildKey($key);
+        $storageKey = $this->buildKey($key, $group);
 
-        // Runtime cache
-        if (isset($this->localCache[$storageKey])) {
+        if (isset($this->localCache[$group][$storageKey])) {
             $this->stats['hits']++;
-            return $this->localCache[$storageKey];
+            return $this->localCache[$group][$storageKey];
         }
 
-        // Object cache
         if ($this->objectCacheAvailable) {
             $cachedValue = wp_cache_get($storageKey, $group, false, $found);
 
             if ($found) {
                 $this->stats['hits']++;
-                return $this->localCache[$storageKey] = $cachedValue;
+                return $this->localCache[$group][$storageKey] = $cachedValue;
             }
         }
 
-        // Transient fallback
         $transientValue = get_transient($storageKey);
 
         if ($transientValue !== false) {
             $this->stats['hits']++;
-            return $this->localCache[$storageKey] = $transientValue;
+            return $this->localCache[$group][$storageKey] = $transientValue;
         }
 
         $this->stats['misses']++;
@@ -131,15 +118,21 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Store a value in cache.
+     * Store value in cache.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param int|null $expiration
+     * @param string|null $group
+     * @return bool
      */
     public function set(string $key, $value, ?int $expiration = null, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
         $expiration = $expiration ?? $this->defaultExpiration;
-        $storageKey = $this->buildKey($key);
+        $storageKey = $this->buildKey($key, $group);
 
-        $this->localCache[$storageKey] = $value;
+        $this->localCache[$group][$storageKey] = $value;
 
         if ($this->objectCacheAvailable) {
             wp_cache_set($storageKey, $value, $group, $expiration);
@@ -155,14 +148,18 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Delete a cached value.
+     * Delete cached value.
+     *
+     * @param string $key
+     * @param string|null $group
+     * @return bool
      */
     public function delete(string $key, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
-        $storageKey = $this->buildKey($key);
+        $storageKey = $this->buildKey($key, $group);
 
-        unset($this->localCache[$storageKey]);
+        unset($this->localCache[$group][$storageKey]);
 
         if ($this->objectCacheAvailable) {
             wp_cache_delete($storageKey, $group);
@@ -172,14 +169,18 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Check if a cache key exists.
+     * Check if cache key exists.
+     *
+     * @param string $key
+     * @param string|null $group
+     * @return bool
      */
     public function has(string $key, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
-        $storageKey = $this->buildKey($key);
+        $storageKey = $this->buildKey($key, $group);
 
-        if (isset($this->localCache[$storageKey])) {
+        if (isset($this->localCache[$group][$storageKey])) {
             return true;
         }
 
@@ -194,20 +195,31 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Increment a cached numeric value.
+     * Cache helper similar to Laravel remember().
      *
-     * If the key does not exist, it will be initialized with 0
-     * before applying the increment.
-     *
-     * Note: This method resets the expiration time if provided.
-     * If no expiration is given, the default cache expiration is used.
-     *
-     * @param string $key Cache key.
-     * @param int $amount Amount to increment (default: 1).
-     * @param int|null $expiration Optional expiration time in seconds.
-     * @param string|null $group Optional cache group.
-     *
-     * @return int The updated numeric value.
+     * @param string $key
+     * @param callable $callback
+     * @param int|null $expiration
+     * @param string|null $group
+     * @return mixed
+     */
+    public function remember(string $key, callable $callback, ?int $expiration = null, ?string $group = null)
+    {
+        $value = $this->get($key, null, $group);
+
+        if ($value !== null) {
+            return $value;
+        }
+
+        $value = $callback();
+
+        $this->set($key, $value, $expiration, $group);
+
+        return $value;
+    }
+
+    /**
+     * Increment numeric cache value.
      */
     public function increment(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
@@ -225,33 +237,20 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Decrement a cached numeric value.
-     *
-     * This is a wrapper around increment() using a negative amount.
-     *
-     * @param string $key Cache key.
-     * @param int $amount Amount to decrement (default: 1).
-     * @param int|null $expiration Optional expiration time in seconds.
-     * @param string|null $group Optional cache group.
-     *
-     * @return int The updated numeric value.
+     * Decrement numeric cache value.
      */
     public function decrement(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
         return $this->increment($key, -$amount, $expiration, $group);
     }
 
-    /* =====================================================
-       Helpers
-    ===================================================== */
-
     /**
-     * Build a fully qualified cache key.
+     * Build internal cache key.
      *
-     * Structure:
-     * prefix:version:blog_id:key
+     * Format:
+     * prefix:version:blog_id:group:key
      */
-    private function buildKey(string $key): string
+    private function buildKey(string $key, string $group): string
     {
         $blogId = is_multisite() ? get_current_blog_id() : 1;
 
@@ -261,11 +260,13 @@ class CacheManager extends AbstractSingleton
             . ':'
             . $blogId
             . ':'
+            . $group
+            . ':'
             . $key;
     }
 
     /**
-     * Generate a stable hashed cache key segment.
+     * Generate deterministic cache key from arguments.
      */
     public static function makeKey(string $prefix, ...$args): string
     {
@@ -279,7 +280,7 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Flush all plugin-related cache entries.
+     * Flush all plugin cache.
      */
     public function flush(): bool
     {
@@ -293,7 +294,7 @@ class CacheManager extends AbstractSingleton
 
         $like = PrefixConfig::PREFIX . ':%';
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- intentional safe query for plugin prefix
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options}
@@ -312,13 +313,60 @@ class CacheManager extends AbstractSingleton
     }
 
     /**
-     * Return runtime cache statistics.
+     * Flush cache for a specific group.
+     *
+     * @param string $group
+     * @return bool
+     */
+    public function flushGroup(string $group): bool
+    {
+        global $wpdb;
+
+        unset($this->localCache[$group]);
+
+        if ($this->objectCacheAvailable && function_exists('wp_cache_flush_group')) {
+            wp_cache_flush_group($group);
+        }
+
+        $blogId = is_multisite() ? get_current_blog_id() : 1;
+
+        $like = PrefixConfig::PREFIX
+            . ':'
+            . self::VERSION
+            . ':'
+            . $blogId
+            . ':'
+            . $group
+            . ':%';
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->options}
+                 WHERE option_name LIKE %s
+                 OR option_name LIKE %s",
+                '_transient_' . $like,
+                '_transient_timeout_' . $like
+            )
+        );
+
+        Logger::info("Cache group flushed: {$group}");
+
+        do_action('proactive_site_advisor_cache_group_flushed', $group);
+
+        return true;
+    }
+
+    /**
+     * Get cache statistics.
+     *
+     * @return array
      */
     public function getStats(): array
     {
         return array_merge($this->stats, [
             'object_cache' => $this->objectCacheAvailable,
-            'local_items'  => count($this->localCache),
+            'local_items'  => array_sum(array_map('count', $this->localCache)),
         ]);
     }
 }

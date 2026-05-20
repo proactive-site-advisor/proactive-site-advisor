@@ -2,7 +2,6 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 use ProactiveSiteAdvisor\Cache\CacheKeys;
 use ProactiveSiteAdvisor\Cache\CacheManager;
 
@@ -20,24 +19,13 @@ if (!defined('ABSPATH')) {
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
-class TrafficCollector extends AbstractSingleton
+class TrafficCollector
 {
     /**
      * Transient TTL in seconds (10 days).
      * Long TTL ensures transient survives until daily cron processes it.
      */
     private const TRANSIENT_TTL = DAY_IN_SECONDS * 10;
-
-    /**
-     * Register WordPress hooks.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        // Run late enough so WP query is ready, but before output
-        add_action('wp', [$this, 'maybeCountPageview'], 20);
-    }
 
     /**
      * Increment pageview count if this is a valid frontend request.
@@ -51,6 +39,6 @@ class TrafficCollector extends AbstractSingleton
         }
 
         $key = CacheKeys::pageviewsToday();
-        CacheManager::getInstance()->increment($key, 1, self::TRANSIENT_TTL);
+        CacheManager::instance()->increment($key, 1, self::TRANSIENT_TTL);
     }
 }

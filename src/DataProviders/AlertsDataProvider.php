@@ -3,17 +3,16 @@
 namespace ProactiveSiteAdvisor\DataProviders;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractDataProvider;
-use ProactiveSiteAdvisor\Config\PrefixConfig;
 use ProactiveSiteAdvisor\Models\Alert;
-use ProactiveSiteAdvisor\Utils\OptionUtils;
-use ProactiveSiteAdvisor\Config\UserOptions;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class AlertsDataProvider
+ * AlertsDataProvider
+ *
+ * Provides query helpers for retrieving alert data from the database.
  *
  * @package ProactiveSiteAdvisor\DataProviders
  * @version 1.0.0
@@ -21,24 +20,26 @@ if (!defined('ABSPATH')) {
 class AlertsDataProvider extends AbstractDataProvider
 {
     /**
-     * Get the latest alerts with enriched data.
+     * Retrieve the latest alert rows from the database.
      *
-     * @param int $limit Number of alerts to retrieve (1-20).
-     * @param int $days
+     * @param int $limit Maximum number of rows to return.
+     * @param int $days Number of days to look back.
+     *
      * @return array<int, array<string, mixed>>
      */
-    public function getLatest(int $limit = 7, int $days = 7): array
+    public function getLatestAlerts(int $limit = 7, int $days = 7): array
     {
         global $wpdb;
 
         $limit = max(1, min(20, $limit));
+
         $table = Alert::getTableName();
         $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT alert_date, type, severity, title, message, meta_json, created_at
+                "SELECT id, alert_date, type, severity, title, meta_json, created_at
                  FROM {$table}
                  WHERE alert_date >= %s
                  ORDER BY alert_date DESC, id DESC
@@ -54,114 +55,58 @@ class AlertsDataProvider extends AbstractDataProvider
             return [];
         }
 
-        return array_map([$this, 'enrichAlert'], $rows);
+        return $rows;
     }
 
     /**
-     * Get the priority-based count of alerts for the menu badge.
-     *
-     * Priority order:
-     * 1. Critical alerts count
-     * 2. Warning alerts count
-     * 3. Info alerts count
+     * Get the count of alerts grouped by severity for the last N days.
      *
      * @param int $days Number of days to look back.
-     * @return array{count: int, severity: string} The count and severity based on priority.
+     * @param int $lastSeenId Only count alerts with ID greater than this value.
+     *
+     * @return array{critical: int, warning: int, info: int}
      */
-    public function getPriorityCount(int $days = 7): array
+    public function getSeverityCounts(int $days = 7, int $lastSeenId = 0): array
     {
         global $wpdb;
 
         $table = Alert::getTableName();
         $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
 
-        $lastSeenId = $this->getLastSeenAlertId();
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT severity, COUNT(*) as count
-                 FROM {$table}
-                 WHERE alert_date >= %s
-                 AND id > %d
-                 GROUP BY severity",
-                $start,
-                $lastSeenId
-            ),
-            ARRAY_A
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $sql = $wpdb->prepare(
+            "
+            SELECT
+                SUM(CASE WHEN severity = 'critical' THEN 1 ELSE 0 END) AS critical,
+                SUM(CASE WHEN severity = 'warning' THEN 1 ELSE 0 END) AS warning,
+                SUM(CASE WHEN severity = 'info' THEN 1 ELSE 0 END) AS info
+            FROM {$table}
+            WHERE alert_date >= %s
+            AND id > %d
+            ",
+            $start,
+            $lastSeenId
         );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-        $counts = [
-            'critical' => 0,
-            'warning'  => 0,
-            'info'     => 0,
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $row = $wpdb->get_row($sql, ARRAY_A) ?? [];
+
+        return [
+            'critical' => (int)($row['critical'] ?? 0),
+            'warning'  => (int)($row['warning'] ?? 0),
+            'info'     => (int)($row['info'] ?? 0),
         ];
-
-        if (is_array($rows)) {
-            foreach ($rows as $row) {
-                $severity = strtolower((string)($row['severity'] ?? ''));
-                if (isset($counts[$severity])) {
-                    $counts[$severity] = (int)$row['count'];
-                }
-            }
-        }
-
-        if ($counts['critical'] > 0) {
-            return ['count' => $counts['critical'], 'severity' => 'critical'];
-        }
-
-        if ($counts['warning'] > 0) {
-            return ['count' => $counts['warning'], 'severity' => 'warning'];
-        }
-
-        return ['count' => $counts['info'], 'severity' => 'info'];
     }
 
     /**
-     * Get the ID of the most recent alert.
-     *
-     * @return int
-     */
-    public function getLatestAlertId(): int
-    {
-        global $wpdb;
-        $table = Alert::getTableName();
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        return (int)$wpdb->get_var("SELECT MAX(id) FROM {$table}");
-    }
-
-    /**
-     * Get the ID of the alert last acknowledged by the current user.
-     *
-     * @return int
-     */
-    public function getLastSeenAlertId(): int
-    {
-        return (int)OptionUtils::getUserOption(UserOptions::LAST_SEEN_ALERT_ID, 0);
-    }
-
-    /**
-     * Update the last seen alert ID for the current user.
-     *
-     * @return void
-     */
-    public function updateLastSeenAlertId(): void
-    {
-        $latestId = $this->getLatestAlertId();
-        if ($latestId > 0) {
-            OptionUtils::setUserOption(UserOptions::LAST_SEEN_ALERT_ID, $latestId);
-        }
-    }
-
-    /**
-     * Get digest statistics for the last N days.
+     * Retrieve digest source rows for the last N days.
      *
      * @param int $days Number of days to look back.
-     * @return array{traffic_alerts: int, error_alerts: int, critical_alerts: int, total_alerts: int}
+     *
+     * @return array<int, array{type: string, severity: string}>
      */
-    public function getDigest(int $days = 7): array
+    public function getDigestRows(int $days = 7): array
     {
         global $wpdb;
 
@@ -171,126 +116,30 @@ class AlertsDataProvider extends AbstractDataProvider
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT type, severity FROM {$table} WHERE alert_date >= %s",
+                "SELECT type, severity
+                 FROM {$table}
+                 WHERE alert_date >= %s",
                 $start
             ),
             ARRAY_A
         );
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        $traffic  = 0;
-        $error    = 0;
-        $critical = 0;
-
-        if (is_array($rows)) {
-            foreach ($rows as $row) {
-                $type     = isset($row['type']) ? (string)$row['type'] : '';
-                $severity = isset($row['severity']) ? strtolower((string)$row['severity']) : '';
-
-                if ($severity === 'critical') {
-                    $critical++;
-                } elseif ($type === 'traffic_drop' || $type === 'traffic_spike') {
-                    $traffic++;
-                } elseif ($type === 'error_404_spike') {
-                    $error++;
-                }
-            }
+        if (!is_array($rows)) {
+            return [];
         }
 
-        return [
-            'traffic_alerts'  => $traffic,
-            'error_alerts'    => $error,
-            'critical_alerts' => $critical,
-            'total_alerts'    => is_array($rows) ? count($rows) : 0,
-        ];
+        return $rows;
     }
 
     /**
-     * Enrich alert data with computed fields.
-     *
-     * @param array<string, mixed> $alert Raw alert data.
-     * @return array<string, mixed> Enriched alert data.
-     */
-    private function enrichAlert(array $alert): array
-    {
-        $type     = isset($alert['type']) ? (string)$alert['type'] : '';
-        $severity = isset($alert['severity']) ? strtolower((string)$alert['severity']) : 'info';
-
-        $alert['icon_class']     = $this->getIconClass($type);
-        $alert['severity_class'] = $this->getSeverityClass($severity);
-        $alert['type_label']     = $this->getTypeLabel($type);
-
-        return $alert;
-    }
-
-    /**
-     * Get CSS class for alert type icon.
-     *
-     * @param string $type Alert type.
-     * @return string CSS class.
-     */
-    private function getIconClass(string $type): string
-    {
-        switch ($type) {
-            case 'traffic_drop':
-                return PrefixConfig::css('icon--traffic-drop');
-            case 'traffic_spike':
-                return PrefixConfig::css('icon--traffic-spike');
-            case 'error_404_spike':
-                return PrefixConfig::css('icon--error-404');
-            default:
-                return PrefixConfig::css('icon--alert');
-        }
-    }
-
-    /**
-     * Get CSS class for severity badge.
-     *
-     * @param string $severity Alert severity.
-     * @return string CSS class.
-     */
-    private function getSeverityClass(string $severity): string
-    {
-        switch ($severity) {
-            case 'warning':
-                return PrefixConfig::css('badge--warning');
-            case 'critical':
-                return PrefixConfig::css('badge--danger');
-            default:
-                return PrefixConfig::css('badge--info');
-        }
-    }
-
-    /**
-     * Get human-readable label for alert type.
-     *
-     * @param string $type Alert type.
-     * @return string Translated label.
-     */
-    private function getTypeLabel(string $type): string
-    {
-        switch ($type) {
-            case 'traffic_drop':
-                return __('Traffic Drop', 'proactive-site-advisor');
-            case 'traffic_spike':
-                return __('Traffic Spike', 'proactive-site-advisor');
-            case 'error_404_spike':
-                return __('404 Spike', 'proactive-site-advisor');
-            default:
-                return __('Alert', 'proactive-site-advisor');
-        }
-    }
-
-    /**
-     * Get aggregated top 404 URLs from recent alerts.
-     *
-     * Extracts and aggregates the 'top' array from error_404_spike alert meta_json.
+     * Retrieve meta_json rows for 404 spike alerts in the last N days.
      *
      * @param int $days Number of days to look back.
-     * @param int $limit Number of top URLs to return.
-     * @return array<int, array{url: string, count: int}>
+     *
+     * @return array<int, array{meta_json: string}>
      */
-    public function getTop404Urls(int $days = 7, int $limit = 3): array
+    public function get404SpikeRows(int $days = 7): array
     {
         global $wpdb;
 
@@ -300,7 +149,8 @@ class AlertsDataProvider extends AbstractDataProvider
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT meta_json FROM {$table}
+                "SELECT meta_json
+                 FROM {$table}
                  WHERE type = 'error_404_spike'
                  AND alert_date >= %s
                  AND meta_json IS NOT NULL",
@@ -314,29 +164,21 @@ class AlertsDataProvider extends AbstractDataProvider
             return [];
         }
 
-        // Aggregate counts across alerts
-        $aggregated = [];
-        foreach ($rows as $row) {
-            $meta = json_decode($row['meta_json'], true);
-            if (is_array($meta) && isset($meta['top']) && is_array($meta['top'])) {
-                foreach ($meta['top'] as $item) {
-                    if (is_array($item) && isset($item[0], $item[1])) {
-                        $path              = (string)$item[0];
-                        $count             = (int)$item[1];
-                        $aggregated[$path] = ($aggregated[$path] ?? 0) + $count;
-                    }
-                }
-            }
-        }
+        return $rows;
+    }
 
-        arsort($aggregated);
-        $top = array_slice($aggregated, 0, $limit, true);
+    /**
+     * Get the ID of the most recently created alert.
+     *
+     * @return int
+     */
+    public function getLatestAlertId(): int
+    {
+        global $wpdb;
 
-        $result = [];
-        foreach ($top as $url => $count) {
-            $result[] = ['url' => $url, 'count' => $count];
-        }
+        $table = Alert::getTableName();
 
-        return $result;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        return (int)$wpdb->get_var("SELECT MAX(id) FROM {$table}");
     }
 }

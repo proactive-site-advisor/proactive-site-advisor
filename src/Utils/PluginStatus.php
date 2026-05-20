@@ -2,10 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Utils;
 
-use ProactiveSiteAdvisor\Models\DailyStats;
 use ProactiveSiteAdvisor\Config\PluginMeta;
-use ProactiveSiteAdvisor\Utils\DateTimeUtils;
-use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -31,11 +28,6 @@ class PluginStatus
     public const STATUS_ISSUE   = 'issue';
 
     /**
-     * Option key for last daily run timestamp.
-     */
-    public const OPTION_LAST_DAILY_RUN = 'proactive_site_advisor_last_daily_run';
-
-    /**
      * Baseline period in days.
      */
     public const BASELINE_DAYS = 7;
@@ -54,9 +46,11 @@ class PluginStatus
      * 3. Limited (< 7 days of data)
      * 4. Normal
      *
+     * @param int $days
+     *
      * @return string One of the STATUS_* constants.
      */
-    public static function getStatus(): string
+    public static function getStatus(int $days): string
     {
         // Check fresh install first
         if (self::isFreshInstall()) {
@@ -73,7 +67,7 @@ class PluginStatus
         }
 
         // Check for limited data
-        if (!self::isBaselineComplete()) {
+        if (!self::isBaselineComplete($days)) {
             return self::STATUS_LIMITED;
         }
 
@@ -90,14 +84,17 @@ class PluginStatus
         return self::getLastRunTimestamp() === null;
     }
 
+
     /**
      * Check if baseline period is complete (7+ days of data).
      *
+     * @param int $days
+     *
      * @return bool
      */
-    public static function isBaselineComplete(): bool
+    public static function isBaselineComplete(int $days): bool
     {
-        return self::getDaysWithData() >= self::BASELINE_DAYS;
+        return $days >= self::BASELINE_DAYS;
     }
 
     /**
@@ -108,31 +105,13 @@ class PluginStatus
     public static function getLastRunTimestamp(): ?int
     {
 
-        $timestamp = OptionUtils::getMeta(PluginMeta::LAST_DAILY_RUN, null);
+        $timestamp = OptionUtils::getMeta(PluginMeta::LAST_DAILY_RUN);
 
         if ($timestamp === null || $timestamp === false || $timestamp === '') {
             return null;
         }
 
         return (int)$timestamp;
-    }
-
-    /**
-     * Get number of days with collected data.
-     *
-     * @return int
-     */
-    public static function getDaysWithData(): int
-    {
-        global $wpdb;
-
-        $table = DailyStats::getTableName();
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $count = $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-
-        return (int)$count;
     }
 
     /**

@@ -4,120 +4,124 @@
 
 @use "../prefix" as *;
 
-.#{css-class('card')} {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: css-var(card-bg);
-  background-clip: border-box;
-  border: css-var(border-width) solid css-var(border-color);
-  border-radius: css-var(border-radius-lg);
-  box-shadow: css-var(box-shadow-sm);
+.#{css-class('wrap')} {
 
-  > hr {
-    margin-right: 0;
-    margin-left: 0;
+  .#{css-class('card')} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: css-var(card-bg);
+    background-clip: border-box;
+    border: css-var(border-width) solid css-var(border-color);
+    border-radius: css-var(border-radius-lg);
+    box-shadow: css-var(box-shadow-sm);
+
+    > hr {
+      margin-right: 0;
+      margin-left: 0;
+    }
   }
-}
-
-.#{css-class('card-header')} {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 1.5rem 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  border-bottom: 0;
-
-  &:first-child {
-    border-radius: calc(css-var(border-radius-lg) - 1px) calc(css-var(border-radius-lg) - 1px) 0 0;
-  }
-}
-
-.#{css-class('card-header-content')} {
-  flex: 1;
-}
-
-.#{css-class('card-title')} {
-  margin-bottom: 0;
-  font-size: 1.125rem;
-  font-weight: 500;
-  color: css-var(heading-color);
-}
-
-.#{css-class('card-subtitle')} {
-  margin-top: 0.25rem;
-  margin-bottom: 0;
-  font-size: 0.8125rem;
-  color: css-var(muted-color);
-}
-
-.#{css-class('card-actions')} {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.#{css-class('card-body')} {
-  flex: 1 1 auto;
-  padding: 1.5rem;
-  color: css-var(body-color);
-}
-
-.#{css-class('card-footer')} {
-  padding: 1rem 1.5rem;
-  background-color: transparent;
-  border-top: css-var(border-width) solid css-var(border-color);
-
-  &:last-child {
-    border-radius: 0 0 calc(css-var(border-radius-lg) - 1px) calc(css-var(border-radius-lg) - 1px);
-  }
-}
-
-// Card variants
-.#{css-class('card-primary')} {
-  border-color: css-var(primary);
 
   .#{css-class('card-header')} {
-    background-color: css-var(primary);
-    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1.5rem 0;
+    margin-bottom: 0;
+    background-color: transparent;
+    border-bottom: 0;
+
+    &:first-child {
+      border-radius: calc(css-var(border-radius-lg) - 1px) calc(css-var(border-radius-lg) - 1px) 0 0;
+    }
   }
-}
 
-.#{css-class('card-success')} {
-  border-color: css-var(success);
-
-  .#{css-class('card-header')} {
-    background-color: css-var(success);
-    color: #fff;
+  .#{css-class('card-header-content')} {
+    flex: 1;
   }
-}
 
-.#{css-class('card-danger')} {
-  border-color: css-var(danger);
-
-  .#{css-class('card-header')} {
-    background-color: css-var(danger);
-    color: #fff;
+  .#{css-class('card-title')} {
+    margin-bottom: 0;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: css-var(heading-color);
   }
-}
 
-.#{css-class('card-warning')} {
-  border-color: css-var(warning);
-
-  .#{css-class('card-header')} {
-    background-color: css-var(warning);
-    color: #fff;
+  .#{css-class('card-subtitle')} {
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+    font-size: 0.8125rem;
+    color: css-var(muted-color);
   }
-}
 
-.#{css-class('card-info')} {
-  border-color: css-var(info);
-
-  .#{css-class('card-header')} {
-    background-color: css-var(info);
-    color: #fff;
+  .#{css-class('card-actions')} {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
+
+  .#{css-class('card-body')} {
+    flex: 1 1 auto;
+    padding: 1.5rem;
+    color: css-var(body-color);
+  }
+
+  .#{css-class('card-footer')} {
+    padding: 1rem 1.5rem;
+    background-color: transparent;
+    border-top: css-var(border-width) solid css-var(border-color);
+
+    &:last-child {
+      border-radius: 0 0 calc(css-var(border-radius-lg) - 1px) calc(css-var(border-radius-lg) - 1px);
+    }
+  }
+
+  // Card variants
+  .#{css-class('card-primary')} {
+    border-color: css-var(primary);
+
+    .#{css-class('card-header')} {
+      background-color: css-var(primary);
+      color: #fff;
+    }
+  }
+
+  .#{css-class('card-success')} {
+    border-color: css-var(success);
+
+    .#{css-class('card-header')} {
+      background-color: css-var(success);
+      color: #fff;
+    }
+  }
+
+  .#{css-class('card-error')} {
+    border-color: css-var(error);
+
+    .#{css-class('card-header')} {
+      background-color: css-var(error);
+      color: #fff;
+    }
+  }
+
+  .#{css-class('card-warning')} {
+    border-color: css-var(warning);
+
+    .#{css-class('card-header')} {
+      background-color: css-var(warning);
+      color: #fff;
+    }
+  }
+
+  .#{css-class('card-info')} {
+    border-color: css-var(info);
+
+    .#{css-class('card-header')} {
+      background-color: css-var(info);
+      color: #fff;
+    }
+  }
+
 }

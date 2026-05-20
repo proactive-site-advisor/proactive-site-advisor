@@ -2,8 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Insights;
 
-use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
-use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\DataProviders\DailyStatsDataProvider;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,87 +11,62 @@ if (!defined('ABSPATH')) {
 /**
  * Class BaselineCalculator
  *
- * Calculates baseline statistics from historical daily data.
- * Used for comparing current day metrics against recent averages.
+ * Computes the statistical baseline used by alert analyzers.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
  * @version 1.0.0
  */
-class BaselineCalculator extends AbstractSingleton
+class BaselineCalculator
 {
     /**
-     * Table name for daily stats.
+     * Fetches daily stats from DB.
      *
-     * @var string
+     * @var DailyStatsDataProvider
      */
-    private string $statsTable;
+    private DailyStatsDataProvider $dailyStatsDataProvider;
 
     /**
-     * Initialize the calculator.
+     * Constructor.
      */
-    protected function __construct()
+    public function __construct()
     {
-        parent::__construct();
-        $this->statsTable = DatabaseManager::getFullTableName('daily_stats');
+        $this->dailyStatsDataProvider = new DailyStatsDataProvider();
     }
 
     /**
-     * Register hooks and filters.
+     * Calculates average pageviews and 404 errors for the specified window before the given date.
      *
-     * @return void
-     */
-    public function register(): void
-    {
-        // Reserved for future hooks if needed
-    }
-
-    /**
-     * Get average stats for the last N days, excluding today.
+     * @param string $today
+     * @param int $days
      *
-     * @param string $today Date in Y-m-d format.
-     * @param int $days Number of days to average.
-     * @return array{count: int, avg_pageviews: float, avg_404: float}
+     * @return array
      */
-    public function getAvgLastNDaysExcludingToday(string $today, int $days = 7): array
+    public function calculate(string $today, int $days = 7): array
     {
-        global $wpdb;
+        $rows = $this->dailyStatsDataProvider->getDailyStatsBeforeDate($today, $days);
 
-        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from DatabaseManager::getFullTableName()
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT pageviews, errors_404
-                 FROM {$this->statsTable}
-                 WHERE stats_date < %s
-                 ORDER BY stats_date DESC
-                 LIMIT %d",
-                $today,
-                $days
-            ),
-            ARRAY_A
-        );
-        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
-
-        if (!is_array($rows) || empty($rows)) {
+        if (!$rows) {
             return [
                 'count'         => 0,
                 'avg_pageviews' => 0.0,
-                'avg_404'       => 0.0,
+                'avg_404'       => 0.0
             ];
         }
 
-        $count  = count($rows);
+        $count = count($rows);
+
         $sumPv  = 0;
         $sum404 = 0;
 
         foreach ($rows as $row) {
-            $sumPv  += (int)($row['pageviews'] ?? 0);
-            $sum404 += (int)($row['errors_404'] ?? 0);
+            $sumPv  += (int)$row['pageviews'];
+            $sum404 += (int)$row['errors_404'];
         }
 
         return [
             'count'         => $count,
-            'avg_pageviews' => $count > 0 ? ($sumPv / $count) : 0.0,
-            'avg_404'       => $count > 0 ? ($sum404 / $count) : 0.0,
+            'avg_pageviews' => $sumPv / $count,
+            'avg_404'       => $sum404 / $count
         ];
     }
 }

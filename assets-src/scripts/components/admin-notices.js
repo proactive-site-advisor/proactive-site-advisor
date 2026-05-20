@@ -7,65 +7,79 @@
 (function (window, document) {
     'use strict';
 
-    var PREFIX_CONFIG = window.__PREFIX_CONFIG__;
-    if (!PREFIX_CONFIG) throw new Error('AdminNotices requires namespace.js (__PREFIX_CONFIG__).');
+    const PREFIX_CONFIG = window.__PREFIX_CONFIG__;
+    if (!PREFIX_CONFIG) return;
 
-    var ProactiveSiteAdvisor = window[PREFIX_CONFIG.namespace];
-    if (!ProactiveSiteAdvisor) throw new Error('AdminNotices requires global namespace.');
+    const PSA = window[PREFIX_CONFIG.namespace];
+    if (!PSA) return;
 
-    var Helpers = ProactiveSiteAdvisor.Helpers;
-    var Config = ProactiveSiteAdvisor.Config;
-    if (!Helpers || !Config) throw new Error('AdminNotices requires helpers.js and config.js.');
+    const Helpers = PSA.Helpers;
+    const Config = PSA.Config;
+    if (!Helpers || !Config) return;
 
-    function dismissNotice(noticeId) {
-        if (!noticeId || typeof window.fetch !== 'function') return;
+    const AdminNotices = {
 
-        var ajaxUrl = Config.getAjaxUrl();
-        var nonce = Config.getNonce();
-        if (!ajaxUrl || !nonce) return;
+        init: function () {
+            this.bindEvents();
+        },
 
-        var formData = new FormData();
-        formData.append('action', ProactiveSiteAdvisor.ajaxAction('dismiss_notice'));
-        formData.append('notice_id', noticeId);
-        formData.append('security', nonce);
+        /* ------------------------------------------------------------
+         * Bind Events
+         * ------------------------------------------------------------ */
+        bindEvents: function () {
 
-        window.fetch(ajaxUrl, {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: formData
-        }).catch(function () {
-        });
-    }
+            document.addEventListener('click', (e) => {
 
-    function init() {
-        document.addEventListener('click', function (e) {
-            var target = Helpers.getElement(e.target);
-            if (!target) return;
+                const target = Helpers.getElement(e.target);
+                if (!target) return;
 
-            var btn = target.closest(
-                ProactiveSiteAdvisor.selector('dismissible-notice') + ' .notice-dismiss'
-            );
-            if (!btn) return;
+                const btn = target.closest(PSA.selector('notice') + ' ' + PSA.selector('notice-close'));
+                if (!btn) return;
 
-            var notice = btn.closest(
-                ProactiveSiteAdvisor.selector('notice')
-            );
-            if (!notice) return;
+                const notice = btn.closest(PSA.selector('notice'));
+                if (!notice) return;
 
-            var noticeId = notice.getAttribute(
-                ProactiveSiteAdvisor.dataAttr('notice-id')
-            );
+                const noticeId = notice.getAttribute('id');
 
-            dismissNotice(noticeId);
-        });
-    }
+                this.dismissNotice(noticeId);
+                notice.remove();
+            });
+        },
 
+        /* ------------------------------------------------------------
+         * AJAX Dismiss Notice
+         * ------------------------------------------------------------ */
+        dismissNotice: function (noticeId) {
+
+            if (!noticeId || typeof window.fetch !== 'function') return;
+
+            const ajaxUrl = Config.getAjaxUrl();
+            const nonce = Config.getNonce();
+            if (!ajaxUrl || !nonce) return;
+
+            const formData = new FormData();
+            formData.append('action', PSA.ajaxAction('dismiss_notice'));
+            formData.append('notice_id', noticeId);
+            formData.append('security', nonce);
+
+            window.fetch(ajaxUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                body: formData
+            }).catch(() => {
+            });
+        }
+    };
+
+    /* Init component */
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', function () {
+            AdminNotices.init();
+        });
     } else {
-        init();
+        AdminNotices.init();
     }
 
-    ProactiveSiteAdvisor.AdminNotices = {init: init};
+    PSA.AdminNotices = AdminNotices;
 
 })(window, document);

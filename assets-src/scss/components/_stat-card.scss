@@ -1,107 +1,108 @@
 // =====================================================
 // Admin UI - Stat Card Component
 // =====================================================
-// Statistics display card with icon, value and label.
-// Based on Sneat/Vuexy analytics card design.
-// =====================================================
 
 @use "../prefix" as *;
 
-.#{css-class('stat-card')} {
-  // Explicit card styles (ensure visibility in WP admin)
-  background-color: css-var(card-bg);
-  border-radius: css-var(border-radius-lg);
-  box-shadow: css-var(box-shadow-sm);
-  border: css-var(border-width) solid css-var(border-color);
+.#{css-class('wrap')} {
 
-  &__body {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    padding: 1.25rem;
-  }
+  .#{css-class('stat-card')} {
+    display: block;
+    background-color: css-var(card-bg);
+    border-radius: css-var(border-radius-lg);
+    box-shadow: css-var(box-shadow-sm);
+    border: css-var(border-width) solid css-var(border-color);
+    transition: css-var(transition-base);
 
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: css-var(border-radius);
-    flex-shrink: 0;
+    --stat-color: #{css-var(primary)};
+    --stat-color-rgb: #{css-var(primary-rgb)};
 
-    span {
-      width: 1.25rem;
-      height: 1.25rem;
+    border-bottom: 2px solid rgba(var(--stat-color-rgb), 0.25);
+
+    &:hover,
+    &:focus {
+      box-shadow: css-var(box-shadow-lg);
+      border-bottom-color: var(--stat-color);
     }
 
-    // Color variants
-    &--primary {
-      background-color: rgba(css-var(primary-rgb), 0.16);
+    // dynamic color bindings
+    &:has(.#{css-class('stat-card')}__icon--primary) {
+      --stat-color: #{css-var(primary)};
+      --stat-color-rgb: #{css-var(primary-rgb)};
+    }
+
+    &:has(.#{css-class('stat-card')}__icon--success) {
+      --stat-color: #{css-var(success)};
+      --stat-color-rgb: #{css-var(success-rgb)};
+    }
+
+    &:has(.#{css-class('stat-card')}__icon--warning) {
+      --stat-color: #{css-var(warning)};
+      --stat-color-rgb: #{css-var(warning-rgb)};
+    }
+
+    &:has(.#{css-class('stat-card')}__icon--error) {
+      --stat-color: #{css-var(error)};
+      --stat-color-rgb: #{css-var(error-rgb)};
+    }
+
+    &:has(.#{css-class('stat-card')}__icon--info) {
+      --stat-color: #{css-var(info)};
+      --stat-color-rgb: #{css-var(info-rgb)};
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.65rem;
+      padding: 1.4rem 1.25rem 1.25rem;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: css-var(border-radius);
+      flex-shrink: 0;
+
+      background-color: rgba(var(--stat-color-rgb), 0.12);
 
       span {
-        background-color: css-var(primary);
+        width: 1.35rem;
+        height: 1.35rem;
+        background-color: var(--stat-color);
       }
     }
 
-    &--success {
-      background-color: rgba(css-var(success-rgb), 0.16);
-
-      span {
-        background-color: css-var(success);
-      }
+    &__content {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
     }
 
-    &--warning {
-      background-color: rgba(css-var(warning-rgb), 0.16);
-
-      span {
-        background-color: css-var(warning);
-      }
+    &__label {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: css-var(heading-color);
     }
 
-    &--danger {
-      background-color: rgba(css-var(danger-rgb), 0.16);
-
-      span {
-        background-color: css-var(danger);
-      }
+    &__value {
+      margin: 0.35rem 0 0;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: css-var(heading-color);
     }
 
-    &--info {
-      background-color: rgba(css-var(info-rgb), 0.16);
-
-      span {
-        background-color: css-var(info);
-      }
+    &__subtitle {
+      margin: 0.15rem 0 0 0;
+      font-size: 0.75rem;
+      color: css-var(muted-color);
     }
-  }
-
-  &__content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__label {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-    color: css-var(muted-color);
-  }
-
-  &__value {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: css-var(heading-color);
-  }
-
-  &__subtitle {
-    margin: 0.375rem 0 0 0;
-    font-size: 0.75rem;
-    color: css-var(muted-color);
   }
 }

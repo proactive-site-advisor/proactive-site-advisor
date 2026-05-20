@@ -1,29 +1,26 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Admin;
+namespace ProactiveSiteAdvisor\Admin\Notices;
 
 use ProactiveSiteAdvisor\Components\AjaxComponent;
+use ProactiveSiteAdvisor\Config\UserOptions;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
-use ProactiveSiteAdvisor\Config\UserOptions;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class PromoBanner
- *
- * Handles the promo banner dismissal functionality.
- * Stores dismissal timestamp per user and checks if banner should be shown.
+ * Class PromoNotice
  *
  * @package ProactiveSiteAdvisor\Admin
  * @version 1.0.0
  */
-class PromoBanner
+class PromoNotice
 {
     /**
-     * Number of days the banner stays dismissed
+     * Number of days the notice stays dismissed
      *
      * @var int
      */
@@ -47,14 +44,14 @@ class PromoBanner
             return;
         }
 
-        // Register AJAX handler for dismissing the promo banner
-        AjaxComponent::register('dismiss_promo_banner', [self::class, 'handleDismiss'], false);
+        // Register AJAX handler for dismissing the promo notice
+        AjaxComponent::register('dismiss_promo_notice', [self::class, 'handleDismiss'], false);
 
         self::$initialized = true;
     }
 
     /**
-     * AJAX handler for dismissing the promo banner
+     * AJAX handler for dismissing the promo notice
      *
      * @return void
      */
@@ -68,22 +65,22 @@ class PromoBanner
         $dismissUntil = DateTimeUtils::timestamp() + ($dismissDays * DAY_IN_SECONDS);
 
         // Store per-user dismissal
-        OptionUtils::setUserOption(UserOptions::PROMO_BANNER_DISMISSED_UNTIL, $dismissUntil);
+        OptionUtils::setUserOption(UserOptions::PROMO_NOTICE_DISMISSED_UNTIL, $dismissUntil);
 
         AjaxComponent::sendSuccess([
             'dismissed_until' => $dismissUntil,
             'days'            => $dismissDays,
-        ], __('Banner dismissed successfully.', 'proactive-site-advisor'));
+        ], __('Promo notice dismissed successfully.', 'proactive-site-advisor'));
     }
 
     /**
-     * Check if the promo banner should be shown for the current user
+     * Check if the promo notice should be shown for the current user
      *
      * @return bool
      */
-    public static function shouldShowBanner(): bool
+    public static function shouldShowPromoNotice(): bool
     {
-        $dismissedUntil = OptionUtils::getUserOption(UserOptions::PROMO_BANNER_DISMISSED_UNTIL, 0);
+        $dismissedUntil = OptionUtils::getUserOption(UserOptions::PROMO_NOTICE_DISMISSED_UNTIL, 0);
 
         // Never dismissed
         if (empty($dismissedUntil)) {

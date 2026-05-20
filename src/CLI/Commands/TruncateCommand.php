@@ -4,6 +4,8 @@ namespace ProactiveSiteAdvisor\CLI\Commands;
 
 use ProactiveSiteAdvisor\Database\Seeders\SeederManager;
 use WP_CLI;
+use ReflectionClass;
+use ReflectionException;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -49,11 +51,11 @@ class TruncateCommand
      * @param array $args Positional arguments.
      * @param array $assocArgs Associative arguments.
      * @return void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __invoke(array $args, array $assocArgs): void
     {
-        $manager          = SeederManager::getInstance();
+        $manager          = SeederManager::instance();
         $seeder           = $assocArgs['seeder'] ?? '';
         $skipConfirmation = isset($assocArgs['yes']);
 
@@ -115,7 +117,7 @@ class TruncateCommand
                 continue;
             }
 
-            $className      = (new \ReflectionClass($class))->getShortName();
+            $className      = (new ReflectionClass($class))->getShortName();
             $classShortName = str_replace('Seeder', '', $className);
 
             if (strtolower($classShortName) === strtolower($seederName)) {
@@ -134,14 +136,14 @@ class TruncateCommand
      *
      * @param SeederManager $manager Seeder manager instance.
      * @return void
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function truncateAll(SeederManager $manager): void
     {
         $results = $manager->cleanAll();
 
         foreach ($results as $class => $deleted) {
-            $className = (new \ReflectionClass($class))->getShortName();
+            $className = (new ReflectionClass($class))->getShortName();
             $shortName = str_replace('Seeder', '', $className);
 
             WP_CLI::log("Truncated {$shortName}: {$deleted} records deleted");

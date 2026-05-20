@@ -7,18 +7,18 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class QueryCache
+ * Query caching layer for database operations.
  *
- * Specialized caching layer for database queries.
- * Provides stable key generation and grouped invalidation.
+ * Provides stable cache keys and grouped invalidation
+ * for SQL queries and common WordPress query types.
  *
  * @package ProactiveSiteAdvisor\Cache
- * @since 1.0.0
+ * @version 1.0.0
  */
 class QueryCache
 {
     /**
-     * Default cache expiration (15 minutes).
+     * Default cache expiration (seconds).
      */
     public const DEFAULT_EXPIRATION = 900;
 
@@ -31,10 +31,12 @@ class QueryCache
 
     /**
      * Constructor.
+     *
+     * @version 1.0.0
      */
     public function __construct()
     {
-        $this->cache = CacheManager::getInstance();
+        $this->cache = CacheManager::instance();
     }
 
     /**
@@ -43,6 +45,7 @@ class QueryCache
      * @param string $sql
      * @param callable $callback
      * @param int|null $expiration
+     *
      * @return mixed
      */
     public function remember(string $sql, callable $callback, ?int $expiration = null)
@@ -65,6 +68,7 @@ class QueryCache
      * @param array $args
      * @param callable $callback
      * @param int|null $expiration
+     *
      * @return mixed
      */
     public function rememberPrepared(string $sql, array $args, callable $callback, ?int $expiration = null)
@@ -72,7 +76,7 @@ class QueryCache
         global $wpdb;
 
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        $preparedSql = $wpdb->prepare($sql, ...$args);
+        $preparedSql = empty($args) ? $sql : $wpdb->prepare($sql, ...$args);
 
         if ($preparedSql === false) {
             return $callback();
@@ -95,6 +99,7 @@ class QueryCache
      * @param array $args
      * @param callable $callback
      * @param int|null $expiration
+     *
      * @return mixed
      */
     public function rememberPostQuery(array $args, callable $callback, ?int $expiration = null)
@@ -112,6 +117,12 @@ class QueryCache
 
     /**
      * Cache term query result.
+     *
+     * @param array $args
+     * @param callable $callback
+     * @param int|null $expiration
+     *
+     * @return mixed
      */
     public function rememberTermQuery(array $args, callable $callback, ?int $expiration = null)
     {
@@ -128,6 +139,12 @@ class QueryCache
 
     /**
      * Cache user query result.
+     *
+     * @param array $args
+     * @param callable $callback
+     * @param int|null $expiration
+     *
+     * @return mixed
      */
     public function rememberUserQuery(array $args, callable $callback, ?int $expiration = null)
     {
@@ -144,6 +161,13 @@ class QueryCache
 
     /**
      * Cache custom table query result.
+     *
+     * @param string $table
+     * @param array $args
+     * @param callable $callback
+     * @param int|null $expiration
+     *
+     * @return mixed
      */
     public function rememberTableQuery(string $table, array $args, callable $callback, ?int $expiration = null)
     {
@@ -169,40 +193,37 @@ class QueryCache
     }
 
     /**
-     * Invalidate all post-related queries.
+     * Invalidate post-related queries.
      *
-     * @param int $postId
      * @return void
      */
-    public function invalidatePost(int $postId): void
+    public function invalidatePost(): void
     {
         $this->invalidate();
     }
 
     /**
-     * Invalidate all term-related queries.
+     * Invalidate term-related queries.
      *
-     * @param int $termId
      * @return void
      */
-    public function invalidateTerm(int $termId): void
+    public function invalidateTerm(): void
     {
         $this->invalidate();
     }
 
     /**
-     * Invalidate table-related cache.
+     * Invalidate custom table queries.
      *
-     * @param string $table
      * @return void
      */
-    public function invalidateTable(string $table): void
+    public function invalidateTable(): void
     {
         $this->invalidate();
     }
 
     /**
-     * Register WordPress invalidation hooks.
+     * Register WordPress cache invalidation hooks.
      *
      * @return void
      */
@@ -218,7 +239,7 @@ class QueryCache
     }
 
     /**
-     * Generate stable hash from query arguments.
+     * Generate stable hash for query arguments.
      *
      * @param array $args
      * @return string
@@ -238,6 +259,8 @@ class QueryCache
      */
     private function generateSqlKey(string $sql): string
     {
+        $sql = trim(preg_replace('/\s+/', ' ', $sql));
+
         return 'sql_' . md5($sql);
     }
 }

@@ -33,7 +33,7 @@ abstract class AbstractFactory
     /**
      * Set the pattern context.
      *
-     * @param string $pattern Pattern name ('realistic' or 'alerts').
+     * @param string $pattern
      * @return self
      */
     public function setPattern(string $pattern): self

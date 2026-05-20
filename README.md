@@ -1,32 +1,53 @@
 # Proactive Site Advisor
 
-Proactive Site Advisor is a WordPress plugin that monitors basic site activity and surfaces important changes directly in the WordPress admin dashboard.
+Proactive Site Advisor helps WordPress site owners detect potential issues before they become real problems.
 
-It helps site owners become aware of unusual behavior—such as sudden traffic drops, unexpected traffic spikes, or increased 404 errors—using simple, daily insights without external services.
+It runs lightweight daily scans, monitors your WordPress environment, and provides proactive admin notices with actionable recommendations — all automatically, with zero setup required.
+
+Simple, useful insights — directly inside the WordPress admin.
 
 ## Features
 
-- Detects sudden drops in daily traffic
-- Highlights unusual traffic spikes
-- Monitors increases in 404 (Not Found) errors
-- Displays clear admin alerts with brief explanations and suggested checks
-- Clean, modular, and extensible codebase
+- Automatic daily site scans  
+- Smart admin notices with clear recommendations  
+- WordPress environment health monitoring  
+- Plugin and theme version checks  
+- Detection of configuration and system issues  
+- Zero‑configuration setup — works instantly on activation  
+- Lightweight, fast, and optimized for all site sizes  
 
 ## Requirements
 
-- WordPress 6.1 or higher
-- PHP 7.4 or higher
+- WordPress 5.8 or higher  
+- PHP 7.4 or higher  
+- MySQL 5.7+ or MariaDB equivalent  
 
 ## Installation
 
 ### Install from ZIP
 
-1. Download the repository as a ZIP.
-2. Extract it and upload the `proactive-site-advisor` directory to `wp-content/plugins/`.
-3. Activate **Proactive Site Advisor** from **Plugins → Installed Plugins**.
+1. Download the plugin ZIP.  
+2. Upload the `proactive-site-advisor` directory to `wp-content/plugins/`.  
+3. Activate **Proactive Site Advisor** from Plugins → Installed Plugins.  
+4. Monitoring begins automatically — no setup needed.
 
-### Development setup
+## Development setup
 
-```bash
+```
 git clone git@github.com:proactive-site-advisor/proactive-site-advisor.git
 cd proactive-site-advisor
+```
+
+## Frequently Asked Questions
+
+### Does the plugin require configuration?
+No. It works automatically after activation.
+
+### When does the plugin run checks?
+Checks run once per day, plus additional event‑based triggers.
+
+### Does this affect performance?
+No. All checks are lightweight, optimized, and cached.
+
+### Does the plugin use external services?
+No. All operations run locally within your WordPress installation.

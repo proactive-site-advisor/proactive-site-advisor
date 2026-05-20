@@ -3,7 +3,9 @@
 namespace ProactiveSiteAdvisor\Abstracts;
 
 use Exception;
+use RuntimeException;
 use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -143,7 +145,8 @@ abstract class AbstractModel
         $model = static::find($id);
 
         if ($model === null) {
-            throw new Exception(sprintf('Model not found with ID: %d', esc_html($id)));
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+            throw new RuntimeException(sprintf('Model not found with ID: %d', $id));
         }
 
         return $model;
@@ -425,7 +428,7 @@ abstract class AbstractModel
 
         // Add created_at timestamp if not set
         if (!isset($attributes['created_at'])) {
-            $attributes['created_at'] = current_time('mysql', true);
+            $attributes['created_at'] = DateTimeUtils::now();
         }
 
         $id = DatabaseManager::insert(static::$table, $attributes);
@@ -455,7 +458,7 @@ abstract class AbstractModel
         $dirty = $this->getDirty();
 
         // Add updated_at timestamp
-        $dirty['updated_at'] = current_time('mysql', true);
+        $dirty['updated_at'] = DateTimeUtils::now();
 
         $result = DatabaseManager::update(
             static::$table,
