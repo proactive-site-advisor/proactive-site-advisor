@@ -3,7 +3,7 @@
         'name' => 'mohammadyari/proactive-site-advisor',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '47aeea04e5f07385e1fb97b4c0d5c09a4c3c582e',
+        'reference' => 'f6f3f4ecf660c29cbf2bff3d6ef31baec7a5e57c',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'mohammadyari/proactive-site-advisor' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '47aeea04e5f07385e1fb97b4c0d5c09a4c3c582e',
+            'reference' => 'f6f3f4ecf660c29cbf2bff3d6ef31baec7a5e57c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
