@@ -1,61 +1,74 @@
-=== Proactive Site Advisor ===  
-Contributors: yourname  
-Tags: admin, monitoring, site health, notifications, tools  
+=== Proactive Site Advisor ===
+Contributors: sitealerts
+Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
 Tested up to: 6.9
-Requires PHP: 7.4  
-Stable tag: 1.0.0  
-License: GPL-2.0-or-later  
-License URI: https://www.gnu.org/licenses/gpl-2.0.html  
+Requires PHP: 7.4
+Stable tag: 1.0.0
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Proactively monitor your WordPress environment and detect issues before they become problems.
+Alerts for traffic drops, spikes, and 404 surges — based on completed day vs. last 7 days.
 
 == Description ==
 
-Proactive Site Advisor keeps your WordPress website healthy by automatically scanning for common issues, misconfigurations, and environment problems.  
-Instead of relying on manual checks, the plugin runs lightweight daily scans and displays smart, actionable admin notices directly in the dashboard.
+Proactive Site Advisor adds a "Site Advisor" dashboard to your WordPress admin. A daily scan runs after each full day and compares that day's data with the previous 7 days.
 
-All operations run locally inside WordPress.  
-No external services, no API keys, no data sharing.
+When a significant deviation is detected, you see an alert with:
+- What changed (e.g., "Traffic dropped by 41%")
+- What this means for your site
+- What you should check next
+- Top 404 URLs (for 404 alerts)
 
-Key features:
+Dashboard includes: critical issues indicator, weekly digest cards, latest alerts list, and 7‑day history table with averages.
 
-* Automatic daily monitoring  
-* Smart admin notices with actionable insights  
-* Detection of configuration and environment issues  
-* Version and requirement checks  
-* Zero‑configuration setup — works instantly on activation  
-* Lightweight, optimized, and fast  
+The plugin does NOT fix anything. It only alerts and recommends.
+
+All monitoring runs locally. No external APIs, no data sharing.
+
+== Key Features ==
+
+* Traffic drop/spike detection (7‑day baseline)
+* 404 error surge detection with Top 404 URLs
+* "Site Advisor" dashboard (digest, history, latest alerts)
+* Actionable "What you should check next" lists
+* Daily WP-Cron scan after day completion (cached)
+* Zero configuration
 
 == Installation ==
 
-1. Upload the `proactive-site-advisor` folder to the `/wp-content/plugins/` directory.  
-2. Activate the plugin through the “Plugins” menu in WordPress.  
-3. The plugin will begin monitoring automatically.
+1. Upload `proactive-site-advisor` to `/wp-content/plugins/`
+2. Activate from Plugins -> Installed Plugins
+3. Visit **Site Advisor** menu
 
 == Frequently Asked Questions ==
 
-= Does it require configuration? =  
-No. Proactive Site Advisor works automatically after activation.
+= Does the plugin fix anything automatically? =
+No. It only alerts and recommends.
 
-= Does it impact performance? =  
-No. All checks are optimized and extremely lightweight.
+= When are scans performed? =
+After each full day is completed.
 
-= Does this plugin use external services? =  
-No. All monitoring is performed locally.
+= How does it detect anomalies? =
+Compares completed day vs. last 7 days.
 
-= Is this plugin free? =  
-Yes. It is fully free and licensed under GPL‑2.0‑or‑later.
+= What does a 404 alert show? =
+Top 404 URLs with hit counts, plus recommendations.
+
+= Is it free? =
+Yes. GPL-2.0-or-later.
 
 == Changelog ==
 
-= 1.0.0 =  
-* Initial release  
-* Core scanning engine  
-* Admin notices module  
-* Basic environment checks  
+= 1.0.0 =
+* Initial release
+* Traffic drop/spike detection (completed day vs. last 7 days)
+* 404 surge detection with Top 404 URLs
+* Site Advisor dashboard (critical issues, digest, latest alerts, 7‑day history)
+* Actionable recommendations
+* Daily WP-Cron scans
 
 == Upgrade Notice ==
 
-= 1.0.0 =  
+= 1.0.0 =
 Initial release.

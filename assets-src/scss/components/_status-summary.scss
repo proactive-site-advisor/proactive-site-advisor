@@ -68,10 +68,10 @@
     border-left-color: css-var(warning);
   }
 
-  .#{css-class('status-summary--danger')} {
+  .#{css-class('status-summary--error')} {
     color: #a63235;
     background-color: #ffe2e3;
-    border-left-color: css-var(danger);
+    border-left-color: css-var(error);
   }
 
 }

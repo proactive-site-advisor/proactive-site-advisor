@@ -47,14 +47,14 @@
       }
     }
 
-    &--critical {
-      border-left-color: css-var(danger);
+    &--error {
+      border-left-color: css-var(error);
 
       .#{css-class('alert-card__icon')} {
-        background-color: rgba(css-var(danger-rgb), 0.16);
+        background-color: rgba(css-var(error-rgb), 0.16);
 
         span {
-          background-color: css-var(danger);
+          background-color: css-var(error);
         }
       }
     }

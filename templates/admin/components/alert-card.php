@@ -12,7 +12,6 @@
  * @var string $color
  * @var string $label
  * @var string $title
- * @var string $text
  * @var string $short
  * @var array $expanded
  * @var string $date

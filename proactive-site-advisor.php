@@ -3,7 +3,7 @@
 /**
  * Plugin Name:         Proactive Site Advisor
  * Plugin URI:          https://github.com/proactive-site-advisor/proactive-site-advisor
- * Description:         Automatically monitors your WordPress environment and alerts you about potential issues before they become problems.
+ * Description:         Tracks daily traffic & 404 errors vs. 7‑day baseline. Alerts on drops, spikes, or 404 surges, shows top URLs, and recommends what to check. No automatic fixes.
  * Version:             1.0.0
  * Author:              Mohammad Yari
  * Author URI:          https://github.com/proactive-site-advisor

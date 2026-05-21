@@ -1,30 +1,58 @@
-# Security Policy
+\# Security Policy
 
-The security of **Proactive Site Advisor** is a top priority.
 
-If you discover a security vulnerability, please report it responsibly and **do not** open a public issue.
 
-## Reporting a Vulnerability
+\## Reporting a Vulnerability
 
-To report a security issue, please contact us via email:
 
-📧 security.proactive.advisor@gmail.com
 
-Please include as much information as possible:
+Do not open public issues. Email us at:
 
-- Description of the vulnerability  
-- Steps to reproduce  
-- Affected versions (if known)  
-- Any relevant screenshots or code snippets  
 
-We aim to respond within **72 hours**.
 
-## Supported Versions
+security.proactive.site.advisor@gmail.com
 
-Only the latest major version of **Proactive Site Advisor** is actively supported with security updates.
 
-## Responsible Disclosure
 
-We kindly ask that you give us a reasonable amount of time to investigate and fix the issue before disclosing it publicly.
+Include: description, steps to reproduce, affected versions, and any relevant code/screenshots (remove sensitive data like credentials or paths).
 
-Thank you for helping keep **Proactive Site Advisor** secure.
+
+
+We respond within 72 hours.
+
+
+
+\## Supported Versions
+
+
+
+Only the latest major version receives security updates.
+
+
+
+\## Responsible Disclosure
+
+
+
+Allow reasonable time to fix the issue before public disclosure.
+
+
+
+\## Data Privacy
+
+
+
+This plugin stores locally:
+
+\- Daily aggregated traffic counts
+
+\- Daily 404 error counts
+
+\- Top 404 URLs (URL strings only)
+
+\- Rolling 7-day historical data
+
+
+
+All data stays on your server. No external APIs or data sharing.
+
