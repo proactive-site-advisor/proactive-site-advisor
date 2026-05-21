@@ -77,7 +77,6 @@ echo TemplateUtils::renderTemplate(
                         'color'    => $alert['color'],
                         'label'    => $alert['label'],
                         'title'    => $alert['title'],
-                        'text'     => $alert['text'],
                         'short'    => $alert['short'],
                         'expanded' => $alert['expanded'],
                         'date'     => $alert['date'],
