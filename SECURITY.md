@@ -1,8 +1,8 @@
-\# Security Policy
+# Security Policy
 
 
 
-\## Reporting a Vulnerability
+## Reporting a Vulnerability
 
 
 
@@ -22,7 +22,7 @@ We respond within 72 hours.
 
 
 
-\## Supported Versions
+## Supported Versions
 
 
 
@@ -30,7 +30,7 @@ Only the latest major version receives security updates.
 
 
 
-\## Responsible Disclosure
+## Responsible Disclosure
 
 
 
@@ -38,19 +38,19 @@ Allow reasonable time to fix the issue before public disclosure.
 
 
 
-\## Data Privacy
+## Data Privacy
 
 
 
 This plugin stores locally:
 
-\- Daily aggregated traffic counts
+- Daily aggregated traffic counts
 
-\- Daily 404 error counts
+- Daily 404 error counts
 
-\- Top 404 URLs (URL strings only)
+- Top 404 URLs (URL strings only)
 
-\- Rolling 7-day historical data
+- Rolling 7-day historical data
 
 
 
