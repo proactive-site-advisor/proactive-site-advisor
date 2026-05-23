@@ -62,6 +62,7 @@ class FragmentCache
         $cached = $this->cache->get($fullKey, null, CacheGroups::FRAGMENT);
 
         if ($cached !== null) {
+            // Content is already escaped HTML.
             echo $cached; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             return;
         }
@@ -85,6 +86,7 @@ class FragmentCache
             CacheGroups::FRAGMENT
         );
 
+        // Content is already escaped HTML.
         echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 

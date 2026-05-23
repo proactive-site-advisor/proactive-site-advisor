@@ -88,6 +88,7 @@ abstract class AbstractAdminPage extends AbstractSingleton
             $output .= $section;
         }
 
+        // All sections return escaped HTML from renderTemplate()
         echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
