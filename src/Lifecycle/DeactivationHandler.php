@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Lifecycle;
 
+use ProactiveSiteAdvisor\Config\PluginOptions;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -147,8 +149,8 @@ class DeactivationHandler
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
-                '_transient_proactive_site_advisor_%',
-                '_transient_timeout_proactive_site_advisor_%'
+                '_transient_' . PluginOptions::META_PREFIX . '%',
+                '_transient_timeout_' . PluginOptions::META_PREFIX . '%'
             )
         );
 

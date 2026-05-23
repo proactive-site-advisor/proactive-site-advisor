@@ -189,6 +189,7 @@ class AdminNotices
     public static function render(): void
     {
         foreach (self::$notices as $notice) {
+            // render() returns already escaped HTML.
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo $notice->render();
         }
@@ -203,6 +204,7 @@ class AdminNotices
      */
     public static function handleDismiss(): void
     {
+        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $noticeId = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
         $notice   = self::$notices[$noticeId] ?? null;

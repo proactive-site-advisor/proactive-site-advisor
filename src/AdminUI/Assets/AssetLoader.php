@@ -24,20 +24,6 @@ if (!defined('ABSPATH')) {
 class AssetLoader extends AbstractSingleton
 {
     /**
-     * Registered vendor configurations.
-     *
-     * @var array
-     */
-    private array $vendors = [];
-
-    /**
-     * Vendors queued for loading.
-     *
-     * @var array
-     */
-    private array $queuedVendors = [];
-
-    /**
      * Whether assets have been registered.
      *
      * @var bool
@@ -50,13 +36,6 @@ class AssetLoader extends AbstractSingleton
      * @var bool
      */
     private bool $coreEnqueued = false;
-
-    /**
-     * Vendors that have been enqueued.
-     *
-     * @var array
-     */
-    private array $enqueuedVendors = [];
 
     /**
      * Core asset handle.
@@ -75,77 +54,18 @@ class AssetLoader extends AbstractSingleton
         }
 
         $this->registered = true;
-        $this->registerVendors();
 
         add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
     }
 
     /**
-     * Register available vendor libraries.
-     *
-     * @return void
-     */
-    private function registerVendors(): void
-    {
-        $libsUrl = PROACTIVE_SITE_ADVISOR_URL . 'libs/';
-
-        $this->vendors = [];
-
-        // Prepend libs URL to all paths
-        foreach ($this->vendors as $key => $config) {
-            if (!empty($config['css'])) {
-                $this->vendors[$key]['css'] = array_map(
-                    static fn($path) => $libsUrl . $path,
-                    $config['css']
-                );
-            }
-            if (!empty($config['js'])) {
-                $this->vendors[$key]['js'] = array_map(
-                    static fn($path) => $libsUrl . $path,
-                    $config['js']
-                );
-            }
-        }
-
-        /**
-         * Filter the available vendor libraries.
-         *
-         * @param array $vendors Vendor configurations.
-         */
-        $this->vendors = apply_filters('proactive_site_advisor_admin_ui_vendors', $this->vendors);
-    }
-
-    /**
-     * Queue vendor libraries for loading.
-     *
-     * @param string|array $vendors Vendor name(s) to queue.
-     * @return self
-     */
-    public function queue($vendors): self
-    {
-        $vendors = (array)$vendors;
-
-        foreach ($vendors as $vendor) {
-            if (isset($this->vendors[$vendor]) && !in_array($vendor, $this->queuedVendors, true)) {
-                $this->queuedVendors[] = $vendor;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Enqueue all queued assets.
+     * Enqueue core AdminUI assets.
      *
      * @return void
      */
     public function enqueueAssets(): void
     {
         $this->enqueueCoreAssets();
-
-        foreach ($this->queuedVendors as $vendor) {
-            $this->enqueueVendor($vendor);
-        }
     }
 
     /**
@@ -180,60 +100,13 @@ class AssetLoader extends AbstractSingleton
         AssetsComponent::localizeScript(self::CORE_HANDLE, PrefixConfig::CONFIG_OBJECT, [
             'ajaxUrl'   => admin_url('admin-ajax.php'),
             'nonce'     => AjaxComponent::createNonce(),
-            'restUrl'   => rest_url('proactive-site-advisor/v1/'),
+            'restUrl'   => rest_url(PrefixConfig::SLUG . '/v1/'),
             'restNonce' => wp_create_nonce('wp_rest'),
             'theme'     => $this->getCurrentTheme(),
             'i18n'      => [],
         ]);
 
         $this->coreEnqueued = true;
-    }
-
-    /**
-     * Enqueue a specific vendor library.
-     *
-     * @param string $vendor Vendor name.
-     * @return void
-     */
-    private function enqueueVendor(string $vendor): void
-    {
-        // Check if vendor exists and not already enqueued
-        if (!isset($this->vendors[$vendor])) {
-            return;
-        }
-
-        if (in_array($vendor, $this->enqueuedVendors, true)) {
-            return;
-        }
-
-        $config     = $this->vendors[$vendor];
-        $baseHandle = PrefixConfig::handle('vendor-' . $vendor);
-
-        // Enqueue CSS files
-        if (!empty($config['css'])) {
-            foreach ($config['css'] as $index => $url) {
-                $handle = $baseHandle . ($index > 0 ? "-{$index}" : '') . '-css';
-
-                if (!wp_style_is($handle)) {
-                    wp_enqueue_style($handle, $url, [], PROACTIVE_SITE_ADVISOR_VERSION);
-                }
-            }
-        }
-
-        // Enqueue JS files
-        if (!empty($config['js'])) {
-            $deps = array_merge(['jquery'], $config['deps'] ?? []);
-
-            foreach ($config['js'] as $index => $url) {
-                $handle = $baseHandle . ($index > 0 ? "-{$index}" : '') . '-js';
-
-                if (!wp_script_is($handle)) {
-                    wp_enqueue_script($handle, $url, $deps, PROACTIVE_SITE_ADVISOR_VERSION, true);
-                }
-            }
-        }
-
-        $this->enqueuedVendors[] = $vendor;
     }
 
     /**
@@ -244,37 +117,5 @@ class AssetLoader extends AbstractSingleton
     public function getCurrentTheme(): string
     {
         return ThemeSwitcher::instance()->getCurrentTheme();
-    }
-
-    /**
-     * Static helper to queue vendors.
-     *
-     * @param string|array $vendors Vendor name(s) to queue.
-     * @return void
-     */
-    public static function enqueue($vendors): void
-    {
-        self::instance()->queue($vendors);
-    }
-
-    /**
-     * Check if a vendor is available.
-     *
-     * @param string $vendor Vendor name.
-     * @return bool
-     */
-    public function hasVendor(string $vendor): bool
-    {
-        return isset($this->vendors[$vendor]);
-    }
-
-    /**
-     * Get all available vendor names.
-     *
-     * @return array
-     */
-    public function getAvailableVendors(): array
-    {
-        return array_keys($this->vendors);
     }
 }
