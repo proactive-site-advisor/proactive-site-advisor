@@ -18,6 +18,9 @@
       "ProactiveSiteAdvisor\\": "src/"
     }
   },
+    "config": {
+    "autoloader-suffix": "ProactiveSiteAdvisor"
+  },
   "minimum-stability": "stable",
   "prefer-stable": true
 }
