@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-05-21 19:39+0330\n"
+"POT-Creation-Date: 2026-06-02 22:33+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,12 +30,12 @@ msgstr ""
 msgid "Instances of this class cannot be unserialized."
 msgstr ""
 
-#: src/Admin/Notices/AdminNotices.php:211
+#: src/Admin/Notices/AdminNotices.php:212
 msgid "Invalid notice ID."
 msgstr ""
 
-#: src/Admin/Notices/AdminNotices.php:216
-#: src/Admin/Notices/AdminNotices.php:222
+#: src/Admin/Notices/AdminNotices.php:217
+#: src/Admin/Notices/AdminNotices.php:223
 msgid "Notice dismissed."
 msgstr ""
 
@@ -475,11 +475,11 @@ msgstr ""
 msgid "Toggle navigation"
 msgstr ""
 
-#: templates/admin/pages/dashboard/content.php:41
+#: templates/admin/pages/dashboard/content.php:43
 msgid "Weekly Digest"
 msgstr ""
 
-#: templates/admin/pages/dashboard/content.php:42
+#: templates/admin/pages/dashboard/content.php:44
 msgid "Alert summary for the last 7 days."
 msgstr ""
 
@@ -491,11 +491,11 @@ msgstr ""
 msgid "Most recent alerts triggered on your site."
 msgstr ""
 
-#: templates/admin/pages/dashboard/content.php:103
+#: templates/admin/pages/dashboard/content.php:99
 msgid "7-Day History"
 msgstr ""
 
-#: templates/admin/pages/dashboard/content.php:104
+#: templates/admin/pages/dashboard/content.php:100
 msgid "Daily traffic and error statistics."
 msgstr ""
 
@@ -509,8 +509,9 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Automatically monitors your WordPress environment and alerts you about "
-"potential issues before they become problems."
+"Tracks daily traffic & 404 errors vs. 7‑day baseline. Alerts on drops, "
+"spikes, or 404 surges, shows top URLs, and recommends what to check. No "
+"automatic fixes."
 msgstr ""
 
 #. Author of the plugin/theme
