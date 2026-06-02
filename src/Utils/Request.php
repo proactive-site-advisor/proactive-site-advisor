@@ -57,20 +57,6 @@ class Request
     }
 
     /**
-     * Generic getter with recursive sanitization.
-     *
-     * @param string $key Parameter key.
-     * @param mixed|null $default Default if not found.
-     * @param string $method 'get' or 'post'.
-     * @return mixed
-     */
-    public static function get(string $key, $default = null, string $method = 'get')
-    {
-        $value = self::value($key, $method);
-        return $value ?? $default;
-    }
-
-    /**
      * Get sanitized string value.
      *
      * @param string $key
@@ -155,20 +141,6 @@ class Request
     }
 
     /**
-     * Get sanitized array.
-     *
-     * @param string $key
-     * @param array $default
-     * @param string $method
-     * @return array
-     */
-    public static function arr(string $key, array $default = [], string $method = 'get'): array
-    {
-        $value = self::value($key, $method);
-        return is_array($value) ? $value : $default;
-    }
-
-    /**
      * Check if parameter exists.
      *
      * @param string $key
@@ -178,49 +150,6 @@ class Request
     public static function has(string $key, string $method = 'get'): bool
     {
         return isset(self::source($method)[$key]);
-    }
-
-    /**
-     * Get only specific keys from source.
-     *
-     * @param array $keys List of allowed keys.
-     * @param string $method
-     * @return array
-     */
-    public static function only(array $keys, string $method = 'get'): array
-    {
-        $src = self::source($method);
-        $out = [];
-
-        foreach ($keys as $key) {
-            if (isset($src[$key])) {
-                $out[$key] = wp_unslash($src[$key]);
-            }
-        }
-
-        return $out;
-    }
-
-    /**
-     * Get all except specific keys.
-     *
-     * @param array $keys List of keys to exclude.
-     * @param string $method
-     * @return array
-     */
-    public static function except(array $keys, string $method = 'get'): array
-    {
-        $src = self::source($method);
-
-        foreach ($keys as $key) {
-            unset($src[$key]);
-        }
-
-        foreach ($src as $key => $value) {
-            $src[$key] = wp_unslash($value);
-        }
-
-        return $src;
     }
 
     /**

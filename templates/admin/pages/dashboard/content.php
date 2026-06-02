@@ -3,6 +3,10 @@
 /**
  * Template part: Dashboard page content.
  *
+ * All output is captured by TemplateUtils::renderTemplate() and
+ * escaped late via wp_kses() in AbstractAdminPage::render().
+ *
+ * phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  *
  * @package ProactiveSiteAdvisor
@@ -23,7 +27,6 @@ use ProactiveSiteAdvisor\Utils\TemplateUtils;
 
 ?>
 <?php
-// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 echo TemplateUtils::renderTemplate(
     'admin/components/status',
     [
@@ -33,7 +36,6 @@ echo TemplateUtils::renderTemplate(
         'progress' => $status['progress'] ?? null,
     ]
 );
-// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 ?>
 <div class="psa-page-content">
 
@@ -44,7 +46,6 @@ echo TemplateUtils::renderTemplate(
             <?php foreach ($stats as $stat) : ?>
                 <div class="psa-col-12 psa-col-sm-6 psa-col-lg-3">
                     <?php
-                    // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
                     echo TemplateUtils::renderTemplate(
                         'admin/components/stat-card', [
                             'icon'     => $stat['icon'],
@@ -55,7 +56,6 @@ echo TemplateUtils::renderTemplate(
                             'link'     => $stat['link'] ?? null,
                         ]
                     );
-                    // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
                     ?>
                 </div>
             <?php endforeach; ?>
@@ -68,7 +68,6 @@ echo TemplateUtils::renderTemplate(
         <?php if ($latestAlerts['hasData']): ?>
             <?php
             foreach ($latestAlerts['data'] as $alert) :
-                // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
                 echo TemplateUtils::renderTemplate(
                     'admin/components/alert-card',
                     [
@@ -82,19 +81,16 @@ echo TemplateUtils::renderTemplate(
                         'date'     => $alert['date'],
                     ]
                 );
-                // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
             endforeach;
             ?>
         <?php else: ?>
             <?php
-            // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
             echo TemplateUtils::renderTemplate('admin/components/message-card', [
                 'title' => $latestAlerts['title'],
                 'text'  => $latestAlerts['text'],
                 'icon'  => $latestAlerts['icon'],
                 'color' => $latestAlerts['color'],
             ]);
-            // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
             ?>
         <?php endif; ?>
     </div>
@@ -110,26 +106,22 @@ echo TemplateUtils::renderTemplate(
             <div class="psa-card psa-table-card ">
                 <div class="psa-table-responsive">
                     <?php
-                    // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
                     echo TemplateUtils::renderTemplate('admin/components/table', [
                         'columns' => $history['columns'],
                         'rows'    => $history['rows'],
                         'class'   => $history['class'],
                     ]);
-                    // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
                     ?>
                 </div>
             </div>
         <?php else: ?>
             <?php
-            // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
             echo TemplateUtils::renderTemplate('admin/components/message-card', [
                 'title' => $history['title'],
                 'text'  => $history['text'],
                 'icon'  => $history['icon'],
                 'color' => $history['color'],
             ]);
-            // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
             ?>
         <?php endif; ?>
     </div>
@@ -137,9 +129,7 @@ echo TemplateUtils::renderTemplate(
     <?php if ($showPromoNotice) : ?>
         <div class="psa-section">
             <?php
-            // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
             echo TemplateUtils::renderTemplate('admin/components/notices/promo-notice');
-            // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
             ?>
         </div>
     <?php endif; ?>

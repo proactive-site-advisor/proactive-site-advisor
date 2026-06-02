@@ -49,7 +49,7 @@ class Security
             return false;
         }
 
-        $nonce = wp_unslash($_POST[$field]); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $nonce = sanitize_text_field(wp_unslash($_POST[$field]));
 
         return wp_verify_nonce($nonce, $action) !== false;
     }
