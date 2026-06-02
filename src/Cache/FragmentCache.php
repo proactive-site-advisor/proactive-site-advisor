@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Cache;
 
+use ProactiveSiteAdvisor\Utils\Kses;
 use Throwable;
 
 if (!defined('ABSPATH')) {
@@ -62,8 +63,8 @@ class FragmentCache
         $cached = $this->cache->get($fullKey, null, CacheGroups::FRAGMENT);
 
         if ($cached !== null) {
-            // Content is already escaped HTML.
-            echo $cached; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses($cached, Kses::allowedHtml());
+
             return;
         }
 
@@ -86,8 +87,7 @@ class FragmentCache
             CacheGroups::FRAGMENT
         );
 
-        // Content is already escaped HTML.
-        echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo wp_kses($content, Kses::allowedHtml());
     }
 
     /**

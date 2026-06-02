@@ -8,6 +8,7 @@ use ProactiveSiteAdvisor\Components\AjaxComponent;
 use ProactiveSiteAdvisor\Config\UserOptions;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
 use ProactiveSiteAdvisor\Utils\PluginUtils;
+use ProactiveSiteAdvisor\Utils\Kses;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -189,9 +190,7 @@ class AdminNotices
     public static function render(): void
     {
         foreach (self::$notices as $notice) {
-            // render() returns already escaped HTML.
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $notice->render();
+            echo wp_kses($notice->render(), Kses::allowedHtml());
         }
 
         self::clearNonPersistent();
