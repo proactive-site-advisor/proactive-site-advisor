@@ -46,12 +46,13 @@ class OptionUtils
      */
     public static function getAllOptions(): array
     {
-        $options = get_option(PluginOptions::OPTION_NAME, []);
+        $options = get_option(PluginOptions::OPTION_NAME);
 
-        return array_replace_recursive(
-            self::getDefaults(),
-            is_array($options) ? $options : []
-        );
+        if (!is_array($options)) {
+            return self::getDefaults();
+        }
+
+        return $options;
     }
 
     /**
