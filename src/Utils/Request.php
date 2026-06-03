@@ -57,6 +57,22 @@ class Request
     }
 
     /**
+     * Get sanitized array.
+     *
+     * @param string $key
+     * @param array $default
+     * @param string $method
+     * @return array
+     */
+    public static function arr(string $key, array $default = [], string $method = 'get'): array
+    {
+        $inputType = $method === 'post' ? INPUT_POST : INPUT_GET;
+        $value     = filter_input($inputType, $key, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+
+        return is_array($value) ? wp_unslash($value) : $default;
+    }
+
+    /**
      * Get sanitized string value.
      *
      * @param string $key
