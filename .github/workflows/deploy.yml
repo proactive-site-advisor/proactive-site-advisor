@@ -24,6 +24,7 @@ jobs:
                     SLUG: proactive-site-advisor
                 with:
                     exclude: |
+                        .wporg-assets
                         .github
                         .gitignore
                         .editorconfig
