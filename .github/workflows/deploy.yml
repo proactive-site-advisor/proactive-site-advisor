@@ -40,3 +40,4 @@ jobs:
                         config
                         phpcs.xml
                         composer.lock
+                        .distignore
