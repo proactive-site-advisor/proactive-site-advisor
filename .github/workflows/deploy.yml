@@ -22,22 +22,3 @@ jobs:
                     SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                     SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                     SLUG: proactive-site-advisor
-                with:
-                    exclude: |
-                        .wporg-assets
-                        .github
-                        .gitignore
-                        .editorconfig
-                        CHANGELOG.md
-                        CONTRIBUTING.md
-                        SECURITY.md
-                        README.md
-                        assets-src
-                        node_modules
-                        package.json
-                        package-lock.json
-                        gulpfile.mjs
-                        config
-                        phpcs.xml
-                        composer.lock
-                        .distignore
