@@ -1,0 +1,31 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brand Background -->
+  <rect x="24" y="24" width="208" height="208" rx="52" fill="#3B82F6"/>
+
+  <!-- Subtle inner depth -->
+  <circle cx="128" cy="128" r="72" fill="#FFFFFF" opacity="0.08"/>
+
+  <!-- Site System Ring -->
+  <circle cx="128" cy="128" r="56" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- Baseline (normal behavior) -->
+  <path d="M92 128 A36 36 0 0 1 128 92" fill="none" stroke="#EAEAEC" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Deviation (what changed) -->
+  <path d="M128 92 A36 36 0 0 1 164 128" fill="none" stroke="#2F3349" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Core System Node -->
+  <circle cx="128" cy="128" r="10" fill="#2F3349"/>
+
+  <!-- Proactive Pulse (insight field) -->
+  <circle cx="128" cy="128" r="22" fill="none" stroke="#FF9F43" stroke-width="4" opacity="0.75"/>
+
+  <!-- Anomaly Point (critical change) -->
+  <circle cx="128" cy="92" r="9" fill="#FF4C51"/>
+
+  <!-- Insight Point (advisor output) -->
+  <circle cx="164" cy="128" r="8" fill="#FF9F43"/>
+
+  <!-- Micro Signal (signature detail) -->
+  <circle cx="146" cy="104" r="4" fill="#FF9F43"/>
+</svg>
