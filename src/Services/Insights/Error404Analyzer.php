@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Detects abnormal increases in 404 errors by comparing today's 404 count with the historical baseline.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @version 1.0.1
  */
 class Error404Analyzer
 {
@@ -26,25 +26,32 @@ class Error404Analyzer
      */
     public function analyze(int $today404, float $avg404): array
     {
-        if ($today404 <= 0) {
-            return ['trigger' => false, 'change_pct' => null];
+        if ($avg404 <= 0) {
+            return [
+                'type'       => null,
+                'severity'   => null,
+                'change_pct' => 0
+            ];
         }
 
-        $trigger = false;
+        $ratio  = $today404 / $avg404;
+        $change = ($ratio - 1) * 100;
 
-        if ($avg404 < 3 && $today404 >= 10) {
-            $trigger = true;
+        // Significant increase over baseline (more than 2x)
+        if ($ratio > 2) {
+            $severity = $ratio >= 3 ? 'critical' : 'warning';
+
+            return [
+                'type'       => '404_spike',
+                'severity'   => $severity,
+                'change_pct' => round($change, 2)
+            ];
         }
-
-        if ($avg404 > 0 && $today404 > $avg404 * 2) {
-            $trigger = true;
-        }
-
-        $pct = $avg404 > 0 ? (($today404 / $avg404) - 1) * 100 : null;
 
         return [
-            'trigger'    => $trigger,
-            'change_pct' => $pct ? round($pct, 2) : null
+            'type'       => null,
+            'severity'   => null,
+            'change_pct' => round($change, 2)
         ];
     }
 }

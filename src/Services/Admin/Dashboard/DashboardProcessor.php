@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Class DashboardProcessor
  *
  * @package ProactiveSiteAdvisor\Services\Admin\Dashboard
- * @version 1.0.0
+ * @version 1.0.1
  */
 class DashboardProcessor
 {
@@ -35,6 +35,7 @@ class DashboardProcessor
         foreach ($rows as $row) {
 
             $severity = $row['severity'];
+            $type     = $row['type'];
 
             if ($severity === 'critical') {
                 $critical++;
@@ -44,7 +45,9 @@ class DashboardProcessor
                 $info++;
             }
 
-            $type = $row['type'];
+            if ($severity === 'critical') {
+                continue;
+            }
 
             if ($type === 'traffic_drop' || $type === 'traffic_spike') {
                 $traffic++;

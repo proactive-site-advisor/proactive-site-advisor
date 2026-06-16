@@ -4,7 +4,7 @@ Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,10 @@ Top 404 URLs with hit counts, plus recommendations.
 Yes. GPL-2.0-or-later.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fix: Prevent duplicate alerts in digest cards
+* Feat: Add percentage change for 404 errors
 
 = 1.0.0 =
 * Initial release
