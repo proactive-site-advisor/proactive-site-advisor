@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Generates traffic and 404-related alerts for a given day.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @version 1.0.1
  */
 class AlertEngine
 {
@@ -143,9 +143,12 @@ class AlertEngine
      */
     private function create404Alert(string $date, array $r, int $today, float $avg, ?array $top): void
     {
-        if (!$r['trigger']) {
+        if (!$r['type']) {
             return;
         }
+
+        /* translators: %s: The percentage value of 404 error increase */
+        $title = sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
 
         $meta = [
             'today'      => $today,
@@ -156,9 +159,9 @@ class AlertEngine
 
         Alert::createIfNotExists(
             $date,
-            'error_404_spike',
-            'warning',
-            __('404 errors increased', 'proactive-site-advisor'),
+            $r['type'],
+            $r['severity'],
+            $title,
             wp_json_encode($meta)
         );
     }

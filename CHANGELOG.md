@@ -2,6 +2,14 @@
 
 
 
+= 1.0.1 – 2026-06-16 =
+
+\* Fix: Prevent duplicate alerts in digest cards
+
+\* Feat: Add percentage change for 404 errors
+
+
+
 \## 1.0.0 – 2026-05-21
 
 
