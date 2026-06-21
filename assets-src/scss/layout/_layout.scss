@@ -1,0 +1,27 @@
+// =====================================================
+// Admin UI - Core Layout Structure
+// =====================================================
+
+@use "../prefix" as *;
+
+.#{css-class('wrap')} {
+  margin: 0;
+  margin-inline-start: -20px;
+  display: flex;
+  flex-direction: column;
+  min-block-size: calc(100vh - 32px);
+
+  background-color: css-var(body-bg);
+  color: css-var(body-color);
+  padding: 1.5rem;
+}
+
+.#{css-class('content-wrapper')} {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  inline-size: 100%;
+  min-block-size: 1px;
+  padding-block-end: 0;
+  justify-content: flex-start;
+}

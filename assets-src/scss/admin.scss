@@ -12,14 +12,16 @@
 @use "base/variables";
 @use "base/variables-dark";
 @use "base/root";
+@use "base/reset";
 @use "base/typography";
-@use "base/global";
+@use "base/utilities";
 
 // 3) Layout
-@use "layout/framework";
+@use "layout/layout";
 @use "layout/header";
 @use "layout/grid";
 @use "layout/section";
+@use "layout/admin-overrides";
 
 // 4) Form components
 @use "components/forms";
@@ -27,12 +29,16 @@
 @use "components/input-group";
 
 // 5) Components
+@use "components/spinner";
+@use "components/tabs";
 @use "components/icons";
 @use "components/card";
 @use "components/buttons";
 @use "components/notice";
 @use "components/badge";
 @use "components/table";
+@use "components/settings";
+@use "components/modal";
 @use "components/stat-card";
 @use "components/page-header";
 @use "components/message-card";

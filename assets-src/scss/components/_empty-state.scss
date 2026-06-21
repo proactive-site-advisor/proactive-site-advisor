@@ -1,8 +1,6 @@
 // =====================================================
 // Admin UI - Empty State Component
 // =====================================================
-// Placeholder display for empty lists/sections.
-// =====================================================
 
 @use "../prefix" as *;
 
@@ -30,7 +28,7 @@
         content: '';
         position: absolute;
         top: 50%;
-        left: 50%;
+        inset-inline-start: 50%;
         transform: translate(-50%, -50%);
         width: 4rem;
         height: 4rem;

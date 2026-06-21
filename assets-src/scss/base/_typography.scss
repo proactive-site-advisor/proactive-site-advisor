@@ -1,49 +1,34 @@
 // =====================================================
-// Admin UI - Typography Utilities (Scoped)
+// Admin UI - Typography Utilities (Scoped & Optimized)
 // =====================================================
 
 @use "../prefix" as *;
 
-// -----------------------------------------------------
-// Scope whole utility system into plugin root
-// -----------------------------------------------------
-
 .#{css-class('wrap')} {
 
   // -----------------------------------------------------
-  // Heading Utility Classes
+  // Heading & Display size maps
   // -----------------------------------------------------
+  $headings: (
+          h1: css-var(h1-font-size),
+          h2: css-var(h2-font-size),
+          h3: css-var(h3-font-size),
+          h4: css-var(h4-font-size),
+          h5: css-var(h5-font-size),
+          h6: css-var(h6-font-size)
+  );
 
-  .#{css-class('h1')} {
-    font-size: css-var(h1-font-size);
-  }
+  $displays: (
+          1: 4rem,
+          2: 3.5rem,
+          3: 3rem,
+          4: 2.5rem,
+          5: 2rem,
+          6: 1.5rem
+  );
 
-  .#{css-class('h2')} {
-    font-size: css-var(h2-font-size);
-  }
-
-  .#{css-class('h3')} {
-    font-size: css-var(h3-font-size);
-  }
-
-  .#{css-class('h4')} {
-    font-size: css-var(h4-font-size);
-  }
-
-  .#{css-class('h5')} {
-    font-size: css-var(h5-font-size);
-  }
-
-  .#{css-class('h6')} {
-    font-size: css-var(h6-font-size);
-  }
-
-  .#{css-class('h1')},
-  .#{css-class('h2')},
-  .#{css-class('h3')},
-  .#{css-class('h4')},
-  .#{css-class('h5')},
-  .#{css-class('h6')} {
+  // Shared base for heading‑like elements
+  %heading-base {
     margin-top: 0;
     margin-bottom: 0.5rem;
     font-weight: css-var(font-weight-semibold);
@@ -51,50 +36,26 @@
     color: css-var(heading-color);
   }
 
-  // -----------------------------------------------------
-  // Display Headings
-  // -----------------------------------------------------
-
-  .#{css-class('display-1')} {
-    font-size: 4rem;
-    font-weight: 500;
-    line-height: 1.2;
+  // ---- Heading utility classes (.h1 … .h6) ----
+  @each $level, $size in $headings {
+    .#{css-class($level)} {
+      @extend %heading-base;
+      font-size: $size;
+    }
   }
 
-  .#{css-class('display-2')} {
-    font-size: 3.5rem;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  .#{css-class('display-3')} {
-    font-size: 3rem;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  .#{css-class('display-4')} {
-    font-size: 2.5rem;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  .#{css-class('display-5')} {
-    font-size: 2rem;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  .#{css-class('display-6')} {
-    font-size: 1.5rem;
-    font-weight: 500;
-    line-height: 1.2;
+  // ---- Display headings ----
+  @each $level, $size in $displays {
+    .#{css-class('display-#{$level}')} {
+      font-size: $size;
+      font-weight: 500;
+      line-height: 1.2;
+    }
   }
 
   // -----------------------------------------------------
   // Text Size Utilities
   // -----------------------------------------------------
-
   .#{css-class('lead')} {
     font-size: 1.125rem;
     font-weight: 400;
@@ -105,65 +66,69 @@
   }
 
   // -----------------------------------------------------
+  // Text Color Utilities
+  // -----------------------------------------------------
+  $text-colors: (
+          primary: css-var(primary),
+          secondary: css-var(secondary),
+          success: css-var(success),
+          info: css-var(info),
+          warning: css-var(warning),
+          error: css-var(error),
+          muted: css-var(muted-color),
+          body: css-var(body-color),
+          heading: css-var(heading-color),
+          white: #fff
+  );
+  @each $name, $val in $text-colors {
+    .#{css-class('text-#{$name}')} {
+      color: $val;
+    }
+  }
+
+  // -----------------------------------------------------
   // Font Weight Utilities
   // -----------------------------------------------------
-
-  .#{css-class('fw-light')} {
-    font-weight: 300;
-  }
-
-  .#{css-class('fw-normal')} {
-    font-weight: 400;
-  }
-
-  .#{css-class('fw-medium')} {
-    font-weight: 500;
-  }
-
-  .#{css-class('fw-semibold')} {
-    font-weight: 600;
-  }
-
-  .#{css-class('fw-bold')} {
-    font-weight: 700;
+  $weights: (
+          light: 300,
+          normal: 400,
+          medium: 500,
+          semibold: 600,
+          bold: 700
+  );
+  @each $name, $val in $weights {
+    .#{css-class('fw-#{$name}')} {
+      font-weight: $val;
+    }
   }
 
   // -----------------------------------------------------
   // Text Alignment Utilities
   // -----------------------------------------------------
-
-  .#{css-class('text-start')} {
-    text-align: left;
-  }
-
-  .#{css-class('text-center')} {
-    text-align: center;
-  }
-
-  .#{css-class('text-end')} {
-    text-align: right;
+  $alignments: (
+          start: start,
+          center: center,
+          end: end
+  );
+  @each $name, $val in $alignments {
+    .#{css-class('text-#{$name}')} {
+      text-align: $val;
+    }
   }
 
   // -----------------------------------------------------
   // Text Transform Utilities
   // -----------------------------------------------------
-
-  .#{css-class('text-lowercase')} {
-    text-transform: lowercase;
-  }
-
-  .#{css-class('text-uppercase')} {
-    text-transform: uppercase;
-  }
-
-  .#{css-class('text-capitalize')} {
-    text-transform: capitalize;
+  $transforms: lowercase, uppercase, capitalize;
+  @each $val in $transforms {
+    .#{css-class('text-#{$val}')} {
+      text-transform: $val;
+    }
   }
 
   // -----------------------------------------------------
   // Text Decoration Utilities
   // -----------------------------------------------------
-
   .#{css-class('text-decoration-none')} {
     text-decoration: none;
   }
@@ -175,7 +140,6 @@
   // -----------------------------------------------------
   // Text Wrapping Utilities
   // -----------------------------------------------------
-
   .#{css-class('text-wrap')} {
     white-space: normal;
   }
@@ -193,23 +157,21 @@
   // -----------------------------------------------------
   // List Utilities
   // -----------------------------------------------------
-
   .#{css-class('list-unstyled')} {
-    padding-left: 0;
+    padding-inline-start: 0;
     list-style: none;
   }
 
   .#{css-class('list-inline')} {
-    padding-left: 0;
+    padding-inline-start: 0;
     list-style: none;
 
     .#{css-class('list-inline-item')} {
       display: inline-block;
 
       &:not(:last-child) {
-        margin-right: 0.5rem;
+        margin-inline-end: 0.5rem;
       }
     }
   }
-
 }

@@ -10,27 +10,27 @@
   .#{css-class('form-check')} {
     display: block;
     min-height: calc(css-var(input-line-height) * 1rem);
-    padding-left: css-var(form-check-padding-start);
+    padding-inline-start: css-var(form-check-padding-start);
     margin-bottom: css-var(form-check-margin-bottom);
 
     .#{css-class('form-check-input')} {
-      float: left;
-      margin-left: calc(css-var(form-check-padding-start) * -1);
+      float: inline-start;
+      margin-inline-start: calc(css-var(form-check-padding-start) * -1);
     }
 
     &.#{css-class('form-check-reverse')} {
-      padding-right: css-var(form-check-padding-start);
-      padding-left: 0;
-      text-align: right;
+      padding-inline-end: css-var(form-check-padding-start);
+      padding-inline-start: 0;
+      text-align: end;
 
       .#{css-class('form-check-input')} {
-        float: right;
-        margin-right: calc(css-var(form-check-padding-start) * -1);
-        margin-left: 0;
+        float: inline-end;
+        margin-inline-end: calc(css-var(form-check-padding-start) * -1);
+        margin-inline-start: 0;
       }
 
       .#{css-class('form-check-label')} {
-        margin-right: 0.5rem;
+        margin-inline-end: 0.5rem;
       }
     }
   }
@@ -115,32 +115,28 @@
   // Inline Form Checks
   .#{css-class('form-check-inline')} {
     display: inline-block;
-    margin-right: 1rem;
+    margin-inline-end: 1rem;
   }
 
   // Form Switch
   .#{css-class('form-switch')} {
-    padding-left: css-var(form-switch-padding-start);
+    padding-inline-start: css-var(form-switch-padding-start);
 
     .#{css-class('form-check-input')}[type="checkbox"] {
-      #{css-var-name(form-switch-bg)}: url("data:image/svg+xml,%3csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg filter='url%28%23a%29'%3e%3ccircle cx='12' cy='11' r='8.5' fill='%23fff'/%3e%3c/g%3e%3cdefs%3e%3cfilter id='a' x='0' y='0' width='22' height='22' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3e%3cfeOffset dy='2'/%3e%3cfeGaussianBlur stdDeviation='2'/%3e%3cfeColorMatrix values='0 0 0 0 0.180392 0 0 0 0 0.14902 0 0 0 0 0.239216 0 0 0 0.16 0'/%3e%3cfeBlend in2='BackgroundImageFix' result='effect1_dropShadow_6488_3264'/%3e%3cfeBlend in='SourceGraphic' in2='effect1_dropShadow_6488_3264' result='shape'/%3e%3c/filter%3e%3c/defs%3e%3c/svg%3e");
+      #{css-var-name(form-switch-knob-image)}: url("data:image/svg+xml,%3csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg filter='url%28%23a%29'%3e%3ccircle cx='12' cy='11' r='8.5' fill='%23fff'/%3e%3c/g%3e%3cdefs%3e%3cfilter id='a' x='0' y='0' width='22' height='22' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3e%3cfeOffset dy='2'/%3e%3cfeGaussianBlur stdDeviation='2'/%3e%3cfeColorMatrix values='0 0 0 0 0.180392 0 0 0 0 0.14902 0 0 0 0 0.239216 0 0 0 0.16 0'/%3e%3cfeBlend in2='BackgroundImageFix' result='effect1_dropShadow_6488_3264'/%3e%3cfeBlend in='SourceGraphic' in2='effect1_dropShadow_6488_3264' result='shape'/%3e%3c/filter%3e%3c/defs%3e%3c/svg%3e");
 
       width: css-var(form-switch-width);
       height: css-var(form-switch-height);
-      margin-left: calc(css-var(form-switch-padding-start) * -1);
-      background-image: css-var(form-switch-bg);
+      margin-inline-start: calc(css-var(form-switch-padding-start) * -1);
+      background-image: css-var(form-switch-knob-image);
       background-position: left center;
       border-radius: css-var(form-switch-width);
       border: 0;
       transition: background-position 0.15s ease-in-out, background-color 0.15s ease-in-out;
 
       &:not(:checked) {
-        background-color: rgba(css-var(gray-400), 0.4);
+        background-color: css-var(form-switch-bg);
         box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.16) inset;
-      }
-
-      &:focus {
-        box-shadow: none;
       }
 
       &:checked {
@@ -154,13 +150,22 @@
     }
 
     &.#{css-class('form-check-reverse')} {
-      padding-right: css-var(form-switch-padding-start);
-      padding-left: 0;
+      padding-inline-end: css-var(form-switch-padding-start);
+      padding-inline-start: 0;
 
       .#{css-class('form-check-input')}[type="checkbox"] {
-        margin-right: calc(css-var(form-switch-padding-start) * -1);
-        margin-left: 0;
+        margin-inline-end: calc(css-var(form-switch-padding-start) * -1);
+        margin-inline-start: 0;
       }
+    }
+  }
+
+  // ---- RTL Override for switch knob position ----
+  [dir="rtl"] .#{css-class('wrap')} .#{css-class('form-switch')} .#{css-class('form-check-input')}[type="checkbox"] {
+    background-position: right center;
+
+    &:checked {
+      background-position: 5% center;
     }
   }
 

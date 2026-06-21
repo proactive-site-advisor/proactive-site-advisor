@@ -1,0 +1,150 @@
+// =====================================================
+// Admin UI - Modal Component
+// =====================================================
+
+@use "../prefix" as *;
+
+.#{css-class('wrap')} {
+  .#{css-class('modal')} {
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    z-index: css-var(zindex-modal);
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    &.#{css-class('show')} {
+      display: block;
+    }
+  }
+
+  .#{css-class('modal-dialog')} {
+    position: relative;
+    width: auto;
+    margin: 1.75rem auto;
+    max-width: 500px;
+    pointer-events: none;
+
+    .#{css-class('modal')}.#{css-class('show')} & {
+      animation: modal-fade-in 0.15s ease-out;
+    }
+  }
+
+  .#{css-class('modal-dialog-centered')} {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 3.5rem);
+  }
+
+  .#{css-class('modal-dialog-scrollable')} {
+    height: calc(100% - 3.5rem);
+
+    .#{css-class('modal-content')} {
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    .#{css-class('modal-body')} {
+      overflow-y: auto;
+    }
+  }
+
+  .#{css-class('modal-sm')} {
+    max-width: 300px;
+  }
+
+  .#{css-class('modal-lg')} {
+    max-width: 800px;
+  }
+
+  .#{css-class('modal-xl')} {
+    max-width: 1140px;
+  }
+
+  .#{css-class('modal-content')} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: css-var(paper-bg);
+    background-clip: padding-box;
+    border: 0;
+    border-radius: css-var(border-radius-lg);
+    box-shadow: css-var(box-shadow-lg);
+    outline: 0;
+  }
+
+  .#{css-class('modal-header')} {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid css-var(border-color);
+    border-start-start-radius: calc(css-var(border-radius-lg) - 1px);
+    border-start-end-radius: calc(css-var(border-radius-lg) - 1px);
+  }
+
+  .#{css-class('modal-title')} {
+    margin-bottom: 0;
+    font-size: css-var(h4-font-size);
+    font-weight: css-var(font-weight-medium);
+    line-height: 1.5;
+    color: css-var(heading-color);
+  }
+
+  .#{css-class('modal-close')} {
+    padding: 0.5rem;
+    margin-top: -0.5rem;
+    margin-bottom: -0.5rem;
+    margin-inline-end: -0.5rem;
+    margin-inline-start: auto;
+    font-size: 1.5rem;
+    font-weight: css-var(font-weight-light);
+    line-height: 1;
+    color: css-var(muted-color);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: css-var(heading-color);
+    }
+  }
+
+  .#{css-class('modal-body')} {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1.5rem;
+  }
+
+  .#{css-class('modal-footer')} {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid css-var(border-color);
+    border-end-end-radius: calc(css-var(border-radius-lg) - 1px);
+    border-end-start-radius: calc(css-var(border-radius-lg) - 1px);
+  }
+
+  @keyframes modal-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

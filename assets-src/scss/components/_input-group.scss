@@ -1,5 +1,5 @@
 // =====================================================
-// Admin UI - Input Groups
+// Admin UI - Input Groups (RTL‑ready)
 // =====================================================
 
 @use "../prefix" as *;
@@ -53,7 +53,7 @@
       width: 100%;
       height: 100%;
       top: 0;
-      left: 0;
+      inset-inline-start: 0; // ← logical
       content: "";
       border-radius: css-var(input-border-radius);
       pointer-events: none;
@@ -100,16 +100,16 @@
       }
     }
 
-    // Rounded corners handling
+    // Rounded corners handling – logical
     > :not(:first-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
-      margin-left: calc(css-var(input-border-width) * -1);
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      margin-inline-start: calc(css-var(input-border-width) * -1);
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
     }
 
     > :not(:last-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
     }
 
     // Prevent double focus styling
@@ -151,26 +151,26 @@
     }
   }
 
-  // Merged Input Group
+  // Merged Input Group – logical borders/padding
   .#{css-class('input-group-merge')} {
     .#{css-class('input-group-text')},
     .#{css-class('form-control')},
     .#{css-class('form-select')} {
       &:first-child {
-        border-right: 0;
+        border-inline-end: 0;
       }
 
       &:last-child {
-        border-left: 0;
+        border-inline-start: 0;
       }
 
       &:not(:first-child) {
-        border-left: 0;
-        padding-left: 0;
+        border-inline-start: 0;
+        padding-inline-start: 0;
       }
 
       &:not(:last-child) {
-        border-right: 0;
+        border-inline-end: 0;
       }
     }
   }
@@ -188,7 +188,7 @@
     }
   }
 
-  // Rounded pill style
+  // Rounded pill style – also logical
   .#{css-class('input-group')}.#{css-class('rounded-pill')} {
     .#{css-class('input-group-text')},
     .#{css-class('form-control')},
@@ -198,13 +198,13 @@
     }
 
     > :not(:first-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
     }
 
     > :not(:last-child):not(.#{css-class('dropdown-menu')}):not(.#{css-class('valid-tooltip')}):not(.#{css-class('valid-feedback')}):not(.#{css-class('invalid-tooltip')}):not(.#{css-class('invalid-feedback')}) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
     }
   }
 

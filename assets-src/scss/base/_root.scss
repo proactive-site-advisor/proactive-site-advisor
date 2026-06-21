@@ -400,9 +400,9 @@
   // Shadows
   // -----------------------------------------------------
   #{css-var-name(shadow-color)}: #{dark.$shadow-color};
-  #{css-var-name(box-shadow)}: 0 0.1875rem 0.75rem 0 #{dark.$shadow-color};
-  #{css-var-name(box-shadow-sm)}: 0 0.125rem 0.5rem 0 #{dark.$shadow-color};
-  #{css-var-name(box-shadow-lg)}: 0 0.25rem 1.125rem 0 #{dark.$shadow-color};
+  #{css-var-name(box-shadow)}: #{dark.$box-shadow};
+  #{css-var-name(box-shadow-sm)}: #{dark.$box-shadow-sm};
+  #{css-var-name(box-shadow-lg)}: #{dark.$box-shadow-lg};
 
   // -----------------------------------------------------
   // Table

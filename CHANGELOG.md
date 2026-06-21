@@ -2,6 +2,12 @@
 
 
 
+= 1.0.2 – 2026-06-21 =
+
+\* Added: RTL support for WordPress admin dashboard
+
+
+
 = 1.0.1 – 2026-06-16 =
 
 \* Fix: Prevent duplicate alerts in digest cards

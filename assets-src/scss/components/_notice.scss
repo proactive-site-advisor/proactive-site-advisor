@@ -38,7 +38,7 @@
   .#{css-class('notice-close')} {
     position: absolute;
     top: 0.5rem;
-    right: 0.75rem;
+    inset-inline-end: 0.75rem;
     padding: 0.25rem;
     font-size: 1.25rem;
     line-height: 1;
@@ -54,7 +54,7 @@
   }
 
   .#{css-class('notice-dismissible')} {
-    padding-right: 2.5rem;
+    padding-inline-end: 2.5rem;
   }
 
   .#{css-class('notice-primary')} {

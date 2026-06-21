@@ -1,0 +1,21 @@
+// =====================================================
+// Admin UI - WordPress Admin Overrides
+// =====================================================
+
+@use "../prefix" as *;
+
+body:has(.#{css-class('wrap')}) {
+  background-color: css-var(body-bg);
+
+  #wpfooter {
+    color: css-var(muted-color);
+
+    a {
+      color: css-var(link-color);
+
+      &:hover {
+        color: css-var(link-hover-color);
+      }
+    }
+  }
+}

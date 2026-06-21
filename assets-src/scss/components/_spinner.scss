@@ -1,0 +1,23 @@
+// =====================================================
+// Admin UI - Spinner Component
+// =====================================================
+
+@use "../prefix" as *;
+
+.#{css-class('wrap')} {
+
+  .#{css-class('spin')} {
+    display: inline-block;
+    animation: #{css-class('spin')} 1s linear infinite;
+  }
+
+  @keyframes #{css-class('spin')} {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+}

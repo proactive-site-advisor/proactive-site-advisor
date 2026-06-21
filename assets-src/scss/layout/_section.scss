@@ -1,10 +1,6 @@
 // =====================================================
 // Admin UI - Section Layout (Scoped)
 // =====================================================
-// Page section containers with titles.
-// Entirely scoped within .#{css-class('wrap')} to ensure
-// full isolation from WordPress admin styles.
-// =====================================================
 
 @use "../prefix" as *;
 

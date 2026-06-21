@@ -3,8 +3,8 @@
 /**
  * Plugin Name:         Proactive Site Advisor
  * Plugin URI:          https://github.com/proactive-site-advisor/proactive-site-advisor
- * Description:         Tracks daily traffic & 404 errors vs. 7‑day baseline. Alerts on drops, spikes, or 404 surges, shows top URLs, and recommends what to check. No automatic fixes.
- * Version:             1.0.1
+ * Description:         Daily local monitoring of critical site signals – currently traffic & 404 errors. Alerts you on anomalies with actionable next steps. No automatic fixes.
+ * Version:             1.0.2
  * Author:              Mohammad Yari
  * Author URI:          https://github.com/proactive-site-advisor
  * Text Domain:         proactive-site-advisor
@@ -92,7 +92,7 @@ if (!defined('PROACTIVE_SITE_ADVISOR_ASSETS')) {
  * @const string
  */
 if (!defined('PROACTIVE_SITE_ADVISOR_VERSION')) {
-    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.0.1');
+    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.0.2');
 }
 
 /**

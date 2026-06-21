@@ -25,6 +25,16 @@
     border-radius: css-var(border-radius);
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
+    &.button {
+      background: none;
+      border: none;
+      box-shadow: none;
+      text-shadow: none;
+      padding: 0;
+      height: auto;
+      line-height: inherit;
+    }
+
     &:hover {
       text-decoration: none;
     }
@@ -267,17 +277,17 @@
       border-radius: 0;
 
       &:first-child {
-        border-top-left-radius: css-var(border-radius);
-        border-bottom-left-radius: css-var(border-radius);
+        border-start-start-radius: css-var(border-radius);
+        border-end-start-radius: css-var(border-radius);
       }
 
       &:last-child {
-        border-top-right-radius: css-var(border-radius);
-        border-bottom-right-radius: css-var(border-radius);
+        border-start-end-radius: css-var(border-radius);
+        border-end-end-radius: css-var(border-radius);
       }
 
       &:not(:first-child) {
-        margin-left: -1px;
+        margin-inline-start: -1px;
       }
     }
   }

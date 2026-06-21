@@ -144,6 +144,11 @@
     }
   }
 
+  // RTL: placeholder slide direction
+  [dir="rtl"] .#{css-class('wrap')} .#{css-class('form-control')}:focus::placeholder {
+    transform: translateX(-4px);
+  }
+
   // Textarea specific
   textarea.#{css-class('form-control')} {
     min-height: calc(css-var(input-line-height) * 1em + css-var(input-padding-y) * 2 + css-var(input-border-width) * 2);
@@ -190,7 +195,7 @@
 
     &[multiple],
     &[size]:not([size="1"]) {
-      padding-right: css-var(form-select-padding-x);
+      padding-inline-end: css-var(form-select-padding-x);
       background-image: none;
     }
 
@@ -251,6 +256,39 @@
     }
   }
 
+  // ---- RTL: select arrow & padding swap ----
+  [dir="rtl"] .#{css-class('wrap')} select.#{css-class('form-select')} {
+    background-position: left css-var(form-select-padding-x) center;
+    padding-right: calc(css-var(form-select-padding-x) - css-var(input-border-width));
+    padding-left: calc(css-var(form-select-indicator-padding) - css-var(input-border-width));
+
+    &:focus {
+      background-position: left calc(css-var(form-select-padding-x) - 1px) center;
+      padding-right: calc(css-var(form-select-padding-x) - css-var(input-focus-border-width));
+      padding-left: calc(css-var(form-select-indicator-padding) - css-var(input-focus-border-width));
+    }
+  }
+
+  [dir="rtl"] .#{css-class('wrap')} select.#{css-class('form-select-sm')} {
+    padding-right: calc(css-var(input-padding-x-sm) - css-var(input-border-width));
+    padding-left: calc(css-var(form-select-indicator-padding) - css-var(input-border-width));
+
+    &:focus {
+      padding-right: calc(css-var(input-padding-x-sm) - css-var(input-focus-border-width));
+      padding-left: calc(css-var(form-select-indicator-padding) - css-var(input-focus-border-width));
+    }
+  }
+
+  [dir="rtl"] .#{css-class('wrap')} select.#{css-class('form-select-lg')} {
+    padding-right: calc(css-var(input-padding-x-lg) - css-var(input-border-width));
+    padding-left: calc(css-var(form-select-indicator-padding) - css-var(input-border-width));
+
+    &:focus {
+      padding-right: calc(css-var(input-padding-x-lg) - css-var(input-focus-border-width));
+      padding-left: calc(css-var(form-select-indicator-padding) - css-var(input-focus-border-width));
+    }
+  }
+
   // Form Text (Help text)
   .#{css-class('form-text')} {
     margin-top: 0.25rem;
@@ -272,7 +310,7 @@
     > label {
       position: absolute;
       top: 0;
-      left: 0;
+      inset-inline-start: 0;
       z-index: 2;
       height: 100%;
       padding: 1rem css-var(input-padding-x);
@@ -305,6 +343,19 @@
 
     > .#{css-class('form-control')}:focus::placeholder {
       color: css-var(input-placeholder-color);
+    }
+  }
+
+  // RTL: mirror floating label origin and translation
+  [dir="rtl"] .#{css-class('wrap')} .#{css-class('form-floating')} {
+    > label {
+      transform-origin: 100% 0;
+    }
+
+    > .#{css-class('form-control')}:focus ~ label,
+    > .#{css-class('form-control')}:not(:placeholder-shown) ~ label,
+    > .#{css-class('form-select')} ~ label {
+      transform: scale(0.85) translateY(-0.5rem) translateX(-0.15rem);
     }
   }
 
@@ -377,13 +428,13 @@
   .#{css-class('form-row')} {
     display: flex;
     flex-wrap: wrap;
-    margin-right: -0.5rem;
-    margin-left: -0.5rem;
+    margin-inline-end: -0.5rem;
+    margin-inline-start: -0.5rem;
 
     > .#{css-class('col')},
     > [class*="#{css-class('col-')}"] {
-      padding-right: 0.5rem;
-      padding-left: 0.5rem;
+      padding-inline-end: 0.5rem;
+      padding-inline-start: 0.5rem;
     }
   }
 
