@@ -85,7 +85,11 @@ final class HeaderConfig
      */
     public static function getDefaultLogoUrl(): string
     {
-        return '';
+        if (is_rtl()) {
+            return PROACTIVE_SITE_ADVISOR_ASSETS . 'img/header-logo/header-logo-rtl.svg';
+        }
+
+        return PROACTIVE_SITE_ADVISOR_ASSETS . 'img/header-logo/header-logo.svg';
     }
 
     /**

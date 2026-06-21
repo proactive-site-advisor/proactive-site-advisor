@@ -135,7 +135,7 @@
     span {
       display: block;
       position: absolute;
-      left: 0;
+      inset-inline-start: 0;
       width: 100%;
       height: 2px;
       background-color: css-var(heading-color);
@@ -270,7 +270,7 @@
       .#{css-class('header-nav')} {
         position: absolute;
         top: calc(100% + 0.5rem);
-        right: 0;
+        inset-inline-end: 0;
         min-width: 200px;
         background-color: css-var(card-bg);
         border: 1px solid css-var(border-color);
@@ -315,7 +315,7 @@
 
     .#{css-class('header-actions')} {
       order: 2;
-      margin-left: auto;
+      margin-inline-start: auto;
     }
   }
 

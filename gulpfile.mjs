@@ -70,6 +70,8 @@ const paths = {
             'assets-src/scripts/components/header.js',
             'assets-src/scripts/components/promo-notice.js',
             'assets-src/scripts/components/theme-switcher.js',
+            'assets-src/scripts/components/settings-tabs.js',
+            'assets-src/scripts/components/tabs.js'
         ],
         watch: 'assets-src/scripts/**/*.js',
         dest: 'assets/js/',

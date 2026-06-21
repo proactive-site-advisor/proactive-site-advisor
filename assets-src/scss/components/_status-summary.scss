@@ -12,7 +12,7 @@
     margin-bottom: 1.5rem;
     padding: 0.875rem 1rem;
     border-radius: css-var(border-radius);
-    border-left: 4px solid transparent;
+    border-inline-start: 4px solid transparent;
   }
 
   .#{css-class('status-summary__content')} {
@@ -53,25 +53,25 @@
   .#{css-class('status-summary--info')} {
     color: #007a88;
     background-color: #d6f4f8;
-    border-left-color: css-var(info);
+    border-inline-start-color: css-var(info);
   }
 
   .#{css-class('status-summary--success')} {
     color: #1a824a;
     background-color: #ddf6e8;
-    border-left-color: css-var(success);
+    border-inline-start-color: css-var(success);
   }
 
   .#{css-class('status-summary--warning')} {
     color: #a66829;
     background-color: #fff0e1;
-    border-left-color: css-var(warning);
+    border-inline-start-color: css-var(warning);
   }
 
   .#{css-class('status-summary--error')} {
     color: #a63235;
     background-color: #ffe2e3;
-    border-left-color: css-var(error);
+    border-inline-start-color: css-var(error);
   }
 
 }

@@ -68,8 +68,8 @@
     // Pill variant
     &--pill {
       border-radius: css-var(border-radius-pill);
-      padding-left: 0.65em;
-      padding-right: 0.65em;
+      padding-inline-start: 0.65em;
+      padding-inline-end: 0.65em;
     }
   }
 

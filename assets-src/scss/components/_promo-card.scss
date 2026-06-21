@@ -1,9 +1,6 @@
 // =====================================================
 // Admin UI - Promo Card Component
 // =====================================================
-// Premium upsell card with bright, shiny gold theme.
-// White background with vibrant gold accents.
-// =====================================================
 
 @use "sass:color";
 @use "../prefix" as *;
@@ -18,7 +15,7 @@
     position: relative;
     background: #FFFFFF;
     border: 1px solid #FDE68A;
-    border-left: 3px solid $promo-gold;
+    border-inline-start: 3px solid $promo-gold;
 
     &__body {
       padding: 1rem 1.25rem;
@@ -28,7 +25,7 @@
     &__dismiss {
       position: absolute;
       top: 0.5rem;
-      right: 0.5rem;
+      inset-inline-end: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;

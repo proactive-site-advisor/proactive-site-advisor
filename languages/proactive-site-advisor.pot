@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-06-02 22:33+0330\n"
+"POT-Creation-Date: 2026-06-21 10:49+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -284,106 +284,106 @@ msgstr ""
 msgid "404 Errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardManager.php:81
+#: src/Services/Admin/Dashboard/DashboardManager.php:83
 msgid "Site Advisor"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardManager.php:99
+#: src/Services/Admin/Dashboard/DashboardManager.php:101
 #: templates/admin/pages/dashboard/header.php:21
 msgid "Dashboard"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:199
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:202
 msgid "Traffic drop"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:202
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:205
 msgid "Traffic spike"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:205
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:208
 msgid "404 spike"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:208
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:211
 msgid "Alert"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:222
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:225
 msgid "Traffic dropped unexpectedly compared to recent days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:225
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:228
 msgid "Traffic increased significantly compared to recent days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:228
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:231
 msgid "Visitors are reaching pages that no longer exist."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:231
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:234
 msgid "Unusual activity was detected."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:247
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:250
 msgid "Sudden traffic drops are often caused by downtime or recent changes."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:249
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:252
 msgid "Check if your site is reachable"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:250
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:253
 msgid "Review recent plugin or theme changes"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:251
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:254
 msgid "Look for increases in 404 errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:257
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:260
 msgid ""
 "Traffic spikes can indicate viral content, marketing success, or bot "
 "activity."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:259
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:262
 msgid "Check analytics for sources"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:260
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:263
 msgid "Review server load and performance"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:261
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:264
 msgid "Look for unusual referrers"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:267
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:270
 msgid "Missing pages can frustrate visitors and affect SEO."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:269
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:272
 msgid "Add redirects for missing pages"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:270
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:273
 msgid "Fix internal links pointing to missing URLs"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:271
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:274
 msgid "Review permalink changes"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:278
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:281
 msgid "This issue may require your attention."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:280
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:283
 msgid "Review recent changes to your site"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:281
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:284
 msgid "Check your site for visible issues"
 msgstr ""
 
@@ -399,8 +399,10 @@ msgstr ""
 msgid "Traffic increased by %s%%"
 msgstr ""
 
-#: src/Services/Insights/AlertEngine.php:161
-msgid "404 errors increased"
+#. translators: %s: The percentage value of 404 error increase
+#: src/Services/Insights/AlertEngine.php:151
+#, php-format
+msgid "404 errors increased by %s%%"
 msgstr ""
 
 #. translators: 1: average pageviews, 2: average 404 errors

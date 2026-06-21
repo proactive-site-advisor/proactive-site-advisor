@@ -52,15 +52,15 @@
     flex-wrap: wrap;
 
     margin-top: calc(-1 * css-var(gutter-y));
-    margin-right: calc(css-var(gutter-x) / -2);
-    margin-left: calc(css-var(gutter-x) / -2);
+    margin-inline-end: calc(css-var(gutter-x) / -2);
+    margin-inline-start: calc(css-var(gutter-x) / -2);
 
     > * {
       flex-shrink: 0;
       width: 100%;
       max-width: 100%;
-      padding-right: calc(css-var(gutter-x) / 2);
-      padding-left: calc(css-var(gutter-x) / 2);
+      padding-inline-end: calc(css-var(gutter-x) / 2);
+      padding-inline-start: calc(css-var(gutter-x) / 2);
       margin-top: css-var(gutter-y);
     }
   }
@@ -159,10 +159,9 @@
     #{css-var-name(gutter-y)}: 0;
 
     width: 100%;
-    padding-right: calc(css-var(gutter-x) / 2);
-    padding-left: calc(css-var(gutter-x) / 2);
-    margin-right: auto;
-    margin-left: auto;
+    padding-inline-end: calc(css-var(gutter-x) / 2);
+    padding-inline-start: calc(css-var(gutter-x) / 2);
+    margin-inline: auto;
   }
 
   // -----------------------------------------------------
@@ -181,5 +180,5 @@
       }
     }
   }
-  
+
 }

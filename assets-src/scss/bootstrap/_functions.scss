@@ -1,9 +1,10 @@
 // =====================================================
 // Admin UI - Bootstrap Functions
 // =====================================================
-// Only essential functions needed for our custom components
 
 @use "sass:math";
+@use "sass:map";
+@use "sass:meta";
 
 // Color contrast
 @function color-contrast(
@@ -58,12 +59,12 @@
                       2.4
       );
     }
-    $rgb: map-merge($rgb, ($name: $value));
+    $rgb: map.merge($rgb, ($name: $value));
   }
 
-  @return (map-get($rgb, "r") * 0.2126) +
-          (map-get($rgb, "g") * 0.7152) +
-          (map-get($rgb, "b") * 0.0722);
+  @return (map.get($rgb, "r") * 0.2126) +
+          (map.get($rgb, "g") * 0.7152) +
+          (map.get($rgb, "b") * 0.0722);
 }
 
 // Tint a color: mix with white
@@ -93,7 +94,7 @@
   @if $value2 == null {
     @return $value1;
   }
-  @if type-of($value1) == number and type-of($value2) == number and comparable($value1, $value2) {
+  @if meta.type-of($value1) == number and meta.type-of($value2) == number and comparable($value1, $value2) {
     @return $value1 + $value2;
   }
   @if $return-calc == true {
@@ -114,7 +115,7 @@
   @if $value2 == null {
     @return $value1;
   }
-  @if type-of($value1) == number and type-of($value2) == number and comparable($value1, $value2) {
+  @if meta.type-of($value1) == number and meta.type-of($value2) == number and comparable($value1, $value2) {
     @return $value1 - $value2;
   }
   @if $return-calc == true {
@@ -131,7 +132,7 @@
 
 // Convert to rem
 @function to-rem($value) {
-  @if type-of($value) == "number" and unit($value) == "px" {
+  @if meta.type-of($value) == "number" and unit($value) == "px" {
     @return math.div($value, 16px) * 1rem;
   }
   @return $value;
@@ -140,7 +141,7 @@
 // Map deep get
 @function map-deep-get($map, $keys...) {
   @each $key in $keys {
-    $map: map-get($map, $key);
+    $map: map.get($map, $key);
   }
   @return $map;
 }

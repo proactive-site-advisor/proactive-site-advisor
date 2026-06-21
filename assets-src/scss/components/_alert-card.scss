@@ -9,7 +9,7 @@
   .#{css-class('alert-card')} {
     position: relative;
     margin-bottom: 0.75rem;
-    border-left: 3px solid css-var(border-color);
+    border-inline-start: 3px solid css-var(border-color);
     transition: border-color 0.2s ease;
 
     &:last-child {
@@ -24,7 +24,7 @@
 
     // Severity variants
     &--info {
-      border-left-color: css-var(info);
+      border-inline-start-color: css-var(info);
 
       .#{css-class('alert-card__icon')} {
         background-color: rgba(css-var(info-rgb), 0.16);
@@ -36,7 +36,7 @@
     }
 
     &--warning {
-      border-left-color: css-var(warning);
+      border-inline-start-color: css-var(warning);
 
       .#{css-class('alert-card__icon')} {
         background-color: rgba(css-var(warning-rgb), 0.16);
@@ -48,7 +48,7 @@
     }
 
     &--error {
-      border-left-color: css-var(error);
+      border-inline-start-color: css-var(error);
 
       .#{css-class('alert-card__icon')} {
         background-color: rgba(css-var(error-rgb), 0.16);
@@ -122,7 +122,7 @@
       width: 1.75rem;
       height: 1.75rem;
       padding: 0;
-      margin-left: 0.5rem;
+      margin-inline-start: 0.5rem;
       background: none;
       border: none;
       border-radius: css-var(border-radius);
@@ -138,6 +138,10 @@
 
     &--expanded &__toggle {
       transform: rotate(180deg);
+    }
+
+    [dir="rtl"] &--expanded &__toggle {
+      transform: rotate(-180deg);
     }
 
     &__details {
@@ -170,7 +174,7 @@
 
     &__checklist {
       margin: 0;
-      padding-left: 1.25rem;
+      padding-inline-start: 1.25rem;
       font-size: 0.8125rem;
       color: css-var(body-color);
       list-style: disc;

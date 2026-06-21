@@ -1,0 +1,96 @@
+// =====================================================
+// Admin UI - Tabs Component
+// =====================================================
+
+@use "../prefix" as *;
+
+.#{css-class('wrap')} {
+
+  .#{css-class('tab-wrapper')} {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .#{css-class('tab-nav')} {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    padding-inline-start: 0;
+    margin-bottom: 0;
+    list-style: none;
+  }
+
+  .#{css-class('tab-nav-link')} {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: css-var(body-color);
+    text-decoration: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    white-space: nowrap;
+
+    &:hover,
+    &:focus {
+      color: css-var(primary);
+    }
+
+    &.#{css-class('disabled')} {
+      color: css-var(muted-color);
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
+  // Underline Tabs style
+  .#{css-class('nav-tabs')} {
+    .#{css-class('tab-nav-link')} {
+      margin-bottom: -1px;
+      border: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+
+      &.#{css-class('active')} {
+        color: css-var(primary);
+        border-bottom-color: css-var(primary);
+      }
+    }
+  }
+
+  // Pills style
+  .#{css-class('tab-nav-pills')} {
+    gap: 0.25rem;
+
+    .#{css-class('tab-nav-link')} {
+      border-radius: css-var(border-radius);
+
+      &.#{css-class('active')} {
+        color: #fff;
+        background-color: css-var(primary);
+      }
+    }
+  }
+
+  // Tab content
+  .#{css-class('tab-content')} {
+    padding: 1rem 0;
+  }
+
+  .#{css-class('tab-pane')} {
+    display: none;
+
+    &.#{css-class('show')}.#{css-class('active')} {
+      display: block;
+    }
+  }
+}
