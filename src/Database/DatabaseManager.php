@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Manages custom database table creation and updates using dbDelta().
  *
  * @package ProactiveSiteAdvisor\Database
- * @version 1.0.0
+ * @version 1.0.3
  */
 class DatabaseManager
 {
@@ -27,7 +27,7 @@ class DatabaseManager
      *
      * @var string
      */
-    private static string $version = '1.0.0';
+    private static string $version = '1.0.1';
 
     /**
      * Registered table schemas
@@ -93,6 +93,16 @@ class DatabaseManager
     }
 
     /**
+     * Save the current database version to the database.
+     *
+     * @return void
+     */
+    public static function saveVersion(): void
+    {
+        OptionUtils::setMeta(PluginMeta::DB_VERSION, self::$version);
+    }
+
+    /**
      * Get the current database schema version.
      *
      * @return string
@@ -148,8 +158,7 @@ class DatabaseManager
             $results[$schema->getName()] = self::createTable($schema);
         }
 
-        // Update version after successful creation
-        OptionUtils::setMeta(PluginMeta::DB_VERSION, self::$version);
+        self::saveVersion();
 
         /**
          * Action fired after database tables are created/updated.
@@ -211,7 +220,7 @@ class DatabaseManager
         Logger::warning('Dropping database table', ['table' => $tableName]);
 
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
-        $result = $wpdb->query("DROP TABLE IF EXISTS {$tableName}");
+        $result = $wpdb->query("DROP TABLE IF EXISTS $tableName");
 
         return $result !== false;
     }
@@ -249,7 +258,7 @@ class DatabaseManager
         $tableName = $schema->getFullName();
 
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
-        return $wpdb->get_var("SHOW TABLES LIKE '{$tableName}'") === $tableName;
+        return $wpdb->get_var("SHOW TABLES LIKE '$tableName'") === $tableName;
     }
 
     /**
@@ -270,7 +279,7 @@ class DatabaseManager
         }
 
         $tableName = $schema->getFullName();
-        $sql       = "SELECT COUNT(*) FROM {$tableName}";
+        $sql       = "SELECT COUNT(*) FROM $tableName";
         $values    = [];
 
         if (!empty($where)) {
@@ -319,7 +328,7 @@ class DatabaseManager
         Logger::warning('Truncating database table', ['table' => $tableName]);
 
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized via TableSchema::getFullName()
-        $result = $wpdb->query("TRUNCATE TABLE {$tableName}");
+        $result = $wpdb->query("TRUNCATE TABLE $tableName");
 
         return $result !== false;
     }
@@ -343,7 +352,7 @@ class DatabaseManager
         $tableName = $schema->getFullName();
 
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
-        $columns = $wpdb->get_results("DESCRIBE {$tableName}", ARRAY_A);
+        $columns = $wpdb->get_results("DESCRIBE $tableName", ARRAY_A);
 
         return $columns ?: [];
     }
@@ -369,6 +378,62 @@ class DatabaseManager
     }
 
     /**
+     * Drop a column from a table.
+     *
+     * @param string $tableName Table name (without prefix).
+     * @param string $columnName Column name.
+     * @return bool True on success, false on failure.
+     */
+    public static function dropColumn(string $tableName, string $columnName): bool
+    {
+        global $wpdb;
+
+        $schema = self::getTable($tableName);
+
+        if (!$schema) {
+            Logger::error('Table not found for dropping column', [
+                'table'  => $tableName,
+                'column' => $columnName,
+            ]);
+            return false;
+        }
+
+        $fullTableName = $schema->getFullName();
+
+        if (!self::columnExists($tableName, $columnName)) {
+            Logger::warning('Column does not exist, skipping drop', [
+                'table'  => $fullTableName,
+                'column' => $columnName,
+            ]);
+            return true;
+        }
+
+        Logger::info('Dropping column from table', [
+            'table'  => $fullTableName,
+            'column' => $columnName,
+        ]);
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table and column are sanitized, ALTER TABLE requires direct query
+        $result = $wpdb->query("ALTER TABLE `$fullTableName` DROP COLUMN `$columnName`");
+
+        if ($result === false) {
+            Logger::error('Failed to drop column', [
+                'table'  => $fullTableName,
+                'column' => $columnName,
+                'error'  => $wpdb->last_error,
+            ]);
+            return false;
+        }
+
+        Logger::info('Column dropped successfully', [
+            'table'  => $fullTableName,
+            'column' => $columnName,
+        ]);
+
+        return true;
+    }
+
+    /**
      * Run a database migration.
      *
      * @param string $fromVersion Version to migrate from.
@@ -379,8 +444,8 @@ class DatabaseManager
     {
         $installedVersion = self::getInstalledVersion();
 
-        if (version_compare($installedVersion, $fromVersion, '<')) {
-            return false;
+        if (version_compare($installedVersion, $fromVersion, '>=')) {
+            return true;
         }
 
         Logger::info('Running database migration', [
@@ -566,17 +631,17 @@ class DatabaseManager
             $values     = [];
 
             foreach ($idOrWhere as $column => $value) {
-                $conditions[] = "`{$column}` = %s";
+                $conditions[] = "`$column` = %s";
                 $values[]     = $value;
             }
 
             $whereClause = implode(' AND ', $conditions);
 
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized, placeholders built dynamically
-            $sql = $wpdb->prepare("SELECT * FROM {$tableName} WHERE {$whereClause} LIMIT 1", ...$values);
+            $sql = $wpdb->prepare("SELECT * FROM $tableName WHERE $whereClause LIMIT 1", ...$values);
         } else {
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized, value is prepared
-            $sql = $wpdb->prepare("SELECT * FROM {$tableName} WHERE `{$idColumn}` = %s LIMIT 1", $idOrWhere);
+            $sql = $wpdb->prepare("SELECT * FROM $tableName WHERE `$idColumn` = %s LIMIT 1", $idOrWhere);
         }
 
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above
@@ -614,7 +679,7 @@ class DatabaseManager
         $args = wp_parse_args($args, $defaults);
 
         $columns = is_array($args['columns']) ? implode(', ', $args['columns']) : $args['columns'];
-        $sql     = "SELECT {$columns} FROM {$tableName}";
+        $sql     = "SELECT $columns FROM $tableName";
 
         // WHERE
         if (!empty($args['where'])) {
@@ -624,10 +689,10 @@ class DatabaseManager
             foreach ($args['where'] as $column => $value) {
                 if (is_array($value)) {
                     $placeholders = array_fill(0, count($value), '%s');
-                    $conditions[] = "`{$column}` IN (" . implode(', ', $placeholders) . ")";
+                    $conditions[] = "`$column` IN (" . implode(', ', $placeholders) . ")";
                     $values       = array_merge($values, $value);
                 } else {
-                    $conditions[] = "`{$column}` = %s";
+                    $conditions[] = "`$column` = %s";
                     $values[]     = $value;
                 }
             }
@@ -643,7 +708,7 @@ class DatabaseManager
         // ORDER BY
         $order = strtoupper($args['order']) === 'DESC' ? 'DESC' : 'ASC';
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- orderby is from trusted defaults, order is validated
-        $sql .= " ORDER BY `{$args['orderby']}` {$order}";
+        $sql .= " ORDER BY `{$args['orderby']}` $order";
 
         // LIMIT
         if ($args['limit'] > 0) {

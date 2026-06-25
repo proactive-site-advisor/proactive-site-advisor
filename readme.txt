@@ -1,10 +1,10 @@
 === Proactive Site Advisor – Local, privacy-first site alerts ===
-Contributors: sitealerts
+Contributors: zheynlab
 Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,10 @@ Yes. Licensed GPL-2.0-or-later.
 
 == Changelog ==
 
+= 1.0.3 =
+* Fix: Alert messages now fully translatable via WordPress i18n functions
+* Database: Removed redundant "title" column for cleaner table structure
+
 = 1.0.2 =
 * Added: RTL support for WordPress admin dashboard
 
@@ -96,6 +100,9 @@ Yes. Licensed GPL-2.0-or-later.
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+This update makes alert messages translation-ready and removes a redundant database column. Safe automatic update. No manual action required.
 
 = 1.0.2 =
 Added RTL language support for admin dashboard. Safe automatic update.

@@ -17,7 +17,7 @@ use ProactiveSiteAdvisor\Config\PluginOptions;
  * This class provides methods that can be called from uninstall.php.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.0
+ * @version 1.0.3
  */
 class UninstallHandler
 {
@@ -73,7 +73,7 @@ class UninstallHandler
         global $wpdb;
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Multisite network query requires direct access
-        $blogIds = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs}");
+        $blogIds = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
 
         foreach ($blogIds as $blogId) {
             switch_to_blog($blogId);
@@ -91,14 +91,12 @@ class UninstallHandler
     {
         global $wpdb;
 
-        // Delete main plugin option
         delete_option(PluginOptions::OPTION_NAME);
 
-        // Delete any options with our prefix
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk cleanup on uninstall requires direct query
         $wpdb->query(
             $wpdb->prepare(
-                "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+                "DELETE FROM $wpdb->options WHERE option_name LIKE %s",
                 PluginOptions::META_PREFIX . '%'
             )
         );
@@ -124,30 +122,23 @@ class UninstallHandler
         global $wpdb;
 
         $schemas        = self::$tableSchemas;
-        $fullTableNames = [];
+        $tablesToDelete = [];
 
         foreach ($schemas as $schemaClass) {
             if (class_exists($schemaClass) && method_exists($schemaClass, 'getSchemas')) {
                 $tables = $schemaClass::getSchemas();
 
                 foreach ($tables as $table) {
-                    $fullTableNames[] = $table->getFullName();
+                    $tablesToDelete[] = $table->getFullName();
                 }
             }
         }
-
-        /**
-         * Filter the list of tables to delete on uninstall.
-         *
-         * @param array $tables Array of full table names (with prefix).
-         */
-        $tablesToDelete = apply_filters('proactive_site_advisor_tables_to_delete', $fullTableNames);
 
         foreach ($tablesToDelete as $tableName) {
             $tableName = esc_sql($tableName);
 
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized above
-            $wpdb->query("DROP TABLE IF EXISTS {$tableName}");
+            $wpdb->query("DROP TABLE IF EXISTS $tableName");
         }
     }
 
@@ -163,7 +154,7 @@ class UninstallHandler
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk cleanup on uninstall requires direct query
         $wpdb->query(
             $wpdb->prepare(
-                "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+                "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
                 '_transient_' . PluginOptions::META_PREFIX . '%',
                 '_transient_timeout_' . PluginOptions::META_PREFIX . '%'
             )
@@ -197,9 +188,9 @@ class UninstallHandler
          *
          * @param array $hooks Array of hook names to clear.
          */
-        $hooks = apply_filters('proactive_site_advisor_cron_hooks_to_clear', [
+        $hooks = [
             'proactive_site_advisor_daily_cron',
-        ]);
+        ];
 
         foreach ($hooks as $hook) {
             wp_clear_scheduled_hook($hook);

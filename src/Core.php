@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor;
 
+use ProactiveSiteAdvisor\Lifecycle\UpdateHandler;
 use ProactiveSiteAdvisor\Admin\Notices\AdminNotices;
 use ProactiveSiteAdvisor\Admin\Notices\PromoNotice;
 use ProactiveSiteAdvisor\AdminUI\Assets\AssetLoader;
@@ -26,7 +27,7 @@ if (!defined('ABSPATH')) {
  * Main plugin bootstrap class (Singleton pattern).
  *
  * @package ProactiveSiteAdvisor
- * @version 1.0.0
+ * @version 1.0.3
  */
 final class Core
 {
@@ -62,6 +63,7 @@ final class Core
         AssetLoader::class,
         ThemeSwitcher::class,
         DashboardManager::class,
+        UpdateHandler::class,
     ];
 
     /**

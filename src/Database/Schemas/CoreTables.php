@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Defines core database tables for the Proactive Site Advisor plugin.
  *
  * @package ProactiveSiteAdvisor\Database\Schemas
- * @version 1.0.0
+ * @version 1.0.3
  */
 class CoreTables
 {
@@ -88,7 +88,6 @@ class CoreTables
             ->date('alert_date')
             ->varchar('type', 40)
             ->varchar('severity', 12)
-            ->varchar('title', 190)
             ->json('meta_json')
             ->timestamps()
             ->unique('alerts_unique', ['alert_date', 'type']);
