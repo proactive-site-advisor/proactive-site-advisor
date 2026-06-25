@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Represents an alert record stored in the alerts table.
  *
  * @package ProactiveSiteAdvisor\Models
- * @version 1.0.0
+ * @version 1.0.3
  */
 class Alert extends AbstractModel
 {
@@ -35,7 +35,6 @@ class Alert extends AbstractModel
         'alert_date',
         'type',
         'severity',
-        'title',
         'meta_json',
     ];
 
@@ -54,7 +53,6 @@ class Alert extends AbstractModel
      * @param string $dateYmd
      * @param string $type
      * @param string $severity
-     * @param string $title
      * @param string|null $metaJson
      *
      * @return static|null
@@ -63,7 +61,6 @@ class Alert extends AbstractModel
         string  $dateYmd,
         string  $type,
         string  $severity,
-        string  $title,
         ?string $metaJson = null
     ): ?self
     {
@@ -80,7 +77,6 @@ class Alert extends AbstractModel
             'alert_date' => $dateYmd,
             'type'       => $type,
             'severity'   => $severity,
-            'title'      => $title,
             'meta_json'  => $metaJson,
         ]);
     }

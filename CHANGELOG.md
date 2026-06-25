@@ -2,6 +2,14 @@
 
 
 
+= 1.0.3 – 2026-06-25 =
+
+\* Fix: Make alert messages translation-ready by removing hardcoded "title" column from database and using WordPress i18n functions
+
+\* Database: Remove redundant "title" column to optimize table structure
+
+
+
 = 1.0.2 – 2026-06-21 =
 
 \* Added: RTL support for WordPress admin dashboard

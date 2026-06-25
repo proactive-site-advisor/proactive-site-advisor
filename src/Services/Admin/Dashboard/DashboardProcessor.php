@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Class DashboardProcessor
  *
  * @package ProactiveSiteAdvisor\Services\Admin\Dashboard
- * @version 1.0.1
+ * @version 1.0.3
  */
 class DashboardProcessor
 {
@@ -53,7 +53,7 @@ class DashboardProcessor
                 $traffic++;
             }
 
-            if ($type === 'error_404_spike') {
+            if ($type === '404_spike') {
                 $error++;
             }
         }
@@ -97,7 +97,7 @@ class DashboardProcessor
                 'icon'     => $this->getIcon($type),
                 'color'    => $this->getColor($severity),
                 'label'    => $this->getLabel($type),
-                'title'    => $alert['title'],
+                'title'    => $this->getTitle($type, $meta),
                 'short'    => $this->getShortMessage($type),
                 'expanded' => $this->getExpandedContent($type, $meta),
                 'date'     => DateTimeUtils::format($alert['alert_date'], 'F j, Y'),
@@ -161,7 +161,7 @@ class DashboardProcessor
             case 'traffic_spike':
                 return PrefixConfig::css('icon--traffic-spike');
 
-            case 'error_404_spike':
+            case '404_spike':
                 return PrefixConfig::css('icon--error-404');
 
             default:
@@ -204,12 +204,40 @@ class DashboardProcessor
             case 'traffic_spike':
                 return __('Traffic spike', 'proactive-site-advisor');
 
-            case 'error_404_spike':
+            case '404_spike':
                 return __('404 spike', 'proactive-site-advisor');
 
             default:
                 return __('Alert', 'proactive-site-advisor');
         }
+    }
+
+    /**
+     * Generate alert title from meta data.
+     *
+     * @param string $type Alert type.
+     * @param array $meta Meta data containing change_pct.
+     *
+     * @return string Generated title.
+     */
+    private function getTitle(string $type, array $meta): string
+    {
+        if ($type === 'traffic_drop') {
+            /* translators: %s: The percentage value of traffic drop */
+            return sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+        }
+
+        if ($type === 'traffic_spike') {
+            /* translators: %s: The percentage value of traffic increase */
+            return sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+        }
+
+        if ($type === '404_spike') {
+            /* translators: %s: The percentage value of 404 error increase */
+            return sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+        }
+
+        return $this->getLabel($type);
     }
 
     /**
@@ -227,7 +255,7 @@ class DashboardProcessor
             case 'traffic_spike':
                 return __('Traffic increased significantly compared to recent days.', 'proactive-site-advisor');
 
-            case 'error_404_spike':
+            case '404_spike':
                 return __('Visitors are reaching pages that no longer exist.', 'proactive-site-advisor');
 
             default:
@@ -265,7 +293,7 @@ class DashboardProcessor
                     ],
                 ];
 
-            case 'error_404_spike':
+            case '404_spike':
                 return [
                     'meaning' => __('Missing pages can frustrate visitors and affect SEO.', 'proactive-site-advisor'),
                     'checks'  => [

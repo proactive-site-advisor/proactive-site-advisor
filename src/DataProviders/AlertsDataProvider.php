@@ -15,17 +15,17 @@ if (!defined('ABSPATH')) {
  * Provides query helpers for retrieving alert data from the database.
  *
  * @package ProactiveSiteAdvisor\DataProviders
- * @version 1.0.0
+ * @version 1.0.3
  */
 class AlertsDataProvider extends AbstractDataProvider
 {
     /**
      * Retrieve the latest alert rows from the database.
      *
-     * @param int $limit Maximum number of rows to return.
-     * @param int $days Number of days to look back.
+     * @param int $limit
+     * @param int $days
      *
-     * @return array<int, array<string, mixed>>
+     * @return array
      */
     public function getLatestAlerts(int $limit = 7, int $days = 7): array
     {
@@ -39,7 +39,7 @@ class AlertsDataProvider extends AbstractDataProvider
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT id, alert_date, type, severity, title, meta_json, created_at
+                "SELECT id, alert_date, type, severity, meta_json, created_at
                  FROM {$table}
                  WHERE alert_date >= %s
                  ORDER BY alert_date DESC, id DESC
@@ -61,10 +61,10 @@ class AlertsDataProvider extends AbstractDataProvider
     /**
      * Get the count of alerts grouped by severity for the last N days.
      *
-     * @param int $days Number of days to look back.
-     * @param int $lastSeenId Only count alerts with ID greater than this value.
+     * @param int $days
+     * @param int $lastSeenId
      *
-     * @return array{critical: int, warning: int, info: int}
+     * @return array
      */
     public function getSeverityCounts(int $days = 7, int $lastSeenId = 0): array
     {
@@ -102,9 +102,9 @@ class AlertsDataProvider extends AbstractDataProvider
     /**
      * Retrieve digest source rows for the last N days.
      *
-     * @param int $days Number of days to look back.
+     * @param int $days
      *
-     * @return array<int, array{type: string, severity: string}>
+     * @return array
      */
     public function getDigestRows(int $days = 7): array
     {
@@ -137,7 +137,7 @@ class AlertsDataProvider extends AbstractDataProvider
      *
      * @param int $days Number of days to look back.
      *
-     * @return array<int, array{meta_json: string}>
+     * @return array
      */
     public function get404SpikeRows(int $days = 7): array
     {
@@ -151,7 +151,7 @@ class AlertsDataProvider extends AbstractDataProvider
             $wpdb->prepare(
                 "SELECT meta_json
                  FROM {$table}
-                 WHERE type = 'error_404_spike'
+                 WHERE type = '404_spike'
                  AND alert_date >= %s
                  AND meta_json IS NOT NULL",
                 $start
@@ -179,6 +179,6 @@ class AlertsDataProvider extends AbstractDataProvider
         $table = Alert::getTableName();
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        return (int)$wpdb->get_var("SELECT MAX(id) FROM {$table}");
+        return (int)$wpdb->get_var("SELECT MAX(id) FROM $table");
     }
 }

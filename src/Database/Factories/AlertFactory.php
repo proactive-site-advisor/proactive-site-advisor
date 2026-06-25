@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Factory for creating Alert records with fake data.
  *
  * @package ProactiveSiteAdvisor\Database\Factories
- * @version 1.0.0
+ * @version 1.0.3
  */
 class AlertFactory extends AbstractFactory
 {
@@ -25,26 +25,6 @@ class AlertFactory extends AbstractFactory
      * @var string
      */
     protected string $model = Alert::class;
-
-    /**
-     * Alert type configurations.
-     *
-     * @var array
-     */
-    private array $alertTypes = [
-        'traffic_drop'    => [
-            'severities' => ['warning', 'critical'],
-            'title'      => 'Traffic dropped by %d%%',
-        ],
-        'traffic_spike'   => [
-            'severities' => ['info'],
-            'title'      => 'Traffic increased by %d%%',
-        ],
-        'error_404_spike' => [
-            'severities' => ['warning'],
-            'title'      => '404 errors increased significantly',
-        ],
-    ];
 
     /**
      * Define default attributes.
@@ -57,88 +37,96 @@ class AlertFactory extends AbstractFactory
             'alert_date' => current_time('Y-m-d'),
             'type'       => 'traffic_drop',
             'severity'   => 'warning',
-            'title'      => 'Traffic dropped by 35%',
             'meta_json'  => null,
         ];
     }
 
     /**
-     * Create a traffic drop alert.
+     * Create a traffic drop alert, following TrafficAnalyzer rules.
      *
-     * @param string $date Date in Y-m-d format.
-     * @param int $percentDrop Percentage drop (positive number).
-     * @param bool $critical Whether it's critical severity.
+     * @param string $date
+     * @param int $percentDrop
      * @return Alert|null
      */
-    public function trafficDrop(string $date, int $percentDrop = 35, bool $critical = false): ?Alert
+    public function trafficDrop(string $date, int $percentDrop = 35): ?Alert
     {
-        $severity = $critical ? 'critical' : 'warning';
-        $today    = $this->randomInt(300, 600);
-        $avg7     = (int)($today / (1 - ($percentDrop / 100)));
+        if ($percentDrop <= 30) {
+            $percentDrop = 31;
+        }
+
+        $today = $this->randomInt(300, 600);
+        $avg7  = (int)round(($today / (1 - ($percentDrop / 100))));
+
+        $ratio     = $today / $avg7;
+        $changePct = round(($ratio - 1) * 100, 2);
+        $severity  = abs($changePct) >= 40 ? 'critical' : 'warning';
 
         $metaJson = wp_json_encode([
             'today'      => $today,
             'avg7'       => $avg7,
-            'change_pct' => -$percentDrop,
+            'change_pct' => $changePct,
         ]);
 
-        // Delete existing to avoid duplicate key error
-        Alert::deleteByDateAndType($date, 'traffic_drop');
-
-        $result = $this->create([
-            'alert_date' => $date,
-            'type'       => 'traffic_drop',
-            'severity'   => $severity,
-            'title'      => sprintf($this->alertTypes['traffic_drop']['title'], $percentDrop),
-            'meta_json'  => $metaJson,
-        ]);
-
-        return $result instanceof Alert ? $result : null;
+        return Alert::createIfNotExists(
+            $date,
+            'traffic_drop',
+            $severity,
+            $metaJson
+        );
     }
 
     /**
-     * Create a traffic spike alert.
+     * Create a traffic spike alert, following TrafficAnalyzer rules.
      *
-     * @param string $date Date in Y-m-d format.
-     * @param int $percentIncrease Percentage increase.
+     * @param string $date
+     * @param int $percentIncrease
      * @return Alert|null
      */
     public function trafficSpike(string $date, int $percentIncrease = 75): ?Alert
     {
+        if ($percentIncrease <= 50) {
+            $percentIncrease = 51;
+        }
+
         $avg7  = $this->randomInt(800, 1200);
         $today = (int)($avg7 * (1 + ($percentIncrease / 100)));
+
+        $ratio     = $today / $avg7;
+        $changePct = round(($ratio - 1) * 100, 2);
 
         $metaJson = wp_json_encode([
             'today'      => $today,
             'avg7'       => $avg7,
-            'change_pct' => $percentIncrease,
+            'change_pct' => $changePct,
         ]);
 
-        // Delete existing to avoid duplicate key error
-        Alert::deleteByDateAndType($date, 'traffic_spike');
-
-        $result = $this->create([
-            'alert_date' => $date,
-            'type'       => 'traffic_spike',
-            'severity'   => 'info',
-            'title'      => sprintf($this->alertTypes['traffic_spike']['title'], $percentIncrease),
-            'meta_json'  => $metaJson,
-        ]);
-
-        return $result instanceof Alert ? $result : null;
+        return Alert::createIfNotExists(
+            $date,
+            'traffic_spike',
+            'info',
+            $metaJson
+        );
     }
 
     /**
-     * Create a 404 spike alert.
+     * Create a 404 spike alert, compatible with Error404Analyzer logic.
      *
-     * @param string $date Date in Y-m-d format.
-     * @param int $errorCount Today's 404 count.
-     * @param int $average Average 404 count.
+     * @param string $date
+     * @param int $errorCount
+     * @param int $average
      * @return Alert|null
      */
     public function error404Spike(string $date, int $errorCount = 50, int $average = 15): ?Alert
     {
-        $changePct = (int)(($errorCount - $average) / $average * 100);
+        $ratio = $average > 0 ? $errorCount / $average : 0;
+        if ($ratio <= 2) {
+            $factor     = $this->randomFloat(2.1, 4.0);
+            $errorCount = (int)($average * $factor);
+            $ratio      = $factor;
+        }
+
+        $severity  = $ratio >= 3 ? 'critical' : 'warning';
+        $changePct = round(($ratio - 1) * 100, 2);
 
         $topPaths = [
             ['/wp-login.php', $this->randomInt(10, 20)],
@@ -153,47 +141,38 @@ class AlertFactory extends AbstractFactory
             'top'        => $topPaths,
         ]);
 
-        // Delete existing to avoid duplicate key error
-        Alert::deleteByDateAndType($date, 'error_404_spike');
-
-        $result = $this->create([
-            'alert_date' => $date,
-            'type'       => 'error_404_spike',
-            'severity'   => 'warning',
-            'title'      => $this->alertTypes['error_404_spike']['title'],
-            'meta_json'  => $metaJson,
-        ]);
-
-        return $result instanceof Alert ? $result : null;
+        return Alert::createIfNotExists(
+            $date,
+            '404_spike',
+            $severity,
+            $metaJson
+        );
     }
 
     /**
      * Create a random alert for realistic pattern.
      *
-     * @param string $date Date in Y-m-d format.
+     * @param string $date
      * @return Alert|null
      */
     public function randomAlert(string $date): ?Alert
     {
-        $types = ['traffic_drop', 'traffic_spike', 'error_404_spike'];
+        $types = ['traffic_drop', 'traffic_spike', '404_spike'];
         $type  = $this->randomElement($types);
 
         switch ($type) {
             case 'traffic_drop':
-                $percentDrop = $this->randomInt(30, 50);
-                $critical    = $percentDrop >= 40;
-
-                return $this->trafficDrop($date, $percentDrop, $critical);
+                $percentDrop = $this->randomInt(31, 50);
+                return $this->trafficDrop($date, $percentDrop);
 
             case 'traffic_spike':
                 $percentIncrease = $this->randomInt(60, 120);
-
                 return $this->trafficSpike($date, $percentIncrease);
 
-            case 'error_404_spike':
-                $errorCount = $this->randomInt(40, 80);
+            case '404_spike':
                 $average    = $this->randomInt(10, 20);
-
+                $factor     = $this->randomFloat(2.1, 4.0);
+                $errorCount = (int)($average * $factor);
                 return $this->error404Spike($date, $errorCount, $average);
 
             default:

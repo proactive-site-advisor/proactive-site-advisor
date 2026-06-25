@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Generates traffic and 404-related alerts for a given day.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.1
+ * @version 1.0.3
  */
 class AlertEngine
 {
@@ -67,7 +67,7 @@ class AlertEngine
      */
     public function generateForDay(string $date): void
     {
-        $base = $this->baselineCalculator->calculate($date, 7);
+        $base = $this->baselineCalculator->calculate($date);
 
         if ($base['count'] < 7) {
             return;
@@ -107,14 +107,6 @@ class AlertEngine
             return;
         }
 
-        if ($r['type'] === 'traffic_drop') {
-            /* translators: %s: The percentage value of traffic drop */
-            $title = sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
-        } else {
-            /* translators: %s: The percentage value of traffic increase */
-            $title = sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
-        }
-
         $meta = [
             'today'      => $today,
             'avg7'       => (int)round($avg),
@@ -125,7 +117,6 @@ class AlertEngine
             $date,
             $r['type'],
             $r['severity'],
-            $title,
             wp_json_encode($meta)
         );
     }
@@ -147,9 +138,6 @@ class AlertEngine
             return;
         }
 
-        /* translators: %s: The percentage value of 404 error increase */
-        $title = sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), abs($r['change_pct']));
-
         $meta = [
             'today'      => $today,
             'avg7'       => (int)round($avg),
@@ -161,7 +149,6 @@ class AlertEngine
             $date,
             $r['type'],
             $r['severity'],
-            $title,
             wp_json_encode($meta)
         );
     }
