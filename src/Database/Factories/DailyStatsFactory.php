@@ -171,10 +171,10 @@ class DailyStatsFactory extends AbstractFactory
         }
 
         if ($dayIndex === 15) {
-            $botPageviews = $this->randomInt(2000, 3000);
+            $botPageviews = $this->randomInt(2500, 3500);
         }
         if ($dayIndex === 30) {
-            $botPageviews = $this->randomInt(10, 30);
+            $botPageviews = $this->randomInt(5, 15);
         }
 
         $top404Json  = $this->generateTop404Json($errors404);

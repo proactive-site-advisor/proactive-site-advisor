@@ -167,7 +167,7 @@ class AlertFactory extends AbstractFactory
 
         $ratio     = $today / $avg7;
         $changePct = round(($ratio - 1) * 100, 2);
-        $severity  = $ratio >= 4 ? 'critical' : 'warning';
+        $severity  = $ratio >= 3.5 ? 'critical' : 'warning';
 
         $topBots = [
             ['Googlebot', $this->randomInt(50, 80)],
@@ -209,6 +209,8 @@ class AlertFactory extends AbstractFactory
         $ratio     = $today / $avg7;
         $changePct = round(($ratio - 1) * 100, 2);
 
+        $severity = $ratio <= 0.3 ? 'critical' : 'warning';
+
         $topBots = [
             ['Googlebot', $this->randomInt(2, 5)],
             ['Bingbot', $this->randomInt(1, 4)],
@@ -224,7 +226,7 @@ class AlertFactory extends AbstractFactory
         return Alert::createIfNotExists(
             $date,
             'bot_drop',
-            'info',
+            $severity,
             $metaJson
         );
     }
