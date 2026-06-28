@@ -66,6 +66,20 @@ if (!defined('ABSPATH')) {
                     </div>
                 <?php endif; ?>
 
+                <?php if (!empty($expanded['topBots'])): ?>
+                    <div class="psa-alert-card__section">
+                        <h6 class="psa-alert-card__section-title"><?php esc_html_e('Top Bots', 'proactive-site-advisor'); ?></h6>
+                        <ul class="psa-alert-card__url-list">
+                            <?php foreach ($expanded['topBots'] as $botItem) : ?>
+                                <li>
+                                    <span class="psa-alert-card__url-path"><?php echo esc_html($botItem['name']); ?></span>
+                                    <span class="psa-alert-card__url-count"><?php echo esc_html(number_format_i18n($botItem['count'])); ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+
             </div>
         </div>
         <button
