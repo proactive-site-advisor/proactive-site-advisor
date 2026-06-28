@@ -2,6 +2,26 @@
 
 
 
+= 1.0.4 – 2026-06-28 =
+
+\* Feat: Bot traffic detection – separate human vs bot pageviews
+
+\* Feat: Bot anomaly alerts – spike and drop detection with Top 3 bots
+
+\* Dashboard: New "Bot Alerts" KPI card and bot pageviews column in history table
+
+\* Dashboard: Bot alert cards with top bot names and actionable recommendations
+
+\* Performance: Combined bot pattern regex (1500+ patterns) in single static file
+
+\* Database: Added bot\_pageviews and top\_bots\_json columns to daily\_stats table
+
+\* Improvement: 404 alerts now display Top 3 broken URLs for consistency
+
+\* Improvement: FAQ and documentation expanded with bot detection details
+
+
+
 = 1.0.3 – 2026-06-25 =
 
 \* Fix: Make alert messages translation-ready by removing hardcoded "title" column from database and using WordPress i18n functions

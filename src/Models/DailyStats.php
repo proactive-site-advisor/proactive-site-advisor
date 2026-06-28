@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  * Stores one record per day with aggregated traffic data.
  *
  * @package ProactiveSiteAdvisor\Models
- * @version 1.0.0
+ * @version 1.0.4
  */
 class DailyStats extends AbstractModel
 {
@@ -38,6 +38,8 @@ class DailyStats extends AbstractModel
         'pageviews',
         'errors_404',
         'top_404_json',
+        'bot_pageviews',
+        'top_bots_json',
     ];
 
     /**
@@ -46,16 +48,18 @@ class DailyStats extends AbstractModel
      * @var array
      */
     protected static array $casts = [
-        'pageviews'    => 'integer',
-        'errors_404'   => 'integer',
-        'top_404_json' => 'json',
+        'pageviews'     => 'integer',
+        'errors_404'    => 'integer',
+        'top_404_json'  => 'json',
+        'bot_pageviews' => 'integer',
+        'top_bots_json' => 'json',
     ];
 
 
     /**
      * Ensure a row exists for the given date.
      *
-     * @param string $dateYmd Date in Y-m-d format.
+     * @param string $dateYmd
      *
      * @return void
      */
@@ -65,8 +69,8 @@ class DailyStats extends AbstractModel
         $nowRaw = DateTimeUtils::now();
 
         DatabaseManager::preparedQuery(
-            "INSERT IGNORE INTO {$table} (stats_date, pageviews, errors_404, top_404_json, created_at, updated_at)
-             VALUES (%s, 0, 0, NULL, %s, %s)",
+            "INSERT IGNORE INTO $table (stats_date, pageviews, errors_404, top_404_json, bot_pageviews, top_bots_json, created_at, updated_at)
+             VALUES (%s, 0, 0, NULL, 0, NULL, %s, %s)",
             $dateYmd,
             $nowRaw,
             $nowRaw
@@ -76,49 +80,43 @@ class DailyStats extends AbstractModel
     /**
      * Increment statistics and update top 404 paths for a specific date.
      *
-     * @param string $dateYmd Date in 'Y-m-d' format.
-     * @param int $pageviews Number of pageviews to add.
-     * @param int $errors404 Number of 404 errors to add.
-     * @param string|null $top404Json The JSON string of top 404 paths.
+     * @param string $dateYmd
+     * @param int $pageviews
+     * @param int $errors404
+     * @param string|null $top404Json
+     * @param int $botPageviews
+     * @param string|null $topBotsJson
      *
      * @return void
      */
-    public static function updateDay(string $dateYmd, int $pageviews, int $errors404, ?string $top404Json): void
+    public static function updateDay(string $dateYmd, int $pageviews, int $errors404, ?string $top404Json, int $botPageviews, ?string $topBotsJson): void
     {
         $table  = static::getTableName();
         $nowRaw = DateTimeUtils::now();
 
         DatabaseManager::preparedQuery(
-            "UPDATE {$table} SET
+            "UPDATE $table SET
                 pageviews = pageviews + %d,
                 errors_404 = errors_404 + %d,
                 top_404_json = %s,
+                bot_pageviews = bot_pageviews + %d,
+                top_bots_json = %s,
                 updated_at = %s
             WHERE stats_date = %s",
             max(0, $pageviews),
             max(0, $errors404),
             $top404Json,
+            max(0, $botPageviews),
+            $topBotsJson,
             $nowRaw,
             $dateYmd
         );
     }
 
     /**
-     * Retrieve the top 404 paths JSON string for a specific date.
-     *
-     * @param string $dateYmd Date in 'Y-m-d' format.
-     *
-     * @return string|null JSON string or null if no record exists.
-     */
-    public static function getTop404Json(string $dateYmd): ?string
-    {
-        return DatabaseManager::getRow(static::$table, ['stats_date' => $dateYmd])->top_404_json;
-    }
-
-    /**
      * Delete records older than the given date.
      *
-     * @param string $dateYmd Date in Y-m-d format.
+     * @param string $dateYmd
      *
      * @return void
      */
@@ -127,7 +125,7 @@ class DailyStats extends AbstractModel
         $table = static::getTableName();
 
         DatabaseManager::preparedQuery(
-            "DELETE FROM {$table} WHERE stats_date < %s",
+            "DELETE FROM $table WHERE stats_date < %s",
             $dateYmd
         );
     }
@@ -135,7 +133,7 @@ class DailyStats extends AbstractModel
     /**
      * Delete the record for a specific date.
      *
-     * @param string $dateYmd Date in Y-m-d format.
+     * @param string $dateYmd
      *
      * @return void
      */
@@ -144,7 +142,7 @@ class DailyStats extends AbstractModel
         $table = static::getTableName();
 
         DatabaseManager::preparedQuery(
-            "DELETE FROM {$table} WHERE stats_date = %s",
+            "DELETE FROM $table WHERE stats_date = %s",
             $dateYmd
         );
     }

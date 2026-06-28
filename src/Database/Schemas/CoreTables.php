@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Defines core database tables for the Proactive Site Advisor plugin.
  *
  * @package ProactiveSiteAdvisor\Database\Schemas
- * @version 1.0.3
+ * @version 1.0.4
  */
 class CoreTables
 {
@@ -69,6 +69,8 @@ class CoreTables
             ->int('pageviews')->default(0)
             ->int('errors_404')->default(0)
             ->json('top_404_json')->nullable()
+            ->int('bot_pageviews')->default(0)
+            ->json('top_bots_json')->nullable()
             ->timestamps()
             ->unique('daily_stats_unique', ['stats_date']);
 

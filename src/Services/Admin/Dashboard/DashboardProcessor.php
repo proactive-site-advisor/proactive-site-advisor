@@ -30,6 +30,7 @@ class DashboardProcessor
         $warning  = 0;
         $info     = 0;
         $traffic  = 0;
+        $bot      = 0;
         $error    = 0;
 
         foreach ($rows as $row) {
@@ -56,6 +57,10 @@ class DashboardProcessor
             if ($type === '404_spike') {
                 $error++;
             }
+
+            if ($type === 'bot_spike' || $type === 'bot_drop') {
+                $bot++;
+            }
         }
 
         return [
@@ -63,6 +68,7 @@ class DashboardProcessor
             'warning_alerts'  => $warning,
             'info_alerts'     => $info,
             'traffic_alerts'  => $traffic,
+            'bot_alerts'      => $bot,
             'error_alerts'    => $error,
             'total_alerts'    => $critical + $warning + $info,
         ];
@@ -161,6 +167,12 @@ class DashboardProcessor
             case 'traffic_spike':
                 return PrefixConfig::css('icon--traffic-spike');
 
+            case 'bot_spike':
+                return PrefixConfig::css('icon--bot-spike');
+
+            case 'bot_drop':
+                return PrefixConfig::css('icon--bot-drop');
+
             case '404_spike':
                 return PrefixConfig::css('icon--error-404');
 
@@ -204,6 +216,12 @@ class DashboardProcessor
             case 'traffic_spike':
                 return __('Traffic spike', 'proactive-site-advisor');
 
+            case 'bot_spike':
+                return __('Bot spike', 'proactive-site-advisor');
+
+            case 'bot_drop':
+                return __('Bot drop', 'proactive-site-advisor');
+
             case '404_spike':
                 return __('404 spike', 'proactive-site-advisor');
 
@@ -232,6 +250,22 @@ class DashboardProcessor
             return sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
         }
 
+        if ($type === 'bot_spike') {
+            return sprintf(
+            /* translators: %s: percentage */
+                __('Bot traffic increased by %s%%', 'proactive-site-advisor'),
+                abs($meta['change_pct'] ?? 0)
+            );
+        }
+
+        if ($type === 'bot_drop') {
+            return sprintf(
+            /* translators: %s: percentage */
+                __('Bot traffic dropped by %s%%', 'proactive-site-advisor'),
+                abs($meta['change_pct'] ?? 0)
+            );
+        }
+
         if ($type === '404_spike') {
             /* translators: %s: The percentage value of 404 error increase */
             return sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
@@ -254,6 +288,12 @@ class DashboardProcessor
 
             case 'traffic_spike':
                 return __('Traffic increased significantly compared to recent days.', 'proactive-site-advisor');
+
+            case 'bot_spike':
+                return __('Unusual bot activity detected – possible scraping or indexing surge.', 'proactive-site-advisor');
+
+            case 'bot_drop':
+                return __('Bot visits dropped significantly – search engines may have reduced crawling.', 'proactive-site-advisor');
 
             case '404_spike':
                 return __('Visitors are reaching pages that no longer exist.', 'proactive-site-advisor');
@@ -291,6 +331,28 @@ class DashboardProcessor
                         __('Review server load and performance', 'proactive-site-advisor'),
                         __('Look for unusual referrers', 'proactive-site-advisor'),
                     ],
+                ];
+
+            case 'bot_spike':
+                return [
+                    'meaning' => __('A sudden increase in bot traffic can indicate aggressive crawling or scraping attempts.', 'proactive-site-advisor'),
+                    'checks'  => [
+                        __('Check server load and bandwidth usage', 'proactive-site-advisor'),
+                        __('Review robots.txt rules and crawling rate in Google Search Console', 'proactive-site-advisor'),
+                        __('Consider blocking abusive IPs if the traffic is malicious', 'proactive-site-advisor'),
+                    ],
+                    'topBots' => $this->normalizeTopBotNames($meta['top'] ?? []),
+                ];
+
+            case 'bot_drop':
+                return [
+                    'meaning' => __('A significant drop in bot activity may signal that search engines are having trouble accessing your site.', 'proactive-site-advisor'),
+                    'checks'  => [
+                        __('Verify your site is accessible and not blocking crawlers unintentionally', 'proactive-site-advisor'),
+                        __('Check Search Console for crawl errors', 'proactive-site-advisor'),
+                        __('Ensure your XML sitemap is up-to-date', 'proactive-site-advisor'),
+                    ],
+                    'topBots' => $this->normalizeTopBotNames($meta['top'] ?? []),
                 ];
 
             case '404_spike':
@@ -339,6 +401,26 @@ class DashboardProcessor
     }
 
     /**
+     * Normalize top bot names meta into an array of ['name' => string, 'count' => int].
+     *
+     * @param array $meta
+     * @return array<int, array{name: string, count: int}>
+     */
+    private function normalizeTopBotNames(array $meta): array
+    {
+        $topBots = [];
+        foreach ($meta as $item) {
+            if (is_array($item) && isset($item[0], $item[1])) {
+                $topBots[] = [
+                    'name'  => (string)$item[0],
+                    'count' => (int)$item[1],
+                ];
+            }
+        }
+        return $topBots;
+    }
+
+    /**
      * Build average pageviews / errors_404 from history rows.
      *
      * @param array<int, array{pageviews:int, errors_404:int}> $rows
@@ -351,18 +433,21 @@ class DashboardProcessor
             return null;
         }
 
-        $totalPageviews = 0;
-        $total404       = 0;
-        $count          = count($rows);
+        $totalPageviews    = 0;
+        $totalBotPageviews = 0;
+        $total404          = 0;
+        $count             = count($rows);
 
         foreach ($rows as $row) {
-            $totalPageviews += $row['pageviews'];
-            $total404       += $row['errors_404'];
+            $totalPageviews    += $row['pageviews'];
+            $totalBotPageviews += $row['bot_pageviews'];
+            $total404          += $row['errors_404'];
         }
 
         return [
-            'pageviews'  => (int)round($totalPageviews / $count),
-            'errors_404' => (int)round($total404 / $count),
+            'pageviews'     => (int)round($totalPageviews / $count),
+            'bot_pageviews' => (int)round($totalBotPageviews / $count),
+            'errors_404'    => (int)round($total404 / $count),
         ];
     }
 
@@ -379,9 +464,10 @@ class DashboardProcessor
 
         foreach ($rows as $row) {
             $formatted[] = [
-                'date'       => DateTimeUtils::format($row['stats_date'], 'F j, Y'),
-                'pageviews'  => $row['pageviews'],
-                'errors_404' => $row['errors_404'],
+                'date'          => DateTimeUtils::format($row['stats_date'], 'F j, Y'),
+                'pageviews'     => $row['pageviews'],
+                'bot_pageviews' => $row['bot_pageviews'],
+                'errors_404'    => $row['errors_404'],
             ];
         }
 

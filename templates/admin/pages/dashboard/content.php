@@ -44,7 +44,7 @@ echo TemplateUtils::renderTemplate(
         <p class="psa-section__description"><?php esc_html_e('Alert summary for the last 7 days.', 'proactive-site-advisor'); ?></p>
         <div class="psa-row">
             <?php foreach ($stats as $stat) : ?>
-                <div class="psa-col-12 psa-col-sm-6 psa-col-lg-3">
+                <div class="psa-col-12 psa-col-sm-6 psa-col-lg-2">
                     <?php
                     echo TemplateUtils::renderTemplate(
                         'admin/components/stat-card', [

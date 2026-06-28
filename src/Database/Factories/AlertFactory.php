@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Factory for creating Alert records with fake data.
  *
  * @package ProactiveSiteAdvisor\Database\Factories
- * @version 1.0.3
+ * @version 1.0.4
  */
 class AlertFactory extends AbstractFactory
 {
@@ -109,6 +109,86 @@ class AlertFactory extends AbstractFactory
     }
 
     /**
+     * Create a bot spike alert, following BotTrafficAnalyzer rules.
+     *
+     * @param string $date
+     * @param int $percentIncrease
+     * @return Alert|null
+     */
+    public function botSpike(string $date, int $percentIncrease = 180): ?Alert
+    {
+        if ($percentIncrease <= 150) {
+            $percentIncrease = 151;
+        }
+
+        $avg7  = $this->randomInt(200, 500);
+        $today = (int)($avg7 * (1 + ($percentIncrease / 100)));
+
+        $ratio     = $today / $avg7;
+        $changePct = round(($ratio - 1) * 100, 2);
+        $severity  = $ratio >= 4 ? 'critical' : 'warning';
+
+        $topBots = [
+            ['Googlebot', $this->randomInt(50, 80)],
+            ['Bingbot', $this->randomInt(30, 60)],
+            ['AhrefsBot', $this->randomInt(20, 40)],
+        ];
+
+        $metaJson = wp_json_encode([
+            'today'      => $today,
+            'avg7'       => $avg7,
+            'change_pct' => $changePct,
+            'top'        => $topBots,
+        ]);
+
+        return Alert::createIfNotExists(
+            $date,
+            'bot_spike',
+            $severity,
+            $metaJson
+        );
+    }
+
+    /**
+     * Create a bot drop alert, following BotTrafficAnalyzer rules.
+     *
+     * @param string $date
+     * @param int $percentDrop
+     * @return Alert|null
+     */
+    public function botDrop(string $date, int $percentDrop = 80): ?Alert
+    {
+        if ($percentDrop <= 70) {
+            $percentDrop = 71;
+        }
+
+        $avg7  = $this->randomInt(200, 500);
+        $today = (int)($avg7 * (1 - ($percentDrop / 100)));
+
+        $ratio     = $today / $avg7;
+        $changePct = round(($ratio - 1) * 100, 2);
+
+        $topBots = [
+            ['Googlebot', $this->randomInt(2, 5)],
+            ['Bingbot', $this->randomInt(1, 4)],
+        ];
+
+        $metaJson = wp_json_encode([
+            'today'      => $today,
+            'avg7'       => $avg7,
+            'change_pct' => $changePct,
+            'top'        => $topBots,
+        ]);
+
+        return Alert::createIfNotExists(
+            $date,
+            'bot_drop',
+            'info',
+            $metaJson
+        );
+    }
+
+    /**
      * Create a 404 spike alert, compatible with Error404Analyzer logic.
      *
      * @param string $date
@@ -157,7 +237,7 @@ class AlertFactory extends AbstractFactory
      */
     public function randomAlert(string $date): ?Alert
     {
-        $types = ['traffic_drop', 'traffic_spike', '404_spike'];
+        $types = ['traffic_drop', 'traffic_spike', '404_spike', 'bot_spike', 'bot_drop'];
         $type  = $this->randomElement($types);
 
         switch ($type) {
@@ -168,6 +248,14 @@ class AlertFactory extends AbstractFactory
             case 'traffic_spike':
                 $percentIncrease = $this->randomInt(60, 120);
                 return $this->trafficSpike($date, $percentIncrease);
+
+            case 'bot_spike':
+                $percentIncrease = $this->randomInt(160, 300);
+                return $this->botSpike($date, $percentIncrease);
+
+            case 'bot_drop':
+                $percentDrop = $this->randomInt(71, 95);
+                return $this->botDrop($date, $percentDrop);
 
             case '404_spike':
                 $average    = $this->randomInt(10, 20);

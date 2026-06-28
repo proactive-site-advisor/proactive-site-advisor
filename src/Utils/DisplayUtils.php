@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Utility class for rendering display strings used in the plugin.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @version 1.0.4
  */
 class DisplayUtils
 {
@@ -49,17 +49,47 @@ class DisplayUtils
      * Render history average text.
      *
      * @param int $pageviews
+     * @param int $botPageviews
      * @param int $errors
      *
      * @return string
      */
-    public static function renderHistoryAverage(int $pageviews, int $errors): string
+    public static function renderHistoryAverage(int $pageviews, int $botPageviews, int $errors): string
     {
+        $parts = [];
+
+        if ($pageviews > 0) {
+            $parts[] = sprintf(
+            /* translators: %s: average pageviews count */
+                __('%s pageviews', 'proactive-site-advisor'),
+                '<strong>' . esc_html(number_format_i18n($pageviews)) . '</strong>'
+            );
+        }
+
+        if ($botPageviews > 0) {
+            $parts[] = sprintf(
+            /* translators: %s: average bot pageviews count */
+                __('%s bot pageviews', 'proactive-site-advisor'),
+                '<strong>' . esc_html(number_format_i18n($botPageviews)) . '</strong>'
+            );
+        }
+
+        if ($errors > 0) {
+            $parts[] = sprintf(
+            /* translators: %s: average 404 errors count */
+                __('%s page errors (404)', 'proactive-site-advisor'),
+                '<strong>' . esc_html(number_format_i18n($errors)) . '</strong>'
+            );
+        }
+
+        if (empty($parts)) {
+            return esc_html__('Average per day: No data yet', 'proactive-site-advisor');
+        }
+
         return sprintf(
-        /* translators: 1: average pageviews, 2: average 404 errors */
-            esc_html__('Average per day: %1$s pageviews · %2$s page errors (404)', 'proactive-site-advisor'),
-            '<strong>' . esc_html(number_format_i18n($pageviews)) . '</strong>',
-            '<strong>' . esc_html(number_format_i18n($errors)) . '</strong>'
+        /* translators: %s: list of average stats separated by middot */
+            esc_html__('Average per day: %s', 'proactive-site-advisor'),
+            implode(' · ', $parts)
         );
     }
 }

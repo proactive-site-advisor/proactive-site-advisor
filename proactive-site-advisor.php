@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name:         Proactive Site Advisor
+ * Plugin Name:         Proactive Site Advisor – Local, privacy-first site alerts
  * Plugin URI:          https://github.com/proactive-site-advisor/proactive-site-advisor
  * Description:         Daily local monitoring of critical site signals – currently traffic & 404 errors. Alerts you on anomalies with actionable next steps. No automatic fixes.
- * Version:             1.0.3
+ * Version:             1.0.4
  * Author:              Mohammad Yari
  * Author URI:          https://github.com/proactive-site-advisor
  * Text Domain:         proactive-site-advisor
@@ -92,7 +92,7 @@ if (!defined('PROACTIVE_SITE_ADVISOR_ASSETS')) {
  * @const string
  */
 if (!defined('PROACTIVE_SITE_ADVISOR_VERSION')) {
-    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.0.3');
+    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.0.4');
 }
 
 /**

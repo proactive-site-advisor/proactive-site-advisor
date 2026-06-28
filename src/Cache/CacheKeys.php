@@ -27,15 +27,11 @@ final class CacheKeys
 
     /**
      * Cache key for persistent admin notices.
-     *
-     * Stores notices that should remain until manually dismissed.
      */
     private const KEY_ADMIN_NOTICES = 'admin_notices';
 
     /**
      * Cache key for flash admin notices.
-     *
-     * Stores one-time notices that display on the next request and auto-expire.
      */
     private const KEY_ADMIN_FLASH_NOTICES = 'admin_flash_notices';
 
@@ -51,25 +47,28 @@ final class CacheKeys
 
     /**
      * Cache key prefix for pageview counters.
-     *
-     * Appended with a normalized date key (Ymd), e.g. "pv_20260416".
      */
     private const PREFIX_PAGEVIEWS = 'pv_';
 
     /**
      * Cache key prefix for daily 404 total counters.
-     *
-     * Appended with a normalized date key (Ymd), e.g. "404_total_20260416".
      */
     private const PREFIX_404_TOTAL = '404_total_';
 
     /**
      * Cache key prefix for daily 404 path maps.
-     *
-     * Used to store structured lists of URLs causing 404s for the day.
-     * Appended with a normalized date key (Ymd), e.g. "404_map_20260416".
      */
     private const PREFIX_404_MAP = '404_map_';
+
+    /**
+     * Prefix for bot pageview count cache keys.
+     */
+    private const PREFIX_BOT_PAGEVIEWS = 'pv_bot_';
+
+    /**
+     * Prefix for bot name count map cache keys.
+     */
+    private const PREFIX_BOT_NAMES = 'bot_names_';
 
     /**
      * Normalize date key to Ymd format.
@@ -193,5 +192,49 @@ final class CacheKeys
     public static function notFoundMapForDate(string $dateKey): string
     {
         return self::PREFIX_404_MAP . self::normalizeDateKey($dateKey);
+    }
+
+    /**
+     * Get cache key for today's bot pageviews.
+     *
+     * @return string
+     */
+    public static function pageviewsBotToday(): string
+    {
+        return self::PREFIX_BOT_PAGEVIEWS . DateTimeUtils::todayKey();
+    }
+
+    /**
+     * Get cache key for bot pageviews on a specific date.
+     *
+     * @param string $dateKey
+     *
+     * @return string
+     */
+    public static function pageviewsBotForDate(string $dateKey): string
+    {
+        return self::PREFIX_BOT_PAGEVIEWS . self::normalizeDateKey($dateKey);
+    }
+
+    /**
+     * Get cache key for today's bot name count map.
+     *
+     * @return string
+     */
+    public static function botNameCountsToday(): string
+    {
+        return self::PREFIX_BOT_NAMES . DateTimeUtils::todayKey();
+    }
+
+    /**
+     * Get cache key for bot name count map on a specific date.
+     *
+     * @param string $dateKey
+     *
+     * @return string
+     */
+    public static function botNameCountsForDate(string $dateKey): string
+    {
+        return self::PREFIX_BOT_NAMES . self::normalizeDateKey($dateKey);
     }
 }

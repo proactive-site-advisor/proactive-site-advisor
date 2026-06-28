@@ -4,7 +4,7 @@ Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,22 +12,23 @@ Don't let traffic drops or 404 surges go unnoticed. Daily monitoring alerts you 
 
 == Description ==
 
-Most WordPress problems stay hidden until they cost you. Proactive Site Advisor watches your site daily, compares activity to the past week, and alerts you the second something deviates from normal. Traffic crashes, 404 spikes, and more alert types are on the way — all monitored locally, no configuration.
+Most WordPress problems stay hidden until they cost you. Proactive Site Advisor watches your site daily, compares activity to the past week, and alerts you the second something deviates from normal. Now with bot detection, you see exactly how much traffic is real vs. crawlers. Traffic crashes, bot anomalies, 404 spikes — all monitored locally, no configuration. More alert types are on the way.
 
 When an anomaly is detected, you see:
 - What changed (e.g., "Traffic dropped by 41%")
 - What this means for your site
 - What you should check next
-- Top 404 URLs (for 404 alerts)
+- Top 3 broken URLs (for 404 alerts)
+- Top 3 bot names (for bot alerts)
 
 Dashboard view includes: critical issues indicator, weekly digest cards, latest alerts list, and a 7‑day history table with averages.
 
-How it works: raw visitor and 404 data is temporarily stored in WordPress transients, processed once daily, then cleared. Only summarized stats (7‑day rolling) and generated alerts are saved in two lightweight tables. No performance overhead.
+How it works: raw visitor, bot, and 404 data is temporarily stored in WordPress transients, processed once daily, then cleared. Only summarized stats (7‑day rolling) and generated alerts are saved in two lightweight tables. No performance overhead.
 
 = Privacy & Performance =
 
 * 100% local — no data leaves your server, no external APIs
-* Visitor and 404 logs are stored in WordPress transients, processed once daily, then cleared
+* Visitor, bot, and 404 logs are stored in WordPress transients, processed once daily, then cleared
 * Only two lightweight tables keep the last 7 days of stats and generated alerts
 * No cookies, no tracking across sites, GDPR‑friendly by design
 
@@ -35,8 +36,9 @@ All monitoring runs locally. No external APIs. No data leaves your server. The p
 
 == Key Features ==
 
+* Bot traffic anomaly detection (surge/drop) with Top 3 bots
 * Traffic drop/spike detection (7‑day baseline)
-* 404 error surge detection with Top 404 URLs
+* 404 error surge detection with Top 3 broken URLs
 * "Site Advisor" dashboard (digest, history, latest alerts)
 * Actionable "What you should check next" lists
 * Daily WP-Cron scan after day completion (cached)
@@ -64,7 +66,10 @@ After each full day, via WP-Cron.
 Yesterday's numbers are compared to the average of the previous 7 days.
 
 = What does a 404 alert show? =
-The most-hit broken URLs that day, with hit counts and suggestions.
+The top 3 broken URLs that day, with hit counts and suggestions.
+
+= What does a bot alert show? =
+The top 3 bot names (e.g., Googlebot, Bingbot) that visited your site that day, with visit counts and suggestions.
 
 = Will you add other alert types? =
 Yes. Future updates will bring more anomaly types (slow pages, server errors, etc.) and integration with popular analytics plugins to pull data instead of logging — always optional.
@@ -76,9 +81,18 @@ Yes. Licensed GPL-2.0-or-later.
 
 1. Main dashboard with critical issue indicator and weekly digest.
 2. Example traffic drop alert — percentage change, impact summary, and action checklist.
-3. Example 404 surge alert with top broken URLs and hit counts.
+3. Example 404 surge alert with top 3 broken URLs and hit counts.
+4. Example bot alert with top 3 bot names and percentage change.
 
 == Changelog ==
+
+= 1.0.4 =
+* Feat: Bot traffic detection — separate human vs bot pageviews
+* Feat: Bot anomaly alerts — spike and drop detection with Top 3 bots
+* Dashboard: New "Bot Alerts" KPI card and bot pageviews column in history table
+* Dashboard: Bot alert cards with top bot names and actionable recommendations
+* Performance: Combined bot pattern regex (1500+ patterns) in single static file
+* Database: Added bot_pageviews and top_bots_json columns to daily_stats table
 
 = 1.0.3 =
 * Fix: Alert messages now fully translatable via WordPress i18n functions
@@ -100,6 +114,9 @@ Yes. Licensed GPL-2.0-or-later.
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+Adds bot traffic detection with anomaly alerts, new dashboard cards, and separate bot pageview tracking. Includes database schema changes (new columns). Safe automatic update.
 
 = 1.0.3 =
 This update makes alert messages translation-ready and removes a redundant database column. Safe automatic update. No manual action required.

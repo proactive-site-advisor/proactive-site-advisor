@@ -41,18 +41,20 @@ class NotFoundTracker
         if (!PageviewSignal::shouldCollect()) {
             return;
         }
-        
+
         if (!is_404()) {
+            return;
+        }
+
+        if (BotDetector::isBot()) {
             return;
         }
 
         $cache = CacheManager::instance();
 
-        // Increase total 404 count
         $totalKey = CacheKeys::notFoundTotalToday();
         $cache->increment($totalKey, 1, self::TRANSIENT_TTL);
 
-        // Track top paths
         $path = Request::getRequestPath();
         if ($path === '') {
             return;
@@ -71,8 +73,9 @@ class NotFoundTracker
     /**
      * Get the path map from cache.
      *
-     * @param string $mapKey The cache key.
-     * @return array The path → count map.
+     * @param string $mapKey
+     *
+     * @return array
      */
     private function getMap(string $mapKey): array
     {
@@ -82,14 +85,16 @@ class NotFoundTracker
         }
 
         $decoded = json_decode($raw, true);
+
         return is_array($decoded) ? $decoded : [];
     }
 
     /**
      * Prune the map to keep only top paths by count.
      *
-     * @param array $map The path → count map.
-     * @return array The pruned map.
+     * @param array $map
+     *
+     * @return array
      */
     private function pruneMap(array $map): array
     {
@@ -97,7 +102,8 @@ class NotFoundTracker
             return $map;
         }
 
-        arsort($map); // highest first
+        arsort($map);
+
         return array_slice($map, 0, self::MAX_PATHS, true);
     }
 }
