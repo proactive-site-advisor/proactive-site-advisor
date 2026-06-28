@@ -60,7 +60,7 @@ class DashboardManager
      */
     public function addMenuItem(array $items): array
     {
-        $icon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmM2YxZjEiIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTEwIDQgTDEwIDExIiBzdHJva2Utd2lkdGg9IjEuOCIvPgogICAgPGNpcmNsZSBjeD0iMTAiIGN5PSIxNSIgcj0iMS41IiBmaWxsPSIjZjNmMWYxIiBzdHJva2U9Im5vbmUiLz4KICAgIDxwYXRoIGQ9Ik00IDE5IEwxNiAxOSIgc3Ryb2tlLXdpZHRoPSIxLjQiLz4KICA8L2c+Cjwvc3ZnPg==';
+        $icon = 'data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmM2YxZjEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0zIDMgTDEwIDEgTDE3IDMgTDE3IDEwIEMxNyAxNCAxMCAxOSAxMCAxOSBDMTAgMTkgMyAxNCAzIDEwIEwzIDMgWiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8Y2lyY2xlIGN4PSIxMC41IiBjeT0iMTAuNSIgcj0iMyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8cGF0aCBkPSJNMTMgMTMgTDE3LjggMTcuOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPC9nPgo8L3N2Zz4=';
 
         /**
          * Apply a filter to determine the position of the plugin menu item.
