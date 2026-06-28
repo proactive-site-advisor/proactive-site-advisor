@@ -30,8 +30,8 @@ class DashboardProcessor
         $warning  = 0;
         $info     = 0;
         $traffic  = 0;
-        $bot      = 0;
         $error    = 0;
+        $bot      = 0;
 
         foreach ($rows as $row) {
 
@@ -68,8 +68,8 @@ class DashboardProcessor
             'warning_alerts'  => $warning,
             'info_alerts'     => $info,
             'traffic_alerts'  => $traffic,
-            'bot_alerts'      => $bot,
             'error_alerts'    => $error,
+            'bot_alerts'      => $bot,
             'total_alerts'    => $critical + $warning + $info,
         ];
     }

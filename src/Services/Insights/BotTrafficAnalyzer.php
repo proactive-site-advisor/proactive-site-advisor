@@ -38,18 +38,18 @@ class BotTrafficAnalyzer
         $ratio  = $todayBotPv / $avgBotPv;
         $change = ($ratio - 1) * 100;
 
-        if ($ratio > 2.5) {
+        if ($ratio > 2.0) {
             return [
                 'type'       => 'bot_spike',
-                'severity'   => $ratio >= 4 ? 'critical' : 'warning',
+                'severity'   => $ratio >= 3.5 ? 'critical' : 'warning',
                 'change_pct' => round($change, 2),
             ];
         }
 
-        if ($ratio < 0.3) {
+        if ($ratio < 0.5) {
             return [
                 'type'       => 'bot_drop',
-                'severity'   => 'info',
+                'severity'   => $ratio <= 0.3 ? 'critical' : 'warning',
                 'change_pct' => round($change, 2),
             ];
         }

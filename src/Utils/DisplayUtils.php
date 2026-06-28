@@ -49,12 +49,12 @@ class DisplayUtils
      * Render history average text.
      *
      * @param int $pageviews
-     * @param int $botPageviews
      * @param int $errors
+     * @param int $botPageviews
      *
      * @return string
      */
-    public static function renderHistoryAverage(int $pageviews, int $botPageviews, int $errors): string
+    public static function renderHistoryAverage(int $pageviews, int $errors, int $botPageviews): string
     {
         $parts = [];
 
@@ -66,19 +66,19 @@ class DisplayUtils
             );
         }
 
-        if ($botPageviews > 0) {
-            $parts[] = sprintf(
-            /* translators: %s: average bot pageviews count */
-                __('%s bot pageviews', 'proactive-site-advisor'),
-                '<strong>' . esc_html(number_format_i18n($botPageviews)) . '</strong>'
-            );
-        }
-
         if ($errors > 0) {
             $parts[] = sprintf(
             /* translators: %s: average 404 errors count */
                 __('%s page errors (404)', 'proactive-site-advisor'),
                 '<strong>' . esc_html(number_format_i18n($errors)) . '</strong>'
+            );
+        }
+
+        if ($botPageviews > 0) {
+            $parts[] = sprintf(
+            /* translators: %s: average bot pageviews count */
+                __('%s bot pageviews', 'proactive-site-advisor'),
+                '<strong>' . esc_html(number_format_i18n($botPageviews)) . '</strong>'
             );
         }
 

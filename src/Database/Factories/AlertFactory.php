@@ -109,6 +109,47 @@ class AlertFactory extends AbstractFactory
     }
 
     /**
+     * Create a 404 spike alert, compatible with Error404Analyzer logic.
+     *
+     * @param string $date
+     * @param int $errorCount
+     * @param int $average
+     * @return Alert|null
+     */
+    public function error404Spike(string $date, int $errorCount = 50, int $average = 15): ?Alert
+    {
+        $ratio = $average > 0 ? $errorCount / $average : 0;
+        if ($ratio <= 2) {
+            $factor     = $this->randomFloat(2.1, 4.0);
+            $errorCount = (int)($average * $factor);
+            $ratio      = $factor;
+        }
+
+        $severity  = $ratio >= 3 ? 'critical' : 'warning';
+        $changePct = round(($ratio - 1) * 100, 2);
+
+        $topPaths = [
+            ['/wp-login.php', $this->randomInt(10, 20)],
+            ['/xmlrpc.php', $this->randomInt(5, 15)],
+            ['/.env', $this->randomInt(3, 10)],
+        ];
+
+        $metaJson = wp_json_encode([
+            'today'      => $errorCount,
+            'avg7'       => $average,
+            'change_pct' => $changePct,
+            'top'        => $topPaths,
+        ]);
+
+        return Alert::createIfNotExists(
+            $date,
+            '404_spike',
+            $severity,
+            $metaJson
+        );
+    }
+
+    /**
      * Create a bot spike alert, following BotTrafficAnalyzer rules.
      *
      * @param string $date
@@ -184,47 +225,6 @@ class AlertFactory extends AbstractFactory
             $date,
             'bot_drop',
             'info',
-            $metaJson
-        );
-    }
-
-    /**
-     * Create a 404 spike alert, compatible with Error404Analyzer logic.
-     *
-     * @param string $date
-     * @param int $errorCount
-     * @param int $average
-     * @return Alert|null
-     */
-    public function error404Spike(string $date, int $errorCount = 50, int $average = 15): ?Alert
-    {
-        $ratio = $average > 0 ? $errorCount / $average : 0;
-        if ($ratio <= 2) {
-            $factor     = $this->randomFloat(2.1, 4.0);
-            $errorCount = (int)($average * $factor);
-            $ratio      = $factor;
-        }
-
-        $severity  = $ratio >= 3 ? 'critical' : 'warning';
-        $changePct = round(($ratio - 1) * 100, 2);
-
-        $topPaths = [
-            ['/wp-login.php', $this->randomInt(10, 20)],
-            ['/xmlrpc.php', $this->randomInt(5, 15)],
-            ['/.env', $this->randomInt(3, 10)],
-        ];
-
-        $metaJson = wp_json_encode([
-            'today'      => $errorCount,
-            'avg7'       => $average,
-            'change_pct' => $changePct,
-            'top'        => $topPaths,
-        ]);
-
-        return Alert::createIfNotExists(
-            $date,
-            '404_spike',
-            $severity,
             $metaJson
         );
     }

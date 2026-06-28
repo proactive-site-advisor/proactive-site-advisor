@@ -49,28 +49,28 @@ class BaselineCalculator
             return [
                 'count'             => 0,
                 'avg_pageviews'     => 0.0,
+                'avg_404'           => 0.0,
                 'avg_bot_pageviews' => 0.0,
-                'avg_404'           => 0.0
             ];
         }
 
         $count = count($rows);
 
         $sumPv    = 0;
-        $sumBotPv = 0;
         $sum404   = 0;
+        $sumBotPv = 0;
 
         foreach ($rows as $row) {
             $sumPv    += (int)$row['pageviews'];
-            $sumBotPv += (int)($row['bot_pageviews'] ?? 0);
             $sum404   += (int)$row['errors_404'];
+            $sumBotPv += (int)$row['bot_pageviews'];
         }
 
         return [
             'count'             => $count,
             'avg_pageviews'     => $sumPv / $count,
+            'avg_404'           => $sum404 / $count,
             'avg_bot_pageviews' => $sumBotPv / $count,
-            'avg_404'           => $sum404 / $count
         ];
     }
 }

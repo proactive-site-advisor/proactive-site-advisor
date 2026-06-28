@@ -65,13 +65,13 @@ class DashboardData
                 'zero'   => __('No unusual traffic detected', 'proactive-site-advisor'),
                 'active' => __('Unusual traffic changes detected', 'proactive-site-advisor'),
             ],
-            'bot_alerts'      => [
-                'zero'   => __('No bot activity anomalies', 'proactive-site-advisor'),
-                'active' => __('Bot traffic anomalies detected', 'proactive-site-advisor'),
-            ],
             'error_alerts'    => [
                 'zero'   => __('No 404 issues detected', 'proactive-site-advisor'),
                 'active' => __('Pages returning 404 errors', 'proactive-site-advisor'),
+            ],
+            'bot_alerts'      => [
+                'zero'   => __('No bot activity anomalies', 'proactive-site-advisor'),
+                'active' => __('Bot traffic anomalies detected', 'proactive-site-advisor'),
             ],
             'total_alerts'    => [
                 'zero'   => __('Last 7 days', 'proactive-site-advisor'),
@@ -369,17 +369,18 @@ class DashboardData
                 'label' => __('Traffic Alerts', 'proactive-site-advisor'),
                 'color' => 'primary',
             ],
-            'bot_alerts'      => [
-                'icon'  => PrefixConfig::css('icon--bot'),
-                'label' => __('Bot Alerts', 'proactive-site-advisor'),
-                'color' => 'secondary',
-            ],
-            'error_alerts'    => [
+
+            'error_alerts' => [
                 'icon'  => PrefixConfig::css('icon--error-404'),
                 'label' => __('404 Alerts', 'proactive-site-advisor'),
                 'color' => 'warning',
             ],
-            'total_alerts'    => [
+            'bot_alerts'   => [
+                'icon'  => PrefixConfig::css('icon--bot'),
+                'label' => __('Bot Alerts', 'proactive-site-advisor'),
+                'color' => 'info',
+            ],
+            'total_alerts' => [
                 'icon'  => PrefixConfig::css('icon--alert'),
                 'label' => __('Total Alerts', 'proactive-site-advisor'),
                 'color' => 'info',
@@ -476,8 +477,8 @@ class DashboardData
             'hasData' => true,
             'average' => DisplayUtils::renderHistoryAverage(
                 $average['pageviews'],
+                $average['errors_404'],
                 $average['bot_pageviews'],
-                $average['errors_404']
             ),
             'columns' => [
                 ['key' => 'date', 'label' => __('Date', 'proactive-site-advisor')],
