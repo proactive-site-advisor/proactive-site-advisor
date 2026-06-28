@@ -27,7 +27,7 @@ class DatabaseManager
      *
      * @var string
      */
-    private static string $version = '1.0.1';
+    private static string $version = '1.0.2';
 
     /**
      * Registered table schemas
@@ -207,8 +207,6 @@ class DatabaseManager
      */
     public static function dropTable(string $name): bool
     {
-        global $wpdb;
-
         $schema = self::getTable($name);
 
         if (!$schema) {
@@ -219,10 +217,19 @@ class DatabaseManager
 
         Logger::warning('Dropping database table', ['table' => $tableName]);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
-        $result = $wpdb->query("DROP TABLE IF EXISTS $tableName");
+        $sql = "DROP TABLE IF EXISTS `$tableName`";
 
-        return $result !== false;
+        $result = self::query($sql);
+
+        if ($result === false) {
+            Logger::error('Failed to drop table', [
+                'table' => $tableName,
+                'error' => self::getLastError(),
+            ]);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -315,8 +322,6 @@ class DatabaseManager
      */
     public static function truncateTable(string $name): bool
     {
-        global $wpdb;
-
         $schema = self::getTable($name);
 
         if (!$schema) {
@@ -327,10 +332,19 @@ class DatabaseManager
 
         Logger::warning('Truncating database table', ['table' => $tableName]);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized via TableSchema::getFullName()
-        $result = $wpdb->query("TRUNCATE TABLE $tableName");
+        $sql = "TRUNCATE TABLE `$tableName`";
 
-        return $result !== false;
+        $result = self::query($sql);
+
+        if ($result === false) {
+            Logger::error('Failed to truncate table', [
+                'table' => $tableName,
+                'error' => self::getLastError(),
+            ]);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -380,14 +394,12 @@ class DatabaseManager
     /**
      * Drop a column from a table.
      *
-     * @param string $tableName Table name (without prefix).
-     * @param string $columnName Column name.
-     * @return bool True on success, false on failure.
+     * @param string $tableName
+     * @param string $columnName
+     * @return bool
      */
     public static function dropColumn(string $tableName, string $columnName): bool
     {
-        global $wpdb;
-
         $schema = self::getTable($tableName);
 
         if (!$schema) {
@@ -413,19 +425,81 @@ class DatabaseManager
             'column' => $columnName,
         ]);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table and column are sanitized, ALTER TABLE requires direct query
-        $result = $wpdb->query("ALTER TABLE `$fullTableName` DROP COLUMN `$columnName`");
+        $sql = "ALTER TABLE `$fullTableName` DROP COLUMN `$columnName`";
+
+        $result = self::query($sql);
 
         if ($result === false) {
             Logger::error('Failed to drop column', [
                 'table'  => $fullTableName,
                 'column' => $columnName,
-                'error'  => $wpdb->last_error,
+                'error'  => self::getLastError(),
             ]);
             return false;
         }
 
         Logger::info('Column dropped successfully', [
+            'table'  => $fullTableName,
+            'column' => $columnName,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Add a column to a table.
+     *
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $columnDefinition
+     * @param string $position
+     *
+     * @return bool
+     */
+    public static function addColumn(string $tableName, string $columnName, string $columnDefinition, string $position = ''): bool
+    {
+        $schema = self::getTable($tableName);
+
+        if (!$schema) {
+            Logger::error('Table not found for adding column', [
+                'table'  => $tableName,
+                'column' => $columnName,
+            ]);
+            return false;
+        }
+
+        $fullTableName = $schema->getFullName();
+
+        if (self::columnExists($tableName, $columnName)) {
+            Logger::warning('Column already exists, skipping add', [
+                'table'  => $fullTableName,
+                'column' => $columnName,
+            ]);
+            return true;
+        }
+
+        $sql = "ALTER TABLE `$fullTableName` ADD COLUMN `$columnName` $columnDefinition";
+        if ($position !== '') {
+            $sql .= ' ' . $position;
+        }
+
+        Logger::info('Adding column to table', [
+            'table'  => $fullTableName,
+            'column' => $columnName,
+        ]);
+
+        $result = self::query($sql);
+
+        if ($result === false) {
+            Logger::error('Failed to add column', [
+                'table'  => $fullTableName,
+                'column' => $columnName,
+                'error'  => self::getLastError(),
+            ]);
+            return false;
+        }
+
+        Logger::info('Column added successfully', [
             'table'  => $fullTableName,
             'column' => $columnName,
         ]);
@@ -526,8 +600,11 @@ class DatabaseManager
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query is prepared with $wpdb->prepare()
-        return $wpdb->query($wpdb->prepare($sql, ...$args));
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is a trusted internal query with placeholders, prepared below
+        $prepared = $wpdb->prepare($sql, ...$args);
+
+        // self::query expects a raw query; $prepared is already safe
+        return self::query($prepared);
     }
 
     /**

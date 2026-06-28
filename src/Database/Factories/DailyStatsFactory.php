@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Factory for creating DailyStats records with fake data.
  *
  * @package ProactiveSiteAdvisor\Database\Factories
- * @version 1.0.0
+ * @version 1.0.4
  */
 class DailyStatsFactory extends AbstractFactory
 {
@@ -25,6 +25,26 @@ class DailyStatsFactory extends AbstractFactory
      * @var string
      */
     protected string $model = DailyStats::class;
+
+    /**
+     * Common bot names for realistic top bots data.
+     *
+     * @var array
+     */
+    private array $commonBotNames = [
+        'Googlebot',
+        'Bingbot',
+        'AhrefsBot',
+        'SemrushBot',
+        'DuckDuckBot',
+        'YandexBot',
+        'FacebookBot',
+        'Twitterbot',
+        'Applebot',
+        'PetalBot',
+        'Slackbot',
+        'TelegramBot',
+    ];
 
     /**
      * Common 404 paths for realistic data.
@@ -57,18 +77,20 @@ class DailyStatsFactory extends AbstractFactory
     protected function definition(): array
     {
         return [
-            'stats_date'   => current_time('Y-m-d'),
-            'pageviews'    => $this->randomInt(800, 1500),
-            'errors_404'   => $this->randomInt(5, 30),
-            'top_404_json' => null,
+            'stats_date'    => current_time('Y-m-d'),
+            'pageviews'     => $this->randomInt(800, 1500),
+            'errors_404'    => $this->randomInt(5, 30),
+            'top_404_json'  => null,
+            'bot_pageviews' => 0,
+            'top_bots_json' => null,
         ];
     }
 
     /**
      * Create stats for a specific date with pattern-aware data.
      *
-     * @param string $date Date in Y-m-d format.
-     * @param int $dayIndex Day index in sequence (for alerts pattern).
+     * @param string $date
+     * @param int $dayIndex
      * @return DailyStats|null
      */
     public function forDate(string $date, int $dayIndex = 0): ?DailyStats
@@ -79,7 +101,6 @@ class DailyStatsFactory extends AbstractFactory
             $attributes = $this->realisticPattern($date);
         }
 
-        // Delete existing record to avoid duplicate key error when re-seeding
         DailyStats::deleteByDate($date);
 
         $result = $this->create($attributes);
@@ -93,8 +114,8 @@ class DailyStatsFactory extends AbstractFactory
      * Generates natural variance: 800-1500 pageviews, 5-30 404s.
      * Weekend traffic is reduced by 20-40%.
      *
-     * @param string $date Date in Y-m-d format.
-     * @return array Attributes for realistic pattern.
+     * @param string $date
+     * @return array
      */
     public function realisticPattern(string $date): array
     {
@@ -104,64 +125,114 @@ class DailyStatsFactory extends AbstractFactory
         $errors404  = $this->randomInt(5, 30);
         $top404Json = $this->generateTop404Json($errors404);
 
+        $botPageviews = $this->randomInt(
+            (int)($pageviews * 0.2),
+            (int)($pageviews * 0.5)
+        );
+        $topBotsJson  = $this->generateTopBotsJson($botPageviews);
+
         return [
-            'stats_date'   => $date,
-            'pageviews'    => $pageviews,
-            'errors_404'   => $errors404,
-            'top_404_json' => $top404Json,
+            'stats_date'    => $date,
+            'pageviews'     => $pageviews,
+            'errors_404'    => $errors404,
+            'top_404_json'  => $top404Json,
+            'bot_pageviews' => $botPageviews,
+            'top_bots_json' => $topBotsJson,
         ];
     }
 
     /**
      * Create alerts pattern data.
      *
-     * Generates data designed to trigger alerts on specific days:
-     * - Day 10: Traffic drop (< 70% of average)
-     * - Day 20: Traffic spike (> 150% of average)
-     * - Day 25: 404 spike (> 200% of average)
-     *
-     * @param string $date Date in Y-m-d format.
-     * @param int $dayIndex Day index in sequence (1-based).
-     * @return array Attributes for alerts pattern.
+     * @param string $date
+     * @param int $dayIndex
+     * @return array
      */
     public function alertsPattern(string $date, int $dayIndex): array
     {
         $baselinePageviews = $this->randomInt(1000, 1200);
         $baseline404       = $this->randomInt(10, 15);
+        $baselineBot       = $this->randomInt(300, 600);
 
-        $pageviews = $baselinePageviews;
-        $errors404 = $baseline404;
+        $pageviews    = $baselinePageviews;
+        $errors404    = $baseline404;
+        $botPageviews = $baselineBot;
 
-        // Day 10: Traffic drop (triggers warning/critical)
         if ($dayIndex === 10) {
             $pageviews = $this->randomInt(300, 500);
         }
 
-        // Day 20: Traffic spike (triggers info)
         if ($dayIndex === 20) {
             $pageviews = $this->randomInt(2000, 2500);
         }
 
-        // Day 25: 404 spike (triggers warning)
         if ($dayIndex === 25) {
             $errors404 = $this->randomInt(50, 80);
         }
 
-        $top404Json = $this->generateTop404Json($errors404);
+        if ($dayIndex === 15) {
+            $botPageviews = $this->randomInt(2500, 3500);
+        }
+        if ($dayIndex === 30) {
+            $botPageviews = $this->randomInt(5, 15);
+        }
+
+        $top404Json  = $this->generateTop404Json($errors404);
+        $topBotsJson = $this->generateTopBotsJson($botPageviews);
 
         return [
-            'stats_date'   => $date,
-            'pageviews'    => $pageviews,
-            'errors_404'   => $errors404,
-            'top_404_json' => $top404Json,
+            'stats_date'    => $date,
+            'pageviews'     => $pageviews,
+            'errors_404'    => $errors404,
+            'top_404_json'  => $top404Json,
+            'bot_pageviews' => $botPageviews,
+            'top_bots_json' => $topBotsJson,
         ];
+    }
+
+    /**
+     * Generate top bots JSON data.
+     *
+     * @param int $botPageviews
+     * @return string|null
+     */
+    private function generateTopBotsJson(int $botPageviews): ?string
+    {
+        if ($botPageviews < 3) {
+            return null;
+        }
+
+        $nameCount = $this->randomInt(1, 3);
+        $names     = $this->randomElements($this->commonBotNames, $nameCount);
+
+        $remaining = $botPageviews;
+        $topBots   = [];
+
+        foreach ($names as $index => $name) {
+            if ($index === count($names) - 1) {
+                $count = $remaining;
+            } else {
+                $count     = $this->randomInt(1, max(1, (int)($remaining * 0.6)));
+                $remaining -= $count;
+            }
+
+            if ($count > 0) {
+                $topBots[] = [$name, $count];
+            }
+        }
+
+        usort($topBots, static function ($a, $b) {
+            return $b[1] - $a[1];
+        });
+
+        return wp_json_encode(array_slice($topBots, 0, 3));
     }
 
     /**
      * Generate top 404 JSON data.
      *
-     * @param int $errorCount Number of 404 errors.
-     * @return string|null JSON string or null.
+     * @param int $errorCount
+     * @return string|null
      */
     private function generateTop404Json(int $errorCount): ?string
     {
@@ -200,9 +271,9 @@ class DailyStatsFactory extends AbstractFactory
      *
      * Weekends typically have less traffic.
      *
-     * @param string $date Date in Y-m-d format.
-     * @param int $basePageviews Base pageview count.
-     * @return int Adjusted pageviews.
+     * @param string $date
+     * @param int $basePageviews
+     * @return int
      */
     private function applyDayOfWeekVariance(string $date, int $basePageviews): int
     {

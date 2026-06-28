@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Class DailyStatsDataProvider
  *
  * @package ProactiveSiteAdvisor\DataProviders
- * @version 1.0.0
+ * @version 1.0.4
  */
 class DailyStatsDataProvider extends AbstractDataProvider
 {
@@ -34,7 +34,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT stats_date, pageviews, errors_404
+                "SELECT stats_date, pageviews, errors_404, bot_pageviews, top_404_json, top_bots_json
                  FROM {$table}
                  ORDER BY stats_date DESC
                  LIMIT %d",
@@ -68,7 +68,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT pageviews, errors_404
+                "SELECT pageviews, errors_404, bot_pageviews
              FROM {$table}
              WHERE stats_date < %s
              ORDER BY stats_date DESC
@@ -103,7 +103,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $row = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT pageviews, errors_404, top_404_json
+                "SELECT pageviews, errors_404, bot_pageviews, top_404_json, top_bots_json
              FROM {$table}
              WHERE stats_date = %s
              LIMIT 1",
@@ -132,7 +132,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         $table = DailyStats::getTableName();
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $count = $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
+        $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         return (int)$count;
