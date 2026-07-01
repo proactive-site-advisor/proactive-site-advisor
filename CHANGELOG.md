@@ -1,5 +1,17 @@
 \# Changelog
 
+= 1.0.5 – 2026-07-01 =
+
+\* Fix: Database tables now created correctly on plugin activation (resolved table creation bug)
+
+\* Update: Bot detection patterns updated with 1500+ new bot signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
+
+\* Improvement: Enhanced bot detection accuracy with better User-Agent parsing and reduced false positives
+
+\* Performance: Optimized bot detection function for faster processing
+
+\* Stability: Improved error handling during table updates and cron jobs
+
 
 
 = 1.0.4 – 2026-06-28 =

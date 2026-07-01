@@ -81,6 +81,34 @@ class BotDetector
             return $matches[1] ?? $matches[0] ?? null;
         }
 
+        return self::matchBotNameFallback($ua);
+    }
+
+    /**
+     * Fallback detection based on common bot keywords.
+     * Called only when regex didn't match.
+     *
+     * @param string $ua User-Agent string
+     *
+     * @return string|null
+     */
+    private static function matchBotNameFallback(string $ua): ?string
+    {
+        $keywords = [
+            'crawler',
+            'crawl',
+            'spider',
+            'slurp',
+            'mediapartners',
+            'bot',
+        ];
+
+        foreach ($keywords as $kw) {
+            if (stripos($ua, $kw) !== false) {
+                return $kw;
+            }
+        }
+
         return null;
     }
 

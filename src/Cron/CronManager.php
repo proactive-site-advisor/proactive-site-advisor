@@ -43,15 +43,10 @@ class CronManager extends AbstractSingleton
     {
         add_filter('cron_schedules', [$this, 'addIntervals']);
 
-        // Register cron handlers
         $this->registerCronHandlers();
 
-        // Register callbacks and schedule crons on init
         add_action('init', [$this, 'registerCallbacks']);
         add_action('init', [$this, 'scheduleAll']);
-
-        // Also listen to activation event (for future activations)
-        add_action('proactive_site_advisor_schedule_events', [$this, 'scheduleAll']);
     }
 
     /**
@@ -68,9 +63,10 @@ class CronManager extends AbstractSingleton
     /**
      * Add a custom interval.
      *
-     * @param string $name Interval name.
-     * @param int $seconds Interval in seconds.
-     * @param string $display Display name.
+     * @param string $name
+     * @param int $seconds
+     * @param string $display
+     *
      * @return self
      */
     public function addInterval(string $name, int $seconds, string $display): self
@@ -85,7 +81,8 @@ class CronManager extends AbstractSingleton
     /**
      * Add intervals to WordPress cron schedules.
      *
-     * @param array $schedules Existing schedules.
+     * @param array $schedules
+     *
      * @return array
      */
     public function addIntervals(array $schedules): array
@@ -124,7 +121,8 @@ class CronManager extends AbstractSingleton
     /**
      * Add a task.
      *
-     * @param CronTask $task The task to add.
+     * @param CronTask $task
+     *
      * @return self
      */
     public function addTask(CronTask $task): self
@@ -136,9 +134,10 @@ class CronManager extends AbstractSingleton
     /**
      * Create and add a task.
      *
-     * @param string $hook Task hook name.
-     * @param callable $callback Callback function.
-     * @param string $recurrence Recurrence interval.
+     * @param string $hook
+     * @param callable $callback
+     * @param string $recurrence
+     *
      * @return CronTask
      */
     public function create(string $hook, callable $callback, string $recurrence = 'hourly'): CronTask
@@ -151,7 +150,8 @@ class CronManager extends AbstractSingleton
     /**
      * Get a task by hook.
      *
-     * @param string $hook Task hook name.
+     * @param string $hook
+     *
      * @return CronTask|null
      */
     public function getTask(string $hook): ?CronTask
@@ -172,7 +172,8 @@ class CronManager extends AbstractSingleton
     /**
      * Remove a task.
      *
-     * @param string $hook Task hook name.
+     * @param string $hook
+     *
      * @return self
      */
     public function removeTask(string $hook): self
@@ -205,7 +206,7 @@ class CronManager extends AbstractSingleton
         /**
          * Filter the cron tasks before scheduling.
          *
-         * @param CronTask[] $tasks Cron tasks.
+         * @param CronTask[] $tasks
          */
         $tasks = apply_filters('proactive_site_advisor_cron_tasks', $this->tasks);
 
@@ -219,7 +220,8 @@ class CronManager extends AbstractSingleton
     /**
      * Schedule a single task.
      *
-     * @param CronTask $task The task to schedule.
+     * @param CronTask $task
+     *
      * @return bool
      */
     public function schedule(CronTask $task): bool
@@ -249,7 +251,8 @@ class CronManager extends AbstractSingleton
     /**
      * Unschedule a task.
      *
-     * @param string $hook Task hook name.
+     * @param string $hook
+     *
      * @return bool
      */
     public function unschedule(string $hook): bool
@@ -285,8 +288,9 @@ class CronManager extends AbstractSingleton
     /**
      * Clear all scheduled instances of a hook.
      *
-     * @param string $hook Task hook name.
-     * @return int Number of events unscheduled.
+     * @param string $hook
+     *
+     * @return int
      */
     public function clearAll(string $hook): int
     {
@@ -296,7 +300,8 @@ class CronManager extends AbstractSingleton
     /**
      * Execute a task.
      *
-     * @param CronTask $task The task to execute.
+     * @param CronTask $task
+     *
      * @return void
      */
     private function executeTask(CronTask $task): void
@@ -347,7 +352,8 @@ class CronManager extends AbstractSingleton
     /**
      * Run a task immediately.
      *
-     * @param string $hook Task hook name.
+     * @param string $hook
+     *
      * @return bool
      */
     public function runNow(string $hook): bool
@@ -366,7 +372,8 @@ class CronManager extends AbstractSingleton
     /**
      * Check if a task is scheduled.
      *
-     * @param string $hook Task hook name.
+     * @param string $hook
+     *
      * @return bool
      */
     public function isScheduled(string $hook): bool
@@ -383,8 +390,9 @@ class CronManager extends AbstractSingleton
     /**
      * Get next scheduled run for a task.
      *
-     * @param string $hook Task hook name.
-     * @return int|false Timestamp or false.
+     * @param string $hook
+     *
+     * @return int|false
      */
     public function getNextRun(string $hook)
     {

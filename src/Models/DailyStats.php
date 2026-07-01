@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  * Stores one record per day with aggregated traffic data.
  *
  * @package ProactiveSiteAdvisor\Models
- * @version 1.0.4
+ * @version 1.0.0
  */
 class DailyStats extends AbstractModel
 {
