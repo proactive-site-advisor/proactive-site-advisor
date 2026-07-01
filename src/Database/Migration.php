@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Handles database schema migrations.
  *
  * @package ProactiveSiteAdvisor\Database
- * @version 1.0.4
+ * @version 1.0.0
  */
 class Migration
 {

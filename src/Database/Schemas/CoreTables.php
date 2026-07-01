@@ -15,20 +15,10 @@ if (!defined('ABSPATH')) {
  * Defines core database tables for the Proactive Site Advisor plugin.
  *
  * @package ProactiveSiteAdvisor\Database\Schemas
- * @version 1.0.4
+ * @version 1.0.0
  */
 class CoreTables
 {
-    /**
-     * Register table creation hooks.
-     *
-     * @return void
-     */
-    public static function register(): void
-    {
-        add_action('proactive_site_advisor_create_tables', [self::class, 'createTables']);
-    }
-
     /**
      * Get all table schemas for this provider.
      *

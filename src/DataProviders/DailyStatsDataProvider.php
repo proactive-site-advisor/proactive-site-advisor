@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Class DailyStatsDataProvider
  *
  * @package ProactiveSiteAdvisor\DataProviders
- * @version 1.0.4
+ * @version 1.0.0
  */
 class DailyStatsDataProvider extends AbstractDataProvider
 {

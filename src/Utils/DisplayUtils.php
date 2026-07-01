@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Utility class for rendering display strings used in the plugin.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.4
+ * @version 1.0.0
  */
 class DisplayUtils
 {

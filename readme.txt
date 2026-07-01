@@ -4,7 +4,7 @@ Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,13 @@ Yes. Licensed GPL-2.0-or-later.
 
 == Changelog ==
 
+= 1.0.5 =
+* Fix: Resolved database table creation bug that prevented tables from being created on plugin activation
+* Update: Bot detection patterns upgraded with 1500+ new bot signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
+* Improvement: Enhanced bot detection accuracy with improved User-Agent parsing and reduced false positives
+* Performance: Optimized bot detection function for faster processing and lower memory usage
+* Stability: Improved error handling during database updates and cron job execution
+
 = 1.0.4 =
 * Feat: Bot traffic detection — separate human vs bot pageviews
 * Feat: Bot anomaly alerts — spike and drop detection with Top 3 bots
@@ -114,6 +121,9 @@ Yes. Licensed GPL-2.0-or-later.
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+Fixes a critical table creation bug on activation, updates bot detection patterns with 1500+ new signatures, and improves overall detection accuracy. Safe automatic update. No manual action required.
 
 = 1.0.4 =
 Adds bot traffic detection with anomaly alerts, new dashboard cards, and separate bot pageview tracking. Includes database schema changes (new columns). Safe automatic update.

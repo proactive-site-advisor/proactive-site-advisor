@@ -188,9 +188,9 @@ class UninstallHandler
          *
          * @param array $hooks Array of hook names to clear.
          */
-        $hooks = [
+        $hooks = apply_filters('proactive_site_advisor_cron_hooks_to_clear', [
             'proactive_site_advisor_daily_cron',
-        ];
+        ]);
 
         foreach ($hooks as $hook) {
             wp_clear_scheduled_hook($hook);

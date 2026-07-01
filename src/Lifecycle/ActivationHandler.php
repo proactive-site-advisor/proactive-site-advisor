@@ -60,6 +60,13 @@ class ActivationHandler
         } else {
             self::singleActivate();
         }
+
+        /**
+         * Fires after the plugin has been activated.
+         *
+         * @param bool $networkWide
+         */
+        do_action('proactive_site_advisor_activated', $networkWide);
     }
 
     /**
@@ -112,8 +119,8 @@ class ActivationHandler
     public static function createTables(): void
     {
         foreach (self::$tableSchemas as $schemaClass) {
-            if (class_exists($schemaClass) && method_exists($schemaClass, 'register')) {
-                $schemaClass::register();
+            if (class_exists($schemaClass) && method_exists($schemaClass, 'createTables')) {
+                $schemaClass::createTables();
             }
         }
     }

@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Factory for creating Alert records with fake data.
  *
  * @package ProactiveSiteAdvisor\Database\Factories
- * @version 1.0.4
+ * @version 1.0.0
  */
 class AlertFactory extends AbstractFactory
 {
