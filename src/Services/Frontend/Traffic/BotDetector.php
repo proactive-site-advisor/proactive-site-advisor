@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Lightweight bot detection.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
- * @version 1.1.0
+ * @version 1.0.0
  */
 class BotDetector
 {
@@ -77,7 +77,8 @@ class BotDetector
             return null;
         }
 
-        if (preg_match($pattern, $ua, $matches)) {
+        $result = preg_match($pattern, $ua, $matches);
+        if ($result === 1) {
             return $matches[1] ?? $matches[0] ?? null;
         }
 
@@ -95,11 +96,25 @@ class BotDetector
     private static function matchBotNameFallback(string $ua): ?string
     {
         $keywords = [
-            'crawler',
-            'crawl',
-            'spider',
-            'slurp',
+            'python-requests',
+            'go-http-client',
             'mediapartners',
+            'crawler',
+            'spider',
+            'scanner',
+            'validator',
+            'checkerbot',
+            'monitorbot',
+            'headless',
+            'slurp',
+            'crawl',
+            'curl',
+            'wget',
+            'python',
+            'okhttp',
+            'libwww',
+            'perl',
+            'java',
             'bot',
         ];
 
@@ -120,8 +135,6 @@ class BotDetector
      */
     private static function normalizeBotName(string $name): string
     {
-        $name = stripslashes($name);
-
         $name = trim($name);
 
         $name = preg_replace('/[\s\-_.]+/', ' ', $name);
@@ -130,7 +143,11 @@ class BotDetector
 
         $name = trim($name);
 
-        if (strlen($name) > 60) {
+        if (function_exists('mb_strlen')) {
+            if (mb_strlen($name) > 60) {
+                $name = mb_substr($name, 0, 60);
+            }
+        } elseif (strlen($name) > 60) {
             $name = substr($name, 0, 60);
         }
 
@@ -147,5 +164,37 @@ class BotDetector
         $ua = sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? ''));
 
         return $ua === '';
+    }
+
+    /**
+     * Check if the User-Agent indicates a headless browser or automation tool.
+     * This is a specific pattern check beyond the general bot detection.
+     *
+     * @return bool
+     */
+    public static function isHeadless(): bool
+    {
+        $ua = sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? ''));
+
+        if ($ua === '') {
+            return false;
+        }
+
+        $headlessPatterns = [
+            'HeadlessChrome',
+            'PhantomJS',
+            'Puppeteer',
+            'Selenium',
+            'Playwright',
+            'Headless',
+        ];
+
+        foreach ($headlessPatterns as $pattern) {
+            if (stripos($ua, $pattern) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

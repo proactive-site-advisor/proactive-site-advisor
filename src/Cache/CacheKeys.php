@@ -71,6 +71,11 @@ final class CacheKeys
     private const PREFIX_BOT_NAMES = 'bot_names_';
 
     /**
+     * Prefix for request rate tracking.
+     */
+    private const PREFIX_REQUEST_RATE = 'rate_';
+
+    /**
      * Normalize date key to Ymd format.
      *
      * @param string $dateKey
@@ -236,5 +241,17 @@ final class CacheKeys
     public static function botNameCountsForDate(string $dateKey): string
     {
         return self::PREFIX_BOT_NAMES . self::normalizeDateKey($dateKey);
+    }
+
+    /**
+     * Request rate key for anonymous requester.
+     *
+     * @param string $hash
+     *
+     * @return string
+     */
+    public static function requestRate(string $hash): string
+    {
+        return self::PREFIX_REQUEST_RATE . $hash;
     }
 }
