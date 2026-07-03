@@ -97,6 +97,7 @@ class ComposerStaticInitProactiveSiteAdvisor
         'ProactiveSiteAdvisor\\Services\\Insights\\TrafficAnalyzer' => __DIR__ . '/../..' . '/src/Services/Insights/TrafficAnalyzer.php',
         'ProactiveSiteAdvisor\\Utils\\DateTimeUtils' => __DIR__ . '/../..' . '/src/Utils/DateTimeUtils.php',
         'ProactiveSiteAdvisor\\Utils\\DisplayUtils' => __DIR__ . '/../..' . '/src/Utils/DisplayUtils.php',
+        'ProactiveSiteAdvisor\\Utils\\Environment' => __DIR__ . '/../..' . '/src/Utils/Environment.php',
         'ProactiveSiteAdvisor\\Utils\\Kses' => __DIR__ . '/../..' . '/src/Utils/Kses.php',
         'ProactiveSiteAdvisor\\Utils\\Logger' => __DIR__ . '/../..' . '/src/Utils/Logger.php',
         'ProactiveSiteAdvisor\\Utils\\MenuUtils' => __DIR__ . '/../..' . '/src/Utils/MenuUtils.php',
