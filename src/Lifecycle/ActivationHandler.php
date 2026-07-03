@@ -2,8 +2,6 @@
 
 namespace ProactiveSiteAdvisor\Lifecycle;
 
-use ProactiveSiteAdvisor\Cache\CacheKeys;
-use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Config\PluginMeta;
 use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
@@ -20,7 +18,7 @@ if (!defined('ABSPATH')) {
  * database table creation, and initial setup.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.3
+ * @version 1.0.0
  */
 class ActivationHandler
 {
@@ -106,7 +104,7 @@ class ActivationHandler
      *
      * @return void
      */
-    public static function setVersion(): void
+    private static function setVersion(): void
     {
         OptionUtils::setMeta(PluginMeta::VERSION, PROACTIVE_SITE_ADVISOR_VERSION);
     }
@@ -116,7 +114,7 @@ class ActivationHandler
      *
      * @return void
      */
-    public static function createTables(): void
+    private static function createTables(): void
     {
         foreach (self::$tableSchemas as $schemaClass) {
             if (class_exists($schemaClass) && method_exists($schemaClass, 'createTables')) {
@@ -130,7 +128,7 @@ class ActivationHandler
      *
      * @return void
      */
-    public static function setDefaultOptions(): void
+    private static function setDefaultOptions(): void
     {
         $optionName = PluginOptions::OPTION_NAME;
 
@@ -144,8 +142,10 @@ class ActivationHandler
      *
      * @return void
      */
-    public static function flushRewriteRules(): void
+    private static function flushRewriteRules(): void
     {
-        CacheManager::instance()->set(CacheKeys::flushRewriteRules(), true, 60);
+        add_action('shutdown', static function () {
+            flush_rewrite_rules();
+        });
     }
 }

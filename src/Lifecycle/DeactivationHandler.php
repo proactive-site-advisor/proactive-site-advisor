@@ -2,7 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Lifecycle;
 
-use ProactiveSiteAdvisor\Config\PluginOptions;
+use ProactiveSiteAdvisor\Cache\CacheManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * scheduled events and transients.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.3
+ * @version 1.0.0
  */
 class DeactivationHandler
 {
@@ -91,7 +91,7 @@ class DeactivationHandler
      *
      * @return void
      */
-    public static function clearScheduledEvents(): void
+    private static function clearScheduledEvents(): void
     {
         // Default hooks to clear
         $defaultHooks = [
@@ -120,18 +120,9 @@ class DeactivationHandler
      *
      * @return void
      */
-    public static function clearTransients(): void
+    private static function clearTransients(): void
     {
-        global $wpdb;
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk cleanup on deactivation requires direct query
-        $wpdb->query(
-            $wpdb->prepare(
-                "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
-                '_transient_' . PluginOptions::META_PREFIX . '%',
-                '_transient_timeout_' . PluginOptions::META_PREFIX . '%'
-            )
-        );
+        CacheManager::instance()->flush();
 
         /**
          * Fires after transients are cleared.
@@ -144,7 +135,7 @@ class DeactivationHandler
      *
      * @return void
      */
-    public static function flushRewriteRules(): void
+    private static function flushRewriteRules(): void
     {
         flush_rewrite_rules();
     }

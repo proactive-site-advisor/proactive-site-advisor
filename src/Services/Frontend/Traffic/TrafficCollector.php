@@ -43,17 +43,16 @@ class TrafficCollector
             return;
         }
 
-        $isBot = BotDetector::isBot();
         $cache = CacheManager::instance();
 
-        if ($isBot) {
+        if ($this->isVisitor() && !$this->isAdvancedBot()) {
+            $key = CacheKeys::pageviewsToday();
+            $cache->increment($key, 1, self::TRANSIENT_TTL);
+        } else {
             $key = CacheKeys::pageviewsBotToday();
             $cache->increment($key, 1, self::TRANSIENT_TTL);
 
             $this->incrementBotNameCount();
-        } else {
-            $key = CacheKeys::pageviewsToday();
-            $cache->increment($key, 1, self::TRANSIENT_TTL);
         }
     }
 
@@ -91,7 +90,7 @@ class TrafficCollector
             return $counts;
         }
 
-        arsort($counts); // highest count first
+        arsort($counts);
         return array_slice($counts, 0, self::MAX_BOT_NAMES, true);
     }
 
@@ -111,5 +110,47 @@ class TrafficCollector
 
         $decoded = json_decode($raw, true);
         return is_array($decoded) ? $decoded : [];
+    }
+
+    /**
+     * Determine if the current request is from a real human user.
+     * A request is considered real ONLY if all signals pass.
+     *
+     * @return bool
+     */
+    private function isVisitor(): bool
+    {
+        if (BotDetector::isBot()) {
+            return false;
+        }
+
+        if (RequestRateSignal::isBotLike()) {
+            return false;
+        }
+
+        if (!BrowserSignal::isBrowser()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Additional bot detection using new methods from other classes.
+     * This does not replace isVisitor(), but complements it.
+     *
+     * @return bool
+     */
+    private function isAdvancedBot(): bool
+    {
+        if (BotDetector::isHeadless()) {
+            return true;
+        }
+
+        if (BrowserSignal::isSuspicious()) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -29,24 +29,29 @@ class PageviewSignal
     /**
      * Check if the current request should be collected as a pageview signal.
      *
-     * @return bool True if the request represents a real user pageview.
+     * @return bool
      */
     public static function shouldCollect(): bool
     {
-        /**
-         * Ensure WordPress has fully initialized the main query
-         * before evaluating the request as a pageview.
-         */
+        if (
+            !isset($_SERVER['REQUEST_METHOD']) ||
+            sanitize_key(wp_unslash($_SERVER['REQUEST_METHOD'])) !== 'get'
+        ) {
+            return false;
+        }
+
         if (!did_action('wp')) {
             return false;
         }
 
-        // Only the main query represents actual user intent
         if (!is_main_query()) {
             return false;
         }
 
-        // Exclude admin, system, and background requests
+        if (is_trackback()) {
+            return false;
+        }
+
         if (
             (defined('REST_REQUEST') && REST_REQUEST) ||
             (defined('DOING_AJAX') && DOING_AJAX) ||
@@ -59,20 +64,61 @@ class PageviewSignal
             return false;
         }
 
-        /**
-         * Ignore non-navigation requests (prefetch, prerender, speculative fetches).
-         * Only real user page navigations should be counted.
-         */
-        if (
-            isset($_SERVER['HTTP_SEC_FETCH_MODE']) &&
-            !in_array($_SERVER['HTTP_SEC_FETCH_MODE'], ['navigate', 'nested-navigate'], true)
-        ) {
+        if (self::isExcludedUser()) {
             return false;
         }
 
-        // Exclude static assets and file-like URLs
-        $uri  = isset($_SERVER['REQUEST_URI']) ? (string)esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
-        $path = wp_parse_url($uri, PHP_URL_PATH);
-        return !($path && pathinfo($path, PATHINFO_EXTENSION));
+        $uri       = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+        $path      = wp_parse_url($uri, PHP_URL_PATH);
+        $extension = strtolower((string)pathinfo($path, PATHINFO_EXTENSION));
+
+        return $path !== null && $extension === '';
+    }
+
+    /**
+     * Check if the current user should be excluded from pageview tracking.
+     *
+     * Excludes logged-in users with administrative or content creation roles
+     * to prevent artificial traffic inflation from site staff.
+     *
+     * @return bool True if the user should be excluded.
+     */
+    private static function isExcludedUser(): bool
+    {
+        if (!is_user_logged_in()) {
+            return false;
+        }
+
+        $user = wp_get_current_user();
+
+        $defaultRoles = [
+            'administrator',
+            'editor',
+            'author',
+            'contributor',
+            'shop_manager',
+            'shop_worker',
+            'shop_staff',
+            'bbp_moderator',
+            'bbp_keymaster',
+            'wpseo_manager',
+            'wpseo_editor',
+            's2member_admin',
+            'member_admin',
+        ];
+
+        /**
+         * Filter the list of user roles that should be excluded from pageview tracking.
+         *
+         * @param string[] $defaultRoles
+         * @since 1.0.0
+         *
+         */
+        $excludedRoles = apply_filters(
+            'proactive_site_advisor_excluded_user_roles',
+            $defaultRoles
+        );
+
+        return array_intersect($excludedRoles, (array)$user->roles) !== [];
     }
 }

@@ -50,6 +50,18 @@ class NotFoundTracker
             return;
         }
 
+        if (RequestRateSignal::isBotLike()) {
+            return;
+        }
+
+        if (!BrowserSignal::isBrowser()) {
+            return;
+        }
+
+        if ($this->isAdvancedBot()) {
+            return;
+        }
+
         $cache = CacheManager::instance();
 
         $totalKey = CacheKeys::notFoundTotalToday();
@@ -105,5 +117,23 @@ class NotFoundTracker
         arsort($map);
 
         return array_slice($map, 0, self::MAX_PATHS, true);
+    }
+
+    /**
+     * Additional bot detection using new methods from other classes.
+     *
+     * @return bool
+     */
+    private function isAdvancedBot(): bool
+    {
+        if (BotDetector::isHeadless()) {
+            return true;
+        }
+
+        if (BrowserSignal::isSuspicious()) {
+            return true;
+        }
+
+        return false;
     }
 }
