@@ -180,24 +180,20 @@ class BrowserSignal
      */
     private static function hasPurposeHeader(): bool
     {
-        if (isset($_SERVER['HTTP_PURPOSE'])) {
-            $purpose = sanitize_text_field(
-                wp_unslash($_SERVER['HTTP_PURPOSE'])
-            );
+        if (isset($_SERVER['HTTP_SEC_FETCH_MODE']) &&
+            sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_MODE'])) === 'navigate') {
+            return false;
+        }
 
-            if (
-                stripos($purpose, 'prefetch') !== false ||
-                stripos($purpose, 'preview') !== false
-            ) {
+        if (isset($_SERVER['HTTP_PURPOSE'])) {
+            $purpose = sanitize_text_field(wp_unslash($_SERVER['HTTP_PURPOSE']));
+            if (stripos($purpose, 'prefetch') !== false || stripos($purpose, 'preview') !== false) {
                 return true;
             }
         }
 
         if (isset($_SERVER['HTTP_SEC_PURPOSE'])) {
-            $secPurpose = sanitize_text_field(
-                wp_unslash($_SERVER['HTTP_SEC_PURPOSE'])
-            );
-
+            $secPurpose = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_PURPOSE']));
             if (stripos($secPurpose, 'prefetch') !== false) {
                 return true;
             }
@@ -266,61 +262,71 @@ class BrowserSignal
     }
 
     /**
-     * Detect suspicious header patterns commonly used by headless browsers.
-     * This complements the main isBrowser() check.
+     * Detect suspicious requests using a weighted scoring system.
+     * Returns true only if the total score exceeds a dynamic threshold.
      *
      * @return bool
      */
     public static function isSuspicious(): bool
     {
         $ua             = sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? ''));
-        $acceptEncoding = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_ENCODING'] ?? ''));
-        $referer        = sanitize_text_field(wp_unslash($_SERVER['HTTP_REFERER'] ?? ''));
-        $acceptLanguage = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''));
-        $secFetchSite   = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_SITE'] ?? ''));
         $accept         = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT'] ?? ''));
+        $acceptLanguage = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''));
+        $acceptEncoding = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_ENCODING'] ?? ''));
+        $secChUa        = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_CH_UA'] ?? ''));
+        $secFetchSite   = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_SITE'] ?? ''));
+
+        $score = 0;
 
         $isChrome = stripos($ua, 'Chrome') !== false
             && stripos($ua, 'Edg') === false
             && stripos($ua, 'OPR') === false;
 
         $isFirefox = stripos($ua, 'Firefox') !== false;
+        $isSafari  = stripos($ua, 'Safari') !== false && stripos($ua, 'Chrome') === false;
+        $isEdge    = stripos($ua, 'Edg') !== false;
+        $isOpera   = stripos($ua, 'OPR') !== false || stripos($ua, 'Opera') !== false;
 
-        $isSafari = stripos($ua, 'Safari') !== false
-            && stripos($ua, 'Chrome') === false;
+        $isKnownBrowser = $isChrome || $isFirefox || $isSafari || $isEdge || $isOpera;
 
-        $isKnownBrowser = $isChrome || $isFirefox || $isSafari;
-
-        if (
-            $isKnownBrowser &&
-            stripos($acceptEncoding, 'br') === false &&
-            stripos($acceptEncoding, 'zstd') === false
-        ) {
-            return true;
+        if (stripos($accept, 'text/html') === false) {
+            $score += 3;
         }
 
-        $isLinux = stripos($ua, 'Linux') !== false;
-
-        $missingContext =
-            empty($referer) &&
-            $secFetchSite === 'none';
-
-        $invalidAcceptLanguage =
-            empty($acceptLanguage) ||
-            !preg_match('/;q=[0-9.]+/', $acceptLanguage);
-
-        if (($isChrome || $isFirefox) &&
-            $isLinux &&
-            $missingContext &&
-            $invalidAcceptLanguage
-        ) {
-            return true;
+        if ($acceptLanguage === '') {
+            ++$score;
         }
 
-        if ($isKnownBrowser && stripos($accept, 'image/webp') === false && stripos($accept, 'image/avif') === false) {
-            return true;
+        if ($acceptEncoding === '' || trim($acceptEncoding) === 'identity') {
+            ++$score;
         }
 
-        return false;
+        $acceptTypes = array_filter(explode(',', $accept));
+        if (count($acceptTypes) < 2) {
+            ++$score;
+        }
+
+        if ($isChrome || $isEdge || $isOpera) {
+            if ($secChUa === '') {
+                ++$score;
+            }
+            if ($secFetchSite === '') {
+                ++$score;
+            }
+        }
+
+        if ($isFirefox && $secChUa !== '') {
+            $score += 2;
+        }
+
+        if ($isKnownBrowser) {
+            --$score;
+        }
+
+        if (isset($_SERVER['HTTP_SEC_FETCH_MODE'], $_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_MODE'] === 'navigate' && $_SERVER['HTTP_SEC_FETCH_DEST'] === 'document') {
+            $score -= 2;
+        }
+
+        return $score >= 5;
     }
 }

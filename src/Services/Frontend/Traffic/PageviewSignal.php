@@ -91,30 +91,33 @@ class PageviewSignal
 
         $user = wp_get_current_user();
 
-        $excludedRoles = [
-            // WordPress core
+        $defaultRoles = [
             'administrator',
             'editor',
             'author',
             'contributor',
-
-            // WooCommerce
             'shop_manager',
             'shop_worker',
             'shop_staff',
-
-            // bbPress
             'bbp_moderator',
             'bbp_keymaster',
-
-            // SEO plugins
             'wpseo_manager',
             'wpseo_editor',
-
-            // Membership plugins
             's2member_admin',
             'member_admin',
         ];
+
+        /**
+         * Filter the list of user roles that should be excluded from pageview tracking.
+         *
+         * @param string[] $defaultRoles
+         * @since 1.0.0
+         *
+         */
+        $excludedRoles = apply_filters(
+            'proactive_site_advisor_excluded_user_roles',
+            $defaultRoles
+        );
 
         return array_intersect($excludedRoles, (array)$user->roles) !== [];
     }
