@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Config\PrefixConfig;
 use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
 use ProactiveSiteAdvisor\Config\PluginOptions;
@@ -61,6 +62,12 @@ class UninstallHandler
         self::deleteTransients();
         self::clearCronHooks();
         self::deleteUploads();
+        self::flushRewriteRules();
+
+        /**
+         * Fires after the plugin has been completely uninstalled.
+         */
+        do_action('proactive_site_advisor_uninstalled');
     }
 
     /**
@@ -87,7 +94,7 @@ class UninstallHandler
      *
      * @return void
      */
-    public static function deleteOptions(): void
+    private static function deleteOptions(): void
     {
         global $wpdb;
 
@@ -107,7 +114,7 @@ class UninstallHandler
      *
      * @return void
      */
-    public static function deleteUserMeta(): void
+    private static function deleteUserMeta(): void
     {
         delete_metadata('user', 0, PluginOptions::OPTION_NAME, '', true);
     }
@@ -117,7 +124,7 @@ class UninstallHandler
      *
      * @return void
      */
-    public static function deleteTables(): void
+    private static function deleteTables(): void
     {
         global $wpdb;
 
@@ -147,18 +154,14 @@ class UninstallHandler
      *
      * @return void
      */
-    public static function deleteTransients(): void
+    private static function deleteTransients(): void
     {
-        global $wpdb;
+        CacheManager::instance()->flush();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk cleanup on uninstall requires direct query
-        $wpdb->query(
-            $wpdb->prepare(
-                "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
-                '_transient_' . PluginOptions::META_PREFIX . '%',
-                '_transient_timeout_' . PluginOptions::META_PREFIX . '%'
-            )
-        );
+        /**
+         * Fires after transients are cleared during uninstallation.
+         */
+        do_action('proactive_site_advisor_clear_transients');
     }
 
     /**
@@ -166,7 +169,7 @@ class UninstallHandler
      *
      * @return void
      */
-    public static function deleteUploads(): void
+    private static function deleteUploads(): void
     {
         $uploadDir        = wp_upload_dir();
         $pluginUploadsDir = $uploadDir['basedir'] . '/' . PrefixConfig::handle('logs');
@@ -181,7 +184,7 @@ class UninstallHandler
      *
      * @return void
      */
-    public static function clearCronHooks(): void
+    private static function clearCronHooks(): void
     {
         /**
          * Filter the list of cron hooks to clear on uninstall.
@@ -195,6 +198,11 @@ class UninstallHandler
         foreach ($hooks as $hook) {
             wp_clear_scheduled_hook($hook);
         }
+
+        /**
+         * Fires after scheduled events are cleared during uninstallation.
+         */
+        do_action('proactive_site_advisor_clear_scheduled_events');
     }
 
     /**
@@ -228,5 +236,15 @@ class UninstallHandler
         }
 
         $wp_filesystem->rmdir($dir);
+    }
+
+    /**
+     * Flush rewrite rules.
+     *
+     * @return void
+     */
+    private static function flushRewriteRules(): void
+    {
+        flush_rewrite_rules();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Lifecycle;
 
+use ProactiveSiteAdvisor\Cache\CacheGroups;
+use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Database\DatabaseManager;
 use ProactiveSiteAdvisor\Database\Migration;
 
@@ -57,6 +59,14 @@ class UpdateHandler
     {
         if (DatabaseManager::needsUpdate()) {
             self::runDatabaseMigrations();
+
+            self::flushRewriteRules();
+            self::clearTransients();
+
+            /**
+             * Fires after the plugin has been updated.
+             */
+            do_action('proactive_site_advisor_updated');
         }
     }
 
@@ -94,5 +104,28 @@ class UpdateHandler
          * Fires after database migrations are run.
          */
         do_action('proactive_site_advisor_database_migrations_complete');
+    }
+
+    /**
+     * Flush rewrite rules.
+     *
+     * @return void
+     */
+    private static function flushRewriteRules(): void
+    {
+        flush_rewrite_rules();
+    }
+
+    /**
+     * Clear plugin transients.
+     *
+     * @return void
+     */
+    private static function clearTransients(): void
+    {
+        $cache = CacheManager::instance();
+
+        $cache->flushGroup(CacheGroups::QUERY);
+        $cache->flushGroup(CacheGroups::FRAGMENT);
     }
 }
