@@ -82,6 +82,7 @@ return array(
     'ProactiveSiteAdvisor\\Services\\Insights\\TrafficAnalyzer' => $baseDir . '/src/Services/Insights/TrafficAnalyzer.php',
     'ProactiveSiteAdvisor\\Utils\\DateTimeUtils' => $baseDir . '/src/Utils/DateTimeUtils.php',
     'ProactiveSiteAdvisor\\Utils\\DisplayUtils' => $baseDir . '/src/Utils/DisplayUtils.php',
+    'ProactiveSiteAdvisor\\Utils\\Environment' => $baseDir . '/src/Utils/Environment.php',
     'ProactiveSiteAdvisor\\Utils\\Kses' => $baseDir . '/src/Utils/Kses.php',
     'ProactiveSiteAdvisor\\Utils\\Logger' => $baseDir . '/src/Utils/Logger.php',
     'ProactiveSiteAdvisor\\Utils\\MenuUtils' => $baseDir . '/src/Utils/MenuUtils.php',

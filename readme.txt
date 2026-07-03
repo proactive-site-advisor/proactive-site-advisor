@@ -1,4 +1,4 @@
-=== Proactive Site Advisor – Local, privacy-first site alerts ===
+=== Proactive Site Advisor – Local, Privacy-First Site Alerts ===
 Contributors: zheynlab
 Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
@@ -8,71 +8,76 @@ Stable tag: 1.0.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Don't let traffic drops or 404 surges go unnoticed. Daily monitoring alerts you the moment something's off.
+Never miss a traffic drop, 404 surge, or bot anomaly. Daily, local monitoring alerts you instantly — with more alert types on the way.
 
 == Description ==
 
-Most WordPress problems stay hidden until they cost you. Proactive Site Advisor watches your site daily, compares activity to the past week, and alerts you the second something deviates from normal. Now with bot detection, you see exactly how much traffic is real vs. crawlers. Traffic crashes, bot anomalies, 404 spikes — all monitored locally, no configuration. More alert types are on the way.
+Most WordPress issues stay hidden until they hurt you. **Proactive Site Advisor** silently watches your site every day, compares activity to the previous week, and immediately alerts you when something changes. It now separates real visitors from bots, so you see exactly how much traffic is human vs. crawler.
 
-When an anomaly is detected, you see:
+Everything stays 100% local—no external APIs, no data leaving your server. The plugin logs, processes, and summarizes data using lightweight database tables and atomic operations. Zero performance overhead.
+
+**When an anomaly is detected you get:**
 - What changed (e.g., "Traffic dropped by 41%")
-- What this means for your site
+- What it means for your site
 - What you should check next
-- Top 3 broken URLs (for 404 alerts)
-- Top 3 bot names (for bot alerts)
+- Top 3 broken URLs (for 404 surges)
+- Top 3 bot names (for bot anomalies)
 
-Dashboard view includes: critical issues indicator, weekly digest cards, latest alerts list, and a 7‑day history table with averages.
+**Dashboard view includes:**
+- Critical issue indicator
+- Weekly digest cards
+- Latest alerts list
+- 7‑day history table with averages
 
-How it works: raw visitor, bot, and 404 data is temporarily stored in WordPress transients, processed once daily, then cleared. Only summarized stats (7‑day rolling) and generated alerts are saved in two lightweight tables. No performance overhead.
+### Privacy & Performance
+- **100% local** – No data leaves your server, no external APIs
+- Raw visitor, bot, and 404 data stored in transients, processed once daily, then cleared
+- Only two lightweight tables keep the last 7 days of stats and generated alerts
+- No cookies, no cross-site tracking, GDPR‑friendly by design
 
-= Privacy & Performance =
-
-* 100% local — no data leaves your server, no external APIs
-* Visitor, bot, and 404 logs are stored in WordPress transients, processed once daily, then cleared
-* Only two lightweight tables keep the last 7 days of stats and generated alerts
-* No cookies, no tracking across sites, GDPR‑friendly by design
-
-All monitoring runs locally. No external APIs. No data leaves your server. The plugin does not fix anything — it alerts and recommends so you stay in control.
+The plugin does **not** fix anything—it alerts and recommends so you stay in full control.
 
 == Key Features ==
 
 * Bot traffic anomaly detection (surge/drop) with Top 3 bots
-* Traffic drop/spike detection (7‑day baseline)
+* Human traffic drop/spike detection (7‑day baseline)
 * 404 error surge detection with Top 3 broken URLs
-* "Site Advisor" dashboard (digest, history, latest alerts)
+* Unified "Site Advisor" dashboard (digest, history, latest alerts)
 * Actionable "What you should check next" lists
-* Daily WP-Cron scan after day completion (cached)
-* Data processed locally — zero external requests
+* Daily WP-Cron scan after day completion
+* 100% local data processing – zero external requests
+* Atomic database operations for reliable metric collection
+* Accurate bot detection with 1500+ signatures
 * Future-ready: more anomaly types planned
 
 == Installation ==
 
 1. Upload `proactive-site-advisor` to `/wp-content/plugins/`
-2. Activate from Plugins -> Installed Plugins
+2. Activate from Plugins → Installed Plugins
 3. Visit **Site Advisor** menu
 
 == Frequently Asked Questions ==
 
 = Does the plugin fix anything automatically? =
-No. It only alerts and recommends.
+No. It only alerts and gives actionable recommendations.
 
-= Where do the traffic and 404 data come from? =
+= Where do traffic and 404 data come from? =
 The plugin logs page views and 404 errors via WordPress hooks. Data is stored temporarily and cleared after daily processing.
 
 = When are scans performed? =
 After each full day, via WP-Cron.
 
 = How does it detect anomalies? =
-Yesterday's numbers are compared to the average of the previous 7 days.
+Yesterday’s numbers are compared to the average of the previous 7 days.
 
 = What does a 404 alert show? =
-The top 3 broken URLs that day, with hit counts and suggestions.
+The top 3 broken URLs that day, with hit counts and fix suggestions.
 
 = What does a bot alert show? =
-The top 3 bot names (e.g., Googlebot, Bingbot) that visited your site that day, with visit counts and suggestions.
+The top 3 bot names (e.g., Googlebot, Bingbot) that visited that day, with visit counts and recommendations.
 
 = Will you add other alert types? =
-Yes. Future updates will bring more anomaly types (slow pages, server errors, etc.) and integration with popular analytics plugins to pull data instead of logging — always optional.
+Yes. Future updates will bring slow page alerts, server error detection, and optional integration with popular analytics plugins—always privacy‑first.
 
 = Is it free? =
 Yes. Licensed GPL-2.0-or-later.
@@ -80,42 +85,48 @@ Yes. Licensed GPL-2.0-or-later.
 == Screenshots ==
 
 1. Main dashboard with critical issue indicator and weekly digest.
-2. Example traffic drop alert — percentage change, impact summary, and action checklist.
-3. Example 404 surge alert with top 3 broken URLs and hit counts.
-4. Example bot alert with top 3 bot names and percentage change.
+2. Traffic drop alert – percentage change, impact summary, and action checklist.
+3. 404 surge alert with top 3 broken URLs and hit counts.
+4. Bot alert with top 3 bot names and percentage change.
 
 == Changelog ==
 
 = 1.0.6 =
-* Improvement: Increased bot detection accuracy with enhanced User-Agent analysis and reduced false positives
-* Performance: Unified cache clearing workflow across plugin install, update, activation, and deactivation
-* Performance: Optimized plugin lifecycle operations for improved reliability and consistency
+* Fix: Daily metrics now stored in durable database (prevents data loss on cache clear)
+* Fix: Incorrect bot classification on local development environments
+* Database: Added atomic increment and JSON map update methods for reliable metric collection
+* Performance: Removed cache-to-database sync cron (data written in real‑time now)
+* Stability: Eliminated race conditions using atomic database operations
+* Improvement: Simplified browser validation for accurate localhost testing
+* Improvement: Enhanced bot detection accuracy with refined User-Agent analysis (reduced false positives)
+* Performance: Unified cache clearing on install, update, activation, and deactivation
+* Performance: Optimized lifecycle operations for better reliability
 
 = 1.0.5 =
-* Fix: Resolved database table creation bug that prevented tables from being created on plugin activation
-* Update: Bot detection patterns upgraded with 1500+ new bot signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
-* Improvement: Enhanced bot detection accuracy with improved User-Agent parsing and reduced false positives
-* Performance: Optimized bot detection function for faster processing and lower memory usage
-* Stability: Improved error handling during database updates and cron job execution
+* Fix: Database table creation bug on activation resolved
+* Update: Bot detection patterns upgraded with 1500+ new signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
+* Improvement: Better User-Agent parsing and reduced false positives
+* Performance: Faster bot detection with lower memory usage
+* Stability: Improved error handling for DB updates and cron jobs
 
 = 1.0.4 =
-* Feat: Bot traffic detection — separate human vs bot pageviews
-* Feat: Bot anomaly alerts — spike and drop detection with Top 3 bots
-* Dashboard: New "Bot Alerts" KPI card and bot pageviews column in history table
-* Dashboard: Bot alert cards with top bot names and actionable recommendations
-* Performance: Combined bot pattern regex (1500+ patterns) in single static file
-* Database: Added bot_pageviews and top_bots_json columns to daily_stats table
+* Feat: Bot traffic detection – separate human vs bot pageviews
+* Feat: Bot anomaly alerts – spike/drop with Top 3 bots
+* Dashboard: New “Bot Alerts” KPI card and bot pageviews column in history
+* Dashboard: Bot alert cards with top bot names and recommendations
+* Performance: Combined 1500+ bot pattern regex in a single static file
+* Database: Added bot_pageviews and top_bots_json columns to daily_stats
 
 = 1.0.3 =
-* Fix: Alert messages now fully translatable via WordPress i18n functions
-* Database: Removed redundant "title" column for cleaner table structure
+* Fix: Alert messages now fully translatable via WordPress i18n
+* Database: Removed redundant “title” column
 
 = 1.0.2 =
-* Added: RTL support for WordPress admin dashboard
+* Added RTL support for admin dashboard
 
 = 1.0.1 =
-* Fix: Prevent duplicate alerts in digest cards
-* Feat: Add percentage change for 404 errors
+* Fix: Prevented duplicate alerts in digest cards
+* Feat: Added percentage change for 404 errors
 
 = 1.0.0 =
 * Initial release
@@ -128,22 +139,22 @@ Yes. Licensed GPL-2.0-or-later.
 == Upgrade Notice ==
 
 = 1.0.6 =
-Improves bot detection accuracy and optimizes plugin lifecycle operations, including unified cache handling during installation, updates, activation, and deactivation. Safe automatic update. No manual action required.
+Daily metrics are now stored in a durable database to prevent data loss when cache is cleared. Bot classification on local development environments is fixed. Bot detection accuracy improved with less false positives. Cache handling and lifecycle operations optimized. Safe automatic update – no manual action required.
 
 = 1.0.5 =
-Fixes a critical table creation bug on activation, updates bot detection patterns with 1500+ new signatures, and improves overall detection accuracy. Safe automatic update. No manual action required.
+Fixes a critical table creation bug on activation and adds 1500+ new bot signatures. Detection accuracy improved. Safe automatic update – no manual action required.
 
 = 1.0.4 =
-Adds bot traffic detection with anomaly alerts, new dashboard cards, and separate bot pageview tracking. Includes database schema changes (new columns). Safe automatic update.
+Adds bot traffic detection, bot anomaly alerts, and new dashboard cards. Includes database schema changes (new columns). Safe automatic update.
 
 = 1.0.3 =
-This update makes alert messages translation-ready and removes a redundant database column. Safe automatic update. No manual action required.
+Makes alert messages translation‑ready and removes a redundant database column. Safe automatic update.
 
 = 1.0.2 =
-Added RTL language support for admin dashboard. Safe automatic update.
+Added RTL support for the admin dashboard. Safe automatic update.
 
 = 1.0.1 =
-Important: Removes duplicate digest entries and adds 404 change percentage. Safe automatic update.
+Removes duplicate digest entries and adds 404 change percentage. Safe automatic update.
 
 = 1.0.0 =
 Initial release.

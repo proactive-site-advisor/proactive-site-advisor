@@ -4,6 +4,18 @@
 
 = 1.0.6 – 2026-07-03 =
 
+\* Fix: Daily metrics now stored in durable database instead of volatile cache to prevent data loss on cache clear
+
+\* Fix: Resolved incorrect bot classification on local development environments
+
+\* Database: Added atomic increment and JSON map update methods to DailyStats model
+
+\* Performance: Removed cache-to-database sync cron job (data now written in real-time)
+
+\* Stability: Eliminated race conditions in metric collection using atomic database operations
+
+\* Improvement: Simplified browser validation on localhost for accurate local development testing
+
 \* Improvement: Refined bot detection algorithm for more accurate bot identification and fewer false positives
 
 \* Refactor: Unified cache clearing workflow across plugin installation, updates, activation, and deactivation

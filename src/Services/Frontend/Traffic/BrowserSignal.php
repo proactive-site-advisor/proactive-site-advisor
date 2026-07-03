@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
+use ProactiveSiteAdvisor\Utils\Environment;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -27,6 +29,10 @@ class BrowserSignal
      */
     public static function isBrowser(): bool
     {
+        if (Environment::isLocal()) {
+            return self::hasHtmlAcceptHeader() && self::hasBrowserUserAgent();
+        }
+
         if (self::hasPurposeHeader()) {
             return false;
         }

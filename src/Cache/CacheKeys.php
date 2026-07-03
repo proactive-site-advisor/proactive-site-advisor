@@ -46,52 +46,9 @@ final class CacheKeys
     private const KEY_DAILY_LOCK = 'daily_lock';
 
     /**
-     * Cache key prefix for pageview counters.
-     */
-    private const PREFIX_PAGEVIEWS = 'pv_';
-
-    /**
-     * Cache key prefix for daily 404 total counters.
-     */
-    private const PREFIX_404_TOTAL = '404_total_';
-
-    /**
-     * Cache key prefix for daily 404 path maps.
-     */
-    private const PREFIX_404_MAP = '404_map_';
-
-    /**
-     * Prefix for bot pageview count cache keys.
-     */
-    private const PREFIX_BOT_PAGEVIEWS = 'pv_bot_';
-
-    /**
-     * Prefix for bot name count map cache keys.
-     */
-    private const PREFIX_BOT_NAMES = 'bot_names_';
-
-    /**
      * Prefix for request rate tracking.
      */
     private const PREFIX_REQUEST_RATE = 'rate_';
-
-    /**
-     * Normalize date key to Ymd format.
-     *
-     * @param string $dateKey
-     * @return string
-     */
-    private static function normalizeDateKey(string $dateKey): string
-    {
-        // Replace all non-digits using \D instead of [^0-9]
-        $dateKey = preg_replace('/\D/', '', $dateKey);
-
-        if (strlen($dateKey) !== 8) {
-            return DateTimeUtils::todayKey();
-        }
-
-        return $dateKey;
-    }
 
     /**
      * Get admin notices cache key.
@@ -131,116 +88,6 @@ final class CacheKeys
     public static function dailyLock(): string
     {
         return self::KEY_DAILY_LOCK;
-    }
-
-    /**
-     * Pageviews for today.
-     *
-     * @return string
-     */
-    public static function pageviewsToday(): string
-    {
-        return self::PREFIX_PAGEVIEWS . DateTimeUtils::todayKey();
-    }
-
-    /**
-     * 404 total count for today.
-     *
-     * @return string
-     */
-    public static function notFoundTotalToday(): string
-    {
-        return self::PREFIX_404_TOTAL . DateTimeUtils::todayKey();
-    }
-
-    /**
-     * 404 total count for today.
-     *
-     * @return string
-     */
-    public static function notFoundMapToday(): string
-    {
-        return self::PREFIX_404_MAP . DateTimeUtils::todayKey();
-    }
-
-    /**
-     * Pageviews for specific date (Ymd).
-     *
-     * @param string $dateKey
-     *
-     * @return string
-     */
-    public static function pageviewsForDate(string $dateKey): string
-    {
-        return self::PREFIX_PAGEVIEWS . self::normalizeDateKey($dateKey);
-    }
-
-    /**
-     * 404 total for specific date (Ymd).
-     *
-     * @param string $dateKey
-     *
-     * @return string
-     */
-    public static function notFoundTotalForDate(string $dateKey): string
-    {
-        return self::PREFIX_404_TOTAL . self::normalizeDateKey($dateKey);
-    }
-
-    /**
-     * 404 path map for specific date (Ymd).
-     *
-     * @param string $dateKey
-     *
-     * @return string
-     */
-    public static function notFoundMapForDate(string $dateKey): string
-    {
-        return self::PREFIX_404_MAP . self::normalizeDateKey($dateKey);
-    }
-
-    /**
-     * Get cache key for today's bot pageviews.
-     *
-     * @return string
-     */
-    public static function pageviewsBotToday(): string
-    {
-        return self::PREFIX_BOT_PAGEVIEWS . DateTimeUtils::todayKey();
-    }
-
-    /**
-     * Get cache key for bot pageviews on a specific date.
-     *
-     * @param string $dateKey
-     *
-     * @return string
-     */
-    public static function pageviewsBotForDate(string $dateKey): string
-    {
-        return self::PREFIX_BOT_PAGEVIEWS . self::normalizeDateKey($dateKey);
-    }
-
-    /**
-     * Get cache key for today's bot name count map.
-     *
-     * @return string
-     */
-    public static function botNameCountsToday(): string
-    {
-        return self::PREFIX_BOT_NAMES . DateTimeUtils::todayKey();
-    }
-
-    /**
-     * Get cache key for bot name count map on a specific date.
-     *
-     * @param string $dateKey
-     *
-     * @return string
-     */
-    public static function botNameCountsForDate(string $dateKey): string
-    {
-        return self::PREFIX_BOT_NAMES . self::normalizeDateKey($dateKey);
     }
 
     /**
