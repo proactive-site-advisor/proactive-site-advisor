@@ -3,8 +3,8 @@
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
 use ProactiveSiteAdvisor\Utils\Request;
-use ProactiveSiteAdvisor\Cache\CacheKeys;
-use ProactiveSiteAdvisor\Cache\CacheManager;
+use ProactiveSiteAdvisor\Models\DailyStats;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class NotFoundTracker
  *
- * Tracks 404 errors on frontend requests.
+ * Tracks 404 errors on frontend requests using database storage.
  * Stores total count and a pruned map of paths that triggered 404s.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
@@ -21,11 +21,6 @@ if (!defined('ABSPATH')) {
  */
 class NotFoundTracker
 {
-    /**
-     * Transient TTL in seconds (10 days).
-     */
-    private const TRANSIENT_TTL = DAY_IN_SECONDS * 10;
-
     /**
      * Maximum number of paths to keep in the map.
      */
@@ -62,61 +57,16 @@ class NotFoundTracker
             return;
         }
 
-        $cache = CacheManager::instance();
+        $today = DateTimeUtils::todayKey();
 
-        $totalKey = CacheKeys::notFoundTotalToday();
-        $cache->increment($totalKey, 1, self::TRANSIENT_TTL);
+        DailyStats::incrementAtomic($today, 'errors_404', 1);
 
         $path = Request::getRequestPath();
         if ($path === '') {
             return;
         }
 
-        $mapKey = CacheKeys::notFoundMapToday();
-        $map    = $this->getMap($mapKey);
-
-        $map[$path] = isset($map[$path]) ? ((int)$map[$path] + 1) : 1;
-
-        $map = $this->pruneMap($map);
-
-        $cache->set($mapKey, wp_json_encode($map), self::TRANSIENT_TTL);
-    }
-
-    /**
-     * Get the path map from cache.
-     *
-     * @param string $mapKey
-     *
-     * @return array
-     */
-    private function getMap(string $mapKey): array
-    {
-        $raw = CacheManager::instance()->get($mapKey);
-        if (!is_string($raw) || $raw === '') {
-            return [];
-        }
-
-        $decoded = json_decode($raw, true);
-
-        return is_array($decoded) ? $decoded : [];
-    }
-
-    /**
-     * Prune the map to keep only top paths by count.
-     *
-     * @param array $map
-     *
-     * @return array
-     */
-    private function pruneMap(array $map): array
-    {
-        if (count($map) <= self::MAX_PATHS) {
-            return $map;
-        }
-
-        arsort($map);
-
-        return array_slice($map, 0, self::MAX_PATHS, true);
+        DailyStats::updateJsonMap($today, 'top_404_json', [$path => 1], self::MAX_PATHS);
     }
 
     /**

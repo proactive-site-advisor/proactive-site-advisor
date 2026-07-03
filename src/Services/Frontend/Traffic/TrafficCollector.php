@@ -2,8 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use ProactiveSiteAdvisor\Cache\CacheKeys;
-use ProactiveSiteAdvisor\Cache\CacheManager;
+use ProactiveSiteAdvisor\Models\DailyStats;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class TrafficCollector
  *
- * Collects frontend pageview counts using WordPress transients.
+ * Collects frontend pageview counts using database storage.
  * Runs only on legitimate frontend requests, skipping admin, REST, AJAX,
  * cron, feed, and preview requests.
  *
@@ -22,13 +22,7 @@ if (!defined('ABSPATH')) {
 class TrafficCollector
 {
     /**
-     * Transient TTL in seconds (10 days).
-     * Long TTL ensures transient survives until daily cron processes it.
-     */
-    private const TRANSIENT_TTL = DAY_IN_SECONDS * 10;
-
-    /**
-     * Maximum number of bot names to keep in daily cache.
+     * Maximum number of bot names to keep in daily stats.
      */
     private const MAX_BOT_NAMES = 30;
 
@@ -43,73 +37,28 @@ class TrafficCollector
             return;
         }
 
-        $cache = CacheManager::instance();
+        $today = DateTimeUtils::todayKey();
 
         if ($this->isVisitor() && !$this->isAdvancedBot()) {
-            $key = CacheKeys::pageviewsToday();
-            $cache->increment($key, 1, self::TRANSIENT_TTL);
+            DailyStats::incrementAtomic($today, 'pageviews', 1);
         } else {
-            $key = CacheKeys::pageviewsBotToday();
-            $cache->increment($key, 1, self::TRANSIENT_TTL);
-
-            $this->incrementBotNameCount();
+            DailyStats::incrementAtomic($today, 'bot_pageviews', 1);
+            $this->trackBotName($today);
         }
     }
 
     /**
-     * Increase the daily counter for a specific bot name.
+     * Track the bot name for today's statistics.
      *
+     * @param string $today Today's date in Ymd format.
      * @return void
      */
-    private function incrementBotNameCount(): void
+    private function trackBotName(string $today): void
     {
         $botName = BotDetector::getBotName() ?: 'unknown';
-        $key     = CacheKeys::botNameCountsToday();
+        $botName = strtolower($botName);
 
-        $cache  = CacheManager::instance();
-        $counts = $this->getBotNameMap($key);
-
-        $botName          = strtolower($botName);
-        $counts[$botName] = ($counts[$botName] ?? 0) + 1;
-
-        $counts = $this->pruneBotNames($counts);
-
-        $cache->set($key, wp_json_encode($counts), self::TRANSIENT_TTL);
-    }
-
-    /**
-     * Prune bot name counts to keep only the top names.
-     *
-     * @param array $counts
-     *
-     * @return array
-     */
-    private function pruneBotNames(array $counts): array
-    {
-        if (count($counts) <= self::MAX_BOT_NAMES) {
-            return $counts;
-        }
-
-        arsort($counts);
-        return array_slice($counts, 0, self::MAX_BOT_NAMES, true);
-    }
-
-    /**
-     * Get bot name counts map from cache.
-     *
-     * @param string $mapKey
-     *
-     * @return array
-     */
-    private function getBotNameMap(string $mapKey): array
-    {
-        $raw = CacheManager::instance()->get($mapKey);
-        if (!is_string($raw) || $raw === '') {
-            return [];
-        }
-
-        $decoded = json_decode($raw, true);
-        return is_array($decoded) ? $decoded : [];
+        DailyStats::updateJsonMap($today, 'top_bots_json', [$botName => 1], self::MAX_BOT_NAMES);
     }
 
     /**

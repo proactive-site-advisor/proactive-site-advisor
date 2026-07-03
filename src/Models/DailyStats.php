@@ -146,4 +146,120 @@ class DailyStats extends AbstractModel
             $dateYmd
         );
     }
+
+    /**
+     * Atomically increment a numeric column for a specific date.
+     * Uses INSERT ... ON DUPLICATE KEY UPDATE to prevent race conditions.
+     *
+     * @param string $dateYmd
+     * @param string $column
+     * @param int $amount
+     * @return void
+     */
+    public static function incrementAtomic(string $dateYmd, string $column, int $amount): void
+    {
+        $table  = static::getTableName();
+        $nowRaw = DateTimeUtils::now();
+
+        $allowedColumns = ['pageviews', 'errors_404', 'bot_pageviews'];
+        if (!in_array($column, $allowedColumns, true)) {
+            return;
+        }
+
+        DatabaseManager::preparedQuery(
+            "INSERT INTO $table (stats_date, $column, created_at, updated_at) 
+             VALUES (%s, %d, %s, %s) 
+             ON DUPLICATE KEY UPDATE 
+                $column = $column + %d,
+                updated_at = %s",
+            $dateYmd,
+            max(0, $amount),
+            $nowRaw,
+            $nowRaw,
+            max(0, $amount),
+            $nowRaw
+        );
+    }
+
+    /**
+     * Update a JSON column by merging new data and keeping only top N entries.
+     *
+     * @param string $dateYmd
+     * @param string $jsonColumn
+     * @param array $newData
+     * @param int $maxEntries
+     * @return void
+     */
+    public static function updateJsonMap(string $dateYmd, string $jsonColumn, array $newData, int $maxEntries = 30): void
+    {
+        $table  = static::getTableName();
+        $nowRaw = DateTimeUtils::now();
+
+        $allowedColumns = ['top_404_json', 'top_bots_json'];
+        if (!in_array($jsonColumn, $allowedColumns, true)) {
+            return;
+        }
+
+        $currentData = static::getJsonMap($dateYmd, $jsonColumn);
+
+        foreach ($newData as $key => $count) {
+            if (!is_numeric($count)) {
+                $count = 1;
+            }
+            $currentData[$key] = isset($currentData[$key])
+                ? ((int)$currentData[$key] + (int)$count)
+                : (int)$count;
+        }
+
+        if (count($currentData) > $maxEntries) {
+            arsort($currentData);
+            $currentData = array_slice($currentData, 0, $maxEntries, true);
+        }
+
+        $jsonValue = !empty($currentData) ? wp_json_encode($currentData) : null;
+
+        DatabaseManager::preparedQuery(
+            "INSERT INTO $table (stats_date, $jsonColumn, created_at, updated_at) 
+             VALUES (%s, %s, %s, %s) 
+             ON DUPLICATE KEY UPDATE 
+                $jsonColumn = %s,
+                updated_at = %s",
+            $dateYmd,
+            $jsonValue,
+            $nowRaw,
+            $nowRaw,
+            $jsonValue,
+            $nowRaw
+        );
+    }
+
+    /**
+     * Get JSON map data for a specific date and column.
+     *
+     * @param string $dateYmd
+     * @param string $jsonColumn
+     *
+     * @return array
+     */
+    private static function getJsonMap(string $dateYmd, string $jsonColumn): array
+    {
+        global $wpdb;
+        $table = static::getTableName();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Column validated above
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT $jsonColumn FROM $table WHERE stats_date = %s LIMIT 1",
+                $dateYmd
+            ),
+            ARRAY_A
+        );
+
+        if (empty($row) || empty($row[$jsonColumn])) {
+            return [];
+        }
+
+        $decoded = json_decode($row[$jsonColumn], true);
+        return is_array($decoded) ? $decoded : [];
+    }
 }
