@@ -1,5 +1,19 @@
 \# Changelog
 
+
+
+= 1.0.6 – 2026-07-03 =
+
+\* Improvement: Refined bot detection algorithm for more accurate bot identification and fewer false positives
+
+\* Refactor: Unified cache clearing workflow across plugin installation, updates, activation, and deactivation
+
+\* Performance: Optimized plugin lifecycle operations for faster and more consistent execution
+
+\* Stability: Improved cache invalidation after plugin lifecycle events
+
+
+
 = 1.0.5 – 2026-07-01 =
 
 \* Fix: Database tables now created correctly on plugin activation (resolved table creation bug)

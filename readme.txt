@@ -86,6 +86,11 @@ Yes. Licensed GPL-2.0-or-later.
 
 == Changelog ==
 
+= 1.0.6 =
+* Improvement: Increased bot detection accuracy with enhanced User-Agent analysis and reduced false positives
+* Performance: Unified cache clearing workflow across plugin install, update, activation, and deactivation
+* Performance: Optimized plugin lifecycle operations for improved reliability and consistency
+
 = 1.0.5 =
 * Fix: Resolved database table creation bug that prevented tables from being created on plugin activation
 * Update: Bot detection patterns upgraded with 1500+ new bot signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
@@ -121,6 +126,9 @@ Yes. Licensed GPL-2.0-or-later.
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.0.6 =
+Improves bot detection accuracy and optimizes plugin lifecycle operations, including unified cache handling during installation, updates, activation, and deactivation. Safe automatic update. No manual action required.
 
 = 1.0.5 =
 Fixes a critical table creation bug on activation, updates bot detection patterns with 1500+ new signatures, and improves overall detection accuracy. Safe automatic update. No manual action required.
