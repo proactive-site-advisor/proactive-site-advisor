@@ -27,12 +27,25 @@ class TrafficCollector
     private const MAX_BOT_NAMES = 30;
 
     /**
+     * Prevents duplicate tracking per request.
+     *
+     * @var bool
+     */
+    private static bool $hasRun = false;
+
+    /**
      * Increment pageview count if this is a valid frontend request.
      *
      * @return void
      */
     public function maybeCountPageview(): void
     {
+        if (self::$hasRun) {
+            return;
+        }
+
+        self::$hasRun = true;
+
         if (!PageviewSignal::shouldCollect()) {
             return;
         }

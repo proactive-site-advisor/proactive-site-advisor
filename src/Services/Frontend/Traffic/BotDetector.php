@@ -70,11 +70,14 @@ class BotDetector
         static $pattern = null;
 
         if ($pattern === null) {
-            $pattern = require PROACTIVE_SITE_ADVISOR_PATH . 'data/bot-patterns.php';
+            $filePath = PROACTIVE_SITE_ADVISOR_PATH . 'data/bot-patterns.php';
+            if (file_exists($filePath)) {
+                $pattern = require $filePath;
+            }
         }
 
         if (!is_string($pattern) || $pattern === '') {
-            return null;
+            return self::matchBotNameFallback($ua);
         }
 
         $result = preg_match($pattern, $ua, $matches);

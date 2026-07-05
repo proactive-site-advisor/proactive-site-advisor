@@ -113,9 +113,12 @@ class RequestRateSignal
             self::getIp()
             . '|'
             . self::getUserAgent()
+            . '|'
+            . sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''))
+            . '|'
+            . sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_CH_UA'] ?? ''))
         );
     }
-
 
     /**
      * Get current user agent.
@@ -140,13 +143,27 @@ class RequestRateSignal
      */
     private static function getIp(): string
     {
-        if (
-            isset($_SERVER['REMOTE_ADDR'])
-            && is_string($_SERVER['REMOTE_ADDR'])
-        ) {
-            return sanitize_text_field(
-                wp_unslash($_SERVER['REMOTE_ADDR'])
-            );
+        $headers = [
+            'HTTP_CF_CONNECTING_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_REAL_IP',
+            'HTTP_CLIENT_IP',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($headers as $header) {
+            if (isset($_SERVER[$header]) && is_string($_SERVER[$header]) && $_SERVER[$header] !== '') {
+                $ip = sanitize_text_field(wp_unslash($_SERVER[$header]));
+
+                if ($header === 'HTTP_X_FORWARDED_FOR') {
+                    $ips = explode(',', $ip);
+                    $ip  = trim($ips[0]);
+                }
+
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip;
+                }
+            }
         }
 
         return 'unknown';

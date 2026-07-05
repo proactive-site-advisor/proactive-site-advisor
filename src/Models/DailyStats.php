@@ -244,16 +244,23 @@ class DailyStats extends AbstractModel
     private static function getJsonMap(string $dateYmd, string $jsonColumn): array
     {
         global $wpdb;
-        $table = static::getTableName();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Column validated above
-        $row = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT $jsonColumn FROM $table WHERE stats_date = %s LIMIT 1",
-                $dateYmd
-            ),
-            ARRAY_A
-        );
+        $columns = [
+            'top_404_json'  => '`top_404_json`',
+            'top_bots_json' => '`top_bots_json`',
+        ];
+
+        if (!isset($columns[$jsonColumn])) {
+            return [];
+        }
+
+        $columnSql = $columns[$jsonColumn];
+        $table     = static::getTableName();
+
+        $sql = "SELECT $columnSql FROM `$table` WHERE stats_date = %s LIMIT 1";
+
+        // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $row = $wpdb->get_row($wpdb->prepare($sql, $dateYmd), ARRAY_A);
 
         if (empty($row) || empty($row[$jsonColumn])) {
             return [];
