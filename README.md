@@ -23,7 +23,7 @@ The plugin adds a **"Site Advisor"** dashboard in your admin with:
 ## Privacy & Performance
 
 - **100% local** – no data leaves your server, no external APIs
-- Visitor, bot, and 404 logs are stored in WordPress transients, processed once daily, then cleared
+- Stores only daily summarized metrics - no personal or visitor data is ever saved
 - Only two lightweight tables keep the last 7 days of stats and generated alerts
 - No cookies, no cross‑site tracking, GDPR‑friendly by design
 - Atomic database operations prevent race conditions and data loss
@@ -35,7 +35,6 @@ The plugin does **not** fix anything automatically — it only alerts and recomm
 - **Bot traffic anomaly detection** (surge/drop) with Top 3 bots
 - **Human traffic drop/spike detection** (completed day vs. 7‑day baseline)
 - **404 error surge detection** with Top 3 broken URLs
-- Unified "Site Advisor" dashboard (digest, history, latest alerts)
 - Actionable "What you should check next" lists
 - Daily WP‑Cron scan (lightweight, cached)
 - Accurate bot detection powered by **1500+ bot signatures** (Googlebot, GPTBot, ClaudeBot, etc.)

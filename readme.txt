@@ -31,7 +31,7 @@ Everything stays 100% local—no external APIs, no data leaving your server. The
 
 ### Privacy & Performance
 - **100% local** – No data leaves your server, no external APIs
-- Raw visitor, bot, and 404 data stored in transients, processed once daily, then cleared
+- Stores only daily summarized metrics - no personal or visitor data is ever saved
 - Only two lightweight tables keep the last 7 days of stats and generated alerts
 - No cookies, no cross-site tracking, GDPR‑friendly by design
 
@@ -42,7 +42,6 @@ The plugin does **not** fix anything—it alerts and recommends so you stay in f
 * Bot traffic anomaly detection (surge/drop) with Top 3 bots
 * Human traffic drop/spike detection (7‑day baseline)
 * 404 error surge detection with Top 3 broken URLs
-* Unified "Site Advisor" dashboard (digest, history, latest alerts)
 * Actionable "What you should check next" lists
 * Daily WP-Cron scan after day completion
 * 100% local data processing – zero external requests
