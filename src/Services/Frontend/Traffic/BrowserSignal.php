@@ -33,7 +33,7 @@ class BrowserSignal
             return self::hasHtmlAcceptHeader() && self::hasBrowserUserAgent();
         }
 
-        if (self::hasPurposeHeader()) {
+        if (self::isPrefetchOrPreview()) {
             return false;
         }
 
@@ -42,14 +42,6 @@ class BrowserSignal
         }
 
         if (!self::hasBrowserUserAgent()) {
-            return false;
-        }
-
-        if (!self::hasNavigationFetchMode()) {
-            return false;
-        }
-
-        if (!self::hasDocumentDestination()) {
             return false;
         }
 
@@ -81,28 +73,6 @@ class BrowserSignal
     }
 
     /**
-     * Verify browser navigation mode.
-     *
-     * @return bool
-     */
-    private static function hasNavigationFetchMode(): bool
-    {
-        if (!isset($_SERVER['HTTP_SEC_FETCH_MODE'])) {
-            return false;
-        }
-
-        $mode = sanitize_text_field(
-            wp_unslash($_SERVER['HTTP_SEC_FETCH_MODE'])
-        );
-
-        return in_array(
-            $mode,
-            ['navigate', 'nested-navigate'],
-            true
-        );
-    }
-
-    /**
      * Verify browser User-Agent.
      *
      * This does not detect bots.
@@ -124,7 +94,10 @@ class BrowserSignal
         static $pattern = null;
 
         if ($pattern === null) {
-            $pattern = require PROACTIVE_SITE_ADVISOR_PATH . 'data/browser-patterns.php';
+            $filePath = PROACTIVE_SITE_ADVISOR_PATH . 'data/browser-patterns.php';
+            if (file_exists($filePath)) {
+                $pattern = require $filePath;
+            }
         }
 
         if (!is_string($pattern) || $pattern === '') {
@@ -132,24 +105,6 @@ class BrowserSignal
         }
 
         return preg_match($pattern, $ua) === 1;
-    }
-
-    /**
-     * Verify browser navigation destination.
-     *
-     * @return bool
-     */
-    private static function hasDocumentDestination(): bool
-    {
-        if (!isset($_SERVER['HTTP_SEC_FETCH_DEST'])) {
-            return false;
-        }
-
-        $dest = sanitize_text_field(
-            wp_unslash($_SERVER['HTTP_SEC_FETCH_DEST'])
-        );
-
-        return $dest === 'document';
     }
 
     /**
@@ -184,13 +139,8 @@ class BrowserSignal
      *
      * @return bool
      */
-    private static function hasPurposeHeader(): bool
+    private static function isPrefetchOrPreview(): bool
     {
-        if (isset($_SERVER['HTTP_SEC_FETCH_MODE']) &&
-            sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_MODE'])) === 'navigate') {
-            return false;
-        }
-
         if (isset($_SERVER['HTTP_PURPOSE'])) {
             $purpose = sanitize_text_field(wp_unslash($_SERVER['HTTP_PURPOSE']));
             if (stripos($purpose, 'prefetch') !== false || stripos($purpose, 'preview') !== false) {
@@ -243,7 +193,7 @@ class BrowserSignal
 
         if (
             isset($_SERVER['HTTP_UPGRADE_INSECURE_REQUESTS']) &&
-            $_SERVER['HTTP_UPGRADE_INSECURE_REQUESTS'] === '1'
+            sanitize_text_field(wp_unslash($_SERVER['HTTP_UPGRADE_INSECURE_REQUESTS'])) === '1'
         ) {
             $score++;
         }
@@ -268,6 +218,183 @@ class BrowserSignal
     }
 
     /**
+     * Check if the User-Agent version is implausibly old for the current date.
+     * This detects bots using outdated UA strings that real users rarely use.
+     *
+     * @return bool
+     */
+    private static function isUserAgentImplausible(): bool
+    {
+        $ua              = sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? ''));
+        $secChUa         = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_CH_UA'] ?? ''));
+        $secChUaMobile   = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_CH_UA_MOBILE'] ?? ''));
+        $secChUaPlatform = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? ''));
+        $acceptLanguage  = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''));
+
+        if ($ua === '') {
+            return false;
+        }
+
+        $score          = 0;
+        $hasModernHints = $secChUa !== '' || $secChUaMobile !== '' || $secChUaPlatform !== '';
+
+        $isChrome  = preg_match('/Chrome\/(\d+)/i', $ua, $chromeMatch) && stripos($ua, 'Edg') === false && stripos($ua, 'OPR') === false;
+        $isEdge    = preg_match('/Edg\/(\d+)/i', $ua, $edgeMatch);
+        $isOpera   = preg_match('/OPR\/(\d+)/i', $ua, $operaMatch);
+        $isFirefox = preg_match('/Firefox\/(\d+)/i', $ua, $firefoxMatch);
+        $isSafari  = preg_match('/Version\/(\d+)/i', $ua, $safariMatch) || preg_match('/OS (\d+)_/i', $ua, $osMatch);
+
+        if ($isChrome) {
+            $version = (int)$chromeMatch[1];
+            if ($version < 60) {
+                $score += 3;
+            } elseif ($version < 90) {
+                if (!$hasModernHints && $acceptLanguage === '') {
+                    $score += 2;
+                }
+            } else {
+                if (!$hasModernHints) {
+                    $score += 3;
+                }
+                if ($hasModernHints && $secChUa !== '' && stripos($secChUa, 'Chrome') === false && stripos($secChUa, 'Chromium') === false) {
+                    $score += 2;
+                }
+            }
+        }
+
+        if ($isEdge) {
+            $version = (int)$edgeMatch[1];
+            if ($version < 60) {
+                $score += 3;
+            } elseif ($version < 90) {
+                if (!$hasModernHints && $acceptLanguage === '') {
+                    $score += 2;
+                }
+            } else {
+                if (!$hasModernHints) {
+                    $score += 3;
+                }
+                if ($hasModernHints && $secChUa !== '' && stripos($secChUa, 'Edg') === false && stripos($secChUa, 'Edge') === false) {
+                    $score += 2;
+                }
+            }
+        }
+
+        if ($isOpera) {
+            $version = (int)$operaMatch[1];
+            if ($version < 60) {
+                $score += 3;
+            } elseif ($version < 90) {
+                if (!$hasModernHints && $acceptLanguage === '') {
+                    $score += 2;
+                }
+            } else {
+                if (!$hasModernHints) {
+                    $score += 3;
+                }
+                if ($hasModernHints && $secChUa !== '' && stripos($secChUa, 'Opera') === false && stripos($secChUa, 'OPR') === false) {
+                    $score += 2;
+                }
+            }
+        }
+
+        if ($isFirefox) {
+            $version = (int)$firefoxMatch[1];
+            if ($version < 60) {
+                $score += 3;
+            } elseif ($version < 100) {
+                if (!$hasModernHints && $acceptLanguage === '') {
+                    $score += 2;
+                }
+            } else if (!$hasModernHints) {
+                $score += 3;
+            }
+        }
+
+        if ($isSafari) {
+            $version = (int)($safariMatch[1] ?? $osMatch[1] ?? 0);
+            if ($version < 15) {
+                $score += 3;
+            } elseif ($version < 17) {
+                if (!$hasModernHints && $acceptLanguage === '') {
+                    $score += 2;
+                }
+            } else if (!$hasModernHints) {
+                $score += 3;
+            }
+        }
+
+        if ($acceptLanguage === '') {
+            ++$score;
+        }
+
+        return $score >= 4;
+    }
+
+    /**
+     * @param string $ua
+     * @param string $acceptLanguage
+     * @param string $secChUa
+     *
+     * @return int
+     */
+    private static function getHeaderInconsistencyScore(
+        string $ua,
+        string $acceptLanguage,
+        string $secChUa
+    ): int
+    {
+        $score = 0;
+
+        if ($secChUa !== '') {
+            $isChromeFamily = (
+                stripos($ua, 'Chrome') !== false ||
+                stripos($ua, 'Edg') !== false ||
+                stripos($ua, 'OPR') !== false
+            );
+
+            if ($isChromeFamily) {
+                $hasChromeHint = (
+                    stripos($secChUa, 'Chrome') !== false ||
+                    stripos($secChUa, 'Google Chrome') !== false ||
+                    stripos($secChUa, 'Chromium') !== false
+                );
+
+                if (!$hasChromeHint) {
+                    $score += 2;
+                }
+            }
+        }
+
+        if ($acceptLanguage === '') {
+            ++$score;
+        } else {
+            $firstLang = strtok($acceptLanguage, ',;');
+            $firstLang = trim($firstLang);
+            if (!preg_match('/^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{1,8})*$/', $firstLang)) {
+                ++$score;
+            }
+        }
+
+        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+            $encoding = sanitize_text_field(
+                wp_unslash($_SERVER['HTTP_ACCEPT_ENCODING'])
+            );
+
+            $isModernUA = preg_match(
+                '/(Chrome|Firefox|Edg|Safari)\/\d{2,}/',
+                $ua
+            );
+
+            if ($isModernUA && stripos($encoding, 'br') === false) {
+                ++$score;
+            }
+        }
+
+        return $score;
+    }
+
+    /**
      * Detect suspicious requests using a weighted scoring system.
      * Returns true only if the total score exceeds a dynamic threshold.
      *
@@ -281,6 +408,8 @@ class BrowserSignal
         $acceptEncoding = sanitize_text_field(wp_unslash($_SERVER['HTTP_ACCEPT_ENCODING'] ?? ''));
         $secChUa        = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_CH_UA'] ?? ''));
         $secFetchSite   = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_SITE'] ?? ''));
+        $secFetchMode   = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_MODE'] ?? ''));
+        $secFetchDest   = sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_FETCH_DEST'] ?? ''));
 
         $score = 0;
 
@@ -288,15 +417,23 @@ class BrowserSignal
             && stripos($ua, 'Edg') === false
             && stripos($ua, 'OPR') === false;
 
-        $isFirefox = stripos($ua, 'Firefox') !== false;
-        $isSafari  = stripos($ua, 'Safari') !== false && stripos($ua, 'Chrome') === false;
-        $isEdge    = stripos($ua, 'Edg') !== false;
-        $isOpera   = stripos($ua, 'OPR') !== false || stripos($ua, 'Opera') !== false;
+        $isSafari = stripos($ua, 'Safari') !== false && stripos($ua, 'Chrome') === false;
+        $isEdge   = stripos($ua, 'Edg') !== false;
+        $isOpera  = stripos($ua, 'OPR') !== false || stripos($ua, 'Opera') !== false;
 
-        $isKnownBrowser = $isChrome || $isFirefox || $isSafari || $isEdge || $isOpera;
+        if (self::isUserAgentImplausible()) {
+            $score += 4;
+        }
 
         if (stripos($accept, 'text/html') === false) {
             $score += 3;
+        }
+
+        $acceptTypes = $accept !== ''
+            ? array_filter(array_map('trim', explode(',', $accept)))
+            : [];
+        if (count($acceptTypes) < 2) {
+            $score += 2;
         }
 
         if ($acceptLanguage === '') {
@@ -307,32 +444,29 @@ class BrowserSignal
             ++$score;
         }
 
-        $acceptTypes = array_filter(explode(',', $accept));
-        if (count($acceptTypes) < 2) {
+        if (($isChrome || $isEdge || $isOpera) && $secChUa === '') {
             ++$score;
         }
 
-        if ($isChrome || $isEdge || $isOpera) {
-            if ($secChUa === '') {
-                ++$score;
-            }
-            if ($secFetchSite === '') {
-                ++$score;
-            }
-        }
-
-        if ($isFirefox && $secChUa !== '') {
+        if ($isSafari && $acceptLanguage === '') {
             $score += 2;
         }
 
-        if ($isKnownBrowser) {
-            --$score;
+        if (!in_array($secFetchSite, ['none', 'same-origin', 'same-site', 'cross-site'], true)) {
+            ++$score;
         }
 
-        if (isset($_SERVER['HTTP_SEC_FETCH_MODE'], $_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_MODE'] === 'navigate' && $_SERVER['HTTP_SEC_FETCH_DEST'] === 'document') {
+        if ($secFetchMode === 'navigate' && $secFetchDest === 'document') {
             $score -= 2;
         }
 
-        return $score >= 5;
+        $inconsistencyScore = self::getHeaderInconsistencyScore(
+            $ua,
+            $acceptLanguage,
+            $secChUa
+        );
+        $score              += $inconsistencyScore;
+
+        return $score >= 3;
     }
 }

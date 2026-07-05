@@ -27,12 +27,25 @@ class NotFoundTracker
     private const MAX_PATHS = 30;
 
     /**
+     * Prevents duplicate tracking per request.
+     *
+     * @var bool
+     */
+    private static bool $hasRun = false;
+
+    /**
      * Track 404 if this is a valid 404 request.
      *
      * @return void
      */
     public function maybeTrack404(): void
     {
+        if (self::$hasRun) {
+            return;
+        }
+
+        self::$hasRun = true;
+
         if (!PageviewSignal::shouldCollect()) {
             return;
         }

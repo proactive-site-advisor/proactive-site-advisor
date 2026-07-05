@@ -1,4 +1,4 @@
-=== Proactive Site Advisor – Local, Privacy-First Site Alerts ===
+=== Proactive Site Advisor – Local, privacy-first site alerts ===
 Contributors: zheynlab
 Tags: traffic, 404, monitoring, notifications, dashboard
 Requires at least: 6.1
@@ -139,7 +139,7 @@ Yes. Licensed GPL-2.0-or-later.
 == Upgrade Notice ==
 
 = 1.0.6 =
-Daily metrics are now stored in a durable database to prevent data loss when cache is cleared. Bot classification on local development environments is fixed. Bot detection accuracy improved with less false positives. Cache handling and lifecycle operations optimized. Safe automatic update – no manual action required.
+Daily metrics now stored in durable DB to prevent data loss on cache clear. Fixed bot classification for local dev. Improved bot detection accuracy with fewer false positives. Optimized cache handling. Safe auto-update – no action needed.
 
 = 1.0.5 =
 Fixes a critical table creation bug on activation and adds 1500+ new bot signatures. Detection accuracy improved. Safe automatic update – no manual action required.

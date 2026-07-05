@@ -23,8 +23,8 @@ class Environment
      */
     public static function isLocal(): bool
     {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        $addr = $_SERVER['REMOTE_ADDR'] ?? '';
+        $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+        $addr = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
 
         $localHosts = ['localhost', '127.0.0.1', '::1'];
 
