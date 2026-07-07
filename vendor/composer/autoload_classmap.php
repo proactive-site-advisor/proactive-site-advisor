@@ -69,6 +69,7 @@ return array(
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Helpers\\DataLoader' => $baseDir . '/src/Services/Frontend/Traffic/Helpers/DataLoader.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Helpers\\HeaderReader' => $baseDir . '/src/Services/Frontend/Traffic/Helpers/HeaderReader.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BotDetector' => $baseDir . '/src/Services/Frontend/Traffic/Signals/BotDetector.php',
+    'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BrowserFingerprintSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/BrowserFingerprintSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BrowserSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/BrowserSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BrowserValidator' => $baseDir . '/src/Services/Frontend/Traffic/Signals/BrowserValidator.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\IpSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/IpSignal.php',

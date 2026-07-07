@@ -13,10 +13,10 @@ if (!defined('ABSPATH')) {
 /**
  * Class RequestRateSignal
  *
- * Detects bot-like request velocity.
+ * Detects suspicious request velocity.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @version 1.1.0
  */
 class RequestRateSignal
 {
@@ -26,26 +26,54 @@ class RequestRateSignal
     private const WINDOW = 10;
 
     /**
-     * Maximum requests allowed inside window.
-     */
-    private const LIMIT = 20;
-
-    /**
      * Runtime cached counter.
      *
      * @var int|null
      */
     private static ?int $count = null;
 
+
+    /**
+     * Get request rate suspicion score.
+     *
+     * @return int
+     */
+    public static function getScore(): int
+    {
+        $count = self::count();
+
+        if ($count <= 5) {
+            return 0;
+        }
+
+        if ($count <= 15) {
+            return 1;
+        }
+
+        if ($count <= 30) {
+            return 2;
+        }
+
+        if ($count <= 50) {
+            return 3;
+        }
+
+        return 5;
+    }
+
+
     /**
      * Determine whether current request looks bot-like.
+     *
+     * Backward compatibility method.
      *
      * @return bool
      */
     public static function isBotLike(): bool
     {
-        return self::count() > self::LIMIT;
+        return self::getScore() >= 4;
     }
+
 
     /**
      * Get current requester request count.
@@ -56,6 +84,7 @@ class RequestRateSignal
     {
         return self::count();
     }
+
 
     /**
      * Increment and return request counter.
@@ -89,6 +118,7 @@ class RequestRateSignal
         return $count;
     }
 
+
     /**
      * Build anonymous requester fingerprint.
      *
@@ -96,8 +126,14 @@ class RequestRateSignal
      */
     private static function requestHash(): string
     {
+        $ip = HeaderReader::getIp();
+
+        if ($ip === '' || $ip === 'unknown') {
+            return 'rate_skip_' . uniqid('', true);
+        }
+
         return md5(
-            HeaderReader::getIp()
+            $ip
             . '|'
             . HeaderReader::getUserAgent()
             . '|'

@@ -127,6 +127,16 @@ class HeaderReader
     }
 
     /**
+     * Get Sec-Fetch-User header.
+     *
+     * @return string
+     */
+    public static function getSecFetchUser(): string
+    {
+        return self::getHeader('Sec-Fetch-User');
+    }
+
+    /**
      * Get Purpose header.
      *
      * @return string

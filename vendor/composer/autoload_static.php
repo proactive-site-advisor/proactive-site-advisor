@@ -84,6 +84,7 @@ class ComposerStaticInitProactiveSiteAdvisor
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Helpers\\DataLoader' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Helpers/DataLoader.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Helpers\\HeaderReader' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Helpers/HeaderReader.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BotDetector' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/BotDetector.php',
+        'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BrowserFingerprintSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/BrowserFingerprintSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BrowserSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/BrowserSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\BrowserValidator' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/BrowserValidator.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\IpSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/IpSignal.php',
