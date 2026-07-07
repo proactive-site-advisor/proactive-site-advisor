@@ -2,6 +2,9 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors\TrafficCollector;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors\NotFoundTracker;
+
 if (!defined('ABSPATH')) {
     exit;
 }

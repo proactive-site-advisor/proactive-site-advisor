@@ -1,10 +1,12 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors;
 
 use ProactiveSiteAdvisor\Utils\Request;
 use ProactiveSiteAdvisor\Models\DailyStats;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\PageviewSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Decision\TrafficClassifier;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,9 +16,8 @@ if (!defined('ABSPATH')) {
  * Class NotFoundTracker
  *
  * Tracks 404 errors on frontend requests using database storage.
- * Stores total count and a pruned map of paths that triggered 404s.
  *
- * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors
  * @version 1.0.0
  */
 class NotFoundTracker
@@ -54,19 +55,7 @@ class NotFoundTracker
             return;
         }
 
-        if (BotDetector::isBot()) {
-            return;
-        }
-
-        if (RequestRateSignal::isBotLike()) {
-            return;
-        }
-
-        if (!BrowserSignal::isBrowser()) {
-            return;
-        }
-
-        if ($this->isAdvancedBot()) {
+        if (!TrafficClassifier::shouldTrack404()) {
             return;
         }
 
@@ -80,23 +69,5 @@ class NotFoundTracker
         }
 
         DailyStats::updateJsonMap($today, 'top_404_json', [$path => 1], self::MAX_PATHS);
-    }
-
-    /**
-     * Additional bot detection using new methods from other classes.
-     *
-     * @return bool
-     */
-    private function isAdvancedBot(): bool
-    {
-        if (BotDetector::isHeadless()) {
-            return true;
-        }
-
-        if (BrowserSignal::isSuspicious()) {
-            return true;
-        }
-
-        return false;
     }
 }

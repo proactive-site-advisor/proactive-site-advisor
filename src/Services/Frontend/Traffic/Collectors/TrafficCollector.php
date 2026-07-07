@@ -1,9 +1,12 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors;
 
 use ProactiveSiteAdvisor\Models\DailyStats;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotDetector;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\PageviewSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Decision\TrafficClassifier;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,10 +16,8 @@ if (!defined('ABSPATH')) {
  * Class TrafficCollector
  *
  * Collects frontend pageview counts using database storage.
- * Runs only on legitimate frontend requests, skipping admin, REST, AJAX,
- * cron, feed, and preview requests.
  *
- * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors
  * @version 1.0.0
  */
 class TrafficCollector
@@ -52,7 +53,7 @@ class TrafficCollector
 
         $today = DateTimeUtils::todayKey();
 
-        if ($this->isVisitor() && !$this->isAdvancedBot()) {
+        if (TrafficClassifier::isRealHuman()) {
             DailyStats::incrementAtomic($today, 'pageviews', 1);
         } else {
             DailyStats::incrementAtomic($today, 'bot_pageviews', 1);
@@ -63,7 +64,7 @@ class TrafficCollector
     /**
      * Track the bot name for today's statistics.
      *
-     * @param string $today Today's date in Ymd format.
+     * @param string $today
      * @return void
      */
     private function trackBotName(string $today): void
@@ -72,47 +73,5 @@ class TrafficCollector
         $botName = strtolower($botName);
 
         DailyStats::updateJsonMap($today, 'top_bots_json', [$botName => 1], self::MAX_BOT_NAMES);
-    }
-
-    /**
-     * Determine if the current request is from a real human user.
-     * A request is considered real ONLY if all signals pass.
-     *
-     * @return bool
-     */
-    private function isVisitor(): bool
-    {
-        if (BotDetector::isBot()) {
-            return false;
-        }
-
-        if (RequestRateSignal::isBotLike()) {
-            return false;
-        }
-
-        if (!BrowserSignal::isBrowser()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Additional bot detection using new methods from other classes.
-     * This does not replace isVisitor(), but complements it.
-     *
-     * @return bool
-     */
-    private function isAdvancedBot(): bool
-    {
-        if (BotDetector::isHeadless()) {
-            return true;
-        }
-
-        if (BrowserSignal::isSuspicious()) {
-            return true;
-        }
-
-        return false;
     }
 }
