@@ -123,6 +123,10 @@ class BotDetector
          */
         $keywords = apply_filters('proactive_site_advisor_bot_fallback_keywords', $keywords);
 
+        if (!is_array($keywords)) {
+            $keywords = [];
+        }
+
         foreach ($keywords as $kw) {
             if (stripos($ua, $kw) !== false) {
                 return $kw;

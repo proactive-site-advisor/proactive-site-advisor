@@ -128,18 +128,16 @@ class RequestRateSignal
     {
         $ip = HeaderReader::getIp();
 
-        if ($ip === '' || $ip === 'unknown') {
-            return 'rate_skip_' . uniqid('', true);
-        }
-
-        return md5(
-            $ip
-            . '|'
-            . HeaderReader::getUserAgent()
+        $baseFingerprint = HeaderReader::getUserAgent()
             . '|'
             . HeaderReader::getAcceptLanguage()
             . '|'
-            . HeaderReader::getSecChUa()
-        );
+            . HeaderReader::getSecChUa();
+
+        if ($ip === '' || $ip === 'unknown') {
+            return 'noip_' . md5($baseFingerprint);
+        }
+
+        return md5($ip . '|' . $baseFingerprint);
     }
 }

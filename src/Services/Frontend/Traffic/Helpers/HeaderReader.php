@@ -133,7 +133,7 @@ class HeaderReader
      */
     public static function getSecFetchUser(): string
     {
-        return self::getHeader('Sec-Fetch-User');
+        return self::getHeader('HTTP_SEC_FETCH_USER');
     }
 
     /**

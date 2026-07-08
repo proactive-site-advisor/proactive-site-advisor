@@ -62,10 +62,10 @@ class ReferrerSignal
             return false;
         }
 
-        $referrerHost = preg_replace('/^www\./i', '', $referrerHost);
-        $currentHost  = preg_replace('/^www\./i', '', $currentHost);
+        $referrerHost = strtolower(preg_replace('/^www\./i', '', $referrerHost));
+        $currentHost  = strtolower(preg_replace('/^www\./i', '', $currentHost));
 
-        return str_starts_with($referrerHost, $currentHost);
+        return $referrerHost === $currentHost || str_ends_with($referrerHost, '.' . $currentHost);
     }
 
     /**

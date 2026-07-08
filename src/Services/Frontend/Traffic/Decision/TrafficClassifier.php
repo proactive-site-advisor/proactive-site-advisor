@@ -46,7 +46,7 @@ class TrafficClassifier
 
         $result = true;
 
-        if (self::isBot()) {
+        if (self::isBot() || BotDetector::isHeadless()) {
             $result = false;
         } elseif (self::isSuspicious()) {
             $result = false;
@@ -145,7 +145,7 @@ class TrafficClassifier
 
         $score = 0;
 
-        if (preg_match('/(Chrome|Edg|OPR|Firefox)\/(1[0-9]{2,}|[2-9][0-9]{2,})/i', $ua)) {
+        if (preg_match('/(Chrome|Edg|OPR|Firefox)\/(1\d{2,}|[2-9]\d{2,})/i', $ua)) {
             if (!$hasModernHints) {
                 $score += 2;
             }
@@ -154,7 +154,7 @@ class TrafficClassifier
             }
         }
 
-        if (preg_match('/(Chrome|Edg|OPR|Firefox)\/([1-5][0-9])\b/i', $ua)) {
+        if (preg_match('/(Chrome|Edg|OPR|Firefox)\/([1-5]\d)\b/i', $ua)) {
             $score = max($score, 3);
         }
 
@@ -190,6 +190,12 @@ class TrafficClassifier
             $result = false;
         } elseif (!BrowserSignal::isBrowser()) {
             $result = false;
+        } else {
+            $referrerUrl = HeaderReader::getReferer();
+            $currentHost = HeaderReader::getHost();
+            if (ReferrerSignal::isSpamReferrer($referrerUrl, $currentHost)) {
+                $result = false;
+            }
         }
 
         self::$cache[$key] = $result;

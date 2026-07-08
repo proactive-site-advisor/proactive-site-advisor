@@ -74,9 +74,12 @@ class BrowserFingerprintSignal
             if (self::hasClientPlatformMismatch($ua)) {
                 ++$score;
             }
-
-            $score += self::getMissingBrowserHeadersScore();
         }
+
+        /**
+         * Basic browser headers check applies to all browsers.
+         */
+        $score += self::getMissingBrowserHeadersScore();
 
         /**
          * Navigation fingerprint applies globally.
