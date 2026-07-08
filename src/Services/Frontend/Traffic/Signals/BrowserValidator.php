@@ -108,6 +108,17 @@ class BrowserValidator
 
         self::$allowlist = DataLoader::loadBrowserAllowlist();
 
+        /**
+         * Filter the browser name allowlist.
+         *
+         * @param string[] $allowlist Array of valid browser names.
+         */
+        self::$allowlist = apply_filters('proactive_site_advisor_browser_allowlist', self::$allowlist);
+
+        if (!is_array(self::$allowlist)) {
+            self::$allowlist = [];
+        }
+
         return self::$allowlist;
     }
 

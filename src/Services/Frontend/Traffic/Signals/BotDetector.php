@@ -41,6 +41,10 @@ class BotDetector
             return true;
         }
 
+        if (self::hasSuspiciousTypos()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -137,6 +141,42 @@ class BotDetector
     }
 
     /**
+     * Check for common typos in User-Agent that indicate a bot.
+     *
+     * @return bool
+     */
+    public static function hasSuspiciousTypos(): bool
+    {
+        $ua = HeaderReader::getUserAgent();
+        if ($ua === '') {
+            return false;
+        }
+
+        $typos = [
+            'Mozlila', 'Bulid', 'Moblie', 'Appel', 'Windwos',
+            'Andriod', 'Safri', 'Chrmoe', 'Gogle'
+        ];
+
+        /**
+         * Filter the list of suspicious User‑Agent typos.
+         *
+         * @param string[] $typos Array of typo strings.
+         */
+        $typos = apply_filters('proactive_site_advisor_suspicious_ua_typos', $typos);
+
+        if (!is_array($typos)) {
+            $typos = [];
+        }
+
+        foreach ($typos as $typo) {
+            if (stripos($ua, $typo) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Normalize bot name for consistent output
      *
      * @param string $name
@@ -195,6 +235,20 @@ class BotDetector
             'QtWebEngine',
             'NW.js',
         ];
+
+        /**
+         * Filter the list of headless browser patterns.
+         *
+         * @param string[] $headlessPatterns Array of strings to look for in the User-Agent.
+         */
+        $headlessPatterns = apply_filters(
+            'proactive_site_advisor_headless_patterns',
+            $headlessPatterns
+        );
+
+        if (!is_array($headlessPatterns)) {
+            $headlessPatterns = [];
+        }
 
         foreach ($headlessPatterns as $pattern) {
             if (stripos($ua, $pattern) !== false) {

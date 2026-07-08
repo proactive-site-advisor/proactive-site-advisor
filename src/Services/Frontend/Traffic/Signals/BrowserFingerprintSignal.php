@@ -51,15 +51,16 @@ class BrowserFingerprintSignal
             return self::$score = 3;
         }
 
-        /**
-         * Safari-like browsers do not use Chromium client hints.
-         */
+        if (self::hasMissingAllFetchHeaders()) {
+            $score += 3;
+        }
+
         if (!self::isSafariLike($ua)) {
 
             if (self::isModernChromeFamily($ua)) {
 
                 if (self::hasMissingClientHints()) {
-                    ++$score;
+                    $score += 2;
                 }
 
                 if (self::hasInvalidClientHints($ua)) {
@@ -76,14 +77,8 @@ class BrowserFingerprintSignal
             }
         }
 
-        /**
-         * Basic browser headers check applies to all browsers.
-         */
         $score += self::getMissingBrowserHeadersScore();
 
-        /**
-         * Navigation fingerprint applies globally.
-         */
         if (self::hasNavigationMismatch()) {
             $score += 2;
         }
@@ -93,6 +88,20 @@ class BrowserFingerprintSignal
         }
 
         return self::$score = $score;
+    }
+
+    /**
+     * Check if all Sec-Fetch-* headers are empty.
+     *
+     * A real browser always sends at least one of them on navigation.
+     *
+     * @return bool
+     */
+    private static function hasMissingAllFetchHeaders(): bool
+    {
+        return HeaderReader::getSecFetchSite() === ''
+            && HeaderReader::getSecFetchMode() === ''
+            && HeaderReader::getSecFetchDest() === '';
     }
 
     /**

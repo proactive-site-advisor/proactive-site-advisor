@@ -106,6 +106,10 @@ class TrafficClassifier
 
         $score = 0;
 
+        if (!BrowserSignal::isBrowser()) {
+            $score += 4;
+        }
+
         if (BotDetector::isHeadless()) {
             $score += 5;
         }
