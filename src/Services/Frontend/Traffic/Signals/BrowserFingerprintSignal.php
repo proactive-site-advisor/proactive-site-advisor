@@ -91,6 +91,25 @@ class BrowserFingerprintSignal
     }
 
     /**
+     * Check if Sec-CH-UA header is present but malformed.
+     * Real browsers always send properly formatted strings.
+     *
+     * @return bool
+     */
+    public static function hasMalformedClientHints(): bool
+    {
+        $header = HeaderReader::getSecChUa();
+        if ($header === '') {
+            return false;
+        }
+
+        return preg_match(
+                '/^"([^"]+)";v="\d+"(,\s*"([^"]+)";v="\d+")*$/i',
+                $header
+            ) !== 1;
+    }
+
+    /**
      * Check if all Sec-Fetch-* headers are empty.
      *
      * A real browser always sends at least one of them on navigation.

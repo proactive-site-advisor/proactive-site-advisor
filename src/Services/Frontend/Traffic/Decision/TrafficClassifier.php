@@ -76,19 +76,14 @@ class TrafficClassifier
             return self::$cache[$key];
         }
 
-        $result = false;
-
-        if (BotDetector::isBot()) {
-            $result = true;
-        } else {
-            $ua = HeaderReader::getUserAgent();
-            if (BrowserValidator::hasInvalidBrowserName($ua)) {
-                $result = true;
-            }
+        if (BrowserFingerprintSignal::hasMalformedClientHints() || BotDetector::isBot()) {
+            return self::$cache[$key] = true;
         }
 
-        self::$cache[$key] = $result;
-        return $result;
+        $ua     = HeaderReader::getUserAgent();
+        $result = BrowserValidator::hasInvalidBrowserName($ua);
+
+        return self::$cache[$key] = $result;
     }
 
     /**
