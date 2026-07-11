@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
  * Main plugin bootstrap class (Singleton pattern).
  *
  * @package ProactiveSiteAdvisor
- * @version 1.0.3
+ * @version 1.0.0
  */
 final class Core
 {

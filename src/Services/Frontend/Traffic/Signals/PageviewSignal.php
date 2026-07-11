@@ -1,6 +1,6 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,25 +9,13 @@ if (!defined('ABSPATH')) {
 /**
  * Class PageviewSignal
  *
- * Determines whether the current request represents a real pageview signal.
- *
- * A valid pageview signal must:
- * - Reach the template rendering stage
- * - Belong to the main query (user intent)
- * - Not be an admin, system, or background request
- * - Not target a static file or asset
- *
- * This class is intentionally final and static:
- * it represents a fixed domain rule used for anomaly detection,
- * * not a customizable tracking behavior.
- *
- * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
 class PageviewSignal
 {
     /**
-     * Check if the current request should be collected as a pageview signal.
+     * Determines if the current request should be collected.
      *
      * @return bool
      */
@@ -76,12 +64,9 @@ class PageviewSignal
     }
 
     /**
-     * Check if the current user should be excluded from pageview tracking.
+     * Checks if the current user should be excluded.
      *
-     * Excludes logged-in users with administrative or content creation roles
-     * to prevent artificial traffic inflation from site staff.
-     *
-     * @return bool True if the user should be excluded.
+     * @return bool
      */
     private static function isExcludedUser(): bool
     {
@@ -108,11 +93,9 @@ class PageviewSignal
         ];
 
         /**
-         * Filter the list of user roles that should be excluded from pageview tracking.
+         * Filter excluded user roles.
          *
          * @param string[] $defaultRoles
-         * @since 1.0.0
-         *
          */
         $excludedRoles = apply_filters(
             'proactive_site_advisor_excluded_user_roles',
