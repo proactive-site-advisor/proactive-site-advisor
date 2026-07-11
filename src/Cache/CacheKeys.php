@@ -51,6 +51,11 @@ final class CacheKeys
     private const PREFIX_REQUEST_RATE = 'rate_';
 
     /**
+     * Prefix for burst rate tracking (per second).
+     */
+    private const PREFIX_BURST_RATE = 'burst_';
+
+    /**
      * Get admin notices cache key.
      *
      * @return string
@@ -100,5 +105,18 @@ final class CacheKeys
     public static function requestRate(string $hash): string
     {
         return self::PREFIX_REQUEST_RATE . $hash;
+    }
+
+    /**
+     * Get burst rate cache key for a specific second.
+     *
+     * @param string $hash
+     * @param int $timestamp
+     *
+     * @return string
+     */
+    public static function burstRate(string $hash, int $timestamp): string
+    {
+        return self::PREFIX_BURST_RATE . $hash . '_' . $timestamp;
     }
 }

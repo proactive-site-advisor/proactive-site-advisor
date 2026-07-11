@@ -45,7 +45,7 @@ class Environment
         }
 
         if (function_exists('wp_get_environment_type')) {
-            return wp_get_environment_type() !== 'local';
+            return wp_get_environment_type() === 'local';
         }
 
         return false;

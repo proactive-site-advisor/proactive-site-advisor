@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\DataLoader;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
@@ -10,28 +11,22 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BotDetector
- *
- * Lightweight bot detection based on User-Agent.
+ * Class BotAgentSignal
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
-class BotDetector
+class BotAgentSignal implements BotSignalInterface
 {
     /**
-     * Custom block patterns (regex or string)
-     *
      * @var array|null
      */
     private static ?array $customPatterns = null;
 
     /**
-     * Check if request is bot
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public static function isBot(): bool
+    public function isBot(): bool
     {
         if (self::hasEmptyUserAgent()) {
             return true;
@@ -45,11 +40,15 @@ class BotDetector
             return true;
         }
 
+        if (self::isHeadless()) {
+            return true;
+        }
+
         return false;
     }
 
     /**
-     * Get bot name (best effort)
+     * Returns detected bot name.
      *
      * @return string|null
      */
@@ -69,17 +68,13 @@ class BotDetector
     }
 
     /**
-     * Match bot and return captured name.
+     * Matches bot name from User-Agent.
      *
      * @return string|null
      */
     private static function matchBotName(): ?string
     {
         $ua = HeaderReader::getUserAgent();
-
-        if ($ua === '') {
-            return null;
-        }
 
         static $pattern = null;
 
@@ -101,7 +96,7 @@ class BotDetector
     }
 
     /**
-     * Fallback detection based on common bot keywords.
+     * Fallback detection using keyword list.
      *
      * @param string $ua
      * @return string|null
@@ -119,11 +114,9 @@ class BotDetector
         ];
 
         /**
-         * Filter the list of bot fallback keywords.
+         * Filter bot fallback keywords.
          *
-         * Used when the main regex pattern does not match, as a secondary detection.
-         *
-         * @param string[] $keywords List of keywords to search for in User-Agent string.
+         * @param string[] $keywords
          */
         $keywords = apply_filters('proactive_site_advisor_bot_fallback_keywords', $keywords);
 
@@ -141,127 +134,7 @@ class BotDetector
     }
 
     /**
-     * Check for common typos in User-Agent that indicate a bot.
-     *
-     * @return bool
-     */
-    public static function hasSuspiciousTypos(): bool
-    {
-        $ua = HeaderReader::getUserAgent();
-        if ($ua === '') {
-            return false;
-        }
-
-        $typos = [
-            'Mozlila', 'Bulid', 'Moblie', 'Appel', 'Windwos',
-            'Andriod', 'Safri', 'Chrmoe', 'Gogle'
-        ];
-
-        /**
-         * Filter the list of suspicious User‑Agent typos.
-         *
-         * @param string[] $typos Array of typo strings.
-         */
-        $typos = apply_filters('proactive_site_advisor_suspicious_ua_typos', $typos);
-
-        if (!is_array($typos)) {
-            $typos = [];
-        }
-
-        foreach ($typos as $typo) {
-            if (stripos($ua, $typo) !== false) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Normalize bot name for consistent output
-     *
-     * @param string $name
-     * @return string
-     */
-    private static function normalizeBotName(string $name): string
-    {
-        $name = trim($name);
-        $name = preg_replace('/[\s\-_.]+/', ' ', $name);
-        $name = preg_replace('/\s+/', ' ', $name);
-        $name = trim($name);
-
-        if (function_exists('mb_strlen')) {
-            if (mb_strlen($name) > 60) {
-                $name = mb_substr($name, 0, 60);
-            }
-        } elseif (strlen($name) > 60) {
-            $name = substr($name, 0, 60);
-        }
-
-        return $name !== '' ? $name : 'unknown';
-    }
-
-    /**
-     * Check empty UA
-     *
-     * @return bool
-     */
-    private static function hasEmptyUserAgent(): bool
-    {
-        return HeaderReader::getUserAgent() === '';
-    }
-
-    /**
-     * Check if the User-Agent indicates a headless browser or automation tool.
-     *
-     * @return bool
-     */
-    public static function isHeadless(): bool
-    {
-        $ua = HeaderReader::getUserAgent();
-
-        if ($ua === '') {
-            return false;
-        }
-
-        $headlessPatterns = [
-            'HeadlessChrome',
-            'PhantomJS',
-            'Puppeteer',
-            'Selenium',
-            'Playwright',
-            'Headless',
-            'Electron',
-            'CefSharp',
-            'QtWebEngine',
-            'NW.js',
-        ];
-
-        /**
-         * Filter the list of headless browser patterns.
-         *
-         * @param string[] $headlessPatterns Array of strings to look for in the User-Agent.
-         */
-        $headlessPatterns = apply_filters(
-            'proactive_site_advisor_headless_patterns',
-            $headlessPatterns
-        );
-
-        if (!is_array($headlessPatterns)) {
-            $headlessPatterns = [];
-        }
-
-        foreach ($headlessPatterns as $pattern) {
-            if (stripos($ua, $pattern) !== false) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Match user agent against custom patterns.
+     * Matches custom bot patterns.
      *
      * @param string $ua
      * @return string|null
@@ -286,7 +159,117 @@ class BotDetector
     }
 
     /**
-     * Get custom bot patterns from WordPress filter.
+     * Checks if User-Agent is empty.
+     *
+     * @return bool
+     */
+    private static function hasEmptyUserAgent(): bool
+    {
+        return HeaderReader::getUserAgent() === '';
+    }
+
+    /**
+     * Checks for suspicious typos in User-Agent.
+     *
+     * @return bool
+     */
+    private static function hasSuspiciousTypos(): bool
+    {
+        $ua = HeaderReader::getUserAgent();
+
+        $typos = [
+            'Mozlila', 'Bulid', 'Moblie', 'Appel', 'Windwos',
+            'Andriod', 'Safri', 'Chrmoe', 'Gogle'
+        ];
+
+        /**
+         * Filter suspicious User-Agent typos.
+         *
+         * @param string[] $typos
+         */
+        $typos = apply_filters('proactive_site_advisor_suspicious_ua_typos', $typos);
+
+        if (!is_array($typos)) {
+            $typos = [];
+        }
+
+        foreach ($typos as $typo) {
+            if (stripos($ua, $typo) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks for headless browser indicators.
+     *
+     * @return bool
+     */
+    private static function isHeadless(): bool
+    {
+        $ua = HeaderReader::getUserAgent();
+
+        $patterns = [
+            'HeadlessChrome',
+            'PhantomJS',
+            'Puppeteer',
+            'Selenium',
+            'Playwright',
+            'Headless',
+            'Electron',
+            'CefSharp',
+            'QtWebEngine',
+            'NW.js',
+        ];
+
+        /**
+         * Filter headless browser patterns.
+         *
+         * @param string[] $patterns
+         */
+        $patterns = apply_filters('proactive_site_advisor_headless_patterns', $patterns);
+
+        if (!is_array($patterns)) {
+            $patterns = [];
+        }
+
+        foreach ($patterns as $pattern) {
+            if (stripos($ua, $pattern) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Normalizes bot name.
+     *
+     * @param string $name
+     * @return string
+     */
+    private static function normalizeBotName(string $name): string
+    {
+        $name = trim($name);
+        $name = preg_replace('/[\s\-_.]+/', ' ', $name);
+        $name = preg_replace('/\s+/', ' ', $name);
+        $name = trim($name);
+
+        if (function_exists('mb_strlen')) {
+            if (mb_strlen($name) > 60) {
+                $name = mb_substr($name, 0, 60);
+            }
+        } elseif (strlen($name) > 60) {
+            $name = substr($name, 0, 60);
+        }
+
+        return $name !== '' ? $name : 'unknown';
+    }
+
+    /**
+     * Returns custom bot patterns from filter.
      *
      * @return string[]
      */
@@ -299,7 +282,7 @@ class BotDetector
         /**
          * Filter custom bot patterns.
          *
-         * @param string[] $patterns Array of regex or string patterns.
+         * @param string[] $patterns
          */
         $patterns = apply_filters('proactive_site_advisor_custom_bot_patterns', []);
 

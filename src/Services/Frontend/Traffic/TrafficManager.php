@@ -2,8 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors\TrafficCollector;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors\NotFoundTracker;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders\NotFoundRecorder;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders\PageviewRecorder;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -12,41 +12,39 @@ if (!defined('ABSPATH')) {
 /**
  * Class TrafficManager
  *
- * Manages frontend traffic tracking services.
- *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
  * @version 1.0.0
  */
 class TrafficManager
 {
     /**
-     * Register all traffic-related hooks.
+     * Registers all traffic-related hooks.
      *
      * @return void
      */
     public function register(): void
     {
-        add_action('wp', [$this, 'maybeCountPageview'], 20);
-        add_action('template_redirect', [$this, 'maybeTrack404'], 1);
+        add_action('wp', [$this, 'recordPageview'], 20);
+        add_action('template_redirect', [$this, 'recordNotFound'], 1);
     }
 
     /**
-     * Proxy pageview counting.
+     * Records pageview if applicable.
      *
      * @return void
      */
-    public function maybeCountPageview(): void
+    public function recordPageview(): void
     {
-        (new TrafficCollector())->maybeCountPageview();
+        (new PageviewRecorder())->maybeRecord();
     }
 
     /**
-     * Proxy 404 tracking.
+     * Records 404 if applicable.
      *
      * @return void
      */
-    public function maybeTrack404(): void
+    public function recordNotFound(): void
     {
-        (new NotFoundTracker())->maybeTrack404();
+        (new NotFoundRecorder())->maybeRecord();
     }
 }

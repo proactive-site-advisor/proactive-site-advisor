@@ -9,15 +9,13 @@ if (!defined('ABSPATH')) {
 /**
  * Class PageviewSignal
  *
- * Determines whether the current request represents a real pageview signal.
- *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
 class PageviewSignal
 {
     /**
-     * Check if the current request should be collected as a pageview signal.
+     * Determines if the current request should be collected.
      *
      * @return bool
      */
@@ -66,7 +64,7 @@ class PageviewSignal
     }
 
     /**
-     * Check if the current user should be excluded from pageview tracking.
+     * Checks if the current user should be excluded.
      *
      * @return bool
      */
@@ -95,11 +93,9 @@ class PageviewSignal
         ];
 
         /**
-         * Filter the list of user roles excluded from pageview tracking.
+         * Filter excluded user roles.
          *
-         * Logged-in users with these roles will not be counted in pageview statistics.
-         *
-         * @param string[] $defaultRoles List of role names.
+         * @param string[] $defaultRoles
          */
         $excludedRoles = apply_filters(
             'proactive_site_advisor_excluded_user_roles',

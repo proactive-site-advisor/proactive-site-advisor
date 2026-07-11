@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\DataLoader;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
@@ -10,35 +12,70 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BrowserSignal
- *
- * Validates whether the current request resembles a real browser navigation.
+ * Class BrowserHeadersSignal
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
-class BrowserSignal
+class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
 {
     /**
-     * Determine whether the current request looks like a browser-generated page navigation.
+     * {@inheritDoc}
+     */
+    public function isBot(): bool
+    {
+        return !$this->isBrowser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScore(): int
+    {
+        $score = 0;
+
+        if (!$this->hasHtmlAcceptHeader()) {
+            $score += 4;
+        }
+
+        if (!$this->hasBrowserUserAgent()) {
+            $score += 3;
+        }
+
+        $headerScore = $this->getHeaderScore();
+        if ($headerScore < 2) {
+            $score += 3;
+        } elseif ($headerScore < 4) {
+            $score += 2;
+        }
+
+        if ($this->isPrefetchOrPreview()) {
+            $score += 2;
+        }
+
+        return $score;
+    }
+
+    /**
+     * Determines if the request resembles a real browser navigation.
      *
      * @return bool
      */
-    public static function isBrowser(): bool
+    private function isBrowser(): bool
     {
-        if (self::isPrefetchOrPreview()) {
+        if ($this->isPrefetchOrPreview()) {
             return false;
         }
 
-        if (!self::hasHtmlAcceptHeader()) {
+        if (!$this->hasHtmlAcceptHeader()) {
             return false;
         }
 
-        if (!self::hasBrowserUserAgent()) {
+        if (!$this->hasBrowserUserAgent()) {
             return false;
         }
 
-        if (self::getHeaderScore() < 4) {
+        if ($this->getHeaderScore() < 4) {
             return false;
         }
 
@@ -46,11 +83,11 @@ class BrowserSignal
     }
 
     /**
-     * Verify HTML document negotiation.
+     * Verifies HTML document negotiation.
      *
      * @return bool
      */
-    private static function hasHtmlAcceptHeader(): bool
+    private function hasHtmlAcceptHeader(): bool
     {
         $accept = HeaderReader::getAccept();
 
@@ -62,11 +99,11 @@ class BrowserSignal
     }
 
     /**
-     * Verify browser User-Agent.
+     * Verifies browser User-Agent.
      *
      * @return bool
      */
-    private static function hasBrowserUserAgent(): bool
+    private function hasBrowserUserAgent(): bool
     {
         $ua = HeaderReader::getUserAgent();
 
@@ -88,11 +125,11 @@ class BrowserSignal
     }
 
     /**
-     * Verify Sec-Fetch-Site header.
+     * Verifies Sec-Fetch-Site header.
      *
      * @return bool
      */
-    private static function hasValidFetchSite(): bool
+    private function hasValidFetchSite(): bool
     {
         $site = HeaderReader::getSecFetchSite();
 
@@ -108,27 +145,50 @@ class BrowserSignal
     }
 
     /**
-     * Check for Purpose or Sec-Purpose headers.
+     * Checks for prefetch or preview headers.
      *
      * @return bool
      */
-    private static function isPrefetchOrPreview(): bool
+    private function isPrefetchOrPreview(): bool
     {
-        $purpose = HeaderReader::getPurpose();
-        if ($purpose !== '' && (stripos($purpose, 'prefetch') !== false || stripos($purpose, 'preview') !== false)) {
-            return true;
+        $checks = [
+            HeaderReader::getPurpose()    => ['prefetch', 'preview'],
+            HeaderReader::getSecPurpose() => ['prefetch'],
+        ];
+
+        foreach ($checks as $header => $keywords) {
+            foreach ($keywords as $keyword) {
+                if (stripos($header, $keyword) !== false) {
+                    if ($this->isNavigationRequest()) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
         }
 
-        $secPurpose = HeaderReader::getSecPurpose();
-        return $secPurpose !== '' && stripos($secPurpose, 'prefetch') !== false;
+        return false;
     }
 
     /**
-     * Calculate browser request score.
+     * Helper to determine if the request is a navigation.
+     *
+     * @return bool
+     */
+    private function isNavigationRequest(): bool
+    {
+        $mode = HeaderReader::getSecFetchMode();
+        $dest = HeaderReader::getSecFetchDest();
+        
+        return ($mode === 'navigate' && $dest === 'document');
+    }
+
+    /**
+     * Calculates browser request score.
      *
      * @return int
      */
-    private static function getHeaderScore(): int
+    private function getHeaderScore(): int
     {
         $score = 0;
 
@@ -161,7 +221,7 @@ class BrowserSignal
             }
         }
 
-        if (self::hasValidFetchSite()) {
+        if ($this->hasValidFetchSite()) {
             $score++;
         }
 

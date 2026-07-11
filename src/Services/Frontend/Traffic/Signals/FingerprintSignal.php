@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
 if (!defined('ABSPATH')) {
@@ -9,81 +11,84 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BrowserFingerprintSignal
- *
- * Scores browser fingerprint inconsistencies.
+ * Class FingerprintSignal
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
-class BrowserFingerprintSignal
+class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
 {
     /**
-     * Runtime cached score.
-     *
      * @var int|null
      */
     private static ?int $score = null;
 
     /**
-     * Cached client hint brands.
-     *
      * @var array|null
      */
     private static ?array $brands = null;
 
     /**
-     * Calculate browser fingerprint suspicion score.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public static function getScore(): int
+    public function isBot(): bool
+    {
+        $ua = HeaderReader::getUserAgent();
+
+        if ($this->hasMalformedClientHints()) {
+            return true;
+        }
+
+        if ($this->hasMissingAllFetchHeaders()) {
+            return true;
+        }
+
+        if ($this->isScannerClientHints($ua)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScore(): int
     {
         if (self::$score !== null) {
             return self::$score;
         }
 
         $score = 0;
+        $ua    = HeaderReader::getUserAgent();
 
-        $ua = HeaderReader::getUserAgent();
+        if (!$this->isSafariLike($ua)) {
+            if ($this->isModernChromeFamily($ua)) {
+                if ($this->hasMissingClientHints()) {
+                    $score += 5;
+                }
 
-        if ($ua === '') {
-            return self::$score = 3;
+                if ($this->hasInvalidClientHints($ua)) {
+                    $score += 5;
+                }
+            }
+
+            if ($this->hasClientMobileMismatch($ua)) {
+                $score += 2;
+            }
+
+            if ($this->hasClientPlatformMismatch($ua)) {
+                $score += 2;
+            }
         }
 
-        if (self::hasMissingAllFetchHeaders()) {
+        $score += $this->getMissingBrowserHeadersScore();
+
+        if ($this->hasNavigationMismatch()) {
             $score += 3;
         }
 
-        if (!self::isSafariLike($ua)) {
-
-            if (self::isModernChromeFamily($ua)) {
-
-                if (self::hasMissingClientHints()) {
-                    $score += 2;
-                }
-
-                if (self::hasInvalidClientHints($ua)) {
-                    $score += 3;
-                }
-            }
-
-            if (self::hasClientMobileMismatch($ua)) {
-                ++$score;
-            }
-
-            if (self::hasClientPlatformMismatch($ua)) {
-                ++$score;
-            }
-        }
-
-        $score += self::getMissingBrowserHeadersScore();
-
-        if (self::hasNavigationMismatch()) {
-            $score += 2;
-        }
-
-        if (self::hasMissingUserNavigation()) {
+        if ($this->hasMissingUserNavigation()) {
             ++$score;
         }
 
@@ -91,12 +96,11 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check if Sec-CH-UA header is present but malformed.
-     * Real browsers always send properly formatted strings.
+     * Checks if Sec-CH-UA header is malformed.
      *
      * @return bool
      */
-    public static function hasMalformedClientHints(): bool
+    private function hasMalformedClientHints(): bool
     {
         $header = HeaderReader::getSecChUa();
         if ($header === '') {
@@ -110,13 +114,11 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check if all Sec-Fetch-* headers are empty.
-     *
-     * A real browser always sends at least one of them on navigation.
+     * Checks if all Sec-Fetch-* headers are missing.
      *
      * @return bool
      */
-    private static function hasMissingAllFetchHeaders(): bool
+    private function hasMissingAllFetchHeaders(): bool
     {
         return HeaderReader::getSecFetchSite() === ''
             && HeaderReader::getSecFetchMode() === ''
@@ -124,12 +126,33 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check modern Chromium browsers.
+     * Checks if the request is a scanner based on client hints + referrer.
      *
      * @param string $ua
      * @return bool
      */
-    private static function isModernChromeFamily(string $ua): bool
+    private function isScannerClientHints(string $ua): bool
+    {
+        if (!$this->hasInvalidClientHints($ua)) {
+            return false;
+        }
+
+        if (HeaderReader::getReferer() !== '') {
+            return false;
+        }
+
+        $site = HeaderReader::getSecFetchSite();
+
+        return !($site !== '' && $site !== 'none');
+    }
+
+    /**
+     * Checks for modern Chromium browsers.
+     *
+     * @param string $ua
+     * @return bool
+     */
+    private function isModernChromeFamily(string $ua): bool
     {
         if (!preg_match('/(Chrome|Edg|OPR)\/(\d+)/i', $ua, $match)) {
             return false;
@@ -139,11 +162,11 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check missing client hints.
+     * Checks missing client hints.
      *
      * @return bool
      */
-    private static function hasMissingClientHints(): bool
+    private function hasMissingClientHints(): bool
     {
         return (
             HeaderReader::getSecChUa() === '' &&
@@ -153,21 +176,21 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Validate Sec-CH-UA brands.
+     * Validates Sec-CH-UA brands against UA.
      *
      * @param string $ua
      * @return bool
      */
-    private static function hasInvalidClientHints(string $ua): bool
+    private function hasInvalidClientHints(string $ua): bool
     {
-        $brands = self::getClientHintBrands();
+        $brands = $this->getClientHintBrands();
 
         if ($brands === []) {
             return false;
         }
 
         if (stripos($ua, 'Edg') !== false) {
-            return !self::containsBrand(
+            return !$this->containsBrand(
                 $brands,
                 [
                     'Edge',
@@ -178,7 +201,7 @@ class BrowserFingerprintSignal
         }
 
         if (stripos($ua, 'OPR') !== false) {
-            return !self::containsBrand(
+            return !$this->containsBrand(
                 $brands,
                 [
                     'Opera',
@@ -188,7 +211,7 @@ class BrowserFingerprintSignal
         }
 
         if (stripos($ua, 'Chrome') !== false) {
-            return !self::containsBrand(
+            return !$this->containsBrand(
                 $brands,
                 [
                     'Chrome',
@@ -201,11 +224,11 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Extract Sec-CH-UA brands.
+     * Extracts Sec-CH-UA brands.
      *
      * @return string[]
      */
-    private static function getClientHintBrands(): array
+    private function getClientHintBrands(): array
     {
         if (self::$brands !== null) {
             return self::$brands;
@@ -227,13 +250,13 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check expected brand exists.
+     * Checks if expected brand exists.
      *
      * @param array $brands
      * @param array $expected
      * @return bool
      */
-    private static function containsBrand(
+    private function containsBrand(
         array $brands,
         array $expected
     ): bool
@@ -250,11 +273,11 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check navigation fingerprint.
+     * Checks navigation mismatch.
      *
      * @return bool
      */
-    private static function hasNavigationMismatch(): bool
+    private function hasNavigationMismatch(): bool
     {
         $mode = HeaderReader::getSecFetchMode();
         $dest = HeaderReader::getSecFetchDest();
@@ -270,16 +293,15 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check user initiated navigation.
+     * Checks missing user navigation.
      *
      * @return bool
      */
-    private static function hasMissingUserNavigation(): bool
+    private function hasMissingUserNavigation(): bool
     {
         $mode = HeaderReader::getSecFetchMode();
         $dest = HeaderReader::getSecFetchDest();
         $user = HeaderReader::getSecFetchUser();
-
 
         if (
             $mode === 'navigate' &&
@@ -288,40 +310,36 @@ class BrowserFingerprintSignal
             return $user !== '?1';
         }
 
-
         return false;
     }
 
     /**
-     * Calculate missing browser headers score.
+     * Calculates missing browser headers score.
      *
      * @return int
      */
-    private static function getMissingBrowserHeadersScore(): int
+    private function getMissingBrowserHeadersScore(): int
     {
         $score = 0;
-
 
         if (HeaderReader::getAcceptLanguage() === '') {
             ++$score;
         }
 
-
         if (HeaderReader::getAcceptEncoding() === '') {
             ++$score;
         }
-
 
         return $score;
     }
 
     /**
-     * Check mobile hint mismatch.
+     * Checks client mobile mismatch.
      *
      * @param string $ua
      * @return bool
      */
-    private static function hasClientMobileMismatch(string $ua): bool
+    private function hasClientMobileMismatch(string $ua): bool
     {
         $mobile = HeaderReader::getSecChUaMobile();
 
@@ -348,12 +366,12 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Check platform mismatch.
+     * Checks client platform mismatch.
      *
      * @param string $ua
      * @return bool
      */
-    private static function hasClientPlatformMismatch(string $ua): bool
+    private function hasClientPlatformMismatch(string $ua): bool
     {
         $platform = HeaderReader::getSecChUaPlatform();
 
@@ -386,12 +404,12 @@ class BrowserFingerprintSignal
     }
 
     /**
-     * Detect Safari-like browsers.
+     * Detects Safari-like browsers.
      *
      * @param string $ua
      * @return bool
      */
-    private static function isSafariLike(string $ua): bool
+    private function isSafariLike(string $ua): bool
     {
         if (stripos($ua, 'FxiOS') !== false) {
             return true;

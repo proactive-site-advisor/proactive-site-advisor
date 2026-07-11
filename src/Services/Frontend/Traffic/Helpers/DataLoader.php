@@ -66,6 +66,17 @@ class DataLoader
     }
 
     /**
+     * Load scanner 404 URL patterns from data file.
+     *
+     * @return array
+     */
+    public static function loadScanner404Patterns(): array
+    {
+        $data = self::loadFile('scanner-404-patterns.php');
+        return is_array($data) ? $data : [];
+    }
+
+    /**
      * Generic file loader with caching.
      *
      * @param string $filename

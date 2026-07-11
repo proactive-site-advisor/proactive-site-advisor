@@ -1,45 +1,38 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders;
 
 use ProactiveSiteAdvisor\Models\DailyStats;
-use ProactiveSiteAdvisor\Utils\DateTimeUtils;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotDetector;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotAgentSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\PageviewSignal;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Decision\TrafficClassifier;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficEngine;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class TrafficCollector
+ * Class PageviewRecorder
  *
- * Collects frontend pageview counts using database storage.
- *
- * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders
  * @version 1.0.0
  */
-class TrafficCollector
+class PageviewRecorder
 {
-    /**
-     * Maximum number of bot names to keep in daily stats.
-     */
     private const MAX_BOT_NAMES = 30;
 
     /**
-     * Prevents duplicate tracking per request.
-     *
      * @var bool
      */
     private static bool $hasRun = false;
 
     /**
-     * Increment pageview count if this is a valid frontend request.
+     * Records pageview if request is valid.
      *
      * @return void
      */
-    public function maybeCountPageview(): void
+    public function maybeRecord(): void
     {
         if (self::$hasRun) {
             return;
@@ -53,7 +46,7 @@ class TrafficCollector
 
         $today = DateTimeUtils::todayKey();
 
-        if (TrafficClassifier::isRealHuman()) {
+        if (TrafficEngine::isHuman()) {
             DailyStats::incrementAtomic($today, 'pageviews', 1);
         } else {
             DailyStats::incrementAtomic($today, 'bot_pageviews', 1);
@@ -62,14 +55,14 @@ class TrafficCollector
     }
 
     /**
-     * Track the bot name for today's statistics.
+     * Tracks bot name for today's statistics.
      *
      * @param string $today
      * @return void
      */
     private function trackBotName(string $today): void
     {
-        $botName = BotDetector::getBotName() ?: 'unknown';
+        $botName = BotAgentSignal::getBotName() ?: 'unknown';
         $botName = strtolower($botName);
 
         DailyStats::updateJsonMap($today, 'top_bots_json', [$botName => 1], self::MAX_BOT_NAMES);

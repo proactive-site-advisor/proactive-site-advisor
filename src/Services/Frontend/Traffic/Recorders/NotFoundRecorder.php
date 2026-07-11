@@ -1,45 +1,38 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors;
+namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders;
 
-use ProactiveSiteAdvisor\Utils\Request;
 use ProactiveSiteAdvisor\Models\DailyStats;
-use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\PageviewSignal;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Decision\TrafficClassifier;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficEngine;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Utils\Request;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class NotFoundTracker
+ * Class NotFoundRecorder
  *
- * Tracks 404 errors on frontend requests using database storage.
- *
- * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Collectors
+ * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders
  * @version 1.0.0
  */
-class NotFoundTracker
+class NotFoundRecorder
 {
-    /**
-     * Maximum number of paths to keep in the map.
-     */
     private const MAX_PATHS = 30;
 
     /**
-     * Prevents duplicate tracking per request.
-     *
      * @var bool
      */
     private static bool $hasRun = false;
 
     /**
-     * Track 404 if this is a valid 404 request.
+     * Records 404 if request is valid.
      *
      * @return void
      */
-    public function maybeTrack404(): void
+    public function maybeRecord(): void
     {
         if (self::$hasRun) {
             return;
@@ -55,7 +48,7 @@ class NotFoundTracker
             return;
         }
 
-        if (!TrafficClassifier::shouldTrack404()) {
+        if (!TrafficEngine::shouldLog404()) {
             return;
         }
 
@@ -64,6 +57,7 @@ class NotFoundTracker
         DailyStats::incrementAtomic($today, 'errors_404', 1);
 
         $path = Request::getRequestPath();
+
         if ($path === '') {
             return;
         }

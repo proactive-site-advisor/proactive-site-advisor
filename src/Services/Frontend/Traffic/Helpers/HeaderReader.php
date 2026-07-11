@@ -177,6 +177,14 @@ class HeaderReader
     }
 
     /**
+     * @return string
+     */
+    public static function getRequestUri(): string
+    {
+        return self::getHeader('REQUEST_URI');
+    }
+
+    /**
      * Get client IP address from standard headers.
      *
      * @return string

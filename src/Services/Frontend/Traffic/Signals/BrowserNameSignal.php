@@ -2,64 +2,84 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\DataLoader;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class BrowserValidator
- *
- * Validates browser names against an allowlist.
+ * Class BrowserNameSignal
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
-class BrowserValidator
+class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
 {
     /**
-     * Cached allowlist
-     *
      * @var array|null
      */
     private static ?array $allowlist = null;
 
     /**
-     * Check if browser name is valid (in allowlist)
+     * {@inheritDoc}
+     */
+    public function isBot(): bool
+    {
+        $ua = HeaderReader::getUserAgent();
+
+        return $this->hasInvalidBrowserName($ua);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScore(): int
+    {
+        return $this->getPlausibilityScore();
+    }
+
+    /**
+     * Checks if browser name is invalid.
+     *
+     * @param string $ua
+     * @return bool
+     */
+    private function hasInvalidBrowserName(string $ua): bool
+    {
+        $parsed = $this->parseUserAgent($ua);
+
+        return !$this->isValidBrowserName($parsed['browser']);
+    }
+
+    /**
+     * Validates browser name against allowlist.
      *
      * @param string $browser
      * @return bool
      */
-    public static function isValidBrowserName(string $browser): bool
+    private function isValidBrowserName(string $browser): bool
     {
         if ($browser === '') {
             return false;
         }
 
-        $allowlist = self::getAllowlist();
+        $allowlist = $this->getAllowlist();
 
         return in_array($browser, $allowlist, true);
     }
 
     /**
-     * Parse user agent and extract browser name
+     * Parses User-Agent string.
      *
      * @param string $ua
      * @return array{browser: string, version: string, platform: string}
      */
-    public static function parseUserAgent(string $ua): array
+    private function parseUserAgent(string $ua): array
     {
-        $defaults = [
-            'browser'  => '',
-            'version'  => '',
-            'platform' => '',
-        ];
-
-        if ($ua === '') {
-            return $defaults;
-        }
-
         $browser  = '';
         $version  = '';
         $platform = '';
@@ -96,11 +116,47 @@ class BrowserValidator
     }
 
     /**
-     * Get browser allowlist from data file
+     * Calculates plausibility score based on browser version.
+     *
+     * @return int
+     */
+    private function getPlausibilityScore(): int
+    {
+        $parsed = $this->parseUserAgent(HeaderReader::getUserAgent());
+
+        if ($parsed['browser'] === '' || $parsed['version'] === '') {
+            return 0;
+        }
+
+        $majorVersion = (int)explode('.', $parsed['version'])[0];
+
+        $browsers = ['Chrome', 'Edge', 'Opera', 'Firefox'];
+
+        if (!in_array($parsed['browser'], $browsers, true)) {
+            return 0;
+        }
+
+        if ($majorVersion < 40) {
+            return 5;
+        }
+
+        if ($majorVersion < 60) {
+            return 4;
+        }
+
+        if ($majorVersion < 80) {
+            return 2;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Returns browser allowlist.
      *
      * @return array
      */
-    private static function getAllowlist(): array
+    private function getAllowlist(): array
     {
         if (self::$allowlist !== null) {
             return self::$allowlist;
@@ -109,9 +165,9 @@ class BrowserValidator
         self::$allowlist = DataLoader::loadBrowserAllowlist();
 
         /**
-         * Filter the browser name allowlist.
+         * Filter browser allowlist.
          *
-         * @param string[] $allowlist Array of valid browser names.
+         * @param string[] $allowlist
          */
         self::$allowlist = apply_filters('proactive_site_advisor_browser_allowlist', self::$allowlist);
 
@@ -120,22 +176,5 @@ class BrowserValidator
         }
 
         return self::$allowlist;
-    }
-
-    /**
-     * Check if user agent has invalid browser name
-     *
-     * @param string $ua
-     * @return bool
-     */
-    public static function hasInvalidBrowserName(string $ua): bool
-    {
-        if ($ua === '') {
-            return true;
-        }
-
-        $parsed = self::parseUserAgent($ua);
-
-        return !self::isValidBrowserName($parsed['browser']);
     }
 }

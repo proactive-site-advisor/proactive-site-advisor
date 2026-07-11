@@ -2,7 +2,9 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\DataLoader;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,52 +13,59 @@ if (!defined('ABSPATH')) {
 /**
  * Class ReferrerSignal
  *
- * Detects suspicious referrer patterns.
- *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
-class ReferrerSignal
+class ReferrerSignal implements BotSignalInterface
 {
     /**
-     * Cached spam list
-     *
      * @var array|null
      */
     private static ?array $spamList = null;
 
     /**
-     * Check if referrer is spam
+     * {@inheritDoc}
+     */
+    public function isBot(): bool
+    {
+        $referrerUrl = HeaderReader::getReferer();
+        $currentHost = HeaderReader::getHost();
+
+        return $this->isSpamReferrer($referrerUrl, $currentHost);
+    }
+
+    /**
+     * Checks if referrer is spam.
      *
      * @param string $referrerUrl
      * @param string $currentHost
      * @return bool
      */
-    public static function isSpamReferrer(string $referrerUrl, string $currentHost): bool
+    private function isSpamReferrer(string $referrerUrl, string $currentHost): bool
     {
-        $referrerHost = self::extractHost($referrerUrl);
+        $referrerHost = $this->extractHost($referrerUrl);
 
         if ($referrerHost === '') {
             return false;
         }
 
-        if (self::isSelfReferrer($referrerHost, $currentHost)) {
+        if ($this->isSelfReferrer($referrerHost, $currentHost)) {
             return false;
         }
 
-        $spamList = self::getSpamList();
+        $spamList = $this->getSpamList();
 
         return in_array($referrerHost, $spamList, true);
     }
 
     /**
-     * Check if referrer is from the same domain
+     * Checks if referrer is from the same domain.
      *
      * @param string $referrerHost
      * @param string $currentHost
      * @return bool
      */
-    public static function isSelfReferrer(string $referrerHost, string $currentHost): bool
+    private function isSelfReferrer(string $referrerHost, string $currentHost): bool
     {
         if ($referrerHost === '' || $currentHost === '') {
             return false;
@@ -69,12 +78,12 @@ class ReferrerSignal
     }
 
     /**
-     * Extract host from URL
+     * Extracts host from URL.
      *
      * @param string $url
      * @return string
      */
-    public static function extractHost(string $url): string
+    private function extractHost(string $url): string
     {
         if ($url === '') {
             return '';
@@ -90,11 +99,11 @@ class ReferrerSignal
     }
 
     /**
-     * Get spam list from data file
+     * Returns spam list from data file.
      *
      * @return array
      */
-    private static function getSpamList(): array
+    private function getSpamList(): array
     {
         if (self::$spamList !== null) {
             return self::$spamList;
@@ -103,13 +112,15 @@ class ReferrerSignal
         self::$spamList = DataLoader::loadReferrerSpamList();
 
         /**
-         * Filter the list of spam referrer hosts.
+         * Filter referrer spam list.
          *
-         * Hosts in this list will be flagged as spam and excluded from tracking.
-         *
-         * @param string[] $spamList Array of hostnames (e.g., 'example.com').
+         * @param string[] $spamList
          */
         self::$spamList = apply_filters('proactive_site_advisor_referrer_spam_list', self::$spamList);
+
+        if (!is_array(self::$spamList)) {
+            self::$spamList = [];
+        }
 
         return self::$spamList;
     }

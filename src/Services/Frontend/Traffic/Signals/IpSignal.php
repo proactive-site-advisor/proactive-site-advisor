@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
 if (!defined('ABSPATH')) {
@@ -11,19 +12,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class IpSignal
  *
- * Analyzes IP addresses for suspicious patterns.
- *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @version 1.0.0
  */
-class IpSignal
+class IpSignal implements BotSignalInterface
 {
     /**
-     * Check if IP is suspicious
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public static function isSuspiciousIp(): bool
+    public function isBot(): bool
     {
         $ip = HeaderReader::getIp();
 
@@ -31,11 +28,11 @@ class IpSignal
             return true;
         }
 
-        if (self::isPrivateIp($ip)) {
+        if ($this->isPrivateIp($ip)) {
             return false;
         }
 
-        if (self::isDatacenterIp($ip)) {
+        if ($this->isDatacenterIp($ip)) {
             return true;
         }
 
@@ -43,12 +40,12 @@ class IpSignal
     }
 
     /**
-     * Check if IP is private/reserved
+     * Checks if IP is private or reserved.
      *
      * @param string $ip
      * @return bool
      */
-    public static function isPrivateIp(string $ip): bool
+    private function isPrivateIp(string $ip): bool
     {
         if (!filter_var($ip, FILTER_VALIDATE_IP)) {
             return false;
@@ -62,17 +59,17 @@ class IpSignal
     }
 
     /**
-     * Check if IP is from known datacenter
+     * Checks if IP is from a known datacenter.
      *
      * @param string $ip
      * @return bool
      */
-    public static function isDatacenterIp(string $ip): bool
+    private function isDatacenterIp(string $ip): bool
     {
-        $ranges = self::getDatacenterRanges();
+        $ranges = $this->getDatacenterRanges();
 
         foreach ($ranges as $range) {
-            if (self::ipInRange($ip, $range)) {
+            if ($this->ipInRange($ip, $range)) {
                 return true;
             }
         }
@@ -81,21 +78,14 @@ class IpSignal
     }
 
     /**
-     * Get datacenter IP ranges (filterable, default empty).
+     * Returns filterable datacenter IP ranges.
      *
      * @return array
      */
-    private static function getDatacenterRanges(): array
+    private function getDatacenterRanges(): array
     {
         /**
          * Filter datacenter IP ranges.
-         *
-         * To add ranges, use:
-         * add_filter('proactive_site_advisor_datacenter_ip_ranges', function($ranges) {
-         *     $ranges[] = '3.0.0.0/8';
-         *     $ranges[] = '52.0.0.0/8';
-         *     return $ranges;
-         * });
          *
          * @param string[] $ranges List of CIDR ranges.
          */
@@ -105,13 +95,13 @@ class IpSignal
     }
 
     /**
-     * Check if IP is in range (CIDR)
+     * Checks if IP is within a CIDR range.
      *
      * @param string $ip
      * @param string $range
      * @return bool
      */
-    public static function ipInRange(string $ip, string $range): bool
+    private function ipInRange(string $ip, string $range): bool
     {
         if (strpos($range, '/') === false) {
             return $ip === $range;
