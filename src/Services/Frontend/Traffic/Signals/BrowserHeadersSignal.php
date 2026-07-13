@@ -12,24 +12,20 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BrowserHeadersSignal
+ * Analyzes browser headers for bot detection and suspicion scoring.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
 {
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         return !$this->isBrowser();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function getScore(): int
     {
         $score = 0;
@@ -56,11 +52,7 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         return $score;
     }
 
-    /**
-     * Determines if the request resembles a real browser navigation.
-     *
-     * @return bool
-     */
+    /** Determines if the request resembles a real browser navigation. */
     private function isBrowser(): bool
     {
         if ($this->isPrefetchOrPreview()) {
@@ -82,11 +74,7 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         return true;
     }
 
-    /**
-     * Verifies HTML document negotiation.
-     *
-     * @return bool
-     */
+    /** Verifies HTML document negotiation. */
     private function hasHtmlAcceptHeader(): bool
     {
         $accept = HeaderReader::getAccept();
@@ -98,11 +86,7 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         return stripos($accept, 'text/html') !== false;
     }
 
-    /**
-     * Verifies browser User-Agent.
-     *
-     * @return bool
-     */
+    /** Verifies browser User-Agent. */
     private function hasBrowserUserAgent(): bool
     {
         $ua = HeaderReader::getUserAgent();
@@ -124,11 +108,7 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         return preg_match($pattern, $ua) === 1;
     }
 
-    /**
-     * Verifies Sec-Fetch-Site header.
-     *
-     * @return bool
-     */
+    /** Verifies Sec-Fetch-Site header. */
     private function hasValidFetchSite(): bool
     {
         $site = HeaderReader::getSecFetchSite();
@@ -144,11 +124,7 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         );
     }
 
-    /**
-     * Checks for prefetch or preview headers.
-     *
-     * @return bool
-     */
+    /** Checks for prefetch or preview headers. */
     private function isPrefetchOrPreview(): bool
     {
         $checks = [
@@ -170,24 +146,16 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         return false;
     }
 
-    /**
-     * Helper to determine if the request is a navigation.
-     *
-     * @return bool
-     */
+    /** Helper to determine if the request is a navigation. */
     private function isNavigationRequest(): bool
     {
         $mode = HeaderReader::getSecFetchMode();
         $dest = HeaderReader::getSecFetchDest();
-        
+
         return ($mode === 'navigate' && $dest === 'document');
     }
 
-    /**
-     * Calculates browser request score.
-     *
-     * @return int
-     */
+    /** Calculates browser request score. */
     private function getHeaderScore(): int
     {
         $score = 0;

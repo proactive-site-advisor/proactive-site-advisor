@@ -3,6 +3,9 @@
  *
  * Handles vertical menu tab switching for settings page.
  * Requires: namespace.js, helpers.js, config.js
+ *
+ * @fileoverview Settings page tab switching functionality
+ * @version 1.0.0
  */
 (function (window, document) {
     'use strict';

@@ -11,26 +11,20 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class FingerprintSignal
+ * Analyzes browser fingerprinting signals for bot detection.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
 {
-    /**
-     * @var int|null
-     */
+    /** Cached suspicion score. */
     private static ?int $score = null;
 
-    /**
-     * @var array|null
-     */
+    /** Cached client hint brands. */
     private static ?array $brands = null;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         $ua = HeaderReader::getUserAgent();
@@ -50,9 +44,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function getScore(): int
     {
         if (self::$score !== null) {
@@ -95,11 +87,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return self::$score = $score;
     }
 
-    /**
-     * Checks if Sec-CH-UA header is malformed.
-     *
-     * @return bool
-     */
+    /** Checks if Sec-CH-UA header is malformed. */
     private function hasMalformedClientHints(): bool
     {
         $header = HeaderReader::getSecChUa();
@@ -113,11 +101,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             ) !== 1;
     }
 
-    /**
-     * Checks if all Sec-Fetch-* headers are missing.
-     *
-     * @return bool
-     */
+    /** Checks if all Sec-Fetch-* headers are missing. */
     private function hasMissingAllFetchHeaders(): bool
     {
         return HeaderReader::getSecFetchSite() === ''
@@ -125,12 +109,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             && HeaderReader::getSecFetchDest() === '';
     }
 
-    /**
-     * Checks if the request is a scanner based on client hints + referrer.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Checks if the request is a scanner based on client hints + referrer. */
     private function isScannerClientHints(string $ua): bool
     {
         if (!$this->hasInvalidClientHints($ua)) {
@@ -146,12 +125,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return !($site !== '' && $site !== 'none');
     }
 
-    /**
-     * Checks for modern Chromium browsers.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Checks for modern Chromium browsers. */
     private function isModernChromeFamily(string $ua): bool
     {
         if (!preg_match('/(Chrome|Edg|OPR)\/(\d+)/i', $ua, $match)) {
@@ -161,11 +135,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return (int)$match[2] >= 90;
     }
 
-    /**
-     * Checks missing client hints.
-     *
-     * @return bool
-     */
+    /** Checks missing client hints. */
     private function hasMissingClientHints(): bool
     {
         return (
@@ -175,12 +145,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         );
     }
 
-    /**
-     * Validates Sec-CH-UA brands against UA.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Validates Sec-CH-UA brands against UA. */
     private function hasInvalidClientHints(string $ua): bool
     {
         $brands = $this->getClientHintBrands();
@@ -190,44 +155,21 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         }
 
         if (stripos($ua, 'Edg') !== false) {
-            return !$this->containsBrand(
-                $brands,
-                [
-                    'Edge',
-                    'Edg',
-                    'Microsoft Edge'
-                ]
-            );
+            return !$this->containsBrand($brands, ['Edge', 'Edg', 'Microsoft Edge']);
         }
 
         if (stripos($ua, 'OPR') !== false) {
-            return !$this->containsBrand(
-                $brands,
-                [
-                    'Opera',
-                    'OPR'
-                ]
-            );
+            return !$this->containsBrand($brands, ['Opera', 'OPR']);
         }
 
         if (stripos($ua, 'Chrome') !== false) {
-            return !$this->containsBrand(
-                $brands,
-                [
-                    'Chrome',
-                    'Chromium'
-                ]
-            );
+            return !$this->containsBrand($brands, ['Chrome', 'Chromium']);
         }
 
         return false;
     }
 
-    /**
-     * Extracts Sec-CH-UA brands.
-     *
-     * @return string[]
-     */
+    /** Extracts Sec-CH-UA brands. */
     private function getClientHintBrands(): array
     {
         if (self::$brands !== null) {
@@ -249,17 +191,8 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return self::$brands = ($matches[1] ?? []);
     }
 
-    /**
-     * Checks if expected brand exists.
-     *
-     * @param array $brands
-     * @param array $expected
-     * @return bool
-     */
-    private function containsBrand(
-        array $brands,
-        array $expected
-    ): bool
+    /** Checks if expected brand exists. */
+    private function containsBrand(array $brands, array $expected): bool
     {
         foreach ($brands as $brand) {
             foreach ($expected as $item) {
@@ -272,11 +205,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return false;
     }
 
-    /**
-     * Checks navigation mismatch.
-     *
-     * @return bool
-     */
+    /** Checks navigation mismatch. */
     private function hasNavigationMismatch(): bool
     {
         $mode = HeaderReader::getSecFetchMode();
@@ -286,38 +215,24 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        return !(
-            $mode === 'navigate' &&
-            $dest === 'document'
-        );
+        return !($mode === 'navigate' && $dest === 'document');
     }
 
-    /**
-     * Checks missing user navigation.
-     *
-     * @return bool
-     */
+    /** Checks missing user navigation. */
     private function hasMissingUserNavigation(): bool
     {
         $mode = HeaderReader::getSecFetchMode();
         $dest = HeaderReader::getSecFetchDest();
         $user = HeaderReader::getSecFetchUser();
 
-        if (
-            $mode === 'navigate' &&
-            $dest === 'document'
-        ) {
+        if ($mode === 'navigate' && $dest === 'document') {
             return $user !== '?1';
         }
 
         return false;
     }
 
-    /**
-     * Calculates missing browser headers score.
-     *
-     * @return int
-     */
+    /** Calculates missing browser headers score. */
     private function getMissingBrowserHeadersScore(): int
     {
         $score = 0;
@@ -333,12 +248,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         return $score;
     }
 
-    /**
-     * Checks client mobile mismatch.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Checks client mobile mismatch. */
     private function hasClientMobileMismatch(string $ua): bool
     {
         $mobile = HeaderReader::getSecChUaMobile();
@@ -347,30 +257,18 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        if (
-            stripos($ua, 'iPhone') !== false ||
-            stripos($ua, 'Android') !== false
-        ) {
+        if (stripos($ua, 'iPhone') !== false || stripos($ua, 'Android') !== false) {
             return $mobile !== '?1';
         }
 
-        if (
-            stripos($ua, 'Windows') !== false ||
-            stripos($ua, 'Macintosh') !== false ||
-            stripos($ua, 'Linux') !== false
-        ) {
+        if (stripos($ua, 'Windows') !== false || stripos($ua, 'Macintosh') !== false || stripos($ua, 'Linux') !== false) {
             return $mobile === '?1';
         }
 
         return false;
     }
 
-    /**
-     * Checks client platform mismatch.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Checks client platform mismatch. */
     private function hasClientPlatformMismatch(string $ua): bool
     {
         $platform = HeaderReader::getSecChUaPlatform();
@@ -379,36 +277,22 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        if (
-            stripos($ua, 'Windows') !== false &&
-            stripos($platform, 'Windows') === false
-        ) {
+        if (stripos($ua, 'Windows') !== false && stripos($platform, 'Windows') === false) {
             return true;
         }
 
-        if (
-            stripos($ua, 'Macintosh') !== false &&
-            stripos($platform, 'Mac') === false
-        ) {
+        if (stripos($ua, 'Macintosh') !== false && stripos($platform, 'Mac') === false) {
             return true;
         }
 
-        if (
-            stripos($ua, 'Android') !== false &&
-            stripos($platform, 'Android') === false
-        ) {
+        if (stripos($ua, 'Android') !== false && stripos($platform, 'Android') === false) {
             return true;
         }
 
         return false;
     }
 
-    /**
-     * Detects Safari-like browsers.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Detects Safari-like browsers. */
     private function isSafariLike(string $ua): bool
     {
         if (stripos($ua, 'FxiOS') !== false) {

@@ -10,53 +10,29 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AlertEngine
- *
  * Generates traffic and 404-related alerts for a given day.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.3
+ * @since   1.0.0
  */
 class AlertEngine
 {
-    /**
-     * Provides daily stats from DB.
-     *
-     * @var DailyStatsDataProvider
-     */
+    /** Provides daily stats from DB. */
     private DailyStatsDataProvider $dailyStatsDataProvider;
 
-    /**
-     * Calculates 7-day averages of traffic + 404.
-     *
-     * @var BaselineCalculator
-     */
+    /** Calculates 7-day averages of traffic + 404. */
     private BaselineCalculator $baselineCalculator;
 
-    /**
-     * Detects traffic drops or spikes.
-     *
-     * @var TrafficAnalyzer
-     */
+    /** Detects traffic drops or spikes. */
     private TrafficAnalyzer $trafficAnalyzer;
 
-    /**
-     * Detects sudden increases in 404 errors.
-     *
-     * @var Error404Analyzer
-     */
+    /** Detects sudden increases in 404 errors. */
     private Error404Analyzer $error404Analyzer;
 
-    /**
-     * Detects bot traffic drops or spikes.
-     *
-     * @var BotTrafficAnalyzer
-     */
+    /** Detects bot traffic drops or spikes. */
     private BotTrafficAnalyzer $botTrafficAnalyzer;
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public function __construct()
     {
         $this->dailyStatsDataProvider = new DailyStatsDataProvider();
@@ -66,13 +42,7 @@ class AlertEngine
         $this->botTrafficAnalyzer     = new BotTrafficAnalyzer();
     }
 
-    /**
-     * Generates alerts for a specific date (YYYY-MM-DD).
-     *
-     * @param string $date
-     *
-     * @return void
-     */
+    /** Generates alerts for a specific date (YYYY-MM-DD). */
     public function generateForDay(string $date): void
     {
         $base = $this->baselineCalculator->calculate($date);
@@ -87,7 +57,6 @@ class AlertEngine
             return;
         }
 
-        // --- Human traffic ---
         $todayPv  = (int)$row['pageviews'];
         $today404 = (int)$row['errors_404'];
         $top404   = !empty($row['top_404_json']) ? json_decode($row['top_404_json'], true) : null;
@@ -98,7 +67,6 @@ class AlertEngine
         $err = $this->error404Analyzer->analyze($today404, $base['avg_404']);
         $this->create404Alert($date, $err, $today404, $base['avg_404'], $top404);
 
-        // --- Bot traffic ---
         $todayBotPv = (int)$row['bot_pageviews'];
         $topBots    = !empty($row['top_bots_json']) ? json_decode($row['top_bots_json'], true) : null;
 
@@ -106,16 +74,7 @@ class AlertEngine
         $this->createBotAlert($date, $bot, $todayBotPv, $base['avg_bot_pageviews'], $topBots);
     }
 
-    /**
-     * Creates traffic-related alerts (spike or drop).
-     *
-     * @param string $date
-     * @param array $r
-     * @param int $today
-     * @param float $avg
-     *
-     * @return void
-     */
+    /** Creates traffic-related alerts (spike or drop). */
     private function createTrafficAlert(string $date, array $r, int $today, float $avg): void
     {
         if (!$r['type']) {
@@ -136,17 +95,7 @@ class AlertEngine
         );
     }
 
-    /**
-     * Creates an alert when 404 errors spike beyond expected average.
-     *
-     * @param string $date
-     * @param array $r
-     * @param int $today
-     * @param float $avg
-     * @param array|null $top
-     *
-     * @return void
-     */
+    /** Creates an alert when 404 errors spike beyond expected average. */
     private function create404Alert(string $date, array $r, int $today, float $avg, ?array $top): void
     {
         if (!$r['type']) {
@@ -168,17 +117,7 @@ class AlertEngine
         );
     }
 
-    /**
-     * Create alert for abnormal bot traffic.
-     *
-     * @param string $date
-     * @param array $r
-     * @param int $today
-     * @param float $avg
-     * @param array|null $top
-     *
-     * @return void
-     */
+    /** Create alert for abnormal bot traffic. */
     private function createBotAlert(string $date, array $r, int $today, float $avg, ?array $top): void
     {
         if (!$r['type']) {
@@ -190,7 +129,7 @@ class AlertEngine
             'change_pct' => $r['change_pct'],
             'top'        => $top,
         ];
-        
+
         Alert::createIfNotExists($date, $r['type'], $r['severity'], wp_json_encode($meta));
     }
 }

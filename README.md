@@ -1,45 +1,73 @@
-# Proactive Site Advisor
+# Proactive Site Advisor – Privacy‑First Anomaly Alerts
 
-**Never miss a traffic drop, 404 surge, or bot anomaly. Daily, local monitoring alerts you instantly — with more alert types on the way.**
+**Get early warnings on anomalies like traffic drops, 404 surges, and bot spikes. Privacy‑friendly local monitoring with actionable next steps.**
 
-Most WordPress issues stay hidden until they hurt you. **Proactive Site Advisor** silently watches your site every day, compares activity to the previous week, and immediately alerts you when something changes. It now separates real visitors from bots, so you see exactly how much traffic is human vs. crawler.
+Your site talks. Don't wait until it screams. Most WordPress issues — ranking drops, broken links, bot attacks — stay hidden until they hurt you. **Proactive Site Advisor** acts as your first line of defense, silently watching your site every day, comparing activity to the previous week, and immediately alerting you when something changes. It separates real visitors from bots, so you see exactly how much traffic is human vs. crawler.
 
-Everything stays 100% local—no external APIs, no data leaving your server. The plugin logs, processes, and summarizes data using lightweight database tables and atomic operations. Zero performance overhead.
+Everything stays 100% local — no external APIs, no data leaving your server. The plugin logs, processes, and summarizes data using lightweight database tables and atomic operations. Zero performance overhead. No cookies. No front‑end scripts.
 
 The plugin adds a **"Site Advisor"** dashboard in your admin with:
 
 - **Critical issues indicator** (color‑coded)
 - **Weekly digest cards** (Critical, Traffic, Bot, 404 alerts)
-- **Latest alerts list** – what changed, why it matters, what to check next, and Top 3 broken URLs or Top 3 bot names
+- **Latest alerts list** – each alert answers: what changed, why it matters, and what to check next
+- **Top 3 broken URLs** (for 404 alerts) and **Top 3 bot names** (for bot alerts)
 - **7‑day history table** – daily human traffic, bot traffic, and 404 errors, plus averages
 
-**When an anomaly is detected, each alert includes:**
-- What changed (e.g., "Traffic dropped by 41%")
-- What this means for your site
-- What you should check next
-- Top 3 broken URLs (for 404 alerts)
-- Top 3 bot names (for bot alerts)
+**Here’s a real example of a traffic drop alert:**
 
-## Privacy & Performance
+> **Traffic drop — July 9, 2026**
+> Traffic dropped by 44.98% compared to recent days.
+>
+> *What this means:* Sudden drops are often caused by downtime or recent changes.
+>
+> *What you should check next:*
+> - Check if your site is reachable
+> - Review recent plugin or theme changes
+> - Look for increases in 404 errors
 
-- **100% local** – no data leaves your server, no external APIs
-- Stores only daily summarized metrics - no personal or visitor data is ever saved
-- Only two lightweight tables keep the last 7 days of stats and generated alerts
-- No cookies, no cross‑site tracking, GDPR‑friendly by design
-- Atomic database operations prevent race conditions and data loss
+## Why Proactive Site Advisor?
 
-The plugin does **not** fix anything automatically — it only alerts and recommends so you stay in full control.
+**Alerts you can actually act on**
+You don't just get a number. You get a human-readable summary that tells you what changed, what it means, and exactly what to check next.
+
+404 alerts include the top 3 broken URLs with fix suggestions. Bot alerts list the top 3 crawlers by name with visit counts and context.
+
+This is just the beginning. We're actively building new alert types based on real user feedback — slow page detection, server error monitoring, and more — so your site advisor gets smarter over time.
+
+**Built for privacy and performance**
+The plugin never phones home. All data is collected, summarized, and stored inside your own database. We use lightweight tables that hold only the last 7 days of aggregated metrics. No personal visitor data is ever saved. No cookies. No front‑end scripts. GDPR‑friendly by design.
+
+**Zero‑configuration monitoring**
+Install, activate, done. The plugin starts logging and comparing data from day one. No API keys, no tracking codes, no setup wizard. It just works.
 
 ## Key Features
 
-- **Bot traffic anomaly detection** (surge/drop) with Top 3 bots
-- **Human traffic drop/spike detection** (completed day vs. 7‑day baseline)
-- **404 error surge detection** with Top 3 broken URLs
-- Actionable "What you should check next" lists
-- Daily WP‑Cron scan (lightweight, cached)
-- Accurate bot detection powered by **1500+ bot signatures** (Googlebot, GPTBot, ClaudeBot, etc.)
-- Fully local – zero configuration, no external requests
-- Future‑ready: more anomaly types planned
+- **Bot anomaly detection** – Sudden changes in bot visits (crawlers, scrapers) with top 3 bot names
+- **Human traffic monitoring** – Drops or spikes compared to the previous 7‑day average
+- **404 error surge alerts** – Top 3 broken URLs with hit counts and fix suggestions
+- **Actionable recommendations** – Every alert includes a "What you should check next" list
+- **Daily WP‑Cron scans** – Automatic checks after each full day
+- **100% local processing** – No external APIs, zero data leaves your server
+- **Atomic database operations** – Reliable metric collection without race conditions
+- **Accurate bot detection** – 1,500+ bot signatures, updated regularly
+- **Future‑ready** – More anomaly types (slow pages, server errors, plugin conflicts) are planned
+
+## Privacy & Performance by Design
+
+- **Truly self‑hosted** – All statistics stay in your WordPress database. We never see your data.
+- **No personal data** – Only daily summaries. No IP addresses, no visitor profiles.
+- **Ultra‑light footprint** – Two small database tables, no front‑end scripts, zero impact on page speed.
+- **GDPR/CCPA friendly** – No cookies, no cross‑site tracking, no consent banner needed for monitoring.
+
+The plugin does **not** fix anything automatically — it only alerts and recommends so you stay in full control.
+
+## Who is Proactive Site Advisor for?
+
+- **Site owners who hate surprises** – Know the moment traffic dips or errors rise, before clients notice.
+- **Agencies managing multiple sites** – Proactive alerts let you fix issues before reports go out.
+- **SEO and content teams** – Catch 404s and broken links instantly, protecting your rankings.
+- **Privacy‑conscious WordPress users** – Get site insights without giving data to third parties.
 
 ## Requirements
 
@@ -51,33 +79,35 @@ The plugin does **not** fix anything automatically — it only alerts and recomm
 
 1. Upload `proactive-site-advisor` to `/wp-content/plugins/`
 2. Activate through **Plugins → Installed Plugins**
-3. Go to the **Site Advisor** menu to see your alerts
+3. Visit the **Site Advisor** menu in your admin sidebar
+
+That's it. No configuration pages to fill out, no API connections to set up. Proactive Site Advisor starts monitoring immediately.
 
 ## Frequently Asked Questions
 
-### Does the plugin fix anything automatically?
-No. It only alerts and recommends. You decide what to do.
+### Will the plugin fix problems automatically?
+No. It's an advisor, not an autopilot. It tells you what's wrong and what to check, so you stay in full control.
 
 ### Where do the traffic and 404 data come from?
-The plugin logs page views and 404 errors via WordPress hooks. Data is stored temporarily and cleared after daily processing.
+The plugin hooks into WordPress to log page views and 404 errors. Data is aggregated daily and old raw logs are deleted – only the summarized metrics stay.
 
 ### When does the plugin scan?
-After each full day is completed, via WP‑Cron. The current day is not included.
+At the end of each day, via WordPress Cron. You don't need to click anything.
 
-### How does it detect anomalies?
-Yesterday’s numbers are compared to the average of the previous 7 days. Significant deviations trigger an alert.
+### How does it know something is wrong?
+It compares yesterday's numbers to the average of the previous 7 days. A significant deviation triggers an alert.
 
-### What does a 404 alert show?
-The top 3 broken URLs that day, with hit counts and fix suggestions.
+### What exactly does a 404 alert show?
+The three most-hit broken URLs from that day, with the number of hits and a plain‑English suggestion (e.g., "Set up a redirect from /old-page to /new-page").
 
 ### What does a bot alert show?
-The top 3 bot names (e.g., Googlebot, Bingbot) that visited that day, with visit counts and recommendations.
+The top three bot names (like Googlebot, AhrefsBot) with visit counts and context on whether their activity is unusual.
 
-### Will you add other alert types?
-Yes. Future updates will bring more anomaly types (slow pages, server errors, etc.) and optional integration with popular analytics plugins — always privacy‑first.
-
-### Does this affect performance?
-No. Raw data is temporarily cached, processed once daily, and cleared. Only two lightweight database tables persist, with zero impact on page load.
+### Will you add more alert types?
+Absolutely. Planned additions include slow page alerts, server error detection, and optional privacy‑friendly integration with popular analytics plugins — always keeping your data local.
 
 ### Is it free?
-Yes. Licensed under **GPL-2.0-or-later**.
+The core plugin is and will remain free, licensed under GPL-2.0-or-later. A Pro version with advanced features is planned for the future, which will help support ongoing development.
+
+### Does it affect site speed?
+No. The plugin has zero front‑end footprint. All processing happens in the background after page load, using efficient database queries. Your visitors won't notice it.

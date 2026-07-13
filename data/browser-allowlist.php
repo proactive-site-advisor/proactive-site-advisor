@@ -5,7 +5,8 @@
  * Generated from donatj/phpuseragentparser Browsers interface
  * Only these browser names are considered valid.
  *
- * @package ProactiveSiteAdvisor
+ * @package ProactiveSiteAdvisor\Data
+ * @since   1.0.0
  */
 
 return [

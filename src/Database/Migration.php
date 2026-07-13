@@ -7,20 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Migration
- *
  * Handles database schema migrations.
  *
  * @package ProactiveSiteAdvisor\Database
- * @version 1.0.0
+ * @since   1.0.0
  */
 class Migration
 {
-    /**
-     * Run all pending migrations.
-     *
-     * @return void
-     */
+    /** Run all pending migrations. */
     public static function up(): void
     {
         $migrations = [
@@ -33,7 +27,7 @@ class Migration
         ];
 
         foreach ($migrations as $version => $callback) {
-            $result = DatabaseManager::migrate($version, $callback);
+            $result = VersionManager::migrate($version, $callback);
 
             if (!$result) {
                 return;
@@ -41,36 +35,23 @@ class Migration
         }
     }
 
-    /**
-     * Migration to version 1.0.1
-     *
-     * - Drop title column from alerts table.
-     *
-     * @return void
-     */
+    /** Migration to version 1.0.1 - Drop title column from alerts table. */
     private static function migrateTo101(): void
     {
-        DatabaseManager::dropColumn('alerts', 'title');
+        TableMaintenance::dropColumn('alerts', 'title');
     }
 
-    /**
-     * Migration to version 1.0.2
-     *
-     * - Add bot_pageviews column to daily_stats table.
-     * - Add top_bots_json column to daily_stats table.
-     *
-     * @return void
-     */
+    /** Migration to version 1.0.2 - Add bot_pageviews and top_bots_json columns to daily_stats table. */
     private static function migrateTo102(): void
     {
-        DatabaseManager::addColumn(
+        TableMaintenance::addColumn(
             'daily_stats',
             'bot_pageviews',
             "INT UNSIGNED NOT NULL DEFAULT 0",
             "AFTER top_404_json"
         );
 
-        DatabaseManager::addColumn(
+        TableMaintenance::addColumn(
             'daily_stats',
             'top_bots_json',
             "longtext NULL DEFAULT NULL",

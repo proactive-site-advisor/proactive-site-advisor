@@ -7,35 +7,24 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AbstractFactory
- *
  * Base class for model factories providing fake data generation.
  *
  * @package ProactiveSiteAdvisor\Abstracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 abstract class AbstractFactory
 {
     /**
      * The model class this factory creates.
      *
-     * @var string
+     * @var class-string<AbstractModel>
      */
     protected string $model = '';
 
-    /**
-     * Current pattern context.
-     *
-     * @var string
-     */
+    /** Current pattern context. */
     protected string $pattern = 'realistic';
 
-    /**
-     * Set the pattern context.
-     *
-     * @param string $pattern
-     * @return self
-     */
+    /** Set the pattern context. */
     public function setPattern(string $pattern): self
     {
         $this->pattern = $pattern;
@@ -43,29 +32,16 @@ abstract class AbstractFactory
         return $this;
     }
 
-    /**
-     * Get the current pattern.
-     *
-     * @return string
-     */
+    /** Get the current pattern. */
     public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    /**
-     * Define default attributes for the model.
-     *
-     * @return array
-     */
+    /** Define default attributes for the model. */
     abstract protected function definition(): array;
 
-    /**
-     * Make a model instance without saving.
-     *
-     * @param array $attributes Override attributes.
-     * @return object
-     */
+    /** Make a model instance without saving. */
     public function make(array $attributes = []): object
     {
         $modelClass = $this->model;
@@ -74,12 +50,7 @@ abstract class AbstractFactory
         return $modelClass::make($data);
     }
 
-    /**
-     * Create and save a model instance.
-     *
-     * @param array $attributes Override attributes.
-     * @return object|null
-     */
+    /** Create and save a model instance. */
     public function create(array $attributes = []): ?object
     {
         $modelClass = $this->model;
@@ -88,13 +59,7 @@ abstract class AbstractFactory
         return $modelClass::create($data);
     }
 
-    /**
-     * Create multiple model instances.
-     *
-     * @param int $count Number of instances.
-     * @param array $attributes Override attributes.
-     * @return array
-     */
+    /** Create multiple model instances. */
     public function createMany(int $count, array $attributes = []): array
     {
         $models = [];
@@ -110,26 +75,13 @@ abstract class AbstractFactory
         return $models;
     }
 
-    /**
-     * Generate a random integer within range.
-     *
-     * @param int $min Minimum value.
-     * @param int $max Maximum value.
-     * @return int
-     */
+    /** Generate a random integer within range. */
     protected function randomInt(int $min, int $max): int
     {
         return wp_rand($min, $max);
     }
 
-    /**
-     * Generate a random float within range.
-     *
-     * @param float $min Minimum value.
-     * @param float $max Maximum value.
-     * @param int $decimals Decimal places.
-     * @return float
-     */
+    /** Generate a random float within range. */
     protected function randomFloat(float $min, float $max, int $decimals = 2): float
     {
         $scale = 10 ** $decimals;
@@ -138,12 +90,7 @@ abstract class AbstractFactory
         return round($value, $decimals);
     }
 
-    /**
-     * Pick a random element from an array.
-     *
-     * @param array $items Items to choose from.
-     * @return mixed
-     */
+    /** Pick a random element from an array. */
     protected function randomElement(array $items)
     {
         if (empty($items)) {
@@ -155,13 +102,7 @@ abstract class AbstractFactory
         return $items[$index];
     }
 
-    /**
-     * Pick multiple random elements from an array.
-     *
-     * @param array $items Items to choose from.
-     * @param int $count Number of elements to pick.
-     * @return array
-     */
+    /** Pick multiple random elements from an array. */
     protected function randomElements(array $items, int $count): array
     {
         if (empty($items) || $count <= 0) {
@@ -174,13 +115,7 @@ abstract class AbstractFactory
         return array_slice($shuffled, 0, min($count, count($items)));
     }
 
-    /**
-     * Generate a random date within range.
-     *
-     * @param string $start Start date (Y-m-d).
-     * @param string $end End date (Y-m-d).
-     * @return string Date in Y-m-d format.
-     */
+    /** Generate a random date within range. */
     protected function randomDate(string $start, string $end): string
     {
         $startTs = strtotime($start);
@@ -191,13 +126,7 @@ abstract class AbstractFactory
         return gmdate('Y-m-d', $randomTs);
     }
 
-    /**
-     * Generate a date range array.
-     *
-     * @param int $days Number of days.
-     * @param string $endDate End date (Y-m-d). Defaults to today.
-     * @return array Array of dates in Y-m-d format.
-     */
+    /** Generate a date range array. */
     protected function dateRange(int $days, string $endDate = ''): array
     {
         if (empty($endDate)) {
@@ -208,18 +137,13 @@ abstract class AbstractFactory
         $endTs = strtotime($endDate);
 
         for ($i = $days - 1; $i >= 0; $i--) {
-            $dates[] = gmdate('Y-m-d', strtotime("-{$i} days", $endTs));
+            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
         }
 
         return $dates;
     }
 
-    /**
-     * Check if a date falls on a weekend.
-     *
-     * @param string $date Date in Y-m-d format.
-     * @return bool
-     */
+    /** Check if a date falls on a weekend. */
     protected function isWeekend(string $date): bool
     {
         $dayOfWeek = (int)gmdate('N', strtotime($date));

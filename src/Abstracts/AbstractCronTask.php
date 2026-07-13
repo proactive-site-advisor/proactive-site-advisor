@@ -10,48 +10,26 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AbstractCronTask
- *
  * Base class for creating cron tasks with OOP pattern.
  *
  * @package ProactiveSiteAdvisor\Abstracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 abstract class AbstractCronTask
 {
-    /**
-     * Task hook name (must be unique)
-     *
-     * @var string
-     */
+    /** Task hook name (must be unique). */
     protected string $hook;
 
-    /**
-     * Recurrence interval
-     *
-     * @var string
-     */
+    /** Recurrence interval. */
     protected string $recurrence = 'hourly';
 
-    /**
-     * Whether task is enabled
-     *
-     * @var bool
-     */
+    /** Whether task is enabled. */
     protected bool $enabled = true;
 
-    /**
-     * Cron task instance
-     *
-     * @var CronTask|null
-     */
+    /** Cron task instance. */
     protected ?CronTask $task = null;
 
-    /**
-     * Register the cron task.
-     *
-     * @return void
-     */
+    /** Register the cron task. */
     public function register(): void
     {
         $this->task = CronTask::make($this->hook, [$this, 'handle'], $this->recurrence);
@@ -65,101 +43,57 @@ abstract class AbstractCronTask
         CronManager::instance()->addTask($this->task);
     }
 
-    /**
-     * Configure the cron task.
-     * Override this method to customize the task.
-     *
-     * @param CronTask $task The task to configure.
-     * @return void
-     */
+    /** Configure the cron task. */
     protected function configure(CronTask $task): void
     {
-        // Override in child class for additional configuration
     }
 
-    /**
-     * Handle the cron task execution.
-     * Override this method with your task logic.
-     *
-     * @return void
-     */
+    /** Handle the cron task execution. */
     abstract public function handle(): void;
 
-    /**
-     * Get the task hook name.
-     *
-     * @return string
-     */
+    /** Get the task hook name. */
     public function getHook(): string
     {
         return $this->hook;
     }
 
-    /**
-     * Get the recurrence interval.
-     *
-     * @return string
-     */
+    /** Get the recurrence interval. */
     public function getRecurrence(): string
     {
         return $this->recurrence;
     }
 
-    /**
-     * Check if task is enabled.
-     *
-     * @return bool
-     */
+    /** Check if task is enabled. */
     public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * Get the cron task instance.
-     *
-     * @return CronTask|null
-     */
+    /** Get the cron task instance. */
     public function getTask(): ?CronTask
     {
         return $this->task;
     }
 
-    /**
-     * Check if task is scheduled.
-     *
-     * @return bool
-     */
+    /** Check if task is scheduled. */
     public function isScheduled(): bool
     {
         return $this->task && $this->task->isScheduled();
     }
 
-    /**
-     * Get next scheduled run.
-     *
-     * @return int|false
-     */
+    /** Get next scheduled run. */
     public function getNextRun()
     {
         return $this->task ? $this->task->getNextRun() : false;
     }
 
-    /**
-     * Run the task immediately.
-     *
-     * @return void
-     */
+    /** Run the task immediately. */
     public function runNow(): void
     {
         $this->handle();
     }
 
-    /**
-     * Schedule the task.
-     *
-     * @return bool
-     */
+    /** Schedule the task. */
     public function schedule(): bool
     {
         if ($this->task === null) {
@@ -169,11 +103,7 @@ abstract class AbstractCronTask
         return CronManager::instance()->schedule($this->task);
     }
 
-    /**
-     * Unschedule the task.
-     *
-     * @return bool
-     */
+    /** Unschedule the task. */
     public function unschedule(): bool
     {
         return CronManager::instance()->unschedule($this->hook);

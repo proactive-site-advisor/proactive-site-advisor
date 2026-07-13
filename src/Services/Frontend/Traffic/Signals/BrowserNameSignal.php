@@ -12,21 +12,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BrowserNameSignal
+ * Analyzes browser name and version for bot detection.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
 {
-    /**
-     * @var array|null
-     */
+    /** Cached browser allowlist. */
     private static ?array $allowlist = null;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         $ua = HeaderReader::getUserAgent();
@@ -34,20 +30,13 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         return $this->hasInvalidBrowserName($ua);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function getScore(): int
     {
         return $this->getPlausibilityScore();
     }
 
-    /**
-     * Checks if browser name is invalid.
-     *
-     * @param string $ua
-     * @return bool
-     */
+    /** Checks if browser name is invalid. */
     private function hasInvalidBrowserName(string $ua): bool
     {
         $parsed = $this->parseUserAgent($ua);
@@ -55,12 +44,7 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         return !$this->isValidBrowserName($parsed['browser']);
     }
 
-    /**
-     * Validates browser name against allowlist.
-     *
-     * @param string $browser
-     * @return bool
-     */
+    /** Validates browser name against allowlist. */
     private function isValidBrowserName(string $browser): bool
     {
         if ($browser === '') {
@@ -72,12 +56,7 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         return in_array($browser, $allowlist, true);
     }
 
-    /**
-     * Parses User-Agent string.
-     *
-     * @param string $ua
-     * @return array{browser: string, version: string, platform: string}
-     */
+    /** Parses User-Agent string. */
     private function parseUserAgent(string $ua): array
     {
         $browser  = '';
@@ -115,11 +94,7 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         ];
     }
 
-    /**
-     * Calculates plausibility score based on browser version.
-     *
-     * @return int
-     */
+    /** Calculates plausibility score based on browser version. */
     private function getPlausibilityScore(): int
     {
         $parsed = $this->parseUserAgent(HeaderReader::getUserAgent());
@@ -151,11 +126,7 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         return 0;
     }
 
-    /**
-     * Returns browser allowlist.
-     *
-     * @return array
-     */
+    /** Returns browser allowlist. */
     private function getAllowlist(): array
     {
         if (self::$allowlist !== null) {
@@ -165,9 +136,10 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         self::$allowlist = DataLoader::loadBrowserAllowlist();
 
         /**
-         * Filter browser allowlist.
+         * Filters browser allowlist.
          *
          * @param string[] $allowlist
+         * @since  1.0.0
          */
         self::$allowlist = apply_filters('proactive_site_advisor_browser_allowlist', self::$allowlist);
 

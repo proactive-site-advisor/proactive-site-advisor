@@ -9,41 +9,26 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class OptionUtils
- *
- * A helper class to manage plugin options and user meta in WordPress.
+ * Helper class to manage plugin options and user meta in WordPress.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class OptionUtils
 {
-    /**
-     * Get full option key with prefix
-     *
-     * @param string $key
-     * @return string
-     */
+    /** Get full option key with prefix. */
     public static function getMetaOptionName(string $key): string
     {
         return PluginOptions::META_PREFIX . $key;
     }
 
-    /**
-     * Get default plugin options
-     *
-     * @return array
-     */
+    /** Get default plugin options. */
     public static function getDefaults(): array
     {
         return [];
     }
 
-    /**
-     * Get all plugin options (merged with defaults)
-     *
-     * @return array
-     */
+    /** Get all plugin options (merged with defaults). */
     public static function getAllOptions(): array
     {
         $options = get_option(PluginOptions::OPTION_NAME);
@@ -56,11 +41,7 @@ class OptionUtils
     }
 
     /**
-     * Get a single plugin option
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
+     * Get a single plugin option using dot notation.
      */
     public static function getOption(string $key, $default = null)
     {
@@ -79,12 +60,7 @@ class OptionUtils
         return $options;
     }
 
-    /**
-     * Set/update a single plugin option
-     *
-     * @param string $key
-     * @param mixed $value
-     */
+    /** Set/update a single plugin option. */
     public static function setOption(string $key, $value): void
     {
         $options = self::getAllOptions();
@@ -94,11 +70,7 @@ class OptionUtils
         self::updateAll($options);
     }
 
-    /**
-     * Delete a single plugin option
-     *
-     * @param string $key
-     */
+    /** Delete a single plugin option. */
     public static function deleteOption(string $key): void
     {
         $options = get_option(PluginOptions::OPTION_NAME, []);
@@ -123,21 +95,13 @@ class OptionUtils
         self::updateAll($options);
     }
 
-    /**
-     * Reset all plugin options to defaults
-     */
+    /** Reset all plugin options to defaults. */
     public static function resetOptions(): void
     {
         update_option(PluginOptions::OPTION_NAME, self::getDefaults());
     }
 
-    /**
-     * Get a single user-specific option
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
+    /** Get a single user-specific option. */
     public static function getUserOption(string $key, $default = null)
     {
         $userId = get_current_user_id();
@@ -149,12 +113,7 @@ class OptionUtils
         return $options[$key] ?? $default;
     }
 
-    /**
-     * Set/update a single user-specific option
-     *
-     * @param string $key
-     * @param mixed $value
-     */
+    /** Set/update a single user-specific option. */
     public static function setUserOption(string $key, $value): void
     {
         $userId = get_current_user_id();
@@ -167,11 +126,7 @@ class OptionUtils
         update_user_meta($userId, PluginOptions::OPTION_NAME, $options);
     }
 
-    /**
-     * Delete a single user-specific option
-     *
-     * @param string $key
-     */
+    /** Delete a single user-specific option. */
     public static function deleteUserOption(string $key): void
     {
         $userId = get_current_user_id();
@@ -186,9 +141,7 @@ class OptionUtils
         }
     }
 
-    /**
-     * Reset all user-specific options
-     */
+    /** Reset all user-specific options. */
     public static function resetUserOptions(): void
     {
         $userId = get_current_user_id();
@@ -199,48 +152,25 @@ class OptionUtils
         update_user_meta($userId, PluginOptions::OPTION_NAME, []);
     }
 
-    /**
-     * Get plugin meta option (standalone option)
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
+    /** Get plugin meta option (standalone option). */
     public static function getMeta(string $key, $default = null)
     {
         return get_option(self::getMetaOptionName($key), $default);
     }
 
-    /**
-     * Set plugin meta option (standalone option)
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param bool|null $autoload
-     */
+    /** Set plugin meta option (standalone option). */
     public static function setMeta(string $key, $value, ?bool $autoload = null): void
     {
         update_option(self::getMetaOptionName($key), $value, $autoload);
     }
 
-    /**
-     * Delete plugin meta option
-     *
-     * @param string $key
-     */
+    /** Delete plugin meta option. */
     public static function deleteMeta(string $key): void
     {
         delete_option(self::getMetaOptionName($key));
     }
 
-    /**
-     * Set a value in a nested array using dot notation.
-     *
-     * @param array $array
-     * @param string $key
-     * @param $value
-     * @return void
-     */
+    /** Set a value in a nested array using dot notation. */
     private static function put(array &$array, string $key, $value): void
     {
         $keys = explode('.', $key);
@@ -259,48 +189,25 @@ class OptionUtils
         $ref[array_shift($keys)] = $value;
     }
 
-    /**
-     * Get all options for a specific section.
-     *
-     * @param string $section
-     * @return array
-     */
+    /** Get all options for a specific section. */
     public static function getSection(string $section): array
     {
         return self::getOption($section, []);
     }
 
-    /**
-     * Build a dot notation key for a section option
-     *
-     * @param string $section
-     * @param string $key
-     * @return string
-     */
+    /** Build a dot notation key for a section option. */
     public static function makeKey(string $section, string $key): string
     {
         return $section . '.' . $key;
     }
 
-    /**
-     * Set a value in a nested array using dot notation.
-     *
-     * @param array $array
-     * @param string $key
-     * @param $value
-     * @return void
-     */
+    /** Set a value in a nested array using dot notation. */
     public static function setNestedValue(array &$array, string $key, $value): void
     {
         self::put($array, $key, $value);
     }
 
-    /**
-     * Persist all plugin settings to the database.
-     *
-     * @param array $settings
-     * @return bool
-     */
+    /** Persist all plugin settings to the database. */
     public static function updateAll(array $settings): bool
     {
         return update_option(PluginOptions::OPTION_NAME, $settings);

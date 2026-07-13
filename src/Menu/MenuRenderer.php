@@ -9,23 +9,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class MenuRenderer
- *
  * Responsible for rendering all registered admin menu items.
- * Decides whether an item should be added as a top-level menu
- * or as a submenu based on its parentId property.
  *
  * @package ProactiveSiteAdvisor\Menu
- * @version 1.0.0
+ * @since   1.0.0
  */
 class MenuRenderer
 {
-    /**
-     * Render all visible menu items.
-     *
-     * @param MenuItem[] $menuItems Array of MenuItem objects
-     * @return void
-     */
+    /** Render all visible menu items. */
     public function renderAll(array $menuItems): void
     {
         foreach ($menuItems as $item) {
@@ -41,12 +32,7 @@ class MenuRenderer
         }
     }
 
-    /**
-     * Register a top-level menu item.
-     *
-     * @param MenuItem $item
-     * @return void
-     */
+    /** Register a top-level menu item. */
     private function addMenu(MenuItem $item): void
     {
         $id = MenuUtils::getSlug($item->id);
@@ -62,12 +48,7 @@ class MenuRenderer
         );
     }
 
-    /**
-     * Register a submenu item.
-     *
-     * @param MenuItem $item
-     * @return void
-     */
+    /** Register a submenu item. */
     private function addSubmenu(MenuItem $item): void
     {
         $id       = MenuUtils::getSlug($item->id);
@@ -82,5 +63,4 @@ class MenuRenderer
             $item->callback
         );
     }
-
 }

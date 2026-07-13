@@ -4,8 +4,8 @@
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  *
- * @package ProactiveSiteAdvisor
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Templates\Admin\Components
+ * @since   1.0.0
  *
  * @var string $title
  * @var string $text

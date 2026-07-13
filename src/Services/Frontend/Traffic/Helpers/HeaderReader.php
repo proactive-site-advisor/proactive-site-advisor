@@ -7,188 +7,116 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class HeaderReader
- *
  * Centralized HTTP header access with security sanitization.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers
- * @version 1.0.0
+ * @since   1.0.0
  */
 class HeaderReader
 {
-    /**
-     * Get User-Agent header.
-     *
-     * @return string
-     */
+    /** Get User-Agent header. */
     public static function getUserAgent(): string
     {
         return self::getHeader('HTTP_USER_AGENT');
     }
 
-    /**
-     * Get Accept header.
-     *
-     * @return string
-     */
+    /** Get Accept header. */
     public static function getAccept(): string
     {
         return self::getHeader('HTTP_ACCEPT');
     }
 
-    /**
-     * Get Accept-Language header.
-     *
-     * @return string
-     */
+    /** Get Accept-Language header. */
     public static function getAcceptLanguage(): string
     {
         return self::getHeader('HTTP_ACCEPT_LANGUAGE');
     }
 
-    /**
-     * Get Accept-Encoding header.
-     *
-     * @return string
-     */
+    /** Get Accept-Encoding header. */
     public static function getAcceptEncoding(): string
     {
         return self::getHeader('HTTP_ACCEPT_ENCODING');
     }
 
-    /**
-     * Get Referer header.
-     *
-     * @return string
-     */
+    /** Get Referer header. */
     public static function getReferer(): string
     {
         return self::getHeader('HTTP_REFERER');
     }
 
-    /**
-     * Get Sec-Ch-Ua header.
-     *
-     * @return string
-     */
+    /** Get Sec-Ch-Ua header. */
     public static function getSecChUa(): string
     {
         return self::getHeader('HTTP_SEC_CH_UA');
     }
 
-    /**
-     * Get Sec-Ch-Ua-Mobile header.
-     *
-     * @return string
-     */
+    /** Get Sec-Ch-Ua-Mobile header. */
     public static function getSecChUaMobile(): string
     {
         return self::getHeader('HTTP_SEC_CH_UA_MOBILE');
     }
 
-    /**
-     * Get Sec-Ch-Ua-Platform header.
-     *
-     * @return string
-     */
+    /** Get Sec-Ch-Ua-Platform header. */
     public static function getSecChUaPlatform(): string
     {
         return self::getHeader('HTTP_SEC_CH_UA_PLATFORM');
     }
 
-    /**
-     * Get Sec-Fetch-Site header.
-     *
-     * @return string
-     */
+    /** Get Sec-Fetch-Site header. */
     public static function getSecFetchSite(): string
     {
         return self::getHeader('HTTP_SEC_FETCH_SITE');
     }
 
-    /**
-     * Get Sec-Fetch-Mode header.
-     *
-     * @return string
-     */
+    /** Get Sec-Fetch-Mode header. */
     public static function getSecFetchMode(): string
     {
         return self::getHeader('HTTP_SEC_FETCH_MODE');
     }
 
-    /**
-     * Get Sec-Fetch-Dest header.
-     *
-     * @return string
-     */
+    /** Get Sec-Fetch-Dest header. */
     public static function getSecFetchDest(): string
     {
         return self::getHeader('HTTP_SEC_FETCH_DEST');
     }
 
-    /**
-     * Get Sec-Fetch-User header.
-     *
-     * @return string
-     */
+    /** Get Sec-Fetch-User header. */
     public static function getSecFetchUser(): string
     {
         return self::getHeader('HTTP_SEC_FETCH_USER');
     }
 
-    /**
-     * Get Purpose header.
-     *
-     * @return string
-     */
+    /** Get Purpose header. */
     public static function getPurpose(): string
     {
         return self::getHeader('HTTP_PURPOSE');
     }
 
-    /**
-     * Get Sec-Purpose header.
-     *
-     * @return string
-     */
+    /** Get Sec-Purpose header. */
     public static function getSecPurpose(): string
     {
         return self::getHeader('HTTP_SEC_PURPOSE');
     }
 
-    /**
-     * Get Upgrade-Insecure-Requests header.
-     *
-     * @return string
-     */
+    /** Get Upgrade-Insecure-Requests header. */
     public static function getUpgradeInsecureRequests(): string
     {
         return self::getHeader('HTTP_UPGRADE_INSECURE_REQUESTS');
     }
 
-    /**
-     * Get HTTP Host header.
-     *
-     * @return string
-     */
+    /** Get HTTP Host header. */
     public static function getHost(): string
     {
         return self::getHeader('HTTP_HOST');
     }
 
-    /**
-     * @return string
-     */
+    /** Get request URI. */
     public static function getRequestUri(): string
     {
         return self::getHeader('REQUEST_URI');
     }
 
-    /**
-     * Get client IP address from standard headers.
-     *
-     * @return string
-     */
+    /** Get client IP address from standard headers. */
     public static function getIp(): string
     {
         $headers = [
@@ -218,12 +146,7 @@ class HeaderReader
         return 'unknown';
     }
 
-    /**
-     * Generic header getter with sanitization.
-     *
-     * @param string $key
-     * @return string
-     */
+    /** Generic header getter with sanitization. */
     public static function getHeader(string $key): string
     {
         if (!isset($_SERVER[$key]) || !is_string($_SERVER[$key])) {
@@ -233,12 +156,7 @@ class HeaderReader
         return sanitize_text_field(wp_unslash($_SERVER[$key]));
     }
 
-    /**
-     * Check if header exists and is not empty.
-     *
-     * @param string $key
-     * @return bool
-     */
+    /** Check if header exists and is not empty. */
     public static function hasHeader(string $key): bool
     {
         return isset($_SERVER[$key]) && is_string($_SERVER[$key]) && $_SERVER[$key] !== '';

@@ -5,55 +5,38 @@ namespace ProactiveSiteAdvisor\CLI;
 use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
 use ProactiveSiteAdvisor\CLI\Commands\SeedCommand;
 use ProactiveSiteAdvisor\CLI\Commands\TruncateCommand;
-use WP_CLI;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class CLIManager
- *
  * Manages WP-CLI command registration.
  *
+ * @see    \WP_CLI
  * @package ProactiveSiteAdvisor\CLI
- * @version 1.0.0
+ * @since   1.0.0
  */
 class CLIManager extends AbstractSingleton
 {
-    /**
-     * Command namespace.
-     *
-     * @var string
-     */
+    /** Command namespace. */
     private string $namespace = 'proactive-site-advisor';
 
-    /**
-     * Registered commands.
-     *
-     * @var array
-     */
+    /** Registered commands. */
     private array $commands = [
         'seed'     => SeedCommand::class,
         'truncate' => TruncateCommand::class,
     ];
 
-    /**
-     * Register CLI commands.
-     *
-     * @return void
-     */
+    /** Register CLI commands. */
     public function register(): void
     {
-        if (!$this->isCliAvailable()) {
-            return;
-        }
-
         /**
-         * Filter the registered CLI commands.
+         * Filters the registered CLI commands.
          *
          * @param array $commands Array of command name => class mappings.
          * @param string $namespace Command namespace.
+         * @since  1.0.0
          */
         $commands = apply_filters('proactive_site_advisor_cli_commands', $this->commands, $this->namespace);
 
@@ -62,17 +45,13 @@ class CLIManager extends AbstractSingleton
                 continue;
             }
 
-            WP_CLI::add_command("{$this->namespace} {$name}", $class);
+            if (class_exists('WP_CLI')) {
+                \WP_CLI::add_command("$this->namespace $name", $class);
+            }
         }
     }
 
-    /**
-     * Add a command.
-     *
-     * @param string $name Command name.
-     * @param string $class Command class.
-     * @return self
-     */
+    /** Add a command. */
     public function addCommand(string $name, string $class): self
     {
         $this->commands[$name] = $class;
@@ -80,12 +59,7 @@ class CLIManager extends AbstractSingleton
         return $this;
     }
 
-    /**
-     * Remove a command.
-     *
-     * @param string $name Command name.
-     * @return self
-     */
+    /** Remove a command. */
     public function removeCommand(string $name): self
     {
         unset($this->commands[$name]);
@@ -93,33 +67,15 @@ class CLIManager extends AbstractSingleton
         return $this;
     }
 
-    /**
-     * Get registered commands.
-     *
-     * @return array
-     */
+    /** Get registered commands. */
     public function getCommands(): array
     {
         return $this->commands;
     }
 
-    /**
-     * Get the command namespace.
-     *
-     * @return string
-     */
+    /** Get the command namespace. */
     public function getNamespace(): string
     {
         return $this->namespace;
-    }
-
-    /**
-     * Check if WP-CLI is available.
-     *
-     * @return bool
-     */
-    private function isCliAvailable(): bool
-    {
-        return defined('WP_CLI') && WP_CLI && class_exists('WP_CLI');
     }
 }

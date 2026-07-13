@@ -11,55 +11,33 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DateTimeUtils
+ * Utility class for handling date and time operations with WordPress timezone support.
  *
- * A utility class for handling date and time operations with WordPress timezone support.
- *
- * @package MyStarterPlugin\Utils
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Utils
+ * @since   1.0.0
  */
 class DateTimeUtils
 {
-    /**
-     * Common date format constants.
-     */
+    /** Common date format constants. */
     public const FORMAT_DATE     = 'Y-m-d';
     public const FORMAT_TIME     = 'H:i:s';
     public const FORMAT_DATETIME = 'Y-m-d H:i:s';
     public const FORMAT_ISO8601  = 'c';
     public const FORMAT_KEY      = 'Ymd';
 
-    /**
-     * Get today's date in the WordPress timezone.
-     *
-     * @param string $format Optional. PHP date format. Default 'Y-m-d'.
-     * @param bool $utc Whether to return UTC time instead of local time. Default true.
-     * @return string The formatted date string.
-     */
+    /** Get today's date in the WordPress timezone. */
     public static function today(string $format = self::FORMAT_DATE, bool $utc = true): string
     {
         return self::now($format, $utc);
     }
 
-    /**
-     * Get today's date as a key string (Ymd format).
-     *
-     * Useful for generating date-based keys or identifiers.
-     *
-     * @return string The date key (e.g., '20251231').
-     */
+    /** Get today's date as a key string (Ymd format). */
     public static function todayKey(): string
     {
         return self::today(self::FORMAT_KEY, false);
     }
 
-    /**
-     * Get the current date and time in the WordPress timezone.
-     *
-     * @param string $format Optional. PHP date format. Default 'Y-m-d H:i:s'.
-     * @param bool $utc Whether to return UTC time instead of local time. Default true.
-     * @return string The formatted datetime string.
-     */
+    /** Get the current date and time in the WordPress timezone. */
     public static function now(string $format = self::FORMAT_DATETIME, bool $utc = true): string
     {
         if ($utc) {
@@ -69,54 +47,31 @@ class DateTimeUtils
         return current_datetime()->format($format);
     }
 
-    /**
-     * Get the current timestamp adjusted for WordPress timezone.
-     *
-     * @return int Unix timestamp.
-     */
+    /** Get the current timestamp adjusted for WordPress timezone. */
     public static function timestamp(): int
     {
         return current_datetime()->getTimestamp();
     }
 
-    /**
-     * Get the current date and time as a DateTimeImmutable object in the WordPress timezone.
-     * Wrapper around WordPress's current_datetime() function.
-     *
-     * @return DateTimeImmutable The current DateTime in WordPress timezone.
-     */
+    /** Get the current date and time as a DateTimeImmutable object in the WordPress timezone. */
     public static function current(): DateTimeImmutable
     {
         return current_datetime();
     }
 
-    /**
-     * Get the WordPress timezone as a DateTimeZone object.
-     *
-     * @return DateTimeZone The WordPress timezone.
-     */
+    /** Get the WordPress timezone as a DateTimeZone object. */
     public static function getTimezone(): DateTimeZone
     {
         return wp_timezone();
     }
 
-    /**
-     * Get the WordPress timezone string.
-     *
-     * @return string The timezone string (e.g., 'America/New_York' or 'UTC+5').
-     */
+    /** Get the WordPress timezone string. */
     public static function getTimezoneString(): string
     {
         return wp_timezone_string();
     }
 
-    /**
-     * Format a date/time value to the WordPress timezone.
-     *
-     * @param string|int|DateTimeImmutable $date The date to format. Can be a string, timestamp, or DateTimeImmutable.
-     * @param string $format Optional. PHP date format. Default 'Y-m-d H:i:s'.
-     * @return string|false The formatted date string, or false on failure.
-     */
+    /** Format a date/time value to the WordPress timezone. */
     public static function format($date, string $format = self::FORMAT_DATETIME)
     {
         $datetime = self::createDateTime($date);
@@ -128,15 +83,7 @@ class DateTimeUtils
         return $datetime->setTimezone(self::getTimezone())->format($format);
     }
 
-    /**
-     * Convert a date from one timezone to another.
-     *
-     * @param string|int|DateTimeImmutable $date The date to convert.
-     * @param string $fromTz The source timezone string.
-     * @param string $toTz The target timezone string. Use 'wp' for WordPress timezone.
-     * @param string $format Optional. PHP date format. Default 'Y-m-d H:i:s'.
-     * @return string|false The converted date string, or false on failure.
-     */
+    /** Convert a date from one timezone to another. */
     public static function convert($date, string $fromTz, string $toTz, string $format = self::FORMAT_DATETIME)
     {
         try {
@@ -155,37 +102,19 @@ class DateTimeUtils
         }
     }
 
-    /**
-     * Convert a UTC date/time to the WordPress timezone.
-     *
-     * @param string|int|DateTimeImmutable $date The UTC date to convert.
-     * @param string $format Optional. PHP date format. Default 'Y-m-d H:i:s'.
-     * @return string|false The converted date string, or false on failure.
-     */
+    /** Convert a UTC date/time to the WordPress timezone. */
     public static function utcToLocal($date, string $format = self::FORMAT_DATETIME)
     {
         return self::convert($date, 'UTC', 'wp', $format);
     }
 
-    /**
-     * Convert a WordPress local date/time to UTC.
-     *
-     * @param string|int|DateTimeImmutable $date The local date to convert.
-     * @param string $format Optional. PHP date format. Default 'Y-m-d H:i:s'.
-     * @return string|false The converted date string, or false on failure.
-     */
+    /** Convert a WordPress local date/time to UTC. */
     public static function localToUtc($date, string $format = self::FORMAT_DATETIME)
     {
         return self::convert($date, self::getTimezoneString(), 'UTC', $format);
     }
 
-    /**
-     * Create a DateTimeImmutable object from various input types.
-     *
-     * @param string|int|DateTimeImmutable $date The date input.
-     * @param DateTimeZone|null $timezone Optional. The timezone to use.
-     * @return DateTimeImmutable|false The DateTimeImmutable object, or false on failure.
-     */
+    /** Create a DateTimeImmutable object from various input types. */
     private static function createDateTime($date, ?DateTimeZone $timezone = null)
     {
         try {

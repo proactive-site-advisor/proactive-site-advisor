@@ -15,22 +15,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyStatsFlusher
- *
  * Executes the daily statistics routine.
- * Since metrics are now written directly to the database in real-time,
- * this class only triggers insights generation and records the last run.
  *
- * @package ProactiveSiteAdvisor\Services\Cron
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Services\Insights\Crons
+ * @since   1.0.0
  */
 class DailyStatsFlusher extends AbstractSingleton
 {
-    /**
-     * Execute the daily routine.
-     *
-     * @return void
-     */
+    /** Execute the daily routine. */
     public function run(): void
     {
         $cache = CacheManager::instance();

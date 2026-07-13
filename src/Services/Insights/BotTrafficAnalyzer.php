@@ -7,24 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BotTrafficAnalyzer
- *
- * Detects abnormal bot traffic changes by comparing today's bot
- * pageviews against the historical baseline average.
+ * Detects abnormal bot traffic changes.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @since   1.0.0
  */
 class BotTrafficAnalyzer
 {
-    /**
-     * Analyze today's bot traffic against the baseline average.
-     *
-     * @param int $todayBotPv Bot pageviews today.
-     * @param float $avgBotPv Average daily bot pageviews (baseline).
-     *
-     * @return array
-     */
+    /** Analyze today's bot traffic against the baseline average. */
     public function analyze(int $todayBotPv, float $avgBotPv): array
     {
         if ($avgBotPv <= 0) {

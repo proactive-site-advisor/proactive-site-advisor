@@ -9,80 +9,38 @@ if (!defined('ABSPATH')) {
 use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 /**
- * Class TableSchema
- *
  * Fluent interface for building database table schemas.
  *
  * @package ProactiveSiteAdvisor\Database
- * @version 1.0.0
+ * @since   1.0.0
  */
 class TableSchema
 {
-    /**
-     * Table name (without prefix)
-     *
-     * @var string
-     */
+    /** Table name (without prefix) */
     private string $name;
 
-    /**
-     * Table columns
-     *
-     * @var array
-     */
+    /** Table columns */
     private array $columns = [];
 
-    /**
-     * Current column being defined
-     *
-     * @var string|null
-     */
+    /** Current column being defined */
     private ?string $currentColumn = null;
 
-    /**
-     * Primary key column
-     *
-     * @var string|null
-     */
+    /** Primary key column */
     private ?string $primaryKey = null;
 
-    /**
-     * Table indexes
-     *
-     * @var array
-     */
+    /** Table indexes */
     private array $indexes = [];
 
-    /**
-     * Unique indexes
-     *
-     * @var array
-     */
+    /** Unique indexes */
     private array $uniqueIndexes = [];
 
-    /**
-     * Foreign keys
-     *
-     * @var array
-     */
-    private array $foreignKeys = [];
-
-    /**
-     * TableSchema constructor.
-     *
-     * @param string $name Table name (without prefix).
-     */
+    /** Constructor. */
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    /**
-     * Add an auto-incrementing primary key column.
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add an auto-incrementing primary key column. */
     public function id(string $name = 'id'): self
     {
         $this->columns[$name] = [
@@ -98,13 +56,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a BIGINT column.
-     *
-     * @param string $name Column name.
-     * @param bool $unsigned Whether unsigned.
-     * @return self
-     */
+    /** Add a BIGINT column. */
     public function bigInt(string $name, bool $unsigned = true): self
     {
         $this->columns[$name] = [
@@ -118,13 +70,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add an INT column.
-     *
-     * @param string $name Column name.
-     * @param bool $unsigned Whether unsigned.
-     * @return self
-     */
+    /** Add an INT column. */
     public function int(string $name, bool $unsigned = true): self
     {
         $this->columns[$name] = [
@@ -138,13 +84,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a TINYINT column.
-     *
-     * @param string $name Column name.
-     * @param bool $unsigned Whether unsigned.
-     * @return self
-     */
+    /** Add a TINYINT column. */
     public function tinyInt(string $name, bool $unsigned = true): self
     {
         $this->columns[$name] = [
@@ -158,13 +98,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a VARCHAR column.
-     *
-     * @param string $name Column name.
-     * @param int $length Maximum length.
-     * @return self
-     */
+    /** Add a VARCHAR column. */
     public function varchar(string $name, int $length = 255): self
     {
         $this->columns[$name] = [
@@ -177,12 +111,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a TEXT column.
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a TEXT column. */
     public function text(string $name): self
     {
         $this->columns[$name] = [
@@ -194,12 +123,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a LONGTEXT column.
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a LONGTEXT column. */
     public function longText(string $name): self
     {
         $this->columns[$name] = [
@@ -211,12 +135,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a DATETIME column.
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a DATETIME column. */
     public function datetime(string $name): self
     {
         $this->columns[$name] = [
@@ -228,12 +147,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a DATE column.
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a DATE column. */
     public function date(string $name): self
     {
         $this->columns[$name] = [
@@ -245,12 +159,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a TIMESTAMP column.
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a TIMESTAMP column. */
     public function timestamp(string $name): self
     {
         $this->columns[$name] = [
@@ -263,12 +172,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a BOOLEAN column (TINYINT(1)).
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a BOOLEAN column (TINYINT(1)). */
     public function boolean(string $name): self
     {
         $this->columns[$name] = [
@@ -283,14 +187,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a DECIMAL column.
-     *
-     * @param string $name Column name.
-     * @param int $precision Total digits.
-     * @param int $scale Decimal places.
-     * @return self
-     */
+    /** Add a DECIMAL column. */
     public function decimal(string $name, int $precision = 10, int $scale = 2): self
     {
         $this->columns[$name] = [
@@ -304,12 +201,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a JSON column (LONGTEXT for compatibility).
-     *
-     * @param string $name Column name.
-     * @return self
-     */
+    /** Add a JSON column (LONGTEXT for compatibility). */
     public function json(string $name): self
     {
         $this->columns[$name] = [
@@ -321,11 +213,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Make the current column nullable.
-     *
-     * @return self
-     */
+    /** Make the current column nullable. */
     public function nullable(): self
     {
         if ($this->currentColumn) {
@@ -335,12 +223,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Set a default value for the current column.
-     *
-     * @param mixed $value Default value.
-     * @return self
-     */
+    /** Set a default value for the current column. */
     public function default($value): self
     {
         if ($this->currentColumn) {
@@ -350,11 +233,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Make the current column unsigned.
-     *
-     * @return self
-     */
+    /** Make the current column unsigned. */
     public function unsigned(): self
     {
         if ($this->currentColumn) {
@@ -364,12 +243,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Set the primary key.
-     *
-     * @param string $column Column name.
-     * @return self
-     */
+    /** Set the primary key. */
     public function primaryKey(string $column): self
     {
         $this->primaryKey = $column;
@@ -377,13 +251,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add an index.
-     *
-     * @param string $name Index name.
-     * @param array $columns Column names.
-     * @return self
-     */
+    /** Add an index. */
     public function index(string $name, array $columns): self
     {
         $this->indexes[$name] = $columns;
@@ -391,13 +259,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a unique index.
-     *
-     * @param string $name Index name.
-     * @param array $columns Column names.
-     * @return self
-     */
+    /** Add a unique index. */
     public function unique(string $name, array $columns): self
     {
         $this->uniqueIndexes[$name] = $columns;
@@ -405,30 +267,7 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Add a foreign key.
-     *
-     * @param string $column Local column.
-     * @param string $referenceTable Referenced table.
-     * @param string $referenceColumn Referenced column.
-     * @return self
-     */
-    public function foreignKey(string $column, string $referenceTable, string $referenceColumn = 'id'): self
-    {
-        $this->foreignKeys[] = [
-            'column'           => $column,
-            'reference_table'  => $referenceTable,
-            'reference_column' => $referenceColumn,
-        ];
-
-        return $this;
-    }
-
-    /**
-     * Add created_at and updated_at timestamp columns.
-     *
-     * @return self
-     */
+    /** Add created_at and updated_at timestamp columns. */
     public function timestamps(): self
     {
         $this->columns['created_at'] = [
@@ -445,21 +284,13 @@ class TableSchema
         return $this;
     }
 
-    /**
-     * Get the table name (without prefix).
-     *
-     * @return string
-     */
+    /** Get the table name (without prefix). */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Get the full table name with WordPress prefix.
-     *
-     * @return string
-     */
+    /** Get the full table name with WordPress prefix. */
     public function getFullName(): string
     {
         global $wpdb;
@@ -467,11 +298,7 @@ class TableSchema
         return $wpdb->prefix . PrefixConfig::table($this->name);
     }
 
-    /**
-     * Build the SQL CREATE TABLE statement.
-     *
-     * @return string
-     */
+    /** Build the SQL CREATE TABLE statement. */
     public function toSql(): string
     {
         global $wpdb;
@@ -482,45 +309,34 @@ class TableSchema
         $tableName = $this->getFullName();
         $lines     = [];
 
-        // Build column definitions
         foreach ($this->columns as $name => $definition) {
             $lines[] = $this->buildColumnSql($name, $definition);
         }
 
-        // Add primary key
         if ($this->primaryKey) {
-            $lines[] = "PRIMARY KEY ({$this->primaryKey})";
+            $lines[] = "PRIMARY KEY ($this->primaryKey)";
         }
 
-        // Add indexes
         foreach ($this->indexes as $name => $columns) {
             $columnList = implode(', ', $columns);
-            $lines[]    = "INDEX {$name} ({$columnList})";
+            $lines[]    = "INDEX $name ($columnList)";
         }
 
-        // Add unique indexes
         foreach ($this->uniqueIndexes as $name => $columns) {
             $columnList = implode(', ', $columns);
-            $lines[]    = "UNIQUE KEY {$name} ({$columnList})";
+            $lines[]    = "UNIQUE KEY $name ($columnList)";
         }
 
         $columnsSql = implode(",\n  ", $lines);
 
-        return "CREATE TABLE {$tableName} (\n  {$columnsSql}\n) DEFAULT CHARACTER SET {$charset} COLLATE {$collate};";
+        return "CREATE TABLE $tableName (\n  $columnsSql\n) DEFAULT CHARACTER SET $charset COLLATE $collate;";
     }
 
-    /**
-     * Build SQL for a single column.
-     *
-     * @param string $name Column name.
-     * @param array $definition Column definition.
-     * @return string
-     */
+    /** Build SQL for a single column. */
     private function buildColumnSql(string $name, array $definition): string
     {
         $sql = $name . ' ';
 
-        // Type with length/precision
         if (isset($definition['precision'], $definition['scale'])) {
             $sql .= "{$definition['type']}({$definition['precision']},{$definition['scale']})";
         } elseif (isset($definition['length'])) {
@@ -529,20 +345,16 @@ class TableSchema
             $sql .= $definition['type'];
         }
 
-        // Unsigned
         if (!empty($definition['unsigned'])) {
             $sql .= ' UNSIGNED';
         }
 
-        // Nullable
         $sql .= $definition['nullable'] ? ' NULL' : ' NOT NULL';
 
-        // Auto increment
         if (!empty($definition['auto_increment'])) {
             $sql .= ' AUTO_INCREMENT';
         }
 
-        // Default value
         if (array_key_exists('default', $definition)) {
             $default = $definition['default'];
             if ($default === 'CURRENT_TIMESTAMP') {

@@ -7,18 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class PageviewSignal
+ * Determines if the current request should be collected as a pageview.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class PageviewSignal
 {
-    /**
-     * Determines if the current request should be collected.
-     *
-     * @return bool
-     */
+    /** Determines if the current request should be collected. */
     public static function shouldCollect(): bool
     {
         if (
@@ -63,11 +59,7 @@ class PageviewSignal
         return $path !== null && $extension === '';
     }
 
-    /**
-     * Checks if the current user should be excluded.
-     *
-     * @return bool
-     */
+    /** Checks if the current user should be excluded. */
     private static function isExcludedUser(): bool
     {
         if (!is_user_logged_in()) {
@@ -93,9 +85,10 @@ class PageviewSignal
         ];
 
         /**
-         * Filter excluded user roles.
+         * Filters excluded user roles.
          *
          * @param string[] $defaultRoles
+         * @since  1.0.0
          */
         $excludedRoles = apply_filters(
             'proactive_site_advisor_excluded_user_roles',

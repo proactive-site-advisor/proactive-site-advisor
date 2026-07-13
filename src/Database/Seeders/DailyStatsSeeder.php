@@ -10,54 +10,34 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyStatsSeeder
- *
  * Seeds the daily_stats table with fake traffic data.
  *
  * @package ProactiveSiteAdvisor\Database\Seeders
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DailyStatsSeeder extends AbstractSeeder
 {
-    /**
-     * Table name.
-     *
-     * @var string
-     */
+    /** Table name. */
     protected string $table = 'daily_stats';
 
-    /**
-     * Seeder priority (runs first, alerts depend on stats).
-     *
-     * @var int
-     */
+    /** Seeder priority (runs first, alerts depend on stats). */
     protected int $priority = 5;
 
-    /**
-     * Factory instance.
-     *
-     * @var DailyStatsFactory
-     */
+    /** Factory instance. */
     private DailyStatsFactory $factory;
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public function __construct()
     {
         $this->factory = new DailyStatsFactory();
     }
 
-    /**
-     * Run the seeder.
-     *
-     * @return int Number of records created.
-     */
+    /** Run the seeder. */
     public function run(): int
     {
         $this->factory->setPattern($this->pattern);
 
-        $this->log("Seeding daily_stats with '{$this->pattern}' pattern for {$this->days} days...");
+        $this->log("Seeding daily_stats with '$this->pattern' pattern for $this->days days...");
 
         $dates = $this->getDateRange();
         $count = 0;
@@ -71,7 +51,7 @@ class DailyStatsSeeder extends AbstractSeeder
             }
         }
 
-        $this->success("Created {$count} daily_stats records");
+        $this->success("Created $count daily_stats records");
 
         return $count;
     }

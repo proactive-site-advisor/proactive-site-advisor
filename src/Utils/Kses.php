@@ -7,20 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Kses
- *
  * Centralized HTML escaping utility for plugin admin pages.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class Kses
 {
-    /**
-     * Additional allowed HTML tags and attributes.
-     *
-     * @return array
-     */
+    /** Additional allowed HTML tags and attributes. */
     private static function customTags(): array
     {
         return [
@@ -77,11 +71,7 @@ class Kses
         ];
     }
 
-    /**
-     * Allowed HTML tags and attributes for the plugin.
-     *
-     * @return array
-     */
+    /** Allowed HTML tags and attributes for the plugin. */
     public static function allowedHtml(): array
     {
         $allowed = wp_kses_allowed_html('post');

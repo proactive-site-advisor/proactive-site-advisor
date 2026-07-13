@@ -12,28 +12,29 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class TrafficEngine
+ * Detects and classifies traffic as human, bot, or suspicious.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic
- * @version 1.0.0
+ * @since   1.0.0
  */
 class TrafficEngine
 {
-    /**
-     * @var array
-     */
+    /** Runtime cache for signal results. */
     private static array $cache = [];
 
-    private const HUMAN      = 'is_human';
-    private const BOT        = 'is_bot';
-    private const SUSPICIOUS = 'is_suspicious';
-    private const LOG_404    = 'should_log_404';
+    /** Cache key for human detection. */
+    private const HUMAN = 'is_human';
 
-    /**
-     * Determines if the current request is from a human.
-     *
-     * @return bool
-     */
+    /** Cache key for bot detection. */
+    private const BOT = 'is_bot';
+
+    /** Cache key for suspicious score. */
+    private const SUSPICIOUS = 'is_suspicious';
+
+    /** Cache key for 404 logging decision. */
+    private const LOG_404 = 'should_log_404';
+
+    /** Determines if the current request is from a human. */
     public static function isHuman(): bool
     {
         if (array_key_exists(self::HUMAN, self::$cache)) {
@@ -55,11 +56,7 @@ class TrafficEngine
         return self::$cache[self::HUMAN] = true;
     }
 
-    /**
-     * Determines if 404 should be logged.
-     *
-     * @return bool
-     */
+    /** Determines if 404 should be logged. */
     public static function shouldLog404(): bool
     {
         if (array_key_exists(self::LOG_404, self::$cache)) {
@@ -81,11 +78,7 @@ class TrafficEngine
         return self::$cache[self::LOG_404] = true;
     }
 
-    /**
-     * Checks all bot signals.
-     *
-     * @return bool
-     */
+    /** Checks all bot signals. */
     private static function detectBot(): bool
     {
         if (array_key_exists(self::BOT, self::$cache)) {
@@ -105,11 +98,7 @@ class TrafficEngine
         return self::$cache[self::BOT] = false;
     }
 
-    /**
-     * Calculates total suspicion score.
-     *
-     * @return bool
-     */
+    /** Calculates total suspicion score. */
     private static function hasSuspicionScore(): bool
     {
         if (array_key_exists(self::SUSPICIOUS, self::$cache)) {

@@ -7,23 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class TrafficAnalyzer
- *
- * Detects abnormal traffic changes by comparing today's pageviews with the historical baseline average.
+ * Detects abnormal traffic changes.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @since   1.0.0
  */
 class TrafficAnalyzer
 {
-    /**
-     * Analyzes today's traffic against the baseline average.
-     *
-     * @param int $todayPv
-     * @param float $avgPv
-     *
-     * @return array
-     */
+    /** Analyzes today's traffic against the baseline average. */
     public function analyze(int $todayPv, float $avgPv): array
     {
         if ($avgPv <= 0) {

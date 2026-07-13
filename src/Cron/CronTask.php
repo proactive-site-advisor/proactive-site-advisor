@@ -9,64 +9,32 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class CronTask
- *
  * Represents a single cron task configuration.
  *
  * @package ProactiveSiteAdvisor\Cron
- * @version 1.0.0
+ * @since   1.0.0
  */
 class CronTask
 {
-    /**
-     * Task hook name
-     *
-     * @var string
-     */
+    /** Task hook name. */
     private string $hook;
 
-    /**
-     * Callback function
-     *
-     * @var callable
-     */
-    private $callback; // Mixed type: callable
+    /** Callback function. */
+    private $callback;
 
-    /**
-     * Recurrence interval
-     *
-     * @var string
-     */
+    /** Recurrence interval. */
     private string $recurrence;
 
-    /**
-     * First run timestamp
-     *
-     * @var int
-     */
+    /** First run timestamp. */
     private int $firstRun;
 
-    /**
-     * Arguments to pass to callback
-     *
-     * @var array
-     */
+    /** Arguments to pass to callback. */
     private array $args = [];
 
-    /**
-     * Whether task is enabled
-     *
-     * @var bool
-     */
+    /** Whether task is enabled. */
     private bool $enabled = true;
 
-    /**
-     * CronTask constructor.
-     *
-     * @param string $hook Task hook name.
-     * @param callable $callback Callback function.
-     * @param string $recurrence Recurrence interval.
-     */
+    /** Constructor. */
     public function __construct(string $hook, callable $callback, string $recurrence = 'hourly')
     {
         $this->hook       = $hook;
@@ -75,105 +43,62 @@ class CronTask
         $this->firstRun   = DateTimeUtils::timestamp();
     }
 
-    /**
-     * Create a new cron task.
-     *
-     * @param string $hook Task hook name.
-     * @param callable $callback Callback function.
-     * @param string $recurrence Recurrence interval.
-     * @return self
-     */
+    /** Create a new cron task. */
     public static function make(string $hook, callable $callback, string $recurrence = 'hourly'): self
     {
         return new self($hook, $callback, $recurrence);
     }
 
-    /**
-     * Set the recurrence interval.
-     *
-     * @param string $recurrence Recurrence interval.
-     * @return self
-     */
+    /** Set the recurrence interval. */
     public function recurrence(string $recurrence): self
     {
         $this->recurrence = $recurrence;
         return $this;
     }
 
-    /**
-     * Set hourly recurrence.
-     *
-     * @return self
-     */
+    /** Set hourly recurrence. */
     public function hourly(): self
     {
         $this->recurrence = 'hourly';
         return $this;
     }
 
-    /**
-     * Set twice daily recurrence.
-     *
-     * @return self
-     */
+    /** Set twice daily recurrence. */
     public function twiceDaily(): self
     {
         $this->recurrence = 'twicedaily';
         return $this;
     }
 
-    /**
-     * Set daily recurrence.
-     *
-     * @return self
-     */
+    /** Set daily recurrence. */
     public function daily(): self
     {
         $this->recurrence = 'daily';
         return $this;
     }
 
-    /**
-     * Set weekly recurrence.
-     *
-     * @return self
-     */
+    /** Set weekly recurrence. */
     public function weekly(): self
     {
         $this->recurrence = 'weekly';
         return $this;
     }
 
-    /**
-     * Set the first run time.
-     *
-     * @param int $timestamp Unix timestamp.
-     * @return self
-     */
+    /** Set the first run time. */
     public function startAt(int $timestamp): self
     {
         $this->firstRun = $timestamp;
         return $this;
     }
 
-    /**
-     * Set first run to now.
-     *
-     * @return self
-     */
+    /** Set first run to now. */
     public function startNow(): self
     {
         $this->firstRun = DateTimeUtils::timestamp();
         return $this;
     }
 
-    /**
-     * Set first run to a specific time today (WordPress timezone aware).
-     *
-     * @param int $hour Hour (0-23).
-     * @param int $minute Minute (0-59).
-     * @return self
-     */
+    /** Set first run to a specific time today (WordPress timezone aware). */
     public function startTodayAt(int $hour, int $minute = 0): self
     {
         $now         = DateTimeUtils::current();
@@ -188,115 +113,70 @@ class CronTask
         return $this;
     }
 
-    /**
-     * Set callback arguments.
-     *
-     * @param array $args Arguments to pass to callback.
-     * @return self
-     */
+    /** Set callback arguments. */
     public function args(array $args): self
     {
         $this->args = $args;
         return $this;
     }
 
-    /**
-     * Enable the task.
-     *
-     * @return self
-     */
+    /** Enable the task. */
     public function enable(): self
     {
         $this->enabled = true;
         return $this;
     }
 
-    /**
-     * Disable the task.
-     *
-     * @return self
-     */
+    /** Disable the task. */
     public function disable(): self
     {
         $this->enabled = false;
         return $this;
     }
 
-    /**
-     * Get the hook name.
-     *
-     * @return string
-     */
+    /** Get the hook name. */
     public function getHook(): string
     {
         return $this->hook;
     }
 
-    /**
-     * Get the callback.
-     *
-     * @return callable
-     */
+    /** Get the callback. */
     public function getCallback(): callable
     {
         return $this->callback;
     }
 
-    /**
-     * Get the recurrence.
-     *
-     * @return string
-     */
+    /** Get the recurrence. */
     public function getRecurrence(): string
     {
         return $this->recurrence;
     }
 
-    /**
-     * Get the first run timestamp.
-     *
-     * @return int
-     */
+    /** Get the first run timestamp. */
     public function getFirstRun(): int
     {
         return $this->firstRun;
     }
 
-    /**
-     * Get the callback arguments.
-     *
-     * @return array
-     */
+    /** Get the callback arguments. */
     public function getArgs(): array
     {
         return $this->args;
     }
 
-    /**
-     * Check if task is enabled.
-     *
-     * @return bool
-     */
+    /** Check if task is enabled. */
     public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * Check if task is scheduled.
-     *
-     * @return bool
-     */
+    /** Check if task is scheduled. */
     public function isScheduled(): bool
     {
         return wp_next_scheduled($this->hook, $this->args) !== false;
     }
 
-    /**
-     * Get next scheduled run.
-     *
-     * @return int|false
-     */
+    /** Get next scheduled run. */
     public function getNextRun()
     {
         return wp_next_scheduled($this->hook, $this->args);

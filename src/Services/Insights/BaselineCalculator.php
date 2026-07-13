@@ -9,38 +9,23 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BaselineCalculator
- *
  * Computes the statistical baseline used by alert analyzers.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @since   1.0.0
  */
 class BaselineCalculator
 {
-    /**
-     * Fetches daily stats from DB.
-     *
-     * @var DailyStatsDataProvider
-     */
+    /** Fetches daily stats from DB. */
     private DailyStatsDataProvider $dailyStatsDataProvider;
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public function __construct()
     {
         $this->dailyStatsDataProvider = new DailyStatsDataProvider();
     }
 
-    /**
-     * Calculates average pageviews and 404 errors for the specified window before the given date.
-     *
-     * @param string $today
-     * @param int $days
-     *
-     * @return array
-     */
+    /** Calculates average pageviews and 404 errors for the specified window before the given date. */
     public function calculate(string $today, int $days = 7): array
     {
         $rows = $this->dailyStatsDataProvider->getDailyStatsBeforeDate($today, $days);

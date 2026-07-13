@@ -3,19 +3,17 @@
 namespace ProactiveSiteAdvisor\CLI\Commands;
 
 use ProactiveSiteAdvisor\Database\Seeders\SeederManager;
-use WP_CLI;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class SeedCommand
- *
  * WP-CLI command for database seeding.
  *
- * @package ProactiveSiteAdvisor\CLI\Commands
- * @version 1.0.0
+ * @see    \WP_CLI
+ * @package ProactiveSiteAdvisor\CLI
+ * @since   1.0.0
  */
 class SeedCommand
 {
@@ -55,31 +53,30 @@ class SeedCommand
      *
      *     # Seed only alerts with 90 days of data
      *     wp proactive-site-advisor seed --seeder=Alert --days=90
-     *
-     * @param array $args Positional arguments.
-     * @param array $assocArgs Associative arguments.
-     * @return void
      */
     public function __invoke(array $args, array $assocArgs): void
     {
+        if (!class_exists('WP_CLI')) {
+            return;
+        }
+
         $options = $this->validateOptions($assocArgs);
 
-        WP_CLI::log('');
-        WP_CLI::log('Proactive Site Advisor Database Seeder');
-        WP_CLI::log('===========================');
-        WP_CLI::log('');
+        \WP_CLI::log('');
+        \WP_CLI::log('Proactive Site Advisor Database Seeder');
+        \WP_CLI::log('===========================');
+        \WP_CLI::log('');
 
         $manager = SeederManager::instance();
 
-        // Show configuration
-        WP_CLI::log("Pattern: {$options['pattern']}");
-        WP_CLI::log("Days: {$options['days']}");
+        \WP_CLI::log("Pattern: {$options['pattern']}");
+        \WP_CLI::log("Days: {$options['days']}");
 
         if (!empty($options['seeder'])) {
-            WP_CLI::log("Seeder: {$options['seeder']}");
+            \WP_CLI::log("Seeder: {$options['seeder']}");
         }
 
-        WP_CLI::log('');
+        \WP_CLI::log('');
 
         $startTime = microtime(true);
 
@@ -88,32 +85,27 @@ class SeedCommand
 
             if ($count === null) {
                 $available = implode(', ', $manager->getAvailableSeederNames());
-                WP_CLI::error("Seeder '{$options['seeder']}' not found. Available: {$available}");
+                \WP_CLI::error("Seeder '{$options['seeder']}' not found. Available: $available");
 
                 return;
             }
 
-            WP_CLI::log("Records created: {$count}");
+            \WP_CLI::log("Records created: $count");
         } else {
             $results = $manager->runAll($options);
 
             $totalRecords = array_sum($results);
-            WP_CLI::log('');
-            WP_CLI::log("Total records created: {$totalRecords}");
+            \WP_CLI::log('');
+            \WP_CLI::log("Total records created: $totalRecords");
         }
 
         $elapsed = round(microtime(true) - $startTime, 2);
 
-        WP_CLI::log('');
-        WP_CLI::success("Seeding completed in {$elapsed}s");
+        \WP_CLI::log('');
+        \WP_CLI::success("Seeding completed in {$elapsed}s");
     }
 
-    /**
-     * Validate command options.
-     *
-     * @param array $assocArgs Associative arguments.
-     * @return array Validated options.
-     */
+    /** Validate command options. */
     private function validateOptions(array $assocArgs): array
     {
         $days = isset($assocArgs['days']) ? (int)$assocArgs['days'] : 30;
@@ -122,7 +114,9 @@ class SeedCommand
         $pattern = $assocArgs['pattern'] ?? 'realistic';
 
         if (!in_array($pattern, ['realistic', 'alerts'], true)) {
-            WP_CLI::warning("Invalid pattern '{$pattern}', using 'realistic'");
+            if (class_exists('WP_CLI')) {
+                \WP_CLI::warning("Invalid pattern '$pattern', using 'realistic'");
+            }
             $pattern = 'realistic';
         }
 

@@ -12,30 +12,19 @@ use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
 use ProactiveSiteAdvisor\Config\PluginOptions;
 
 /**
- * Class UninstallHandler
- *
  * Handles plugin uninstallation logic for complete cleanup.
- * This class provides methods that can be called from uninstall.php.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.3
+ * @since   1.0.0
  */
 class UninstallHandler
 {
-    /**
-     * Table schema classes used by the plugin.
-     *
-     * @var array
-     */
+    /** Table schema classes used by the plugin. */
     private static array $tableSchemas = [
         CoreTables::class,
     ];
 
-    /**
-     * Run uninstallation logic.
-     *
-     * @return void
-     */
+    /** Run uninstallation logic. */
     public static function uninstall(): void
     {
         if (!defined('WP_UNINSTALL_PLUGIN')) {
@@ -49,11 +38,7 @@ class UninstallHandler
         }
     }
 
-    /**
-     * Run uninstall for a single site.
-     *
-     * @return void
-     */
+    /** Run uninstall for a single site. */
     private static function singleUninstall(): void
     {
         self::deleteOptions();
@@ -66,15 +51,13 @@ class UninstallHandler
 
         /**
          * Fires after the plugin has been completely uninstalled.
+         *
+         * @since 1.0.0
          */
         do_action('proactive_site_advisor_uninstalled');
     }
 
-    /**
-     * Run uninstall for all sites in a network.
-     *
-     * @return void
-     */
+    /** Run uninstall for all sites in a network. */
     private static function networkUninstall(): void
     {
         global $wpdb;
@@ -89,11 +72,7 @@ class UninstallHandler
         }
     }
 
-    /**
-     * Delete all plugin options.
-     *
-     * @return void
-     */
+    /** Delete all plugin options. */
     private static function deleteOptions(): void
     {
         global $wpdb;
@@ -109,21 +88,13 @@ class UninstallHandler
         );
     }
 
-    /**
-     * Delete all user meta created by the plugin.
-     *
-     * @return void
-     */
+    /** Delete all user meta created by the plugin. */
     private static function deleteUserMeta(): void
     {
         delete_metadata('user', 0, PluginOptions::OPTION_NAME, '', true);
     }
 
-    /**
-     * Delete custom database tables.
-     *
-     * @return void
-     */
+    /** Delete custom database tables. */
     private static function deleteTables(): void
     {
         global $wpdb;
@@ -149,26 +120,13 @@ class UninstallHandler
         }
     }
 
-    /**
-     * Delete all transients.
-     *
-     * @return void
-     */
+    /** Delete all transients. */
     private static function deleteTransients(): void
     {
         CacheManager::instance()->flush();
-
-        /**
-         * Fires after transients are cleared during uninstallation.
-         */
-        do_action('proactive_site_advisor_clear_transients');
     }
 
-    /**
-     * Delete uploaded files.
-     *
-     * @return void
-     */
+    /** Delete uploaded files. */
     private static function deleteUploads(): void
     {
         $uploadDir        = wp_upload_dir();
@@ -179,17 +137,14 @@ class UninstallHandler
         }
     }
 
-    /**
-     * Clear all scheduled cron hooks.
-     *
-     * @return void
-     */
+    /** Clear all scheduled cron hooks. */
     private static function clearCronHooks(): void
     {
         /**
-         * Filter the list of cron hooks to clear on uninstall.
+         * Filters the list of cron hooks to clear on uninstall.
          *
          * @param array $hooks Array of hook names to clear.
+         * @since  1.0.0
          */
         $hooks = apply_filters('proactive_site_advisor_cron_hooks_to_clear', [
             'proactive_site_advisor_daily_cron',
@@ -198,19 +153,9 @@ class UninstallHandler
         foreach ($hooks as $hook) {
             wp_clear_scheduled_hook($hook);
         }
-
-        /**
-         * Fires after scheduled events are cleared during uninstallation.
-         */
-        do_action('proactive_site_advisor_clear_scheduled_events');
     }
 
-    /**
-     * Recursively delete a directory.
-     *
-     * @param string $dir Directory path.
-     * @return void
-     */
+    /** Recursively delete a directory. */
     private static function deleteDirectory(string $dir): void
     {
         if (!is_dir($dir)) {
@@ -238,11 +183,7 @@ class UninstallHandler
         $wp_filesystem->rmdir($dir);
     }
 
-    /**
-     * Flush rewrite rules.
-     *
-     * @return void
-     */
+    /** Flush rewrite rules. */
     private static function flushRewriteRules(): void
     {
         flush_rewrite_rules();

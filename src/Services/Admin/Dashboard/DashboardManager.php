@@ -13,29 +13,21 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DashboardManager
+ * Manages the dashboard page registration and hooks.
  *
  * @package ProactiveSiteAdvisor\Services\Admin\Dashboard
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DashboardManager
 {
-    /**
-     * Register hooks and filters.
-     *
-     * @return void
-     */
+    /** Register hooks and filters. */
     public function register(): void
     {
         add_filter('proactive_site_advisor_menu_items', [$this, 'addMenuItem']);
         add_action('admin_init', [$this, 'handleLastSeenUpdate']);
     }
 
-    /**
-     * Update the last seen alert ID when visiting the dashboard page.
-     *
-     * @return void
-     */
+    /** Update the last seen alert ID when visiting the dashboard page. */
     public function handleLastSeenUpdate(): void
     {
         if (!PluginUtils::isPluginAdminRequest()) {
@@ -51,23 +43,17 @@ class DashboardManager
         OptionUtils::setUserOption(UserOptions::LAST_SEEN_ALERT_ID, $latestId);
     }
 
-    /**
-     * Add dashboard menu items.
-     *
-     * @param array $items Existing menu items.
-     *
-     * @return array Modified menu items.
-     */
+    /** Add dashboard menu items. */
     public function addMenuItem(array $items): array
     {
         $icon = 'data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIj4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmM2YxZjEiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgCiAgICA8cGF0aCBkPSJNMiAxMCBBOCA4IDAgMCAxIDE3IDEwIiBzdHJva2Utd2lkdGg9IjIuNSIvPgogICAgCiAgICA8Y2lyY2xlIGN4PSI5IiBjeT0iMTUiIHI9IjQiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjUiLz4KICAgIAogICAgPGNpcmNsZSBjeD0iOSIgY3k9IjE1IiByPSIxLjIiIGZpbGw9IiNmM2YxZjEiIHN0cm9rZT0ibm9uZSIvPgogICAgCiAgICA8Y2lyY2xlIGN4PSIxMCIgY3k9IjQuOCIgcj0iMyIgZmlsbD0iI2YzZjFmMSIgc3Ryb2tlPSJub25lIi8+CiAgICAKICAgIDxjaXJjbGUgY3g9IjE3LjgiIGN5PSIxMiIgcj0iMi4yIiBmaWxsPSIjZjNmMWYxIiBzdHJva2U9Im5vbmUiLz4KICAgIAogIDwvZz4KPC9zdmc+';
 
         /**
-         * Apply a filter to determine the position of the plugin menu item.
+         * Filters the position of the plugin menu item.
          *
-         * @param float $position The default position of the menu item in the admin menu.
-         *
-         * @return float The possibly modified position after applying filters.
+         * @param float $position The default position of the menu item.
+         * @return float
+         * @since  1.0.0
          */
         $position = apply_filters('proactive_site_advisor_plugins_menu_item_position', 66);
 

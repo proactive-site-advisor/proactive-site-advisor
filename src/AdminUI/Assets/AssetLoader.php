@@ -13,40 +13,23 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AssetLoader
- *
- * Handles the registration and enqueueing of AdminUI assets including
- * core styles/scripts and third-party vendor libraries.
+ * Handles registration and enqueueing of AdminUI assets.
  *
  * @package ProactiveSiteAdvisor\AdminUI\Assets
- * @version 1.0.0
+ * @since   1.0.0
  */
 class AssetLoader extends AbstractSingleton
 {
-    /**
-     * Whether assets have been registered.
-     *
-     * @var bool
-     */
+    /** Whether assets have been registered. */
     private bool $registered = false;
 
-    /**
-     * Whether core assets have been enqueued.
-     *
-     * @var bool
-     */
+    /** Whether core assets have been enqueued. */
     private bool $coreEnqueued = false;
 
-    /**
-     * Core asset handle.
-     */
+    /** Core asset handle. */
     private const CORE_HANDLE = 'admin-ui';
 
-    /**
-     * Register the assets manager.
-     *
-     * @return void
-     */
+    /** Register the assets manager. */
     public function register(): void
     {
         if ($this->registered) {
@@ -58,45 +41,32 @@ class AssetLoader extends AbstractSingleton
         add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
     }
 
-    /**
-     * Enqueue core AdminUI assets.
-     *
-     * @return void
-     */
+    /** Enqueue core AdminUI assets. */
     public function enqueueAssets(): void
     {
         $this->enqueueCoreAssets();
     }
 
-    /**
-     * Enqueue core AdminUI assets.
-     *
-     * @return void
-     */
+    /** Enqueue core AdminUI assets. */
     private function enqueueCoreAssets(): void
     {
-        // Prevent duplicate enqueuing
         if ($this->coreEnqueued) {
             return;
         }
 
         $handle = AssetsComponent::getHandle(self::CORE_HANDLE);
 
-        // Check if already enqueued by WordPress
         if (wp_style_is($handle) || wp_script_is($handle)) {
             $this->coreEnqueued = true;
             return;
         }
 
-        // Register and enqueue styles
         AssetsComponent::registerStyle(self::CORE_HANDLE, 'css/admin.min.css');
         AssetsComponent::enqueueStyle(self::CORE_HANDLE);
 
-        // Register and enqueue scripts
         AssetsComponent::registerScript(self::CORE_HANDLE, 'js/admin.min.js', ['jquery'], null, true);
         AssetsComponent::enqueueScript(self::CORE_HANDLE);
 
-        // Localize script with config
         AssetsComponent::localizeScript(self::CORE_HANDLE, PrefixConfig::CONFIG_OBJECT, [
             'ajaxUrl'   => admin_url('admin-ajax.php'),
             'nonce'     => AjaxComponent::createNonce(),
@@ -109,11 +79,7 @@ class AssetLoader extends AbstractSingleton
         $this->coreEnqueued = true;
     }
 
-    /**
-     * Get the current user's theme preference.
-     *
-     * @return string Theme name ('light' or 'dark').
-     */
+    /** Get the current user's theme preference. */
     public function getCurrentTheme(): string
     {
         return ThemeSwitcher::instance()->getCurrentTheme();

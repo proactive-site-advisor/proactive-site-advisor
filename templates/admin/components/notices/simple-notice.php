@@ -4,8 +4,8 @@
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  *
- * @package ProactiveSiteAdvisor
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Templates\Admin\Components\Notices
+ * @since   1.0.0
  *
  * @var string $id
  * @var string $type
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 
 $classes = [
     'psa-notice',
-    "psa-notice-{$type}",
+    "psa-notice-$type",
 ];
 
 if (!empty($dismissible)) {

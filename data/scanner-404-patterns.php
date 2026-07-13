@@ -5,7 +5,8 @@
  * Patterns that, when matched against a 404 request URI,
  * indicate a vulnerability scanner or malicious bot.
  *
- * @package ProactiveSiteAdvisor
+ * @package ProactiveSiteAdvisor\Data
+ * @since   1.0.0
  */
 
 return [

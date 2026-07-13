@@ -9,22 +9,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AlertRetention
- *
  * Handles retention policy for stored alerts.
  *
- * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Services\Insights\Maintenance
+ * @since   1.0.0
  */
 class AlertRetention
 {
-    /**
-     * Deletes alerts older than the specified date.
-     *
-     * @param string $date
-     *
-     * @return void
-     */
+    /** Deletes alerts older than the specified date. */
     public function purgeOlderThan(string $date): void
     {
         Alert::purgeOlderThan($date);

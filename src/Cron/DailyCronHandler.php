@@ -11,60 +11,36 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyCronHandler
- *
  * Central cron handler that runs daily at midnight.
- * Executes all registered daily services sequentially.
  *
  * @package ProactiveSiteAdvisor\Cron
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DailyCronHandler extends AbstractCronTask
 {
-    /**
-     * Task hook name
-     *
-     * @var string
-     */
+    /** Task hook name. */
     protected string $hook = 'proactive_site_advisor_daily_cron';
 
-    /**
-     * Recurrence interval
-     *
-     * @var string
-     */
+    /** Recurrence interval. */
     protected string $recurrence = 'daily';
 
-    /**
-     * Services to run daily.
-     * Each service must have instance() and run() methods.
-     *
-     * @var array<class-string>
-     */
+    /** Services to run daily. */
     private array $services = [];
 
-    /**
-     * Configure the cron task.
-     *
-     * @param CronTask $task The task to configure.
-     * @return void
-     */
+    /** Configure the cron task. */
     protected function configure(CronTask $task): void
     {
-        $task->startTodayAt(0); // Midnight
+        $task->startTodayAt(0);
     }
 
-    /**
-     * Execute all registered daily services.
-     *
-     * @return void
-     */
+    /** Execute all registered daily services. */
     public function handle(): void
     {
         /**
-         * Filter the daily cron services before execution.
+         * Filters the daily cron services before execution.
          *
          * @param array $services Array of service class names.
+         * @since  1.0.0
          */
         $services = apply_filters('proactive_site_advisor_daily_cron_services', $this->services);
 
@@ -72,6 +48,8 @@ class DailyCronHandler extends AbstractCronTask
 
         /**
          * Fires before any daily cron services run.
+         *
+         * @since 1.0.0
          */
         do_action('proactive_site_advisor_daily_cron_before_dispatch');
 
@@ -86,6 +64,7 @@ class DailyCronHandler extends AbstractCronTask
          * Fires after all daily cron services complete.
          *
          * @param array $results Array of service results [class => ['success' => bool, 'duration' => float]].
+         * @since  1.0.0
          */
         do_action('proactive_site_advisor_daily_cron_after_dispatch', $results);
 
@@ -94,29 +73,27 @@ class DailyCronHandler extends AbstractCronTask
 
     /**
      * Execute a single service with error handling.
-     *
-     * @param class-string $serviceClass The service class name.
-     * @return array{success: bool, duration: float, error?: string}
      */
     private function executeService(string $serviceClass): array
     {
         $serviceId = $this->getServiceId($serviceClass);
 
         /**
-         * Filter whether a specific service should run.
+         * Filters whether a specific service should run.
          *
          * @param bool $enabled Whether the service is enabled.
          * @param string $serviceId The service identifier.
+         * @since  1.0.0
          */
         $enabled = apply_filters('proactive_site_advisor_daily_cron_service_enabled', true, $serviceId);
 
         if (!$enabled) {
-            Logger::debug("Service skipped (disabled): {$serviceId}");
+            Logger::debug("Service skipped (disabled): $serviceId");
             return ['success' => true, 'duration' => 0, 'skipped' => true];
         }
 
         if (!class_exists($serviceClass)) {
-            Logger::error("Service class not found: {$serviceClass}");
+            Logger::error("Service class not found: $serviceClass");
             return ['success' => false, 'duration' => 0, 'error' => 'Class not found'];
         }
 
@@ -125,6 +102,7 @@ class DailyCronHandler extends AbstractCronTask
              * Fires before a daily cron service executes.
              *
              * @param string $serviceId The service identifier.
+             * @since  1.0.0
              */
             do_action('proactive_site_advisor_daily_cron_before_service', $serviceId);
 
@@ -139,16 +117,17 @@ class DailyCronHandler extends AbstractCronTask
              * @param string $serviceId The service identifier.
              * @param bool $success Whether the service succeeded.
              * @param float $duration Execution time in seconds.
+             * @since  1.0.0
              */
             do_action('proactive_site_advisor_daily_cron_after_service', $serviceId, true, $duration);
 
-            Logger::debug("Service completed: {$serviceId}", ['duration' => round($duration, 4)]);
+            Logger::debug("Service completed: $serviceId", ['duration' => round($duration, 4)]);
 
             return ['success' => true, 'duration' => $duration];
         } catch (Throwable $e) {
             $duration = microtime(true) - ($startTime ?? microtime(true));
 
-            Logger::error("Service failed: {$serviceId}", [
+            Logger::error("Service failed: $serviceId", [
                 'error' => $e->getMessage(),
                 'file'  => $e->getFile(),
                 'line'  => $e->getLine(),
@@ -160,6 +139,7 @@ class DailyCronHandler extends AbstractCronTask
              * @param string $serviceId The service identifier.
              * @param bool $success Whether the service succeeded.
              * @param float $duration Execution time in seconds.
+             * @since  1.0.0
              */
             do_action('proactive_site_advisor_daily_cron_after_service', $serviceId, false, $duration);
 
@@ -167,33 +147,19 @@ class DailyCronHandler extends AbstractCronTask
         }
     }
 
-    /**
-     * Get a readable service identifier from class name.
-     *
-     * @param string $serviceClass The fully qualified class name.
-     * @return string
-     */
+    /** Get a readable service identifier from class name. */
     private function getServiceId(string $serviceClass): string
     {
         return basename(str_replace('\\', '/', $serviceClass));
     }
 
-    /**
-     * Get registered services.
-     *
-     * @return array<class-string>
-     */
+    /** Get registered services. */
     public function getServices(): array
     {
         return $this->services;
     }
 
-    /**
-     * Add a service to the daily cron.
-     *
-     * @param class-string $serviceClass The service class name.
-     * @return self
-     */
+    /** Add a service to the daily cron. */
     public function addService(string $serviceClass): self
     {
         if (!in_array($serviceClass, $this->services, true)) {
@@ -202,12 +168,7 @@ class DailyCronHandler extends AbstractCronTask
         return $this;
     }
 
-    /**
-     * Remove a service from the daily cron.
-     *
-     * @param class-string $serviceClass The service class name.
-     * @return self
-     */
+    /** Remove a service from the daily cron. */
     public function removeService(string $serviceClass): self
     {
         $this->services = array_filter(

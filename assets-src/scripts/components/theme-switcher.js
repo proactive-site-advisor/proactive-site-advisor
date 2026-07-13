@@ -2,6 +2,9 @@
  * Admin UI - Theme Switcher
  *
  * Requires: namespace.js, config.js, helpers.js
+ *
+ * @fileoverview Light/dark theme switching functionality
+ * @version 1.0.0
  */
 (function (window, document) {
     'use strict';

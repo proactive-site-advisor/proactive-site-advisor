@@ -12,17 +12,12 @@ if (!defined('ABSPATH')) {
 /**
  * Fragment cache for HTML partials.
  *
- * Helps cache template fragments to reduce
- * repeated rendering overhead.
- *
  * @package ProactiveSiteAdvisor\Cache
- * @version 1.0.0
+ * @since   1.0.0
  */
 class FragmentCache
 {
-    /**
-     * Default cache expiration (seconds).
-     */
+    /** Default cache expiration (seconds). */
     public const DEFAULT_EXPIRATION = 1800;
 
     /**
@@ -32,11 +27,7 @@ class FragmentCache
      */
     private CacheManager $cache;
 
-    /**
-     * Constructor.
-     *
-     * @version 1.0.0
-     */
+    /** Constructor. */
     public function __construct()
     {
         $this->cache = CacheManager::instance();
@@ -45,15 +36,6 @@ class FragmentCache
     /**
      * Render a cached fragment.
      *
-     * If cache exists it is returned, otherwise
-     * the callback is executed and stored.
-     *
-     * @param string $key
-     * @param callable $callback
-     * @param int|null $expiration
-     * @param array<string,mixed> $vary
-     *
-     * @return void
      * @throws Throwable
      */
     public function render(string $key, callable $callback, ?int $expiration = null, array $vary = []): void
@@ -90,14 +72,7 @@ class FragmentCache
         echo wp_kses($content, Kses::allowedHtml());
     }
 
-    /**
-     * Get cached fragment without rendering.
-     *
-     * @param string $key
-     * @param array<string,mixed> $vary
-     *
-     * @return string|null
-     */
+    /** Get cached fragment without rendering. */
     public function get(string $key, array $vary = []): ?string
     {
         $fullKey = $this->buildKey($key, $vary);
@@ -105,16 +80,7 @@ class FragmentCache
         return $this->cache->get($fullKey, null, CacheGroups::FRAGMENT);
     }
 
-    /**
-     * Store fragment content.
-     *
-     * @param string $key
-     * @param string $content
-     * @param int|null $expiration
-     * @param array<string,mixed> $vary
-     *
-     * @return bool
-     */
+    /** Store fragment content. */
     public function set(string $key, string $content, ?int $expiration = null, array $vary = []): bool
     {
         $fullKey    = $this->buildKey($key, $vary);
@@ -128,14 +94,7 @@ class FragmentCache
         );
     }
 
-    /**
-     * Delete cached fragment.
-     *
-     * @param string $key
-     * @param array<string,mixed> $vary
-     *
-     * @return bool
-     */
+    /** Delete cached fragment. */
     public function delete(string $key, array $vary = []): bool
     {
         $fullKey = $this->buildKey($key, $vary);
@@ -143,14 +102,7 @@ class FragmentCache
         return $this->cache->delete($fullKey, CacheGroups::FRAGMENT);
     }
 
-    /**
-     * Check if fragment exists.
-     *
-     * @param string $key
-     * @param array<string,mixed> $vary
-     *
-     * @return bool
-     */
+    /** Check if fragment exists. */
     public function has(string $key, array $vary = []): bool
     {
         $fullKey = $this->buildKey($key, $vary);
@@ -158,14 +110,7 @@ class FragmentCache
         return $this->cache->has($fullKey, CacheGroups::FRAGMENT);
     }
 
-    /**
-     * Build fragment cache key with variations.
-     *
-     * @param string $key
-     * @param array<string,mixed> $vary
-     *
-     * @return string
-     */
+    /** Build fragment cache key with variations. */
     private function buildKey(string $key, array $vary = []): string
     {
         if (empty($vary)) {
@@ -177,21 +122,13 @@ class FragmentCache
         return CacheManager::makeKey($key, $vary);
     }
 
-    /**
-     * Vary by current user ID.
-     *
-     * @return array<string,int>
-     */
+    /** Vary by current user ID. */
     public function varyByUser(): array
     {
         return ['user_id' => get_current_user_id()];
     }
 
-    /**
-     * Vary by user roles.
-     *
-     * @return array<string,string>
-     */
+    /** Vary by user roles. */
     public function varyByRole(): array
     {
         $user  = wp_get_current_user();
@@ -202,21 +139,13 @@ class FragmentCache
         return ['roles' => implode(',', $roles)];
     }
 
-    /**
-     * Vary by locale.
-     *
-     * @return array<string,string>
-     */
+    /** Vary by locale. */
     public function varyByLocale(): array
     {
         return ['locale' => get_locale()];
     }
 
-    /**
-     * Vary by request URL.
-     *
-     * @return array<string,string>
-     */
+    /** Vary by request URL. */
     public function varyByUrl(): array
     {
         $uri = '';
@@ -228,11 +157,7 @@ class FragmentCache
         return ['url' => $uri];
     }
 
-    /**
-     * Vary by device type.
-     *
-     * @return array<string,string>
-     */
+    /** Vary by device type. */
     public function varyByDevice(): array
     {
         $device = (function_exists('wp_is_mobile') && wp_is_mobile())
@@ -242,16 +167,9 @@ class FragmentCache
         return ['device' => $device];
     }
 
-    /**
-     * Combine multiple vary conditions.
-     *
-     * @param array ...$conditions
-     *
-     * @return array
-     */
+    /** Combine multiple vary conditions. */
     public function combineVary(array ...$conditions): array
     {
         return $conditions ? array_merge(...$conditions) : [];
     }
 }
-

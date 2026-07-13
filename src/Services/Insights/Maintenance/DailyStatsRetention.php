@@ -9,22 +9,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyStatsRetention
- *
  * Handles retention policy for stored daily statistics.
  *
- * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Services\Insights\Maintenance
+ * @since   1.0.0
  */
 class DailyStatsRetention
 {
-    /**
-     * Deletes daily statistics older than the specified date.
-     *
-     * @param string $date
-     *
-     * @return void
-     */
+    /** Deletes daily statistics older than the specified date. */
     public function purgeOlderThan(string $date): void
     {
         DailyStats::purgeOlderThan($date);

@@ -11,41 +11,26 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class SeederManager
- *
  * Manages and orchestrates database seeders.
  *
  * @package ProactiveSiteAdvisor\Database\Seeders
- * @version 1.0.0
+ * @since   1.0.0
  */
 class SeederManager extends AbstractSingleton
 {
-    /**
-     * Registered seeder classes.
-     *
-     * @var array<class-string<AbstractSeeder>>
-     */
+    /** Registered seeder classes. */
     private array $seeders = [
         DailyStatsSeeder::class,
         AlertSeeder::class,
     ];
 
-    /**
-     * Current seeding options.
-     *
-     * @var array
-     */
+    /** Current seeding options. */
     private array $options = [
         'days'    => 30,
         'pattern' => 'realistic',
     ];
 
-    /**
-     * Register a seeder class.
-     *
-     * @param string $seederClass
-     * @return self
-     */
+    /** Register a seeder class. */
     public function addSeeder(string $seederClass): self
     {
         if (!in_array($seederClass, $this->seeders, true)) {
@@ -55,12 +40,7 @@ class SeederManager extends AbstractSingleton
         return $this;
     }
 
-    /**
-     * Remove a seeder class.
-     *
-     * @param string $seederClass
-     * @return self
-     */
+    /** Remove a seeder class. */
     public function removeSeeder(string $seederClass): self
     {
         $this->seeders = array_filter($this->seeders, static function ($class) use ($seederClass) {
@@ -70,27 +50,13 @@ class SeederManager extends AbstractSingleton
         return $this;
     }
 
-    /**
-     * Get all registered seeders.
-     *
-     * @return array
-     */
+    /** Get all registered seeders. */
     public function getSeeders(): array
     {
-        /**
-         * Filter the registered seeders.
-         *
-         * @param array $seeders
-         */
-        return apply_filters('proactive_site_advisor_seeders', $this->seeders);
+        return $this->seeders;
     }
 
-    /**
-     * Set seeding options.
-     *
-     * @param array $options
-     * @return self
-     */
+    /** Set seeding options. */
     public function setOptions(array $options): self
     {
         $this->options = array_merge($this->options, $options);
@@ -98,22 +64,13 @@ class SeederManager extends AbstractSingleton
         return $this;
     }
 
-    /**
-     * Get current options.
-     *
-     * @return array
-     */
+    /** Get current options. */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * Run all registered seeders.
-     *
-     * @param array $options
-     * @return array
-     */
+    /** Run all registered seeders. */
     public function runAll(array $options = []): array
     {
         $this->setOptions($options);
@@ -129,13 +86,7 @@ class SeederManager extends AbstractSingleton
         return $results;
     }
 
-    /**
-     * Run a specific seeder by short name.
-     *
-     * @param string $shortName
-     * @param array $options
-     * @return int|null
-     */
+    /** Run a specific seeder by short name. */
     public function run(string $shortName, array $options = []): ?int
     {
         $this->setOptions($options);
@@ -152,17 +103,12 @@ class SeederManager extends AbstractSingleton
         return $seeder->run();
     }
 
-    /**
-     * Clean all tables before seeding.
-     *
-     * @return array
-     */
+    /** Clean all tables before seeding. */
     public function cleanAll(): array
     {
         $seeders = $this->getSortedSeeders();
         $results = [];
 
-        // Clean in reverse order
         $seeders = array_reverse($seeders);
 
         foreach ($seeders as $seeder) {
@@ -173,11 +119,7 @@ class SeederManager extends AbstractSingleton
         return $results;
     }
 
-    /**
-     * Get sorted seeders by priority.
-     *
-     * @return AbstractSeeder[]
-     */
+    /** Get sorted seeders by priority. */
     private function getSortedSeeders(): array
     {
         $seederClasses = $this->getSeeders();
@@ -207,12 +149,7 @@ class SeederManager extends AbstractSingleton
         return $seeders;
     }
 
-    /**
-     * Find a seeder by short name.
-     *
-     * @param string $shortName
-     * @return AbstractSeeder|null
-     */
+    /** Find a seeder by short name. */
     private function findSeederByShortName(string $shortName): ?AbstractSeeder
     {
         $seederClasses  = $this->getSeeders();
@@ -238,11 +175,7 @@ class SeederManager extends AbstractSingleton
         return null;
     }
 
-    /**
-     * Get list of available seeder short names.
-     *
-     * @return array
-     */
+    /** Get list of available seeder short names. */
     public function getAvailableSeederNames(): array
     {
         $names = [];

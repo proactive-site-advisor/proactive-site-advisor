@@ -9,28 +9,21 @@ if (!defined('ABSPATH')) {
 use ProactiveSiteAdvisor\Config\PrefixConfig;
 
 /**
- * Class Logger
- *
- * Plugin-specific logging utility with multiple log levels
- * and file-based output.
+ * Plugin-specific logging utility with multiple log levels and file-based output.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class Logger
 {
-    /**
-     * Log level constants
-     */
+    /** Log level constants */
     public const LEVEL_DEBUG    = 'debug';
     public const LEVEL_INFO     = 'info';
     public const LEVEL_WARNING  = 'warning';
     public const LEVEL_ERROR    = 'error';
     public const LEVEL_CRITICAL = 'critical';
 
-    /**
-     * Log level priorities (lower = more verbose)
-     */
+    /** Log level priorities (lower = more verbose) */
     public const LEVEL_PRIORITIES = [
         self::LEVEL_DEBUG    => 0,
         self::LEVEL_INFO     => 1,
@@ -39,63 +32,33 @@ class Logger
         self::LEVEL_CRITICAL => 4,
     ];
 
-    /**
-     * Log file path
-     *
-     * @var string
-     */
+    /** Log file path. */
     private static string $logFile;
 
-    /**
-     * Minimum log level to record
-     *
-     * @var string
-     */
+    /** Minimum log level to record. */
     private static string $minLevel = self::LEVEL_DEBUG;
 
-    /**
-     * Whether logging is enabled
-     *
-     * @var bool
-     */
+    /** Whether logging is enabled. */
     private static bool $enabled = true;
 
-    /**
-     * Maximum log file size in bytes (5MB)
-     *
-     * @var int
-     */
+    /** Maximum log file size in bytes (5MB). */
     private static int $maxFileSize = 5242880;
 
-    /**
-     * Number of rotated log files to keep
-     *
-     * @var int
-     */
+    /** Number of rotated log files to keep. */
     private static int $maxFiles = 3;
 
-    /**
-     * Initialize the logger.
-     *
-     * @return void
-     */
+    /** Initialize the logger. */
     public static function init(): void
     {
         self::$logFile = self::getLogPath();
         self::createLogDirectory();
 
-        // Respect WP_DEBUG setting
         if (!defined('WP_DEBUG') || !WP_DEBUG) {
             self::$minLevel = self::LEVEL_WARNING;
         }
     }
 
-    /**
-     * Set the minimum log level.
-     *
-     * @param string $level One of the LEVEL_* constants.
-     * @return void
-     */
+    /** Set the minimum log level. */
     public static function setMinLevel(string $level): void
     {
         if (isset(self::LEVEL_PRIORITIES[$level])) {
@@ -103,94 +66,49 @@ class Logger
         }
     }
 
-    /**
-     * Enable logging.
-     *
-     * @return void
-     */
+    /** Enable logging. */
     public static function enable(): void
     {
         self::$enabled = true;
     }
 
-    /**
-     * Disable logging.
-     *
-     * @return void
-     */
+    /** Disable logging. */
     public static function disable(): void
     {
         self::$enabled = false;
     }
 
-    /**
-     * Log a debug message.
-     *
-     * @param string $message The message to log.
-     * @param array $context Additional context data.
-     * @return void
-     */
+    /** Log a debug message. */
     public static function debug(string $message, array $context = []): void
     {
         self::log(self::LEVEL_DEBUG, $message, $context);
     }
 
-    /**
-     * Log an info message.
-     *
-     * @param string $message The message to log.
-     * @param array $context Additional context data.
-     * @return void
-     */
+    /** Log an info message. */
     public static function info(string $message, array $context = []): void
     {
         self::log(self::LEVEL_INFO, $message, $context);
     }
 
-    /**
-     * Log a warning message.
-     *
-     * @param string $message The message to log.
-     * @param array $context Additional context data.
-     * @return void
-     */
+    /** Log a warning message. */
     public static function warning(string $message, array $context = []): void
     {
         self::log(self::LEVEL_WARNING, $message, $context);
     }
 
-    /**
-     * Log an error message.
-     *
-     * @param string $message The message to log.
-     * @param array $context Additional context data.
-     * @return void
-     */
+    /** Log an error message. */
     public static function error(string $message, array $context = []): void
     {
         self::log(self::LEVEL_ERROR, $message, $context);
     }
 
-    /**
-     * Log a critical message.
-     *
-     * @param string $message The message to log.
-     * @param array $context Additional context data.
-     * @return void
-     */
+    /** Log a critical message. */
     public static function critical(string $message, array $context = []): void
     {
         self::log(self::LEVEL_CRITICAL, $message, $context);
     }
 
-    /**
-     * Log a message with a specific level.
-     *
-     * @param string $level The log level.
-     * @param string $message The message to log.
-     * @param array $context Additional context data.
-     * @return void
-     */
+    /** Log a message with a specific level. */
     public static function log(string $level, string $message, array $context = []): void
     {
         if (!self::$enabled || !self::shouldLog($level)) {
@@ -203,17 +121,12 @@ class Logger
 
         self::writeToFile($formattedMessage);
 
-        // Also write to error_log if WP_DEBUG_LOG is enabled
         if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
             self::writeToErrorLog($level, $message, $context);
         }
     }
 
-    /**
-     * Get the log file path.
-     *
-     * @return string
-     */
+    /** Get the log file path. */
     public static function getLogPath(): string
     {
         $uploadDir = wp_upload_dir();
@@ -223,22 +136,14 @@ class Logger
         return $directory . '/' . PrefixConfig::handle('plugin') . '.log';
     }
 
-    /**
-     * Get the log directory path.
-     *
-     * @return string
-     */
+    /** Get the log directory path. */
     public static function getLogDirectory(): string
     {
         $uploadDir = wp_upload_dir();
         return $uploadDir['basedir'] . '/' . PrefixConfig::handle('logs');
     }
 
-    /**
-     * Clear the log file.
-     *
-     * @return bool
-     */
+    /** Clear the log file. */
     public static function clearLog(): bool
     {
         if (empty(self::$logFile)) {
@@ -251,12 +156,7 @@ class Logger
         return true;
     }
 
-    /**
-     * Get log file contents.
-     *
-     * @param int $lines Number of lines to return (from end).
-     * @return array
-     */
+    /** Get log file contents. */
     public static function getLogContents(int $lines = 100): array
     {
         if (empty(self::$logFile) || !file_exists(self::$logFile)) {
@@ -272,11 +172,7 @@ class Logger
         return array_slice($file, -$lines);
     }
 
-    /**
-     * Rotate log files if needed.
-     *
-     * @return void
-     */
+    /** Rotate log files if needed. */
     public static function rotateLogs(): void
     {
         if (empty(self::$logFile) || !file_exists(self::$logFile)) {
@@ -294,7 +190,6 @@ class Logger
             WP_Filesystem();
         }
 
-        // Rotate existing log files
         for ($i = self::$maxFiles - 1; $i >= 1; $i--) {
             $oldFile = self::$logFile . '.' . $i;
             $newFile = self::$logFile . '.' . ($i + 1);
@@ -308,16 +203,10 @@ class Logger
             }
         }
 
-        // Rotate current log
         $wp_filesystem->move(self::$logFile, self::$logFile . '.1', true);
     }
 
-    /**
-     * Check if a message should be logged based on level.
-     *
-     * @param string $level The log level.
-     * @return bool
-     */
+    /** Check if a message should be logged based on level. */
     private static function shouldLog(string $level): bool
     {
         $levelPriority = self::LEVEL_PRIORITIES[$level] ?? 0;
@@ -326,20 +215,13 @@ class Logger
         return $levelPriority >= $minPriority;
     }
 
-    /**
-     * Format a log message.
-     *
-     * @param string $level The log level.
-     * @param string $message The message.
-     * @param array $context Additional context.
-     * @return string
-     */
+    /** Format a log message. */
     private static function formatMessage(string $level, string $message, array $context): string
     {
         $timestamp  = current_time('Y-m-d H:i:s');
         $levelUpper = strtoupper($level);
 
-        $formatted = "[{$timestamp}] [{$levelUpper}] {$message}";
+        $formatted = "[$timestamp] [$levelUpper] $message";
 
         if (!empty($context)) {
             $formatted .= ' | Context: ' . wp_json_encode($context, JSON_UNESCAPED_SLASHES);
@@ -348,12 +230,7 @@ class Logger
         return $formatted . PHP_EOL;
     }
 
-    /**
-     * Write a message to the log file.
-     *
-     * @param string $message The formatted message.
-     * @return void
-     */
+    /** Write a message to the log file. */
     private static function writeToFile(string $message): void
     {
         if (empty(self::$logFile)) {
@@ -364,28 +241,18 @@ class Logger
         file_put_contents(self::$logFile, $message, FILE_APPEND | LOCK_EX);
     }
 
-    /**
-     * Write a message to the PHP error log.
-     *
-     * @param string $level The log level.
-     * @param string $message The message.
-     * @param array $context Additional context.
-     * @return void
-     */
+    /** Write a message to the PHP error log. */
     private static function writeToErrorLog(string $level, string $message, array $context): void
     {
         $prefix     = '[Proactive Site Advisor]';
         $contextStr = !empty($context) ? ' | ' . wp_json_encode($context) : '';
 
+        /** @noinspection ForgottenDebugOutputInspection */
         // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-        error_log("{$prefix} [{$level}] {$message}{$contextStr}");
+        error_log("$prefix [$level] $message$contextStr");
     }
 
-    /**
-     * Create the log directory with security measures.
-     *
-     * @return void
-     */
+    /** Create the log directory with security measures. */
     private static function createLogDirectory(): void
     {
         $logDir = self::getLogDirectory();
@@ -393,13 +260,11 @@ class Logger
         if (!is_dir($logDir)) {
             wp_mkdir_p($logDir);
 
-            // Create .htaccess to prevent direct access
             $htaccess = $logDir . '/.htaccess';
             if (!file_exists($htaccess)) {
                 file_put_contents($htaccess, 'deny from all');
             }
 
-            // Create index.php to prevent directory listing
             $index = $logDir . '/index.php';
             if (!file_exists($index)) {
                 file_put_contents($index, '<?php // Silence is golden.');

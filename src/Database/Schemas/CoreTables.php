@@ -2,7 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Database\Schemas;
 
-use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\SchemaBuilder;
+use ProactiveSiteAdvisor\Database\SchemaRegistry;
 use ProactiveSiteAdvisor\Database\TableSchema;
 
 if (!defined('ABSPATH')) {
@@ -10,20 +11,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class CoreTables
- *
  * Defines core database tables for the Proactive Site Advisor plugin.
  *
  * @package ProactiveSiteAdvisor\Database\Schemas
- * @version 1.0.0
+ * @since   1.0.0
  */
 class CoreTables
 {
-    /**
-     * Get all table schemas for this provider.
-     *
-     * @return TableSchema[]
-     */
+    /** Get all table schemas for this provider. */
     public static function getSchemas(): array
     {
         return [
@@ -32,24 +27,16 @@ class CoreTables
         ];
     }
 
-    /**
-     * Register and create all core tables.
-     *
-     * @return void
-     */
+    /** Register and create all core tables. */
     public static function createTables(): void
     {
-        DatabaseManager::registerTable(self::getDailyStatsSchema());
-        DatabaseManager::registerTable(self::getAlertsSchema());
+        SchemaRegistry::registerTable(self::getDailyStatsSchema());
+        SchemaRegistry::registerTable(self::getAlertsSchema());
 
-        DatabaseManager::createTables();
+        SchemaBuilder::createTables();
     }
 
-    /**
-     * Daily statistics table schema.
-     *
-     * @return TableSchema
-     */
+    /** Daily statistics table schema. */
     public static function getDailyStatsSchema(): TableSchema
     {
         $schema = new TableSchema('daily_stats');
@@ -67,11 +54,7 @@ class CoreTables
         return $schema;
     }
 
-    /**
-     * Alerts table schema.
-     *
-     * @return TableSchema
-     */
+    /** Alerts table schema. */
     public static function getAlertsSchema(): TableSchema
     {
         $schema = new TableSchema('alerts');

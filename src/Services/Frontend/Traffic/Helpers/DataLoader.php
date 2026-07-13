@@ -7,81 +7,50 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DataLoader
- *
  * Centralized data file loader with runtime caching.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DataLoader
 {
-    /**
-     * Runtime cache for loaded data.
-     *
-     * @var array
-     */
+    /** Runtime cache for loaded data. */
     private static array $cache = [];
 
-    /**
-     * Load bot patterns from data file.
-     *
-     * @return string|null
-     */
+    /** Load bot patterns from data file. */
     public static function loadBotPatterns(): ?string
     {
         return self::loadFile('bot-patterns.php');
     }
 
-    /**
-     * Load browser patterns from data file.
-     *
-     * @return string|null
-     */
+    /** Load browser patterns from data file. */
     public static function loadBrowserPatterns(): ?string
     {
         return self::loadFile('browser-patterns.php');
     }
 
-    /**
-     * Load browser allowlist from data file.
-     *
-     * @return array
-     */
+    /** Load browser allowlist from data file. */
     public static function loadBrowserAllowlist(): array
     {
         $data = self::loadFile('browser-allowlist.php');
         return is_array($data) ? $data : [];
     }
 
-    /**
-     * Load referrer spam list from data file.
-     *
-     * @return array
-     */
+    /** Load referrer spam list from data file. */
     public static function loadReferrerSpamList(): array
     {
         $data = self::loadFile('referrer-spam.php');
         return is_array($data) ? $data : [];
     }
 
-    /**
-     * Load scanner 404 URL patterns from data file.
-     *
-     * @return array
-     */
+    /** Load scanner 404 URL patterns from data file. */
     public static function loadScanner404Patterns(): array
     {
         $data = self::loadFile('scanner-404-patterns.php');
         return is_array($data) ? $data : [];
     }
 
-    /**
-     * Generic file loader with caching.
-     *
-     * @param string $filename
-     * @return mixed
-     */
+    /** Generic file loader with caching. */
     private static function loadFile(string $filename)
     {
         if (isset(self::$cache[$filename])) {

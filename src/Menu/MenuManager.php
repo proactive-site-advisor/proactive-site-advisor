@@ -9,48 +9,33 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class MenuManager
- *
  * Handles registration, normalization, sorting, and rendering of admin menu items.
- * Supports both object-oriented usage (MenuItem instances) and array-based usage
- * for a WordPress-like developer experience.
  *
  * @package ProactiveSiteAdvisor\Menu
- * @version 1.1.0
+ * @since   1.0.0
  */
 class MenuManager extends AbstractSingleton
 {
     /**
-     * @var MenuItem[]|array[] $menuItems List of registered menu items (objects or arrays)
+     * List of registered menu items (objects or arrays).
+     *
+     * @var MenuItem[]|array[]
      */
     private array $menuItems = [];
 
-    /**
-     * Initialize menu system by hooking into WordPress admin_menu.
-     *
-     * @return void
-     */
+    /** Initialize menu system by hooking into WordPress admin_menu. */
     public function register(): void
     {
         add_action('admin_menu', [$this, 'registerMenus']);
     }
 
-    /**
-     * Register a new menu item.
-     *
-     * @param MenuItem|array $item
-     * @return void
-     */
+    /** Register a new menu item. */
     public function registerMenuItem($item): void
     {
         $this->menuItems[] = $item;
     }
 
-    /**
-     * Collect, filter, normalize, sort, and render all menu items.
-     *
-     * @return void
-     */
+    /** Collect, filter, normalize, sort, and render all menu items. */
     public function registerMenus(): void
     {
         $menuItems = $this->getFilteredMenuItems();
@@ -62,11 +47,15 @@ class MenuManager extends AbstractSingleton
 
     /**
      * Apply WordPress filters to get the final list of menu items.
-     *
-     * @return MenuItem[]|array[] Filtered list of menu items (raw)
      */
     private function getFilteredMenuItems(): array
     {
+        /**
+         * Filters the registered menu items.
+         *
+         * @param MenuItem[]|array[] $menuItems List of menu items (objects or arrays).
+         * @since  1.0.0
+         */
         return apply_filters('proactive_site_advisor_menu_items', $this->menuItems);
     }
 
@@ -74,9 +63,6 @@ class MenuManager extends AbstractSingleton
      * Normalize raw menu items (arrays or MenuItem objects) to MenuItem objects.
      *
      * Wraps callbacks if they are class names with a 'render' method.
-     *
-     * @param array $items Raw menu items
-     * @return MenuItem[] Normalized MenuItem objects
      */
     private function normalizeMenuItems(array $items): array
     {
@@ -99,10 +85,9 @@ class MenuManager extends AbstractSingleton
                 );
             }
 
-            return null; // invalid item
+            return null;
         }, $items);
 
-        // Keep only valid MenuItem instances
         return array_filter($normalized, static fn($item) => $item instanceof MenuItem);
     }
 
@@ -110,14 +95,10 @@ class MenuManager extends AbstractSingleton
      * Sort menu items by hierarchy and position.
      *
      * Top-level menus appear before submenus.
-     *
-     * @param MenuItem[] $items Normalized menu items
-     * @return MenuItem[] Sorted menu items
      */
     private function sortMenuItems(array $items): array
     {
         usort($items, static function ($a, $b) {
-            // top-level comes first
             if ($a->parentId === null && $b->parentId !== null) {
                 return -1;
             }
@@ -125,21 +106,14 @@ class MenuManager extends AbstractSingleton
                 return 1;
             }
 
-            // then sort by position
             return $a->position <=> $b->position;
         });
 
         return $items;
     }
 
-    /**
-     * Wrap a class name as a callable for menu callbacks.
-     *
-     * @param callable|string|null $callback The original callback, or a class name.
-     *
-     * @return callable|null A callable closure or the original callback.
-     */
-    private function wrapClassCallback($callback)
+    /** Wrap a class name as a callable for menu callbacks. */
+    private function wrapClassCallback($callback): array
     {
         if (is_string($callback) && class_exists($callback) && method_exists($callback, 'render')) {
             /** @var class-string $callback */

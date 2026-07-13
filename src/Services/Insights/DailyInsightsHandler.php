@@ -11,22 +11,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyInsightsHandler
- *
- * Coordinates post‑processing tasks after daily stats are flushed.
+ * Coordinates post-processing tasks after daily stats are flushed.
  *
  * @package ProactiveSiteAdvisor\Services\Insights
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DailyInsightsHandler
 {
-    /**
-     * Executes daily insight tasks for a specific date.
-     *
-     * @param string $date
-     *
-     * @return void
-     */
+    /** Executes daily insight tasks for a specific date. */
     public function handle(string $date): void
     {
         $alertEngine = new AlertEngine();

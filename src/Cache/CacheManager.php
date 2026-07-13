@@ -11,44 +11,36 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Handles plugin caching using:
- * - Local runtime cache
- * - WordPress object cache
- * - WordPress transients (fallback)
+ * Handles plugin caching with local, object cache, and transient support.
  *
  * @package ProactiveSiteAdvisor\Cache
- * @version 1.0.0
+ * @since   1.0.0
  */
 class CacheManager extends AbstractSingleton
 {
+    /** Cache version identifier. */
     private const VERSION = 'v1';
 
-    /** @var string Current cache group */
+    /** Current cache group. */
     private string $group;
 
-    /** @var int Default cache expiration in seconds */
+    /** Default cache expiration in seconds. */
     private int $defaultExpiration = HOUR_IN_SECONDS;
 
-    /** @var bool Whether persistent object cache is available */
+    /** Whether persistent object cache is available. */
     private bool $objectCacheAvailable;
 
-    /** @var array Cache statistics */
+    /** Cache statistics. */
     private array $stats = [
         'hits'   => 0,
         'misses' => 0,
         'writes' => 0,
     ];
 
-    /**
-     * Runtime in‑memory cache separated by group.
-     *
-     * @var array
-     */
+    /** Runtime in‑memory cache separated by group. */
     private array $localCache = [];
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     protected function __construct()
     {
         parent::__construct();
@@ -57,35 +49,21 @@ class CacheManager extends AbstractSingleton
         $this->group                = CacheGroups::DEFAULT;
     }
 
-    /**
-     * Register WordPress hooks.
-     */
+    /** Register WordPress hooks. */
     public function register(): void
     {
         add_action('switch_theme', [$this, 'flush']);
         add_action('upgrader_process_complete', [$this, 'flush']);
     }
 
-    /**
-     * Set active cache group.
-     *
-     * @param string $group
-     * @return self
-     */
+    /** Set active cache group. */
     public function setGroup(string $group): self
     {
         $this->group = $group;
         return $this;
     }
 
-    /**
-     * Get cached value.
-     *
-     * @param string $key
-     * @param mixed|null $default
-     * @param string|null $group
-     * @return mixed
-     */
+    /** Get cached value. */
     public function get(string $key, $default = null, ?string $group = null)
     {
         $group      = $group ?? $this->group;
@@ -117,15 +95,7 @@ class CacheManager extends AbstractSingleton
         return $default;
     }
 
-    /**
-     * Store value in cache.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param int|null $expiration
-     * @param string|null $group
-     * @return bool
-     */
+    /** Store value in cache. */
     public function set(string $key, $value, ?int $expiration = null, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
@@ -147,13 +117,7 @@ class CacheManager extends AbstractSingleton
         return $result;
     }
 
-    /**
-     * Delete cached value.
-     *
-     * @param string $key
-     * @param string|null $group
-     * @return bool
-     */
+    /** Delete cached value. */
     public function delete(string $key, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
@@ -168,13 +132,7 @@ class CacheManager extends AbstractSingleton
         return delete_transient($storageKey);
     }
 
-    /**
-     * Check if cache key exists.
-     *
-     * @param string $key
-     * @param string|null $group
-     * @return bool
-     */
+    /** Check if cache key exists. */
     public function has(string $key, ?string $group = null): bool
     {
         $group      = $group ?? $this->group;
@@ -194,15 +152,7 @@ class CacheManager extends AbstractSingleton
         return get_transient($storageKey) !== false;
     }
 
-    /**
-     * Cache helper similar to Laravel remember().
-     *
-     * @param string $key
-     * @param callable $callback
-     * @param int|null $expiration
-     * @param string|null $group
-     * @return mixed
-     */
+    /** Cache helper similar to Laravel remember(). */
     public function remember(string $key, callable $callback, ?int $expiration = null, ?string $group = null)
     {
         $value = $this->get($key, null, $group);
@@ -218,9 +168,7 @@ class CacheManager extends AbstractSingleton
         return $value;
     }
 
-    /**
-     * Increment numeric cache value.
-     */
+    /** Increment numeric cache value. */
     public function increment(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
         $value = $this->get($key, 0, $group);
@@ -236,20 +184,13 @@ class CacheManager extends AbstractSingleton
         return $newValue;
     }
 
-    /**
-     * Decrement numeric cache value.
-     */
+    /** Decrement numeric cache value. */
     public function decrement(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
         return $this->increment($key, -$amount, $expiration, $group);
     }
 
-    /**
-     * Build internal cache key.
-     *
-     * Format:
-     * prefix:version:blog_id:group:key
-     */
+    /** Build internal cache key. */
     private function buildKey(string $key, string $group): string
     {
         $blogId = is_multisite() ? get_current_blog_id() : 1;
@@ -265,9 +206,7 @@ class CacheManager extends AbstractSingleton
             . $key;
     }
 
-    /**
-     * Generate deterministic cache key from arguments.
-     */
+    /** Generate deterministic cache key from arguments. */
     public static function makeKey(string $prefix, ...$args): string
     {
         if (!empty($args)) {
@@ -307,6 +246,11 @@ class CacheManager extends AbstractSingleton
 
         Logger::info('Plugin cache flushed');
 
+        /**
+         * Fires after plugin cache is flushed.
+         *
+         * @since 1.0.0
+         */
         do_action('proactive_site_advisor_cache_flushed');
 
         return true;
@@ -314,9 +258,6 @@ class CacheManager extends AbstractSingleton
 
     /**
      * Flush cache for a specific group.
-     *
-     * @param string $group
-     * @return bool
      */
     public function flushGroup(string $group): bool
     {
@@ -352,16 +293,18 @@ class CacheManager extends AbstractSingleton
 
         Logger::info("Cache group flushed: {$group}");
 
+        /**
+         * Fires after a cache group is flushed.
+         *
+         * @param string $group The flushed cache group.
+         * @since 1.0.0
+         */
         do_action('proactive_site_advisor_cache_group_flushed', $group);
 
         return true;
     }
 
-    /**
-     * Get cache statistics.
-     *
-     * @return array
-     */
+    /** Get cache statistics. */
     public function getStats(): array
     {
         return array_merge($this->stats, [

@@ -11,34 +11,24 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class CronManager
- *
  * Manages scheduled tasks/cron jobs.
  *
  * @package ProactiveSiteAdvisor\Cron
- * @version 1.0.0
+ * @since   1.0.0
  */
 class CronManager extends AbstractSingleton
 {
     /**
-     * Registered tasks
+     * Registered tasks.
      *
      * @var CronTask[]
      */
     private array $tasks = [];
 
-    /**
-     * Custom intervals
-     *
-     * @var array
-     */
+    /** Custom intervals. */
     private array $intervals = [];
 
-    /**
-     * Register hooks.
-     *
-     * @return void
-     */
+    /** Register hooks. */
     public function register(): void
     {
         add_filter('cron_schedules', [$this, 'addIntervals']);
@@ -49,26 +39,14 @@ class CronManager extends AbstractSingleton
         add_action('init', [$this, 'scheduleAll']);
     }
 
-    /**
-     * Register cron handlers.
-     *
-     * @return void
-     */
+    /** Register cron handlers. */
     private function registerCronHandlers(): void
     {
         $dailyHandler = new DailyCronHandler();
         $dailyHandler->register();
     }
 
-    /**
-     * Add a custom interval.
-     *
-     * @param string $name
-     * @param int $seconds
-     * @param string $display
-     *
-     * @return self
-     */
+    /** Add a custom interval. */
     public function addInterval(string $name, int $seconds, string $display): self
     {
         $this->intervals[$name] = [
@@ -78,16 +56,9 @@ class CronManager extends AbstractSingleton
         return $this;
     }
 
-    /**
-     * Add intervals to WordPress cron schedules.
-     *
-     * @param array $schedules
-     *
-     * @return array
-     */
+    /** Add intervals to WordPress cron schedules. */
     public function addIntervals(array $schedules): array
     {
-        // Add common custom intervals
         $defaults = [
             'proactive_site_advisor_every_minute'     => [
                 'interval' => MINUTE_IN_SECONDS,
@@ -118,28 +89,14 @@ class CronManager extends AbstractSingleton
         return array_merge($schedules, $defaults, $this->intervals);
     }
 
-    /**
-     * Add a task.
-     *
-     * @param CronTask $task
-     *
-     * @return self
-     */
+    /** Add a task. */
     public function addTask(CronTask $task): self
     {
         $this->tasks[$task->getHook()] = $task;
         return $this;
     }
 
-    /**
-     * Create and add a task.
-     *
-     * @param string $hook
-     * @param callable $callback
-     * @param string $recurrence
-     *
-     * @return CronTask
-     */
+    /** Create and add a task. */
     public function create(string $hook, callable $callback, string $recurrence = 'hourly'): CronTask
     {
         $task = new CronTask($hook, $callback, $recurrence);
@@ -147,46 +104,26 @@ class CronManager extends AbstractSingleton
         return $task;
     }
 
-    /**
-     * Get a task by hook.
-     *
-     * @param string $hook
-     *
-     * @return CronTask|null
-     */
+    /** Get a task by hook. */
     public function getTask(string $hook): ?CronTask
     {
         return $this->tasks[$hook] ?? null;
     }
 
-    /**
-     * Get all tasks.
-     *
-     * @return CronTask[]
-     */
+    /** Get all tasks. */
     public function getTasks(): array
     {
         return $this->tasks;
     }
 
-    /**
-     * Remove a task.
-     *
-     * @param string $hook
-     *
-     * @return self
-     */
+    /** Remove a task. */
     public function removeTask(string $hook): self
     {
         unset($this->tasks[$hook]);
         return $this;
     }
 
-    /**
-     * Register task callbacks.
-     *
-     * @return void
-     */
+    /** Register task callbacks. */
     public function registerCallbacks(): void
     {
         foreach ($this->tasks as $task) {
@@ -196,17 +133,14 @@ class CronManager extends AbstractSingleton
         }
     }
 
-    /**
-     * Schedule all tasks.
-     *
-     * @return void
-     */
+    /** Schedule all tasks. */
     public function scheduleAll(): void
     {
         /**
-         * Filter the cron tasks before scheduling.
+         * Filters the cron tasks before scheduling.
          *
          * @param CronTask[] $tasks
+         * @since  1.0.0
          */
         $tasks = apply_filters('proactive_site_advisor_cron_tasks', $this->tasks);
 
@@ -217,13 +151,7 @@ class CronManager extends AbstractSingleton
         }
     }
 
-    /**
-     * Schedule a single task.
-     *
-     * @param CronTask $task
-     *
-     * @return bool
-     */
+    /** Schedule a single task. */
     public function schedule(CronTask $task): bool
     {
         if ($task->isScheduled()) {
@@ -248,13 +176,7 @@ class CronManager extends AbstractSingleton
         return $result !== false;
     }
 
-    /**
-     * Unschedule a task.
-     *
-     * @param string $hook
-     *
-     * @return bool
-     */
+    /** Unschedule a task. */
     public function unschedule(string $hook): bool
     {
         $task = $this->getTask($hook);
@@ -273,11 +195,7 @@ class CronManager extends AbstractSingleton
         return false;
     }
 
-    /**
-     * Unschedule all tasks.
-     *
-     * @return void
-     */
+    /** Unschedule all tasks. */
     public function unscheduleAll(): void
     {
         foreach ($this->tasks as $task) {
@@ -285,25 +203,13 @@ class CronManager extends AbstractSingleton
         }
     }
 
-    /**
-     * Clear all scheduled instances of a hook.
-     *
-     * @param string $hook
-     *
-     * @return int
-     */
+    /** Clear all scheduled instances of a hook. */
     public function clearAll(string $hook): int
     {
         return wp_unschedule_hook($hook);
     }
 
-    /**
-     * Execute a task.
-     *
-     * @param CronTask $task
-     *
-     * @return void
-     */
+    /** Execute a task with error handling and hooks. */
     private function executeTask(CronTask $task): void
     {
         if (!$task->isEnabled()) {
@@ -316,18 +222,20 @@ class CronManager extends AbstractSingleton
 
         try {
             /**
-             * Action fired before a cron task executes.
+             * Fires before a cron task executes.
              *
              * @param CronTask $task The task.
+             * @since  1.0.0
              */
             do_action('proactive_site_advisor_before_cron_task', $task);
 
             call_user_func_array($task->getCallback(), $task->getArgs());
 
             /**
-             * Action fired after a cron task executes.
+             * Fires after a cron task executes.
              *
              * @param CronTask $task The task.
+             * @since  1.0.0
              */
             do_action('proactive_site_advisor_after_cron_task', $task);
 
@@ -340,22 +248,17 @@ class CronManager extends AbstractSingleton
             ]);
 
             /**
-             * Action fired when a cron task fails.
+             * Fires when a cron task fails.
              *
              * @param CronTask $task The task.
              * @param Exception $e The exception.
+             * @since  1.0.0
              */
             do_action('proactive_site_advisor_cron_task_failed', $task, $e);
         }
     }
 
-    /**
-     * Run a task immediately.
-     *
-     * @param string $hook
-     *
-     * @return bool
-     */
+    /** Run a task immediately. */
     public function runNow(string $hook): bool
     {
         $task = $this->getTask($hook);
@@ -369,13 +272,7 @@ class CronManager extends AbstractSingleton
         return true;
     }
 
-    /**
-     * Check if a task is scheduled.
-     *
-     * @param string $hook
-     *
-     * @return bool
-     */
+    /** Check if a task is scheduled. */
     public function isScheduled(string $hook): bool
     {
         $task = $this->getTask($hook);
@@ -387,13 +284,7 @@ class CronManager extends AbstractSingleton
         return $task->isScheduled();
     }
 
-    /**
-     * Get next scheduled run for a task.
-     *
-     * @param string $hook
-     *
-     * @return int|false
-     */
+    /** Get next scheduled run for a task. */
     public function getNextRun(string $hook)
     {
         $task = $this->getTask($hook);
@@ -402,21 +293,13 @@ class CronManager extends AbstractSingleton
         return wp_next_scheduled($hook, $args);
     }
 
-    /**
-     * Get all WordPress cron events.
-     *
-     * @return array
-     */
+    /** Get all WordPress cron events. */
     public function getAllCronEvents(): array
     {
         return _get_cron_array() ?: [];
     }
 
-    /**
-     * Get all plugin cron events.
-     *
-     * @return array
-     */
+    /** Get all plugin cron events. */
     public function getPluginCronEvents(): array
     {
         $allEvents    = $this->getAllCronEvents();

@@ -2,8 +2,8 @@
 /**
  * Admin Layout: Footer
  *
- * @package ProactiveSiteAdvisor
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Templates\Admin\Layouts
+ * @since   1.0.0
  */
 
 // Prevent direct access
