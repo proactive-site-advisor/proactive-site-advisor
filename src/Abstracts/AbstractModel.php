@@ -2,109 +2,62 @@
 
 namespace ProactiveSiteAdvisor\Abstracts;
 
+use ProactiveSiteAdvisor\Database\DataStore;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Database\SchemaRegistry;
 use Exception;
 use RuntimeException;
-use ProactiveSiteAdvisor\Database\DatabaseManager;
-use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class AbstractModel
- *
  * Base model class providing CRUD operations and data access.
- * All model classes should extend this class.
  *
  * @package ProactiveSiteAdvisor\Abstracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 abstract class AbstractModel
 {
-    /**
-     * Table name (without prefix)
-     *
-     * @var string
-     */
+    /** Table name (without prefix). */
     protected static string $table = '';
 
-    /**
-     * Primary key column name
-     *
-     * @var string
-     */
+    /** Primary key column name. */
     protected static string $primaryKey = 'id';
 
-    /**
-     * Fillable fields (allowed for mass assignment)
-     *
-     * @var array
-     */
+    /** Fillable fields (allowed for mass assignment). */
     protected static array $fillable = [];
 
-    /**
-     * Hidden fields (excluded from toArray/toJson)
-     *
-     * @var array
-     */
+    /** Hidden fields (excluded from toArray/toJson). */
     protected static array $hidden = [];
 
-    /**
-     * Attribute type casts
-     *
-     * @var array
-     */
+    /** Attribute type casts. */
     protected static array $casts = [];
 
-    /**
-     * Model attributes (data)
-     *
-     * @var array
-     */
+    /** Model attributes (data). */
     protected array $attributes = [];
 
-    /**
-     * Original attributes (for dirty checking)
-     *
-     * @var array
-     */
+    /** Original attributes (for dirty checking). */
     protected array $original = [];
 
-    /**
-     * Whether the model exists in the database
-     *
-     * @var bool
-     */
+    /** Whether the model exists in the database. */
     protected bool $exists = false;
 
-    /**
-     * AbstractModel constructor.
-     *
-     * @param array $attributes Initial attributes.
-     */
+    /** Constructor. */
     public function __construct(array $attributes = [])
     {
         $this->fill($attributes);
     }
 
-    /**
-     * Create a new model instance.
-     *
-     * @param array $attributes Initial attributes.
-     * @return static
-     */
+    /** Create a new model instance. */
     public static function make(array $attributes = []): self
     {
         return new static($attributes);
     }
 
-    /**
-     * Create a new record in the database.
-     *
-     * @param array $attributes Attributes to save.
-     * @return static|null The created model or null on failure.
-     */
+    /** Create a new record in the database. */
     public static function create(array $attributes): ?self
     {
         $model = new static($attributes);
@@ -116,15 +69,10 @@ abstract class AbstractModel
         return null;
     }
 
-    /**
-     * Find a record by primary key.
-     *
-     * @param int $id Primary key value.
-     * @return static|null The model or null if not found.
-     */
+    /** Find a record by primary key. */
     public static function find(int $id): ?self
     {
-        $row = DatabaseManager::getRow(static::$table, $id, static::$primaryKey);
+        $row = DataStore::getRow(static::$table, $id, static::$primaryKey);
 
         if ($row === null) {
             return null;
@@ -136,8 +84,6 @@ abstract class AbstractModel
     /**
      * Find a record by primary key or throw exception.
      *
-     * @param int $id Primary key value.
-     * @return static
      * @throws Exception If not found.
      */
     public static function findOrFail(int $id): self
@@ -152,16 +98,10 @@ abstract class AbstractModel
         return $model;
     }
 
-    /**
-     * Find a record by a specific column value.
-     *
-     * @param string $column Column name.
-     * @param mixed $value Column value.
-     * @return static|null The model or null if not found.
-     */
+    /** Find a record by a specific column value. */
     public static function findBy(string $column, $value): ?self
     {
-        $rows = DatabaseManager::getRows(static::$table, [
+        $rows = DataStore::getRows(static::$table, [
             'where' => [$column => $value],
             'limit' => 1,
         ]);
@@ -173,28 +113,17 @@ abstract class AbstractModel
         return static::hydrate($rows[0]);
     }
 
-    /**
-     * Get all records.
-     *
-     * @param array $options Query options (where, orderby, order, limit, offset).
-     * @return array Array of model instances.
-     */
+    /** Get all records. */
     public static function all(array $options = []): array
     {
-        $rows = DatabaseManager::getRows(static::$table, $options);
+        $rows = DataStore::getRows(static::$table, $options);
 
         return array_map(static function ($row) {
             return static::hydrate($row);
         }, $rows);
     }
 
-    /**
-     * Get records with conditions.
-     *
-     * @param array $where Where conditions.
-     * @param array $options Additional query options.
-     * @return array Array of model instances.
-     */
+    /** Get records with conditions. */
     public static function where(array $where, array $options = []): array
     {
         $options['where'] = $where;
@@ -202,12 +131,7 @@ abstract class AbstractModel
         return static::all($options);
     }
 
-    /**
-     * Get the first record matching conditions.
-     *
-     * @param array $where Where conditions.
-     * @return static|null The model or null if not found.
-     */
+    /** Get the first record matching conditions. */
     public static function first(array $where = []): ?self
     {
         $results = static::where($where, ['limit' => 1]);
@@ -215,34 +139,19 @@ abstract class AbstractModel
         return $results[0] ?? null;
     }
 
-    /**
-     * Count records.
-     *
-     * @param array $where Optional where conditions.
-     * @return int Record count.
-     */
+    /** Count records. */
     public static function count(array $where = []): int
     {
-        return DatabaseManager::getRowCount(static::$table, $where);
+        return DataStore::getRowCount(static::$table, $where);
     }
 
-    /**
-     * Check if a record exists.
-     *
-     * @param array $where Where conditions.
-     * @return bool
-     */
+    /** Check if a record exists. */
     public static function exists(array $where): bool
     {
         return static::count($where) > 0;
     }
 
-    /**
-     * Hydrate a model from a database row.
-     *
-     * @param object $row Database row object.
-     * @return static
-     */
+    /** Hydrate a model from a database row. */
     protected static function hydrate(object $row): self
     {
         $model             = new static();
@@ -253,12 +162,7 @@ abstract class AbstractModel
         return $model;
     }
 
-    /**
-     * Fill model with attributes.
-     *
-     * @param array $attributes Attributes to fill.
-     * @return self
-     */
+    /** Fill model with attributes. */
     public function fill(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
@@ -270,12 +174,7 @@ abstract class AbstractModel
         return $this;
     }
 
-    /**
-     * Check if an attribute is fillable.
-     *
-     * @param string $key Attribute name.
-     * @return bool
-     */
+    /** Check if an attribute is fillable. */
     protected function isFillable(string $key): bool
     {
         if (empty(static::$fillable)) {
@@ -285,13 +184,7 @@ abstract class AbstractModel
         return in_array($key, static::$fillable, true);
     }
 
-    /**
-     * Set an attribute value.
-     *
-     * @param string $key Attribute name.
-     * @param mixed $value Attribute value.
-     * @return self
-     */
+    /** Set an attribute value. */
     public function setAttribute(string $key, $value): self
     {
         $this->attributes[$key] = $value;
@@ -299,13 +192,7 @@ abstract class AbstractModel
         return $this;
     }
 
-    /**
-     * Get an attribute value.
-     *
-     * @param string $key Attribute name.
-     * @param mixed $default Default value if not found.
-     * @return mixed
-     */
+    /** Get an attribute value. */
     public function getAttribute(string $key, $default = null)
     {
         $value = $this->attributes[$key] ?? $default;
@@ -313,13 +200,7 @@ abstract class AbstractModel
         return $this->castAttribute($key, $value);
     }
 
-    /**
-     * Cast an attribute to its defined type.
-     *
-     * @param string $key Attribute name.
-     * @param mixed $value Attribute value.
-     * @return mixed
-     */
+    /** Cast an attribute to its defined type. */
     protected function castAttribute(string $key, $value)
     {
         if ($value === null) {
@@ -358,12 +239,7 @@ abstract class AbstractModel
         }
     }
 
-
-    /**
-     * Get the primary key value.
-     *
-     * @return int|null
-     */
+    /** Get the primary key value. */
     public function getId(): ?int
     {
         $id = $this->getAttribute(static::$primaryKey);
@@ -371,31 +247,20 @@ abstract class AbstractModel
         return $id !== null ? (int)$id : null;
     }
 
-    /**
-     * Get the full table name with prefix.
-     *
-     * @return string
-     */
+    /** Get the full table name with prefix. */
     public static function getTableName(): string
     {
-        return DatabaseManager::getFullTableName(static::$table);
+        $schema = SchemaRegistry::getTable(static::$table);
+        return $schema ? $schema->getFullName() : '';
     }
 
-    /**
-     * Check if the model has been modified.
-     *
-     * @return bool
-     */
+    /** Check if the model has been modified. */
     public function isDirty(): bool
     {
         return $this->attributes !== $this->original;
     }
 
-    /**
-     * Get the dirty (changed) attributes.
-     *
-     * @return array
-     */
+    /** Get the dirty (changed) attributes. */
     public function getDirty(): array
     {
         return array_filter($this->attributes, function ($value, $key) {
@@ -403,11 +268,7 @@ abstract class AbstractModel
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    /**
-     * Save the model to the database.
-     *
-     * @return bool Success status.
-     */
+    /** Save the model to the database. */
     public function save(): bool
     {
         if ($this->exists) {
@@ -417,21 +278,16 @@ abstract class AbstractModel
         return $this->performInsert();
     }
 
-    /**
-     * Perform an insert operation.
-     *
-     * @return bool Success status.
-     */
+    /** Perform an insert operation. */
     protected function performInsert(): bool
     {
         $attributes = $this->attributes;
 
-        // Add created_at timestamp if not set
         if (!isset($attributes['created_at'])) {
             $attributes['created_at'] = DateTimeUtils::now();
         }
 
-        $id = DatabaseManager::insert(static::$table, $attributes);
+        $id = DataStore::insert(static::$table, $attributes);
 
         if ($id === false) {
             return false;
@@ -444,11 +300,7 @@ abstract class AbstractModel
         return true;
     }
 
-    /**
-     * Perform an update operation.
-     *
-     * @return bool Success status.
-     */
+    /** Perform an update operation. */
     protected function performUpdate(): bool
     {
         if (!$this->isDirty()) {
@@ -457,10 +309,9 @@ abstract class AbstractModel
 
         $dirty = $this->getDirty();
 
-        // Add updated_at timestamp
         $dirty['updated_at'] = DateTimeUtils::now();
 
-        $result = DatabaseManager::update(
+        $result = DataStore::update(
             static::$table,
             $dirty,
             [static::$primaryKey => $this->getId()]
@@ -476,11 +327,7 @@ abstract class AbstractModel
         return true;
     }
 
-    /**
-     * Sync original attributes with current.
-     *
-     * @return self
-     */
+    /** Sync original attributes with current. */
     protected function syncOriginal(): self
     {
         $this->original = $this->attributes;
@@ -488,18 +335,14 @@ abstract class AbstractModel
         return $this;
     }
 
-    /**
-     * Delete the model from the database.
-     *
-     * @return bool Success status.
-     */
+    /** Delete the model from the database. */
     public function delete(): bool
     {
         if (!$this->exists) {
             return false;
         }
 
-        $result = DatabaseManager::delete(
+        $result = DataStore::delete(
             static::$table,
             [static::$primaryKey => $this->getId()]
         );
@@ -513,11 +356,7 @@ abstract class AbstractModel
         return true;
     }
 
-    /**
-     * Refresh the model from the database.
-     *
-     * @return self
-     */
+    /** Refresh the model from the database. */
     public function refresh(): self
     {
         if (!$this->exists) {
@@ -534,16 +373,11 @@ abstract class AbstractModel
         return $this;
     }
 
-    /**
-     * Get all attributes as an array.
-     *
-     * @return array
-     */
+    /** Get all attributes as an array. */
     public function toArray(): array
     {
         $attributes = $this->attributes;
 
-        // Remove hidden attributes
         foreach (static::$hidden as $key) {
             unset($attributes[$key]);
         }
@@ -551,56 +385,31 @@ abstract class AbstractModel
         return $attributes;
     }
 
-    /**
-     * Get all attributes as JSON.
-     *
-     * @param int $options JSON encode options.
-     * @return string
-     */
+    /** Get all attributes as JSON. */
     public function toJson(int $options = 0): string
     {
         return wp_json_encode($this->toArray(), $options);
     }
 
-    /**
-     * Magic getter for attributes.
-     *
-     * @param string $key Attribute name.
-     * @return mixed
-     */
+    /** Magic getter for attributes. */
     public function __get(string $key)
     {
         return $this->getAttribute($key);
     }
 
-    /**
-     * Magic setter for attributes.
-     *
-     * @param string $key Attribute name.
-     * @param mixed $value Attribute value.
-     * @return void
-     */
+    /** Magic setter for attributes. */
     public function __set(string $key, $value): void
     {
         $this->setAttribute($key, $value);
     }
 
-    /**
-     * Magic isset check for attributes.
-     *
-     * @param string $key Attribute name.
-     * @return bool
-     */
+    /** Magic isset check for attributes. */
     public function __isset(string $key): bool
     {
         return isset($this->attributes[$key]);
     }
 
-    /**
-     * Convert model to string (JSON).
-     *
-     * @return string
-     */
+    /** Convert model to string (JSON). */
     public function __toString(): string
     {
         return $this->toJson();

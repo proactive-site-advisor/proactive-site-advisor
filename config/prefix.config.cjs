@@ -1,8 +1,7 @@
 /**
  * Prefix Configuration
  *
- * After changing values here, run:
- *   npm run build
+ * After changing values here, run: npm run build
  */
 
 module.exports = {

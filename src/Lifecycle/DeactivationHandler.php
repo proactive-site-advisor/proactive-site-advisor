@@ -9,32 +9,20 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DeactivationHandler
- *
- * Handles plugin deactivation logic including cleanup of
- * scheduled events and transients.
+ * Handles plugin deactivation logic.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DeactivationHandler
 {
-    /**
-     * Register the deactivation hook.
-     *
-     * @return void
-     */
+    /** Register the deactivation hook. */
     public static function register(): void
     {
         register_deactivation_hook(PROACTIVE_SITE_ADVISOR_PLUGIN_FILE, [self::class, 'deactivate']);
     }
 
-    /**
-     * Run deactivation logic.
-     *
-     * @param bool $networkWide Whether this is a network-wide deactivation.
-     * @return void
-     */
+    /** Run deactivation logic. */
     public static function deactivate(bool $networkWide = false): void
     {
         if (!current_user_can('activate_plugins')) {
@@ -51,15 +39,12 @@ class DeactivationHandler
          * Fires after the plugin has been deactivated.
          *
          * @param bool $networkWide Whether this was a network-wide deactivation.
+         * @since  1.0.0
          */
         do_action('proactive_site_advisor_deactivated', $networkWide);
     }
 
-    /**
-     * Run deactivation for a single site.
-     *
-     * @return void
-     */
+    /** Run deactivation for a single site. */
     private static function singleDeactivate(): void
     {
         self::clearScheduledEvents();
@@ -67,11 +52,7 @@ class DeactivationHandler
         self::flushRewriteRules();
     }
 
-    /**
-     * Run deactivation for all sites in a network.
-     *
-     * @return void
-     */
+    /** Run deactivation for all sites in a network. */
     private static function networkDeactivate(): void
     {
         global $wpdb;
@@ -86,55 +67,33 @@ class DeactivationHandler
         }
     }
 
-    /**
-     * Clear all scheduled cron events.
-     *
-     * @return void
-     */
+    /** Clear all scheduled cron events. */
     private static function clearScheduledEvents(): void
     {
-        // Default hooks to clear
         $defaultHooks = [
             'proactive_site_advisor_daily_cron',
         ];
 
         /**
-         * Filter the list of cron hooks to clear on deactivation.
+         * Filters the list of cron hooks to clear on deactivation.
          *
          * @param array $hooks Array of hook names to clear.
+         * @since  1.0.0
          */
         $hooks = apply_filters('proactive_site_advisor_cron_hooks_to_clear', $defaultHooks);
 
         foreach ($hooks as $hook) {
             wp_clear_scheduled_hook($hook);
         }
-
-        /**
-         * Fires after scheduled events are cleared.
-         */
-        do_action('proactive_site_advisor_clear_scheduled_events');
     }
 
-    /**
-     * Clear plugin transients.
-     *
-     * @return void
-     */
+    /** Clear plugin transients. */
     private static function clearTransients(): void
     {
         CacheManager::instance()->flush();
-
-        /**
-         * Fires after transients are cleared.
-         */
-        do_action('proactive_site_advisor_clear_transients');
     }
 
-    /**
-     * Flush rewrite rules.
-     *
-     * @return void
-     */
+    /** Flush rewrite rules. */
     private static function flushRewriteRules(): void
     {
         flush_rewrite_rules();

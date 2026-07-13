@@ -11,21 +11,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class BotAgentSignal
+ * Detects bots based on User-Agent analysis.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class BotAgentSignal implements BotSignalInterface
 {
-    /**
-     * @var array|null
-     */
+    /** Cached custom bot patterns. */
     private static ?array $customPatterns = null;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         if (self::hasEmptyUserAgent()) {
@@ -47,11 +43,7 @@ class BotAgentSignal implements BotSignalInterface
         return false;
     }
 
-    /**
-     * Returns detected bot name.
-     *
-     * @return string|null
-     */
+    /** Returns detected bot name. */
     public static function getBotName(): ?string
     {
         $name = self::matchBotName();
@@ -67,11 +59,7 @@ class BotAgentSignal implements BotSignalInterface
         return null;
     }
 
-    /**
-     * Matches bot name from User-Agent.
-     *
-     * @return string|null
-     */
+    /** Matches bot name from User-Agent. */
     private static function matchBotName(): ?string
     {
         $ua = HeaderReader::getUserAgent();
@@ -95,12 +83,7 @@ class BotAgentSignal implements BotSignalInterface
         return $custom ?? self::matchBotNameFallback($ua);
     }
 
-    /**
-     * Fallback detection using keyword list.
-     *
-     * @param string $ua
-     * @return string|null
-     */
+    /** Fallback detection using keyword list. */
     private static function matchBotNameFallback(string $ua): ?string
     {
         $keywords = [
@@ -114,9 +97,10 @@ class BotAgentSignal implements BotSignalInterface
         ];
 
         /**
-         * Filter bot fallback keywords.
+         * Filters bot fallback keywords.
          *
          * @param string[] $keywords
+         * @since  1.0.0
          */
         $keywords = apply_filters('proactive_site_advisor_bot_fallback_keywords', $keywords);
 
@@ -133,12 +117,7 @@ class BotAgentSignal implements BotSignalInterface
         return null;
     }
 
-    /**
-     * Matches custom bot patterns.
-     *
-     * @param string $ua
-     * @return string|null
-     */
+    /** Matches custom bot patterns. */
     private static function matchCustomPattern(string $ua): ?string
     {
         foreach (self::getCustomPatterns() as $pattern) {
@@ -158,21 +137,13 @@ class BotAgentSignal implements BotSignalInterface
         return null;
     }
 
-    /**
-     * Checks if User-Agent is empty.
-     *
-     * @return bool
-     */
+    /** Checks if User-Agent is empty. */
     private static function hasEmptyUserAgent(): bool
     {
         return HeaderReader::getUserAgent() === '';
     }
 
-    /**
-     * Checks for suspicious typos in User-Agent.
-     *
-     * @return bool
-     */
+    /** Checks for suspicious typos in User-Agent. */
     private static function hasSuspiciousTypos(): bool
     {
         $ua = HeaderReader::getUserAgent();
@@ -183,9 +154,10 @@ class BotAgentSignal implements BotSignalInterface
         ];
 
         /**
-         * Filter suspicious User-Agent typos.
+         * Filters suspicious User-Agent typos.
          *
          * @param string[] $typos
+         * @since  1.0.0
          */
         $typos = apply_filters('proactive_site_advisor_suspicious_ua_typos', $typos);
 
@@ -202,11 +174,7 @@ class BotAgentSignal implements BotSignalInterface
         return false;
     }
 
-    /**
-     * Checks for headless browser indicators.
-     *
-     * @return bool
-     */
+    /** Checks for headless browser indicators. */
     private static function isHeadless(): bool
     {
         $ua = HeaderReader::getUserAgent();
@@ -225,9 +193,10 @@ class BotAgentSignal implements BotSignalInterface
         ];
 
         /**
-         * Filter headless browser patterns.
+         * Filters headless browser patterns.
          *
          * @param string[] $patterns
+         * @since  1.0.0
          */
         $patterns = apply_filters('proactive_site_advisor_headless_patterns', $patterns);
 
@@ -244,12 +213,7 @@ class BotAgentSignal implements BotSignalInterface
         return false;
     }
 
-    /**
-     * Normalizes bot name.
-     *
-     * @param string $name
-     * @return string
-     */
+    /** Normalizes bot name. */
     private static function normalizeBotName(string $name): string
     {
         $name = trim($name);
@@ -268,11 +232,7 @@ class BotAgentSignal implements BotSignalInterface
         return $name !== '' ? $name : 'unknown';
     }
 
-    /**
-     * Returns custom bot patterns from filter.
-     *
-     * @return string[]
-     */
+    /** Returns custom bot patterns from filter. */
     private static function getCustomPatterns(): array
     {
         if (self::$customPatterns !== null) {
@@ -280,9 +240,10 @@ class BotAgentSignal implements BotSignalInterface
         }
 
         /**
-         * Filter custom bot patterns.
+         * Filters custom bot patterns.
          *
          * @param string[] $patterns
+         * @since  1.0.0
          */
         $patterns = apply_filters('proactive_site_advisor_custom_bot_patterns', []);
 

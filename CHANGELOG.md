@@ -2,6 +2,12 @@
 
 
 
+= 1.0.7 – 2026-07-13 =
+
+\* Improvement: Fine-tuned bot fingerprinting for better precision.
+
+
+
 = 1.0.6 – 2026-07-03 =
 
 \* Fix: Daily metrics now stored in durable database instead of volatile cache to prevent data loss on cache clear

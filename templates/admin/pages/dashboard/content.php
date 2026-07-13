@@ -9,8 +9,8 @@
  * phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
  *
- * @package ProactiveSiteAdvisor
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Templates\Admin\Pages\Dashboard
+ * @since   1.0.0
  *
  * @var array $status
  * @var array $stats

@@ -7,40 +7,28 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AbstractSingleton
- *
- * A base abstract class for creating singleton classes.
+ * Base abstract class for creating singleton classes.
  *
  * @package ProactiveSiteAdvisor\Abstracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 abstract class AbstractSingleton
 {
-    /**
-     * Holds singleton instances of all child classes.
-     *
-     * @var array
-     */
+    /** Holds singleton instances of all child classes. */
     private static array $instances = [];
 
-    /**
-     * Protected constructor to prevent direct creation.
-     */
+    /** Protected constructor to prevent direct creation. */
     protected function __construct()
     {
     }
 
-    /**
-     * Cloning is not allowed.
-     */
+    /** Cloning is not allowed. */
     protected function __clone()
     {
         _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'proactive-site-advisor'), '1.0.0');
     }
 
-    /**
-     * Instances of this class cannot be unserialized.
-     */
+    /** Instances of this class cannot be unserialized. */
     public function __wakeup(): void
     {
         _doing_it_wrong(__FUNCTION__, esc_html__('Instances of this class cannot be unserialized.', 'proactive-site-advisor'), '1.0.0');
@@ -49,7 +37,7 @@ abstract class AbstractSingleton
     /**
      * Returns the singleton instance of the class.
      *
-     * @return static The singleton instance.
+     * @return static
      */
     public static function instance(): self
     {

@@ -7,20 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Environment
- *
  * Detects the current execution environment.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class Environment
 {
-    /**
-     * Check if running in local development environment.
-     *
-     * @return bool
-     */
+    /** Check if running in local development environment. */
     public static function isLocal(): bool
     {
         $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';

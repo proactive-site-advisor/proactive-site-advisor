@@ -2,6 +2,9 @@
  * Admin UI - Configuration
  *
  * Requires: namespace.js
+ *
+ * @fileoverview Configuration and utility functions for admin UI
+ * @version 1.0.0
  */
 (function (window, document) {
     'use strict';

@@ -4,7 +4,7 @@ namespace ProactiveSiteAdvisor\Lifecycle;
 
 use ProactiveSiteAdvisor\Cache\CacheGroups;
 use ProactiveSiteAdvisor\Cache\CacheManager;
-use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\VersionManager;
 use ProactiveSiteAdvisor\Database\Migration;
 
 if (!defined('ABSPATH')) {
@@ -12,31 +12,20 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class UpdateHandler
- *
- * Handles plugin update logic including database migrations
- * and version-specific upgrades.
+ * Handles plugin update logic including database migrations.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.0
+ * @since   1.0.0
  */
 class UpdateHandler
 {
-    /**
-     * Register the update handler.
-     *
-     * @return void
-     */
+    /** Register the update handler. */
     public static function register(): void
     {
         add_action('admin_init', [self::class, 'checkForUpdates']);
     }
 
-    /**
-     * Check for and run updates on admin init.
-     *
-     * @return void
-     */
+    /** Check for and run updates on admin init. */
     public static function checkForUpdates(): void
     {
         if (!current_user_can('manage_options')) {
@@ -50,14 +39,10 @@ class UpdateHandler
         }
     }
 
-    /**
-     * Run update for a single site.
-     *
-     * @return void
-     */
+    /** Run update for a single site. */
     private static function singleUpdate(): void
     {
-        if (DatabaseManager::needsUpdate()) {
+        if (VersionManager::needsUpdate()) {
             self::runDatabaseMigrations();
 
             self::flushRewriteRules();
@@ -65,16 +50,14 @@ class UpdateHandler
 
             /**
              * Fires after the plugin has been updated.
+             *
+             * @since 1.0.0
              */
             do_action('proactive_site_advisor_updated');
         }
     }
 
-    /**
-     * Run update for all sites in a network.
-     *
-     * @return void
-     */
+    /** Run update for all sites in a network. */
     private static function networkUpdate(): void
     {
         global $wpdb;
@@ -89,38 +72,28 @@ class UpdateHandler
         }
     }
 
-    /**
-     * Run database migrations.
-     *
-     * @return void
-     */
+    /** Run database migrations. */
     private static function runDatabaseMigrations(): void
     {
         Migration::up();
 
-        DatabaseManager::saveVersion();
+        VersionManager::saveVersion();
 
         /**
          * Fires after database migrations are run.
+         *
+         * @since 1.0.0
          */
         do_action('proactive_site_advisor_database_migrations_complete');
     }
 
-    /**
-     * Flush rewrite rules.
-     *
-     * @return void
-     */
+    /** Flush rewrite rules. */
     private static function flushRewriteRules(): void
     {
         flush_rewrite_rules();
     }
 
-    /**
-     * Clear plugin transients.
-     *
-     * @return void
-     */
+    /** Clear plugin transients. */
     private static function clearTransients(): void
     {
         $cache = CacheManager::instance();

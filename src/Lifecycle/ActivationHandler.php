@@ -12,41 +12,25 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class ActivationHandler
- *
- * Handles plugin activation logic including version tracking,
- * database table creation, and initial setup.
+ * Handles plugin activation logic.
  *
  * @package ProactiveSiteAdvisor\Lifecycle
- * @version 1.0.0
+ * @since   1.0.0
  */
 class ActivationHandler
 {
-    /**
-     * Registered table schema classes
-     *
-     * @var array
-     */
+    /** Registered table schema classes. */
     private static array $tableSchemas = [
         CoreTables::class,
     ];
 
-    /**
-     * Register the activation hook.
-     *
-     * @return void
-     */
+    /** Register the activation hook. */
     public static function register(): void
     {
         register_activation_hook(PROACTIVE_SITE_ADVISOR_PLUGIN_FILE, [self::class, 'activate']);
     }
 
-    /**
-     * Run activation logic.
-     *
-     * @param bool $networkWide Whether this is a network-wide activation.
-     * @return void
-     */
+    /** Run activation logic. */
     public static function activate(bool $networkWide = false): void
     {
         if (!current_user_can('activate_plugins')) {
@@ -63,15 +47,12 @@ class ActivationHandler
          * Fires after the plugin has been activated.
          *
          * @param bool $networkWide
+         * @since  1.0.0
          */
         do_action('proactive_site_advisor_activated', $networkWide);
     }
 
-    /**
-     * Run activation for a single site.
-     *
-     * @return void
-     */
+    /** Run activation for a single site. */
     private static function singleActivate(): void
     {
         self::setDefaultOptions();
@@ -80,11 +61,7 @@ class ActivationHandler
         self::setVersion();
     }
 
-    /**
-     * Run activation for all sites in a network.
-     *
-     * @return void
-     */
+    /** Run activation for all sites in a network. */
     private static function networkActivate(): void
     {
         global $wpdb;
@@ -99,21 +76,13 @@ class ActivationHandler
         }
     }
 
-    /**
-     * Set the plugin version in the database.
-     *
-     * @return void
-     */
+    /** Set the plugin version in the database. */
     private static function setVersion(): void
     {
         OptionUtils::setMeta(PluginMeta::VERSION, PROACTIVE_SITE_ADVISOR_VERSION);
     }
 
-    /**
-     * Create database tables.
-     *
-     * @return void
-     */
+    /** Create database tables. */
     private static function createTables(): void
     {
         foreach (self::$tableSchemas as $schemaClass) {
@@ -123,11 +92,7 @@ class ActivationHandler
         }
     }
 
-    /**
-     * Set default plugin options.
-     *
-     * @return void
-     */
+    /** Set default plugin options. */
     private static function setDefaultOptions(): void
     {
         $optionName = PluginOptions::OPTION_NAME;
@@ -137,11 +102,7 @@ class ActivationHandler
         }
     }
 
-    /**
-     * Flush rewrite rules.
-     *
-     * @return void
-     */
+    /** Flush rewrite rules. */
     private static function flushRewriteRules(): void
     {
         add_action('shutdown', static function () {

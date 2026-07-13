@@ -1,8 +1,11 @@
 /**
  * Admin UI - Alert Card Component
  *
- * Handles expand/collapse functionality for alert cards with details
+ * Handles expand/collapse functionality for alert cards with details.
  * Requires: namespace.js, helpers.js
+ *
+ * @fileoverview Alert card expand/collapse functionality
+ * @version 1.0.0
  */
 (function (window, document) {
     'use strict';

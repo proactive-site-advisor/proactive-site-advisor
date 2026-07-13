@@ -11,21 +11,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class ReferrerSignal
+ * Detects bots based on referrer spam analysis.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class ReferrerSignal implements BotSignalInterface
 {
-    /**
-     * @var array|null
-     */
+    /** Cached referrer spam list. */
     private static ?array $spamList = null;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         $referrerUrl = HeaderReader::getReferer();
@@ -34,13 +30,7 @@ class ReferrerSignal implements BotSignalInterface
         return $this->isSpamReferrer($referrerUrl, $currentHost);
     }
 
-    /**
-     * Checks if referrer is spam.
-     *
-     * @param string $referrerUrl
-     * @param string $currentHost
-     * @return bool
-     */
+    /** Checks if referrer is spam. */
     private function isSpamReferrer(string $referrerUrl, string $currentHost): bool
     {
         $referrerHost = $this->extractHost($referrerUrl);
@@ -58,13 +48,7 @@ class ReferrerSignal implements BotSignalInterface
         return in_array($referrerHost, $spamList, true);
     }
 
-    /**
-     * Checks if referrer is from the same domain.
-     *
-     * @param string $referrerHost
-     * @param string $currentHost
-     * @return bool
-     */
+    /** Checks if referrer is from the same domain. */
     private function isSelfReferrer(string $referrerHost, string $currentHost): bool
     {
         if ($referrerHost === '' || $currentHost === '') {
@@ -77,12 +61,7 @@ class ReferrerSignal implements BotSignalInterface
         return $referrerHost === $currentHost || str_ends_with($referrerHost, '.' . $currentHost);
     }
 
-    /**
-     * Extracts host from URL.
-     *
-     * @param string $url
-     * @return string
-     */
+    /** Extracts host from URL. */
     private function extractHost(string $url): string
     {
         if ($url === '') {
@@ -98,11 +77,7 @@ class ReferrerSignal implements BotSignalInterface
         return strtolower($parsed['host']);
     }
 
-    /**
-     * Returns spam list from data file.
-     *
-     * @return array
-     */
+    /** Returns spam list from data file. */
     private function getSpamList(): array
     {
         if (self::$spamList !== null) {
@@ -112,9 +87,10 @@ class ReferrerSignal implements BotSignalInterface
         self::$spamList = DataLoader::loadReferrerSpamList();
 
         /**
-         * Filter referrer spam list.
+         * Filters referrer spam list.
          *
          * @param string[] $spamList
+         * @since  1.0.0
          */
         self::$spamList = apply_filters('proactive_site_advisor_referrer_spam_list', self::$spamList);
 

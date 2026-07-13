@@ -7,43 +7,25 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Request
- *
- * Request Utility for WordPress Plugins
- *
  * Minimal helper for safely reading GET/POST parameters.
- * Uses WordPress sanitize functions and wp_unslash().
  *
  * phpcs:disable WordPress.Security.NonceVerification
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class Request
 {
-    /**
-     * Maximum path length to store.
-     */
+    /** Maximum path length to store. */
     private const MAX_PATH_LENGTH = 180;
 
-    /**
-     * Get data source array based on method.
-     *
-     * @param string $method 'get' or 'post'.
-     * @return array
-     */
+    /** Get data source array based on method. */
     private static function source(string $method = 'get'): array
     {
         return strtolower($method) === 'post' ? $_POST : $_GET;
     }
 
-    /**
-     * Fetch raw (unslashed) value from the selected source.
-     *
-     * @param string $key
-     * @param string $method 'get' or 'post'.
-     * @return array|string|null
-     */
+    /** Fetch raw (unslashed) value from the selected source. */
     private static function value(string $key, string $method = 'get')
     {
         $src = self::source($method);
@@ -52,18 +34,10 @@ class Request
             return null;
         }
 
-        // Unslash safely
         return wp_unslash($src[$key]);
     }
 
-    /**
-     * Get sanitized array.
-     *
-     * @param string $key
-     * @param array $default
-     * @param string $method
-     * @return array
-     */
+    /** Get sanitized array. */
     public static function arr(string $key, array $default = [], string $method = 'get'): array
     {
         $inputType = $method === 'post' ? INPUT_POST : INPUT_GET;
@@ -72,107 +46,55 @@ class Request
         return is_array($value) ? wp_unslash($value) : $default;
     }
 
-    /**
-     * Get sanitized string value.
-     *
-     * @param string $key
-     * @param string $default
-     * @param string $method
-     * @return string
-     */
+    /** Get sanitized string value. */
     public static function str(string $key, string $default = '', string $method = 'get'): string
     {
         $value = self::value($key, $method);
         return is_string($value) ? sanitize_text_field($value) : $default;
     }
 
-    /**
-     * Get sanitized WordPress key.
-     *
-     * @param string $key
-     * @param string $default
-     * @param string $method
-     * @return string
-     */
+    /** Get sanitized WordPress key. */
     public static function key(string $key, string $default = '', string $method = 'get'): string
     {
         $value = self::value($key, $method);
         return is_string($value) ? sanitize_key($value) : $default;
     }
 
-    /**
-     * Get sanitized text area content.
-     *
-     * @param string $key
-     * @param string $default
-     * @param string $method
-     * @return string
-     */
+    /** Get sanitized text area content. */
     public static function text(string $key, string $default = '', string $method = 'get'): string
     {
         $value = self::value($key, $method);
         return is_string($value) ? sanitize_textarea_field($value) : $default;
     }
 
-    /**
-     * Get sanitized URL.
-     *
-     * @param string $key
-     * @param string $default
-     * @param string $method
-     * @return string
-     */
+    /** Get sanitized URL. */
     public static function url(string $key, string $default = '', string $method = 'get'): string
     {
         $value = self::value($key, $method);
         return is_string($value) ? esc_url_raw($value) : $default;
     }
 
-    /**
-     * Get integer value.
-     *
-     * @param string $key
-     * @param int $default
-     * @param string $method
-     * @return int
-     */
+    /** Get integer value. */
     public static function int(string $key, int $default = 0, string $method = 'get'): int
     {
         $value = self::value($key, $method);
         return is_numeric($value) ? (int)$value : $default;
     }
 
-    /**
-     * Get boolean value.
-     *
-     * @param string $key
-     * @param bool $default
-     * @param string $method
-     * @return bool
-     */
+    /** Get boolean value. */
     public static function bool(string $key, bool $default = false, string $method = 'get'): bool
     {
         $value = self::value($key, $method);
         return $value !== null ? (bool)filter_var($value, FILTER_VALIDATE_BOOLEAN) : $default;
     }
 
-    /**
-     * Check if parameter exists.
-     *
-     * @param string $key
-     * @param string $method
-     * @return bool
-     */
+    /** Check if parameter exists. */
     public static function has(string $key, string $method = 'get'): bool
     {
         return isset(self::source($method)[$key]);
     }
 
-    /**
-     * Get request method (GET/POST).
-     *
-     * @return string
-     */
+    /** Get request method (GET/POST). */
     public static function method(): string
     {
         return isset($_SERVER['REQUEST_METHOD'])
@@ -180,11 +102,7 @@ class Request
             : 'get';
     }
 
-    /**
-     * Get the request path without query parameters.
-     *
-     * @return string The sanitized path, or empty string if invalid.
-     */
+    /** Get the request path without query parameters. */
     public static function getRequestPath(): string
     {
         $uri = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
@@ -197,16 +115,13 @@ class Request
             return '';
         }
 
-        // Normalize
         $path = rawurldecode($path);
         $path = sanitize_text_field($path);
 
-        // Remove trailing slash except root
         if ($path !== '/' && str_ends_with($path, '/')) {
             $path = rtrim($path, '/');
         }
 
-        // Limit length to avoid abuse
         if (strlen($path) > self::MAX_PATH_LENGTH) {
             $path = substr($path, 0, self::MAX_PATH_LENGTH);
         }

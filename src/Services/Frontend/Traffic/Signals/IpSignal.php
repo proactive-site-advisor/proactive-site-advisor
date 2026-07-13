@@ -10,16 +10,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class IpSignal
+ * Detects bots based on IP address analysis.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class IpSignal implements BotSignalInterface
 {
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         $ip = HeaderReader::getIp();
@@ -39,12 +37,7 @@ class IpSignal implements BotSignalInterface
         return false;
     }
 
-    /**
-     * Checks if IP is private or reserved.
-     *
-     * @param string $ip
-     * @return bool
-     */
+    /** Checks if IP is private or reserved. */
     private function isPrivateIp(string $ip): bool
     {
         if (!filter_var($ip, FILTER_VALIDATE_IP)) {
@@ -58,12 +51,7 @@ class IpSignal implements BotSignalInterface
         );
     }
 
-    /**
-     * Checks if IP is from a known datacenter.
-     *
-     * @param string $ip
-     * @return bool
-     */
+    /** Checks if IP is from a known datacenter. */
     private function isDatacenterIp(string $ip): bool
     {
         $ranges = $this->getDatacenterRanges();
@@ -77,30 +65,21 @@ class IpSignal implements BotSignalInterface
         return false;
     }
 
-    /**
-     * Returns filterable datacenter IP ranges.
-     *
-     * @return array
-     */
+    /** Returns filterable datacenter IP ranges. */
     private function getDatacenterRanges(): array
     {
         /**
-         * Filter datacenter IP ranges.
+         * Filters datacenter IP ranges.
          *
          * @param string[] $ranges List of CIDR ranges.
+         * @since  1.0.0
          */
         $ranges = apply_filters('proactive_site_advisor_datacenter_ip_ranges', []);
 
         return is_array($ranges) ? $ranges : [];
     }
 
-    /**
-     * Checks if IP is within a CIDR range.
-     *
-     * @param string $ip
-     * @param string $range
-     * @return bool
-     */
+    /** Checks if IP is within a CIDR range. */
     private function ipInRange(string $ip, string $range): bool
     {
         if (strpos($range, '/') === false) {

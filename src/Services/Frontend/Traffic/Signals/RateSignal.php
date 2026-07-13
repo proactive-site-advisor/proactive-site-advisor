@@ -14,24 +14,23 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class RateSignal
+ * Detects bots based on request rate analysis.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class RateSignal implements BotSignalInterface, ScoreSignalInterface
 {
-    private const WINDOW      = 10;
+    /** Rate window in seconds. */
+    private const WINDOW = 10;
+
+    /** Maximum allowed burst requests. */
     private const BURST_LIMIT = 3;
 
-    /**
-     * @var int|null
-     */
+    /** Cached request count. */
     private static ?int $count = null;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         if ($this->hasHighBurstRate()) {
@@ -45,9 +44,7 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function getScore(): int
     {
         $count = $this->count();
@@ -59,21 +56,13 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
         return 1;
     }
 
-    /**
-     * Checks if request rate is blatantly a bot.
-     *
-     * @return bool
-     */
+    /** Checks if request rate is blatantly a bot. */
     private function isBlatantBot(): bool
     {
         return $this->count() > 10;
     }
 
-    /**
-     * Checks if request burst rate exceeds limit.
-     *
-     * @return bool
-     */
+    /** Checks if request burst rate exceeds limit. */
     private function hasHighBurstRate(): bool
     {
         static $burstCount = null;
@@ -96,11 +85,7 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
         return $burstCount > self::BURST_LIMIT;
     }
 
-    /**
-     * Returns request count within the window.
-     *
-     * @return int
-     */
+    /** Returns request count within the window. */
     private function count(): int
     {
         if (self::$count !== null) {
@@ -122,11 +107,7 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
         return $count;
     }
 
-    /**
-     * Builds anonymous requester fingerprint.
-     *
-     * @return string
-     */
+    /** Builds anonymous requester fingerprint. */
     private function requestHash(): string
     {
         $ip = HeaderReader::getIp();

@@ -3,7 +3,7 @@
 namespace ProactiveSiteAdvisor\Models;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractModel;
-use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\QueryRunner;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
@@ -11,28 +11,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyStats
- *
  * Model for daily statistics including pageviews and 404 errors.
- * Stores one record per day with aggregated traffic data.
  *
  * @package ProactiveSiteAdvisor\Models
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DailyStats extends AbstractModel
 {
-    /**
-     * Table name (without prefix)
-     *
-     * @var string
-     */
+    /** Table name (without prefix). */
     protected static string $table = 'daily_stats';
 
-    /**
-     * Fillable fields (allowed for mass assignment)
-     *
-     * @var array
-     */
+    /** Fillable fields (allowed for mass assignment). */
     protected static array $fillable = [
         'stats_date',
         'pageviews',
@@ -42,11 +31,7 @@ class DailyStats extends AbstractModel
         'top_bots_json',
     ];
 
-    /**
-     * Attribute type casts
-     *
-     * @var array
-     */
+    /** Attribute type casts. */
     protected static array $casts = [
         'pageviews'     => 'integer',
         'errors_404'    => 'integer',
@@ -55,20 +40,13 @@ class DailyStats extends AbstractModel
         'top_bots_json' => 'json',
     ];
 
-
-    /**
-     * Ensure a row exists for the given date.
-     *
-     * @param string $dateYmd
-     *
-     * @return void
-     */
+    /** Ensure a row exists for the given date. */
     public static function ensureDayExists(string $dateYmd): void
     {
         $table  = static::getTableName();
         $nowRaw = DateTimeUtils::now();
 
-        DatabaseManager::preparedQuery(
+        QueryRunner::preparedQuery(
             "INSERT IGNORE INTO $table (stats_date, pageviews, errors_404, top_404_json, bot_pageviews, top_bots_json, created_at, updated_at)
              VALUES (%s, 0, 0, NULL, 0, NULL, %s, %s)",
             $dateYmd,
@@ -77,24 +55,13 @@ class DailyStats extends AbstractModel
         );
     }
 
-    /**
-     * Increment statistics and update top 404 paths for a specific date.
-     *
-     * @param string $dateYmd
-     * @param int $pageviews
-     * @param int $errors404
-     * @param string|null $top404Json
-     * @param int $botPageviews
-     * @param string|null $topBotsJson
-     *
-     * @return void
-     */
+    /** Increment statistics and update top 404 paths for a specific date. */
     public static function updateDay(string $dateYmd, int $pageviews, int $errors404, ?string $top404Json, int $botPageviews, ?string $topBotsJson): void
     {
         $table  = static::getTableName();
         $nowRaw = DateTimeUtils::now();
 
-        DatabaseManager::preparedQuery(
+        QueryRunner::preparedQuery(
             "UPDATE $table SET
                 pageviews = pageviews + %d,
                 errors_404 = errors_404 + %d,
@@ -113,49 +80,29 @@ class DailyStats extends AbstractModel
         );
     }
 
-    /**
-     * Delete records older than the given date.
-     *
-     * @param string $dateYmd
-     *
-     * @return void
-     */
+    /** Delete records older than the given date. */
     public static function purgeOlderThan(string $dateYmd): void
     {
         $table = static::getTableName();
 
-        DatabaseManager::preparedQuery(
+        QueryRunner::preparedQuery(
             "DELETE FROM $table WHERE stats_date < %s",
             $dateYmd
         );
     }
 
-    /**
-     * Delete the record for a specific date.
-     *
-     * @param string $dateYmd
-     *
-     * @return void
-     */
+    /** Delete the record for a specific date. */
     public static function deleteByDate(string $dateYmd): void
     {
         $table = static::getTableName();
 
-        DatabaseManager::preparedQuery(
+        QueryRunner::preparedQuery(
             "DELETE FROM $table WHERE stats_date = %s",
             $dateYmd
         );
     }
 
-    /**
-     * Atomically increment a numeric column for a specific date.
-     * Uses INSERT ... ON DUPLICATE KEY UPDATE to prevent race conditions.
-     *
-     * @param string $dateYmd
-     * @param string $column
-     * @param int $amount
-     * @return void
-     */
+    /** Atomically increment a numeric column for a specific date. */
     public static function incrementAtomic(string $dateYmd, string $column, int $amount): void
     {
         $table  = static::getTableName();
@@ -166,7 +113,7 @@ class DailyStats extends AbstractModel
             return;
         }
 
-        DatabaseManager::preparedQuery(
+        QueryRunner::preparedQuery(
             "INSERT INTO $table (stats_date, $column, created_at, updated_at) 
              VALUES (%s, %d, %s, %s) 
              ON DUPLICATE KEY UPDATE 
@@ -183,12 +130,6 @@ class DailyStats extends AbstractModel
 
     /**
      * Update a JSON column by merging new data and keeping only top N entries.
-     *
-     * @param string $dateYmd
-     * @param string $jsonColumn
-     * @param array $newData
-     * @param int $maxEntries
-     * @return void
      */
     public static function updateJsonMap(string $dateYmd, string $jsonColumn, array $newData, int $maxEntries = 30): void
     {
@@ -218,7 +159,7 @@ class DailyStats extends AbstractModel
 
         $jsonValue = !empty($currentData) ? wp_json_encode($currentData) : null;
 
-        DatabaseManager::preparedQuery(
+        QueryRunner::preparedQuery(
             "INSERT INTO $table (stats_date, $jsonColumn, created_at, updated_at) 
              VALUES (%s, %s, %s, %s) 
              ON DUPLICATE KEY UPDATE 
@@ -233,14 +174,7 @@ class DailyStats extends AbstractModel
         );
     }
 
-    /**
-     * Get JSON map data for a specific date and column.
-     *
-     * @param string $dateYmd
-     * @param string $jsonColumn
-     *
-     * @return array
-     */
+    /** Get JSON map data for a specific date and column. */
     private static function getJsonMap(string $dateYmd, string $jsonColumn): array
     {
         global $wpdb;

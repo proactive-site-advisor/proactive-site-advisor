@@ -7,39 +7,24 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AbstractDataProvider
+ * Base class for data providers.
  *
  * @package ProactiveSiteAdvisor\Abstracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 abstract class AbstractDataProvider
 {
-    /**
-     * Sanitize and qualify ORDER BY clause.
-     *
-     * @param string $orderBy
-     * @param string $order
-     * @param string $table
-     * @param array $allowed
-     * @return string[]
-     */
+    /** Sanitize and qualify ORDER BY clause. */
     protected function sanitizeSorting(string $orderBy, string $order, string $table, array $allowed): array
     {
         if (!in_array($orderBy, $allowed, true)) {
-            $orderBy = $allowed[0]; // default to first column
+            $orderBy = $allowed[0];
         }
         $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
-        return ["{$table}.{$orderBy}", $order];
+        return ["$table.$orderBy", $order];
     }
 
-    /**
-     * Convert numeric filter logic into SQL.
-     *
-     * Supported formats:
-     * 0
-     * range:1-10
-     * gte:100
-     */
+    /** Convert numeric filter logic into SQL. */
     protected function applyNumericFilter(?string $value, array &$where, array &$params, string $field, string $table): void
     {
         if ($value === null || $value === '') {
@@ -51,39 +36,29 @@ abstract class AbstractDataProvider
             $range = substr($value, 6);
             [$min, $max] = array_map('trim', explode('-', $range));
 
-            $where[] = "{$table}.{$field} BETWEEN %d AND %d";
+            $where[] = "$table.$field BETWEEN %d AND %d";
             array_push($params, (int)$min, (int)$max);
 
         } elseif (str_starts_with($value, 'gte:')) {
 
             $min = (int)substr($value, 4);
 
-            $where[]  = "{$table}.{$field} >= %d";
+            $where[]  = "$table.$field >= %d";
             $params[] = $min;
 
         } else {
 
-            // exact match (like 0)
-            $where[]  = "{$table}.{$field} = %d";
+            $where[]  = "$table.$field = %d";
             $params[] = (int)$value;
 
         }
     }
 
-    /**
-     * Apply "less than or equal" integer filter.
-     *
-     * @param string|null $value
-     * @param array $where
-     * @param array $params
-     * @param string $field
-     * @param string $table
-     * @return void
-     */
+    /** Apply "less than or equal" integer filter. */
     protected function applyMaxFilter(?string $value, array &$where, array &$params, string $field, string $table): void
     {
         if (!empty($value)) {
-            $where[]  = "{$table}.{$field} <= %d";
+            $where[]  = "$table.$field <= %d";
             $params[] = (int)$value;
         }
     }
@@ -91,11 +66,7 @@ abstract class AbstractDataProvider
     /**
      * Build pagination metadata response.
      *
-     * @param array $rows
-     * @param int $total
-     * @param int $perPage
-     * @param string $modelClass
-     * @return array
+     * @param class-string<AbstractModel> $modelClass
      */
     protected function formatPaginatedResult(array $rows, int $total, int $perPage, string $modelClass): array
     {

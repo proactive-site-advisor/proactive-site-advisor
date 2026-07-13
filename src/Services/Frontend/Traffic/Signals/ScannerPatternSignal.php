@@ -11,21 +11,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class ScannerPatternSignal
+ * Detects bots based on known scanner URL patterns.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
- * @version 1.0.0
+ * @since   1.0.0
  */
 class ScannerPatternSignal implements BotSignalInterface
 {
-    /**
-     * @var array|null
-     */
+    /** Cached scanner patterns. */
     private static ?array $patterns = null;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public function isBot(): bool
     {
         if (!is_404() || is_user_logged_in()) {
@@ -43,11 +39,7 @@ class ScannerPatternSignal implements BotSignalInterface
         return false;
     }
 
-    /**
-     * Returns scanner patterns.
-     *
-     * @return array
-     */
+    /** Returns scanner patterns. */
     private function getPatterns(): array
     {
         if (self::$patterns !== null) {
@@ -57,9 +49,10 @@ class ScannerPatternSignal implements BotSignalInterface
         $patterns = DataLoader::loadScanner404Patterns();
 
         /**
-         * Filter scanner 404 patterns.
+         * Filters scanner 404 patterns.
          *
          * @param string[] $patterns
+         * @since  1.0.0
          */
         $patterns = apply_filters('proactive_site_advisor_scanner_404_patterns', $patterns);
 

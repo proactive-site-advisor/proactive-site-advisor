@@ -9,17 +9,12 @@ if (!defined('ABSPATH')) {
 /**
  * Query caching layer for database operations.
  *
- * Provides stable cache keys and grouped invalidation
- * for SQL queries and common WordPress query types.
- *
  * @package ProactiveSiteAdvisor\Cache
- * @version 1.0.0
+ * @since   1.0.0
  */
 class QueryCache
 {
-    /**
-     * Default cache expiration (seconds).
-     */
+    /** Default cache expiration (seconds). */
     public const DEFAULT_EXPIRATION = 900;
 
     /**
@@ -29,25 +24,13 @@ class QueryCache
      */
     private CacheManager $cache;
 
-    /**
-     * Constructor.
-     *
-     * @version 1.0.0
-     */
+    /** Constructor. */
     public function __construct()
     {
         $this->cache = CacheManager::instance();
     }
 
-    /**
-     * Cache raw SQL query result.
-     *
-     * @param string $sql
-     * @param callable $callback
-     * @param int|null $expiration
-     *
-     * @return mixed
-     */
+    /** Cache raw SQL query result. */
     public function remember(string $sql, callable $callback, ?int $expiration = null)
     {
         $key        = $this->generateSqlKey($sql);
@@ -61,16 +44,7 @@ class QueryCache
         );
     }
 
-    /**
-     * Cache prepared SQL query result.
-     *
-     * @param string $sql
-     * @param array $args
-     * @param callable $callback
-     * @param int|null $expiration
-     *
-     * @return mixed
-     */
+    /** Cache prepared SQL query result. */
     public function rememberPrepared(string $sql, array $args, callable $callback, ?int $expiration = null)
     {
         global $wpdb;
@@ -93,15 +67,7 @@ class QueryCache
         );
     }
 
-    /**
-     * Cache WP_Query result.
-     *
-     * @param array $args
-     * @param callable $callback
-     * @param int|null $expiration
-     *
-     * @return mixed
-     */
+    /** Cache WP_Query result. */
     public function rememberPostQuery(array $args, callable $callback, ?int $expiration = null)
     {
         $key        = 'posts_' . $this->hashArgs($args);
@@ -115,15 +81,7 @@ class QueryCache
         );
     }
 
-    /**
-     * Cache term query result.
-     *
-     * @param array $args
-     * @param callable $callback
-     * @param int|null $expiration
-     *
-     * @return mixed
-     */
+    /** Cache term query result. */
     public function rememberTermQuery(array $args, callable $callback, ?int $expiration = null)
     {
         $key        = 'terms_' . $this->hashArgs($args);
@@ -137,15 +95,7 @@ class QueryCache
         );
     }
 
-    /**
-     * Cache user query result.
-     *
-     * @param array $args
-     * @param callable $callback
-     * @param int|null $expiration
-     *
-     * @return mixed
-     */
+    /** Cache user query result. */
     public function rememberUserQuery(array $args, callable $callback, ?int $expiration = null)
     {
         $key        = 'users_' . $this->hashArgs($args);
@@ -159,16 +109,7 @@ class QueryCache
         );
     }
 
-    /**
-     * Cache custom table query result.
-     *
-     * @param string $table
-     * @param array $args
-     * @param callable $callback
-     * @param int|null $expiration
-     *
-     * @return mixed
-     */
+    /** Cache custom table query result. */
     public function rememberTableQuery(string $table, array $args, callable $callback, ?int $expiration = null)
     {
         $key        = 'table_' . $table . '_' . $this->hashArgs($args);
@@ -182,51 +123,31 @@ class QueryCache
         );
     }
 
-    /**
-     * Invalidate entire query cache group.
-     *
-     * @return bool
-     */
+    /** Invalidate entire query cache group. */
     public function invalidate(): bool
     {
         return $this->cache->flushGroup(CacheGroups::QUERY);
     }
 
-    /**
-     * Invalidate post-related queries.
-     *
-     * @return void
-     */
+    /** Invalidate post-related queries. */
     public function invalidatePost(): void
     {
         $this->invalidate();
     }
 
-    /**
-     * Invalidate term-related queries.
-     *
-     * @return void
-     */
+    /** Invalidate term-related queries. */
     public function invalidateTerm(): void
     {
         $this->invalidate();
     }
 
-    /**
-     * Invalidate custom table queries.
-     *
-     * @return void
-     */
+    /** Invalidate custom table queries. */
     public function invalidateTable(): void
     {
         $this->invalidate();
     }
 
-    /**
-     * Register WordPress cache invalidation hooks.
-     *
-     * @return void
-     */
+    /** Register WordPress cache invalidation hooks. */
     public function registerInvalidationHooks(): void
     {
         add_action('save_post', [$this, 'invalidatePost']);
@@ -238,12 +159,7 @@ class QueryCache
         add_action('delete_term', [$this, 'invalidateTerm']);
     }
 
-    /**
-     * Generate stable hash for query arguments.
-     *
-     * @param array $args
-     * @return string
-     */
+    /** Generate stable hash for query arguments. */
     private function hashArgs(array $args): string
     {
         ksort($args);
@@ -251,12 +167,7 @@ class QueryCache
         return md5(wp_json_encode($args));
     }
 
-    /**
-     * Generate SQL cache key.
-     *
-     * @param string $sql
-     * @return string
-     */
+    /** Generate SQL cache key. */
     private function generateSqlKey(string $sql): string
     {
         $sql = trim(preg_replace('/\s+/', ' ', $sql));

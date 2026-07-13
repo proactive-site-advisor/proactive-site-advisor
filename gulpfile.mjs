@@ -23,9 +23,7 @@ const __dirname = path.dirname(__filename);
 const sass = gulpSass(dartSass);
 const require = createRequire(import.meta.url);
 
-/**
- * Load Prefix Config
- */
+/** Load prefix configuration. */
 function loadPrefixConfig() {
     try {
         const configPath = path.resolve(__dirname, 'config/prefix.config.cjs');
@@ -45,9 +43,7 @@ function loadPrefixConfig() {
     }
 }
 
-/**
- * Paths
- */
+/** Build path configuration. */
 const paths = {
     config: {
         src: 'config/prefix.config.cjs',
@@ -78,9 +74,7 @@ const paths = {
     },
 };
 
-/**
- * Generate Prefix Files
- */
+/** Generate prefix files for SCSS, JS, and PHP. */
 export async function generatePrefixFiles(cb) {
     const p = await loadPrefixConfig();
 
@@ -206,124 +200,72 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class PrefixConfig
+ * Provides helper methods to generate prefixed identifiers.
  *
- * Provides helper methods to generate prefixed identifiers
- * used across the plugin.
- *
- * @package ${phpNamespace}\\Config
- * @version 1.0.0
+ * @since      1.0.0
+ * @package    ${phpNamespace}
+ * @subpackage Config
  */
-final class PrefixConfig
+class PrefixConfig
 {
-    /**
-     * Used for unique identifiers.
-     */
+    /** Used for unique identifiers. */
     public const SLUG = '${slug}';
-    
-    /**
-     * Used for CSS classes (kebab-case).
-     */
+
+    /** Used for CSS classes (kebab-case). */
     public const BASE = '${base}';
 
-    /**
-     * PHP-safe prefix (snake_case).
-     */
+    /** PHP-safe prefix (snake_case). */
     public const PREFIX = '${basePhp}';
 
-    /**
-     * Global JS config object name.
-     */
+    /** Global JS config object name. */
     public const CONFIG_OBJECT = '${configObject}';
 
-    /**
-     * Prevent instantiation.
-     */
+    /** Prevent instantiation. */
     private function __construct(){}
-    
-    /**
-     * Build a BASE-prefixed string (kebab-case).
-     *
-     * @param string $name Suffix to append.
-     * @return string
-     */
+
+    /** Build a BASE-prefixed string (kebab-case). */
     public static function base(string $name): string
     {
         return self::BASE . '-' . $name;
     }
-    
-    /**
-     * Build a PREFIX-prefixed string (snake_case).
-     *
-     * @param string $name Suffix to append.
-     * @return string
-     */
+
+    /** Build a PREFIX-prefixed string (snake_case). */
     public static function prefix(string $name): string
     {
         return self::PREFIX . '_' . $name;
     }
 
-    /**
-     * Generate a prefixed CSS class.
-     *
-     * @param string $name Class suffix.
-     * @return string
-     */
+    /** Generate a prefixed CSS class. */
     public static function css(string $name): string
     {
         return self::base($name);
     }
 
-    /**
-     * Generate a prefixed data attribute name.
-     *
-     * @param string $name Attribute suffix.
-     * @return string
-     */
+    /** Generate a prefixed data attribute name. */
     public static function dataAttr(string $name): string
     {
         return 'data-' . self::base($name);
     }
 
-    /**
-     * Generate a script/style handle.
-     *
-     * @param string $name Handle suffix.
-     * @return string
-     */
+    /** Generate a script/style handle. */
     public static function handle(string $name): string
     {
         return self::SLUG . '-' . $name;
     }
 
-    /**
-     * Generate an Ajax action name.
-     *
-     * @param string $name Action suffix.
-     * @return string
-     */
+    /** Generate an Ajax action name. */
     public static function ajaxAction(string $name): string
     {
         return self::prefix($name);
     }
 
-    /**
-     * Generate a nonce action name.
-     *
-     * @param string $name Nonce suffix.
-     * @return string
-     */
+    /** Generate a nonce action name. */
     public static function nonce(string $name = 'nonce'): string
     {
         return self::prefix($name);
     }
 
-    /**
-     * Generate a database table name (without $wpdb prefix).
-     *
-     * @param string $name Table suffix.
-     * @return string
-     */
+    /** Generate a database table name (without $wpdb prefix). */
     public static function table(string $name): string
     {
         return self::prefix($name);
@@ -342,28 +284,22 @@ final class PrefixConfig
     cb();
 }
 
-/**
- * Clean
- */
+/** Clean compiled assets. */
 export async function clean() {
     await deleteAsync([paths.scss.dest, paths.js.dest]);
 }
 
-/**
- * SCSS
- */
+/** Compile and minify SCSS. */
 export function compileScss() {
     return gulp
             .src(paths.scss.src, {allowEmpty: true})
-            .pipe(sass().on('error', sass.logError))
+            .pipe(sass.sync().on('error', sass.logError))
             .pipe(cleanCSS({compatibility: 'ie11'}))
             .pipe(rename({suffix: '.min'}))
             .pipe(gulp.dest(paths.scss.dest));
 }
 
-/**
- * JS
- */
+/** Compile and minify JavaScript. */
 export function compileJs() {
     return gulp
             .src(paths.js.src, {allowEmpty: true})
@@ -373,10 +309,13 @@ export function compileJs() {
             .pipe(gulp.dest(paths.js.dest));
 }
 
-export const build = gulp.series(
+/** Full build: generate prefix files, clean, compile. */
+const buildTask = gulp.series(
         generatePrefixFiles,
         clean,
         gulp.parallel(compileScss, compileJs)
 );
 
-export default build;
+gulp.task('build', buildTask);
+
+export {buildTask as build};

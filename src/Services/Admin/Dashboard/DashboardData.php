@@ -14,33 +14,26 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * DashboardData
+ * Provides dashboard data and status information.
  *
  * @package ProactiveSiteAdvisor\Services\Admin\Dashboard
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DashboardData
 {
-    /**
-     * @var AlertsDataProvider
-     */
+    /** Alerts data provider instance. */
     private AlertsDataProvider $alertsDataProvider;
 
-    /**
-     * @var DailyStatsDataProvider
-     */
+    /** Daily stats data provider instance. */
     private DailyStatsDataProvider $dailyStatsDataProvider;
 
-    /**
-     * @var DashboardProcessor
-     */
+    /** Dashboard processor instance. */
     private DashboardProcessor $dashboardProcessor;
 
+    /** Number of days with data. */
     private int $daysWithData;
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public function __construct()
     {
         $this->alertsDataProvider     = new AlertsDataProvider();
@@ -49,11 +42,7 @@ class DashboardData
         $this->daysWithData           = $this->dailyStatsDataProvider->getDaysWithData();
     }
 
-    /**
-     * Returns the meta subtitles for each card (i18n-safe)
-     *
-     * @return array
-     */
+    /** Returns the meta subtitles for each card (i18n-safe). */
     private function getCardMeta(): array
     {
         return [
@@ -80,11 +69,7 @@ class DashboardData
         ];
     }
 
-    /**
-     * Returns the dashboard top status line text.
-     *
-     * @return string
-     */
+    /** Returns the dashboard top status line text. */
     public function getStatusLine(): string
     {
         $status = PluginStatus::getStatus($this->daysWithData);
@@ -104,11 +89,7 @@ class DashboardData
         return $this->getNormalStatusLine();
     }
 
-    /**
-     * Returns the status line for normal operating mode.
-     *
-     * @return string
-     */
+    /** Returns the status line for normal operating mode. */
     private function getNormalStatusLine(): string
     {
         $lastRun = PluginStatus::getLastRunTimestamp();
@@ -119,11 +100,7 @@ class DashboardData
         return sprintf(__('Last checked: %s ago · Range: last 7 days', 'proactive-site-advisor'), $timeAgo);
     }
 
-    /**
-     * Returns the colored dashboard status block (severity or plugin-status).
-     *
-     * @return array
-     */
+    /** Returns the colored dashboard status block (severity or plugin-status). */
     public function getStatus(): array
     {
         $status = PluginStatus::getStatus($this->daysWithData);
@@ -135,13 +112,7 @@ class DashboardData
         return $this->getSeverityStatus();
     }
 
-    /**
-     * Returns the block for plugin-level status (fresh, limited, issue).
-     *
-     * @param string $status
-     *
-     * @return array
-     */
+    /** Returns the block for plugin-level status (fresh, limited, issue). */
     private function getPluginStatus(string $status): array
     {
         switch ($status) {
@@ -156,7 +127,6 @@ class DashboardData
             case PluginStatus::STATUS_LIMITED:
                 $days       = $this->daysWithData;
                 $percentage = min(100, round(($days / PluginStatus::BASELINE_DAYS) * 100));
-
 
                 return [
                     'color'    => 'info',
@@ -181,11 +151,7 @@ class DashboardData
         return [];
     }
 
-    /**
-     * Returns status block based on alert severity levels.
-     *
-     * @return array
-     */
+    /** Returns status block based on alert severity levels. */
     private function getSeverityStatus(): array
     {
         $stats = $this->dashboardProcessor->buildDigest(
@@ -248,14 +214,7 @@ class DashboardData
         ];
     }
 
-    /**
-     * Returns the top severity summary (critical → warning → info)
-     *
-     * @param int $days
-     * @param int $lastSeenId
-     *
-     * @return array
-     */
+    /** Returns the top severity summary (critical → warning → info). */
     public function getTopSeveritySummary(int $days = 7, int $lastSeenId = 0): array
     {
         $counts = $this->alertsDataProvider->getSeverityCounts($days, $lastSeenId);
@@ -272,11 +231,7 @@ class DashboardData
         return ['severity' => 'info', 'count' => 0];
     }
 
-    /**
-     * Returns full card data for the dashboard.
-     *
-     * @return array
-     */
+    /** Returns full card data for the dashboard. */
     public function getStatsCards(): array
     {
         $stats = $this->dashboardProcessor->buildDigest(
@@ -300,7 +255,6 @@ class DashboardData
 
             $state = $this->getCardState($value, $metaForKey, $status);
 
-            // Final assembled card (no array_merge, no references)
             $finalCards[$key] = [
                 'icon'     => $card['icon'],
                 'label'    => $card['label'],
@@ -313,15 +267,7 @@ class DashboardData
         return $finalCards;
     }
 
-    /**
-     * Builds final visual state for a single card.
-     *
-     * @param int $value
-     * @param array $meta
-     * @param string $status
-     *
-     * @return array
-     */
+    /** Builds final visual state for a single card. */
     private function getCardState(int $value, array $meta, string $status): array
     {
         if ($status === PluginStatus::STATUS_FRESH) {
@@ -351,11 +297,7 @@ class DashboardData
         ];
     }
 
-    /**
-     * Returns static card definitions (icons, colors, labels).
-     *
-     * @return array
-     */
+    /** Returns static card definitions (icons, colors, labels). */
     private function getCardDefinitions(): array
     {
         return [
@@ -369,18 +311,17 @@ class DashboardData
                 'label' => __('Traffic Alerts', 'proactive-site-advisor'),
                 'color' => 'primary',
             ],
-
-            'error_alerts' => [
+            'error_alerts'    => [
                 'icon'  => PrefixConfig::css('icon--error-404'),
                 'label' => __('404 Alerts', 'proactive-site-advisor'),
                 'color' => 'warning',
             ],
-            'bot_alerts'   => [
+            'bot_alerts'      => [
                 'icon'  => PrefixConfig::css('icon--bot'),
                 'label' => __('Bot Alerts', 'proactive-site-advisor'),
                 'color' => 'info',
             ],
-            'total_alerts' => [
+            'total_alerts'    => [
                 'icon'  => PrefixConfig::css('icon--alert'),
                 'label' => __('Total Alerts', 'proactive-site-advisor'),
                 'color' => 'info',
@@ -388,17 +329,12 @@ class DashboardData
         ];
     }
 
-    /**
-     * Get latest alerts for dashboard.
-     *
-     * @return array
-     */
+    /** Get latest alerts for dashboard. */
     public function getLatestAlerts(): array
     {
         $status = PluginStatus::getStatus($this->daysWithData);
 
         if ($status === PluginStatus::STATUS_FRESH) {
-
             return array(
                 'hasData' => false,
                 'title'   => __('Getting started', 'proactive-site-advisor'),
@@ -409,7 +345,6 @@ class DashboardData
         }
 
         if ($status === PluginStatus::STATUS_LIMITED) {
-
             return array(
                 'hasData' => false,
                 'title'   => __('Limited history', 'proactive-site-advisor'),
@@ -422,7 +357,6 @@ class DashboardData
         $rawAlerts = $this->alertsDataProvider->getLatestAlerts(20);
 
         if (empty($rawAlerts)) {
-
             return array(
                 'hasData' => false,
                 'title'   => __('All clear', 'proactive-site-advisor'),
@@ -438,11 +372,7 @@ class DashboardData
         );
     }
 
-    /**
-     * Get 7‑day history formatted for dashboard.
-     *
-     * @return array
-     */
+    /** Get 7‑day history formatted for dashboard. */
     public function getHistory(): array
     {
         $status = PluginStatus::getStatus($this->daysWithData);

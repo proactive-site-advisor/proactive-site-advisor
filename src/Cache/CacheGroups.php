@@ -11,16 +11,12 @@ if (!defined('ABSPATH')) {
 /**
  * Cache group identifiers used by the plugin.
  *
- * Centralizes cache group names to avoid hardcoded strings.
- *
  * @package ProactiveSiteAdvisor\Cache
- * @version 1.0.0
+ * @since   1.0.0
  */
-final class CacheGroups
+class CacheGroups
 {
-    /**
-     * Prevent instantiation
-     */
+    /** Prevent instantiation. */
     private function __construct()
     {
     }
@@ -37,11 +33,7 @@ final class CacheGroups
     /** Fragment (HTML/output) cache group */
     public const FRAGMENT = PrefixConfig::PREFIX . '_fragment';
 
-    /**
-     * Return all cache groups.
-     *
-     * @return string[]
-     */
+    /** Return all cache groups. */
     public static function all(): array
     {
         return [

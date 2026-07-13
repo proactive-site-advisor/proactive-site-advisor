@@ -14,39 +14,23 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class ThemeSwitcher
- *
  * Manages the admin UI theme (light / dark) on a per-user basis.
- * Handles theme persistence, AJAX-based switching, and UI helpers.
  *
  * @package ProactiveSiteAdvisor\AdminUI\Theme
+ * @since   1.0.0
  */
 class ThemeSwitcher extends AbstractSingleton
 {
-    /**
-     * Light admin theme identifier.
-     */
+    /** Light admin theme identifier. */
     public const THEME_LIGHT = 'light';
 
-    /**
-     * Dark admin theme identifier.
-     */
+    /** Dark admin theme identifier. */
     public const THEME_DARK = 'dark';
 
-    /**
-     * Whether hooks and AJAX handlers have already been registered.
-     *
-     * Prevents duplicate registration.
-     */
+    /** Whether hooks and AJAX handlers have already been registered. */
     private bool $registered = false;
 
-    /**
-     * Register hooks and AJAX handlers for admin theme management.
-     *
-     * This method is idempotent and safe to call multiple times.
-     *
-     * @return void
-     */
+    /** Register hooks and AJAX handlers for admin theme management. */
     public function register(): void
     {
         if ($this->registered) {
@@ -55,21 +39,12 @@ class ThemeSwitcher extends AbstractSingleton
 
         $this->registered = true;
 
-        // Register AJAX handler for theme switching.
         AjaxComponent::register('switch_theme', [$this, 'handleThemeSwitch'], false);
 
-        // Add theme-specific class to the admin body.
         add_action('admin_body_class', [$this, 'addThemeBodyClass']);
     }
 
-    /**
-     * Get the currently active admin theme for the current user.
-     *
-     * Falls back to the light theme if the stored value is invalid
-     * or missing.
-     *
-     * @return string One of THEME_LIGHT or THEME_DARK.
-     */
+    /** Get the currently active admin theme for the current user. */
     public function getCurrentTheme(): string
     {
         $theme = OptionUtils::getUserOption(UserOptions::ADMIN_THEME, self::THEME_LIGHT);
@@ -79,13 +54,7 @@ class ThemeSwitcher extends AbstractSingleton
             : self::THEME_LIGHT;
     }
 
-    /**
-     * Set the admin theme for the current user.
-     *
-     * @param string $theme Theme identifier.
-     *
-     * @return bool True on success, false if the theme is invalid.
-     */
+    /** Set the admin theme for the current user. */
     public function setTheme(string $theme): bool
     {
         if (!in_array($theme, [self::THEME_LIGHT, self::THEME_DARK], true)) {
@@ -96,34 +65,19 @@ class ThemeSwitcher extends AbstractSingleton
         return true;
     }
 
-    /**
-     * Check whether the current admin theme is dark mode.
-     *
-     * @return bool
-     */
+    /** Check whether the current admin theme is dark mode. */
     public function isDarkMode(): bool
     {
         return $this->getCurrentTheme() === self::THEME_DARK;
     }
 
-    /**
-     * Check whether the current admin theme is light mode.
-     *
-     * @return bool
-     */
+    /** Check whether the current admin theme is light mode. */
     public function isLightMode(): bool
     {
         return $this->getCurrentTheme() === self::THEME_LIGHT;
     }
 
-    /**
-     * Handle AJAX requests for switching the admin theme.
-     *
-     * Expects a `theme` value in the POST payload.
-     * Nonce verification is handled by AjaxComponent.
-     *
-     * @return void
-     */
+    /** Handle AJAX requests for switching the admin theme. */
     public function handleThemeSwitch(): void
     {
         // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
@@ -140,13 +94,7 @@ class ThemeSwitcher extends AbstractSingleton
         }
     }
 
-    /**
-     * Append the current theme class to the admin body element.
-     *
-     * @param string $classes Existing admin body classes.
-     *
-     * @return string Modified body classes.
-     */
+    /** Append the current theme class to the admin body element. */
     public function addThemeBodyClass(string $classes): string
     {
         if (!PluginUtils::isPluginScreen()) {
@@ -156,21 +104,13 @@ class ThemeSwitcher extends AbstractSingleton
         return $classes . ' ' . PrefixConfig::css('ui') . ' ' . PrefixConfig::css('theme-' . $this->getCurrentTheme());
     }
 
-    /**
-     * Static shortcut for retrieving the current admin theme.
-     *
-     * @return string
-     */
+    /** Static shortcut for retrieving the current admin theme. */
     public static function theme(): string
     {
         return self::instance()->getCurrentTheme();
     }
 
-    /**
-     * Static shortcut for checking dark mode state.
-     *
-     * @return bool
-     */
+    /** Static shortcut for checking dark mode state. */
     public static function isDark(): bool
     {
         return self::instance()->isDarkMode();

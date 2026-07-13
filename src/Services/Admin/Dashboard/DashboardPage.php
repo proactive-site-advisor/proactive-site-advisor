@@ -10,23 +10,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * DashboardPage
+ * Dashboard page for the plugin.
  *
  * @package ProactiveSiteAdvisor\Services\Admin\Dashboard
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DashboardPage extends AbstractAdminPage
 {
-    /**
-     * Holds DashboardData instance for data access.
-     *
-     * @var DashboardData
-     */
+    /** Holds DashboardData instance for data access. */
     protected DashboardData $dashboardData;
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     protected function __construct()
     {
         parent::__construct();
@@ -34,31 +28,19 @@ class DashboardPage extends AbstractAdminPage
         $this->dashboardData = new DashboardData();
     }
 
-    /**
-     * Returns the path of the dashboard page header template.
-     *
-     * @return string Template path
-     */
+    /** Returns the path of the dashboard page header template. */
     protected function getPageHeaderTemplate(): string
     {
         return 'admin/pages/dashboard/header';
     }
 
-    /**
-     * Returns the path of the main dashboard template.
-     *
-     * @return string Template path
-     */
+    /** Returns the path of the main dashboard template. */
     protected function getTemplate(): string
     {
         return 'admin/pages/dashboard/content';
     }
 
-    /**
-     * Context data passed to the header template.
-     *
-     * @return array<string,mixed> Header context data
-     */
+    /** Context data passed to the header template. */
     protected function getPageHeaderContext(): array
     {
         return [
@@ -66,14 +48,9 @@ class DashboardPage extends AbstractAdminPage
         ];
     }
 
-    /**
-     * Context data passed to the main dashboard template.
-     *
-     * @return array<string,mixed> Template context data
-     */
+    /** Context data passed to the main dashboard template. */
     protected function getBodyContext(): array
     {
-        // Determine whether promo notice should be shown (disabled for initial release)
         $showPromoNotice = PromoNotice::shouldShowPromoNotice();
 
         return [
@@ -81,7 +58,6 @@ class DashboardPage extends AbstractAdminPage
             'stats'           => $this->dashboardData->getStatsCards(),
             'latestAlerts'    => $this->dashboardData->getLatestAlerts(),
             'history'         => $this->dashboardData->getHistory(),
-            // Promo notice intentionally disabled for the initial public release
             'showPromoNotice' => false,
         ];
     }

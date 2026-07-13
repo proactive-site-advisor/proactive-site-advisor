@@ -2,6 +2,9 @@
  * Admin UI - Helper Functions
  *
  * Requires: namespace.js
+ *
+ * @fileoverview Utility functions for DOM manipulation, timing, storage, and URLs
+ * @version 1.0.0
  */
 
 (function (window, document) {

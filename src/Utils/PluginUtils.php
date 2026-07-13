@@ -9,21 +9,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class PluginUtils
- *
- * A utility class for managing WordPress plugins programmatically.
+ * Utility class for managing WordPress plugins programmatically.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class PluginUtils
 {
-
-    /**
-     * Get all installed plugins.
-     *
-     * @return array An associative array of all installed plugins.
-     */
+    /** Get all installed plugins. */
     public static function getAllPlugins(): array
     {
         if (!function_exists('get_plugins')) {
@@ -32,24 +25,14 @@ class PluginUtils
         return get_plugins();
     }
 
-    /**
-     * Check if a plugin exists by its file path.
-     *
-     * @param string $pluginFile Plugin file path (e.g., "plugin-folder/plugin-file.php").
-     * @return bool True if the plugin exists, false otherwise.
-     */
+    /** Check if a plugin exists by its file path. */
     public static function pluginExists(string $pluginFile): bool
     {
         $allPlugins = self::getAllPlugins();
         return isset($allPlugins[$pluginFile]);
     }
 
-    /**
-     * Check if a plugin is active.
-     *
-     * @param string $pluginFile Plugin file path.
-     * @return bool True if the plugin is active, false otherwise.
-     */
+    /** Check if a plugin is active. */
     public static function isPluginActive(string $pluginFile): bool
     {
         if (!function_exists('is_plugin_active')) {
@@ -58,24 +41,14 @@ class PluginUtils
         return is_plugin_active($pluginFile);
     }
 
-    /**
-     * Get information about a plugin.
-     *
-     * @param string $pluginFile Plugin file path.
-     * @return array|null Plugin information array or null if plugin does not exist.
-     */
+    /** Get information about a plugin. */
     public static function getPluginInfo(string $pluginFile): ?array
     {
         $allPlugins = self::getAllPlugins();
         return $allPlugins[$pluginFile] ?? null;
     }
 
-    /**
-     * Check plugin dependencies.
-     *
-     * @param array $requiredPlugins List of required plugin file paths.
-     * @return array Returns an array of missing or inactive plugins. Empty array if all dependencies are met.
-     */
+    /** Check plugin dependencies. */
     public static function checkDependencies(array $requiredPlugins): array
     {
         $missing = [];
@@ -89,11 +62,7 @@ class PluginUtils
         return $missing;
     }
 
-    /**
-     * Determine whether the current admin screen belongs to this plugin.
-     *
-     * @return bool
-     */
+    /** Determine whether the current admin screen belongs to this plugin. */
     public static function isPluginScreen(): bool
     {
         if (!function_exists('get_current_screen')) {
@@ -109,12 +78,7 @@ class PluginUtils
         return strpos($screen->id, PrefixConfig::SLUG) !== false;
     }
 
-
-    /**
-     * Determine whether the current admin request is for one of the plugin's pages.
-     *
-     * @return bool
-     */
+    /** Determine whether the current admin request is for one of the plugin's pages. */
     public static function isPluginAdminRequest(): bool
     {
         if (!is_admin()) {

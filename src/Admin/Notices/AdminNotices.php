@@ -15,13 +15,10 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AdminNotices
+ * Centralized admin notice management with dismissibility support.
  *
- * Centralized admin notice management with dismissibility support
- * and transient-based persistence.
- *
- * @package ProactiveSiteAdvisor\Admin
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Admin\Notices
+ * @since   1.0.0
  */
 class AdminNotices
 {
@@ -32,18 +29,10 @@ class AdminNotices
      */
     private static array $notices = [];
 
-    /**
-     * Whether the class has been initialized.
-     *
-     * @var bool
-     */
+    /** Whether the class has been initialized. */
     private static bool $initialized = false;
 
-    /**
-     * Register hooks for admin notices.
-     *
-     * @return void
-     */
+    /** Register hooks for admin notices. */
     public static function register(): void
     {
         if (self::$initialized) {
@@ -56,33 +45,18 @@ class AdminNotices
 
         self::loadFromTransient();
 
-        // Save persistent notices at the end of request (safe, prevents early save bugs)
         add_action('shutdown', [self::class, 'saveToTransient'], 9999);
 
         self::$initialized = true;
     }
 
-    /**
-     * Add a notice.
-     *
-     * @param Notice $notice The notice to add.
-     *
-     * @return void
-     */
+    /** Add a notice. */
     public static function add(Notice $notice): void
     {
         self::$notices[$notice->id] = $notice;
     }
 
-    /**
-     * Helper to create and add a notice.
-     *
-     * @param string $message
-     * @param string $type
-     * @param bool $dismissible
-     *
-     * @return Notice
-     */
+    /** Helper to create and add a notice. */
     private static function make(string $message, string $type, bool $dismissible): Notice
     {
         $notice = (new Notice($message, $type))
@@ -93,100 +67,50 @@ class AdminNotices
         return $notice;
     }
 
-    /**
-     * Add a generic notice.
-     *
-     * @param string $message
-     * @param string $type
-     * @param bool $dismissible
-     *
-     * @return Notice
-     */
+    /** Add a generic notice. */
     public static function notice(string $message, string $type = Notice::TYPE_INFO, bool $dismissible = true): Notice
     {
         return self::make($message, $type, $dismissible);
     }
 
-    /**
-     * Add a success notice.
-     *
-     * @param string $message
-     * @param bool $dismissible
-     *
-     * @return Notice
-     */
+    /** Add a success notice. */
     public static function success(string $message, bool $dismissible = true): Notice
     {
         return self::notice($message, Notice::TYPE_SUCCESS, $dismissible);
     }
 
-    /**
-     * Add an error notice.
-     *
-     * @param string $message
-     * @param bool $dismissible
-     *
-     * @return Notice
-     */
+    /** Add an error notice. */
     public static function error(string $message, bool $dismissible = true): Notice
     {
         return self::notice($message, Notice::TYPE_ERROR, $dismissible);
     }
 
-    /**
-     * Add a warning notice.
-     *
-     * @param string $message
-     * @param bool $dismissible
-     *
-     * @return Notice
-     */
+    /** Add a warning notice. */
     public static function warning(string $message, bool $dismissible = true): Notice
     {
         return self::notice($message, Notice::TYPE_WARNING, $dismissible);
     }
 
-    /**
-     * Add an info notice.
-     *
-     * @param string $message
-     * @param bool $dismissible
-     *
-     * @return Notice
-     */
+    /** Add an info notice. */
     public static function info(string $message, bool $dismissible = true): Notice
     {
         return self::notice($message, Notice::TYPE_INFO, $dismissible);
     }
 
-    /**
-     * Remove a notice by ID.
-     *
-     * @param string $id
-     *
-     * @return void
-     */
+    /** Remove a notice by ID. */
     public static function remove(string $id): void
     {
         unset(self::$notices[$id]);
     }
 
-    /**
-     * Clear all notices.
-     *
-     * @return void
-     */
+    /** Clear all notices. */
     public static function clear(): void
     {
         self::$notices = [];
         CacheManager::instance()->delete(CacheKeys::adminNotices());
     }
 
-    /**
-     * Render all notices.
-     *
-     * @return void
-     */
+    /** Render all notices. */
     public static function render(): void
     {
         foreach (self::$notices as $notice) {
@@ -196,11 +120,7 @@ class AdminNotices
         self::clearNonPersistent();
     }
 
-    /**
-     * Handle AJAX dismiss request.
-     *
-     * @return void
-     */
+    /** Handle AJAX dismiss request. */
     public static function handleDismiss(): void
     {
         // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
@@ -223,13 +143,7 @@ class AdminNotices
         AjaxComponent::sendSuccess([], __('Notice dismissed.', 'proactive-site-advisor'));
     }
 
-    /**
-     * Check if a notice has been dismissed by the current user.
-     *
-     * @param string $id
-     *
-     * @return bool
-     */
+    /** Check if a notice has been dismissed by the current user. */
     public static function isDismissed(string $id): bool
     {
         $dismissed = OptionUtils::getUserOption(UserOptions::DISMISSED_NOTICES, []);
@@ -237,13 +151,7 @@ class AdminNotices
         return is_array($dismissed) && in_array($id, $dismissed, true);
     }
 
-    /**
-     * Mark a notice as dismissed for the current user.
-     *
-     * @param string $id
-     *
-     * @return void
-     */
+    /** Mark a notice as dismissed for the current user. */
     public static function markDismissed(string $id): void
     {
         $dismissed = OptionUtils::getUserOption(UserOptions::DISMISSED_NOTICES, []);
@@ -258,21 +166,13 @@ class AdminNotices
         }
     }
 
-    /**
-     * Reset dismissed notices for the current user.
-     *
-     * @return void
-     */
+    /** Reset dismissed notices for the current user. */
     public static function resetDismissed(): void
     {
         OptionUtils::deleteUserOption(UserOptions::DISMISSED_NOTICES);
     }
 
-    /**
-     * Load notices from cache.
-     *
-     * @return void
-     */
+    /** Load notices from cache. */
     private static function loadFromTransient(): void
     {
         $stored      = CacheManager::instance()->get(CacheKeys::adminNotices());
@@ -294,11 +194,7 @@ class AdminNotices
         }
     }
 
-    /**
-     * Save persistent notices to cache.
-     *
-     * @return void
-     */
+    /** Save persistent notices to cache. */
     public static function saveToTransient(): void
     {
         $persistent = [];
@@ -329,11 +225,7 @@ class AdminNotices
         }
     }
 
-    /**
-     * Clear non-persistent notices.
-     *
-     * @return void
-     */
+    /** Clear non-persistent notices. */
     private static function clearNonPersistent(): void
     {
         foreach (self::$notices as $id => $notice) {
@@ -345,11 +237,7 @@ class AdminNotices
         CacheManager::instance()->delete(CacheKeys::adminFlashNotices());
     }
 
-    /**
-     * Suppress third-party notices on plugin pages.
-     *
-     * @return void
-     */
+    /** Suppress third-party notices on plugin pages. */
     public static function sanitizeNotices(): void
     {
         if (!PluginUtils::isPluginScreen()) {

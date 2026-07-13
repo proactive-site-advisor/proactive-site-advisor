@@ -7,17 +7,13 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Interface BotSignalInterface
+ * Defines the contract for bot detection signals.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 interface BotSignalInterface
 {
-    /**
-     * Determines if the request is from a bot.
-     *
-     * @return bool
-     */
+    /** Determines if the request is from a bot. */
     public function isBot(): bool;
 }

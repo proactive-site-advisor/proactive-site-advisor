@@ -10,23 +10,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * AlertsDataProvider
- *
  * Provides query helpers for retrieving alert data from the database.
  *
  * @package ProactiveSiteAdvisor\DataProviders
- * @version 1.0.3
+ * @since   1.0.0
  */
 class AlertsDataProvider extends AbstractDataProvider
 {
-    /**
-     * Retrieve the latest alert rows from the database.
-     *
-     * @param int $limit
-     * @param int $days
-     *
-     * @return array
-     */
+    /** Retrieve the latest alert rows from the database. */
     public function getLatestAlerts(int $limit = 7, int $days = 7): array
     {
         global $wpdb;
@@ -58,14 +49,7 @@ class AlertsDataProvider extends AbstractDataProvider
         return $rows;
     }
 
-    /**
-     * Get the count of alerts grouped by severity for the last N days.
-     *
-     * @param int $days
-     * @param int $lastSeenId
-     *
-     * @return array
-     */
+    /** Get the count of alerts grouped by severity for the last N days. */
     public function getSeverityCounts(int $days = 7, int $lastSeenId = 0): array
     {
         global $wpdb;
@@ -99,13 +83,7 @@ class AlertsDataProvider extends AbstractDataProvider
         ];
     }
 
-    /**
-     * Retrieve digest source rows for the last N days.
-     *
-     * @param int $days
-     *
-     * @return array
-     */
+    /** Retrieve digest source rows for the last N days. */
     public function getDigestRows(int $days = 7): array
     {
         global $wpdb;
@@ -132,13 +110,7 @@ class AlertsDataProvider extends AbstractDataProvider
         return $rows;
     }
 
-    /**
-     * Retrieve meta_json rows for 404 spike alerts in the last N days.
-     *
-     * @param int $days Number of days to look back.
-     *
-     * @return array
-     */
+    /** Retrieve meta_json rows for 404 spike alerts in the last N days. */
     public function get404SpikeRows(int $days = 7): array
     {
         global $wpdb;
@@ -167,11 +139,7 @@ class AlertsDataProvider extends AbstractDataProvider
         return $rows;
     }
 
-    /**
-     * Get the ID of the most recently created alert.
-     *
-     * @return int
-     */
+    /** Get the ID of the most recently created alert. */
     public function getLatestAlertId(): int
     {
         global $wpdb;

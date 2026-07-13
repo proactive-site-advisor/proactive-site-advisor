@@ -10,27 +10,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyStatsFactory
- *
  * Factory for creating DailyStats records with fake data.
  *
  * @package ProactiveSiteAdvisor\Database\Factories
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DailyStatsFactory extends AbstractFactory
 {
-    /**
-     * Model class.
-     *
-     * @var string
-     */
+    /** Model class. */
     protected string $model = DailyStats::class;
 
-    /**
-     * Common bot names for realistic top bots data.
-     *
-     * @var array
-     */
+    /** Common bot names for realistic top bots data. */
     private array $commonBotNames = [
         'Googlebot',
         'Bingbot',
@@ -46,11 +36,7 @@ class DailyStatsFactory extends AbstractFactory
         'TelegramBot',
     ];
 
-    /**
-     * Common 404 paths for realistic data.
-     *
-     * @var array
-     */
+    /** Common 404 paths for realistic data. */
     private array $common404Paths = [
         '/wp-login.php',
         '/wp-admin/',
@@ -69,11 +55,7 @@ class DailyStatsFactory extends AbstractFactory
         '/login',
     ];
 
-    /**
-     * Define default attributes.
-     *
-     * @return array
-     */
+    /** Define default attributes. */
     protected function definition(): array
     {
         return [
@@ -86,13 +68,7 @@ class DailyStatsFactory extends AbstractFactory
         ];
     }
 
-    /**
-     * Create stats for a specific date with pattern-aware data.
-     *
-     * @param string $date
-     * @param int $dayIndex
-     * @return DailyStats|null
-     */
+    /** Create stats for a specific date with pattern-aware data. */
     public function forDate(string $date, int $dayIndex = 0): ?DailyStats
     {
         if ($this->pattern === 'alerts') {
@@ -108,15 +84,7 @@ class DailyStatsFactory extends AbstractFactory
         return $result instanceof DailyStats ? $result : null;
     }
 
-    /**
-     * Create realistic pattern data.
-     *
-     * Generates natural variance: 800-1500 pageviews, 5-30 404s.
-     * Weekend traffic is reduced by 20-40%.
-     *
-     * @param string $date
-     * @return array
-     */
+    /** Create realistic pattern data - generates natural variance: 800-1500 pageviews, 5-30 404s. */
     public function realisticPattern(string $date): array
     {
         $basePageviews = $this->randomInt(800, 1500);
@@ -141,13 +109,7 @@ class DailyStatsFactory extends AbstractFactory
         ];
     }
 
-    /**
-     * Create alerts pattern data.
-     *
-     * @param string $date
-     * @param int $dayIndex
-     * @return array
-     */
+    /** Create alerts pattern data. */
     public function alertsPattern(string $date, int $dayIndex): array
     {
         $baselinePageviews = $this->randomInt(1000, 1200);
@@ -190,12 +152,7 @@ class DailyStatsFactory extends AbstractFactory
         ];
     }
 
-    /**
-     * Generate top bots JSON data.
-     *
-     * @param int $botPageviews
-     * @return string|null
-     */
+    /** Generate top bots JSON data. */
     private function generateTopBotsJson(int $botPageviews): ?string
     {
         if ($botPageviews < 3) {
@@ -228,12 +185,7 @@ class DailyStatsFactory extends AbstractFactory
         return wp_json_encode(array_slice($topBots, 0, 3));
     }
 
-    /**
-     * Generate top 404 JSON data.
-     *
-     * @param int $errorCount
-     * @return string|null
-     */
+    /** Generate top 404 JSON data. */
     private function generateTop404Json(int $errorCount): ?string
     {
         if ($errorCount < 3) {
@@ -266,15 +218,7 @@ class DailyStatsFactory extends AbstractFactory
         return wp_json_encode(array_slice($top404, 0, 3));
     }
 
-    /**
-     * Apply day-of-week variance to pageviews.
-     *
-     * Weekends typically have less traffic.
-     *
-     * @param string $date
-     * @param int $basePageviews
-     * @return int
-     */
+    /** Apply day-of-week variance to pageviews - weekends typically have less traffic. */
     private function applyDayOfWeekVariance(string $date, int $basePageviews): int
     {
         if ($this->isWeekend($date)) {

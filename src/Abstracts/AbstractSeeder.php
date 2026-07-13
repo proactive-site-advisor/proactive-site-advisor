@@ -2,56 +2,35 @@
 
 namespace ProactiveSiteAdvisor\Abstracts;
 
-use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\DataStore;
+use ProactiveSiteAdvisor\Database\TableMaintenance;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class AbstractSeeder
- *
  * Base class for database seeders.
  *
+ * @see    \WP_CLI
  * @package ProactiveSiteAdvisor\Abstracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 abstract class AbstractSeeder
 {
-    /**
-     * The table name this seeder operates on (without prefix).
-     *
-     * @var string
-     */
+    /** The table name this seeder operates on (without prefix). */
     protected string $table = '';
 
-    /**
-     * Seeder priority (lower runs first).
-     *
-     * @var int
-     */
+    /** Seeder priority (lower runs first). */
     protected int $priority = 10;
 
-    /**
-     * Current seeding pattern.
-     *
-     * @var string
-     */
+    /** Current seeding pattern. */
     protected string $pattern = 'realistic';
 
-    /**
-     * Number of days to seed.
-     *
-     * @var int
-     */
+    /** Number of days to seed. */
     protected int $days = 30;
 
-    /**
-     * Set the seeding pattern.
-     *
-     * @param string $pattern
-     * @return self
-     */
+    /** Set the seeding pattern. */
     public function setPattern(string $pattern): self
     {
         $this->pattern = $pattern;
@@ -59,22 +38,13 @@ abstract class AbstractSeeder
         return $this;
     }
 
-    /**
-     * Get the seeding pattern.
-     *
-     * @return string
-     */
+    /** Get the seeding pattern. */
     public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    /**
-     * Set the number of days to seed.
-     *
-     * @param int $days Number of days.
-     * @return self
-     */
+    /** Set the number of days to seed. */
     public function setDays(int $days): self
     {
         $this->days = max(1, $days);
@@ -82,67 +52,43 @@ abstract class AbstractSeeder
         return $this;
     }
 
-    /**
-     * Get the number of days to seed.
-     *
-     * @return int
-     */
+    /** Get the number of days to seed. */
     public function getDays(): int
     {
         return $this->days;
     }
 
-    /**
-     * Run the seeder.
-     *
-     * @return int Number of records created.
-     */
+    /** Run the seeder. */
     abstract public function run(): int;
 
-    /**
-     * Clean existing data before seeding.
-     *
-     * @return int Number of records deleted.
-     */
+    /** Clean existing data before seeding. */
     public function clean(): int
     {
         if (empty($this->table)) {
             return 0;
         }
 
-        $count = DatabaseManager::getRowCount($this->table);
-        DatabaseManager::truncateTable($this->table);
+        $count = DataStore::getRowCount($this->table);
+        TableMaintenance::truncateTable($this->table);
 
-        $this->log("Truncated {$this->table}: {$count} records removed");
+        $this->log("Truncated $this->table: $count records removed");
 
         return $count;
     }
 
-    /**
-     * Get the seeder priority.
-     *
-     * @return int
-     */
+    /** Get the seeder priority. */
     public function getPriority(): int
     {
         return $this->priority;
     }
 
-    /**
-     * Get the table name.
-     *
-     * @return string
-     */
+    /** Get the table name. */
     public function getTable(): string
     {
         return $this->table;
     }
 
-    /**
-     * Get date range for seeding.
-     *
-     * @return array Array of dates in Y-m-d format.
-     */
+    /** Get date range for seeding. */
     protected function getDateRange(): array
     {
         $dates   = [];
@@ -150,49 +96,32 @@ abstract class AbstractSeeder
         $endTs   = strtotime($endDate);
 
         for ($i = $this->days - 1; $i >= 0; $i--) {
-            $dates[] = gmdate('Y-m-d', strtotime("-{$i} days", $endTs));
+            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
         }
 
         return $dates;
     }
 
-    /**
-     * Log progress message.
-     *
-     * Uses WP_CLI if available, otherwise logs to debug.
-     *
-     * @param string $message Message to log.
-     * @return void
-     */
+    /** Log progress message. */
     protected function log(string $message): void
     {
-        if (defined('WP_CLI') && WP_CLI) {
+        if (class_exists('WP_CLI')) {
             \WP_CLI::log($message);
         }
     }
 
-    /**
-     * Log success message.
-     *
-     * @param string $message Message to log.
-     * @return void
-     */
+    /** Log success message. */
     protected function success(string $message): void
     {
-        if (defined('WP_CLI') && WP_CLI) {
+        if (class_exists('WP_CLI')) {
             \WP_CLI::success($message);
         }
     }
 
-    /**
-     * Log warning message.
-     *
-     * @param string $message Message to log.
-     * @return void
-     */
+    /** Log warning message. */
     protected function warning(string $message): void
     {
-        if (defined('WP_CLI') && WP_CLI) {
+        if (class_exists('WP_CLI')) {
             \WP_CLI::warning($message);
         }
     }

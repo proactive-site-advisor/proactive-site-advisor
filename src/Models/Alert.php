@@ -3,34 +3,24 @@
 namespace ProactiveSiteAdvisor\Models;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractModel;
-use ProactiveSiteAdvisor\Database\DatabaseManager;
+use ProactiveSiteAdvisor\Database\QueryRunner;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Alert
- *
  * Represents an alert record stored in the alerts table.
  *
  * @package ProactiveSiteAdvisor\Models
- * @version 1.0.3
+ * @since   1.0.0
  */
 class Alert extends AbstractModel
 {
-    /**
-     * Table name (without prefix).
-     *
-     * @var string
-     */
+    /** Table name (without prefix). */
     protected static string $table = 'alerts';
 
-    /**
-     * Allowed fields for mass assignment.
-     *
-     * @var array<int, string>
-     */
+    /** Allowed fields for mass assignment. */
     protected static array $fillable = [
         'alert_date',
         'type',
@@ -38,11 +28,7 @@ class Alert extends AbstractModel
         'meta_json',
     ];
 
-    /**
-     * Attribute type casting map.
-     *
-     * @var array<string, string>
-     */
+    /** Attribute type casting map. */
     protected static array $casts = [
         'meta_json' => 'json',
     ];
@@ -50,19 +36,14 @@ class Alert extends AbstractModel
     /**
      * Create an alert only if a record for the same date and type does not already exist.
      *
-     * @param string $dateYmd
-     * @param string $type
-     * @param string $severity
-     * @param string|null $metaJson
-     *
-     * @return static|null
+     * @return static
      */
     public static function createIfNotExists(
         string  $dateYmd,
         string  $type,
         string  $severity,
         ?string $metaJson = null
-    ): ?self
+    ): ?AbstractModel
     {
         $existing = static::first([
             'alert_date' => $dateYmd,
@@ -81,76 +62,42 @@ class Alert extends AbstractModel
         ]);
     }
 
-    /**
-     * Find alerts by date (Y-m-d format).
-     *
-     * @param string $dateYmd
-     * @param array<string, mixed> $options
-     *
-     * @return array<int, array<string, mixed>>
-     */
+    /** Find alerts by date (Y-m-d format). */
     public static function findByDate(string $dateYmd, array $options = []): array
     {
         return static::where(['alert_date' => $dateYmd], $options);
     }
 
-    /**
-     * Find alerts by type.
-     *
-     * @param string $type
-     * @param array<string, mixed> $options
-     *
-     * @return array<int, array<string, mixed>>
-     */
+    /** Find alerts by type. */
     public static function findByType(string $type, array $options = []): array
     {
         return static::where(['type' => $type], $options);
     }
 
-    /**
-     * Find alerts by severity.
-     *
-     * @param string $severity
-     * @param array<string, mixed> $options
-     *
-     * @return array<int, array<string, mixed>>
-     */
+    /** Find alerts by severity. */
     public static function findBySeverity(string $severity, array $options = []): array
     {
         return static::where(['severity' => $severity], $options);
     }
 
-    /**
-     * Delete alert records older than the given date.
-     *
-     * @param string $dateYmd
-     *
-     * @return void
-     */
+    /** Delete alert records older than the given date. */
     public static function purgeOlderThan(string $dateYmd): void
     {
         $table = static::getTableName();
 
-        DatabaseManager::preparedQuery(
-            "DELETE FROM {$table} WHERE alert_date < %s",
+        QueryRunner::preparedQuery(
+            "DELETE FROM $table WHERE alert_date < %s",
             $dateYmd
         );
     }
 
-    /**
-     * Delete an alert record by date and type.
-     *
-     * @param string $dateYmd
-     * @param string $type
-     *
-     * @return void
-     */
+    /** Delete an alert record by date and type. */
     public static function deleteByDateAndType(string $dateYmd, string $type): void
     {
         $table = static::getTableName();
 
-        DatabaseManager::preparedQuery(
-            "DELETE FROM {$table} WHERE alert_date = %s AND type = %s",
+        QueryRunner::preparedQuery(
+            "DELETE FROM $table WHERE alert_date = %s AND type = %s",
             $dateYmd,
             $type
         );

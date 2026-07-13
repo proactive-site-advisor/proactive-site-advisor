@@ -5,8 +5,8 @@
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are locally scoped via include.
  *
- * @package ProactiveSiteAdvisor
- * @version 1.0.0
+ * @package ProactiveSiteAdvisor\Templates\Admin\Components
+ * @since   1.0.0
  *
  * @var array $columns
  * @var array $rows

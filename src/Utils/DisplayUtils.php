@@ -7,23 +7,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DisplayUtils.
- *
  * Utility class for rendering display strings used in the plugin.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DisplayUtils
 {
-    /**
-     * Render an admin-style severity badge for alert counts.
-     *
-     * @param int $count
-     * @param string $severity
-     *
-     * @return string
-     */
+    /** Render an admin-style severity badge for alert counts. */
     public static function renderSeverityBadge(int $count, string $severity): string
     {
         if ($count <= 0) {
@@ -45,15 +36,7 @@ class DisplayUtils
         );
     }
 
-    /**
-     * Render history average text.
-     *
-     * @param int $pageviews
-     * @param int $errors
-     * @param int $botPageviews
-     *
-     * @return string
-     */
+    /** Render history average text. */
     public static function renderHistoryAverage(int $pageviews, int $errors, int $botPageviews): string
     {
         $parts = [];

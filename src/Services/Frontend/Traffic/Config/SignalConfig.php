@@ -16,18 +16,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class SignalConfig
+ * Configuration for traffic detection signals.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Config
- * @version 1.0.0
+ * @since   1.0.0
  */
 class SignalConfig
 {
-    /**
-     * Returns list of bot signal classes.
-     *
-     * @return string[]
-     */
+    /** Returns list of bot signal classes. */
     public static function getBotSignals(): array
     {
         $signals = [
@@ -42,18 +38,15 @@ class SignalConfig
         ];
 
         /**
-         * Filter the list of bot signal classes.
+         * Filters the list of bot signal classes.
          *
          * @param string[] $signals Array of fully qualified class names.
+         * @since  1.0.0
          */
         return apply_filters('proactive_site_advisor_bot_signals', $signals);
     }
 
-    /**
-     * Returns list of score signal classes.
-     *
-     * @return string[]
-     */
+    /** Returns list of score signal classes. */
     public static function getScoreSignals(): array
     {
         $signals = [
@@ -64,9 +57,10 @@ class SignalConfig
         ];
 
         /**
-         * Filter the list of score signal classes.
+         * Filters the list of score signal classes.
          *
          * @param string[] $signals Array of fully qualified class names.
+         * @since  1.0.0
          */
         return apply_filters('proactive_site_advisor_score_signals', $signals);
     }

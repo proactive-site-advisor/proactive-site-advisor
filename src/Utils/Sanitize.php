@@ -7,98 +7,56 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Sanitize
- *
  * Utility class for sanitizing various input types.
  *
  * @package ProactiveSiteAdvisor\Utils
- * @version 1.0.0
+ * @since   1.0.0
  */
 class Sanitize
 {
-    /**
-     * Sanitize plain text.
-     *
-     * @param $value
-     * @return string
-     */
+    /** Sanitize plain text. */
     public static function text($value): string
     {
         return sanitize_text_field(wp_unslash($value));
     }
 
-    /**
-     * Sanitize integer value.
-     *
-     * @param $value
-     * @return int
-     */
+    /** Sanitize integer value. */
     public static function int($value): int
     {
         return absint($value);
     }
 
-    /**
-     * Sanitize float value.
-     *
-     * @param $value
-     * @return float
-     */
+    /** Sanitize float value. */
     public static function float($value): float
     {
         return (float)$value;
     }
 
-    /**
-     * Sanitize boolean value.
-     *
-     * @param $value
-     * @return bool
-     */
+    /** Sanitize boolean value. */
     public static function bool($value): bool
     {
         return (bool)filter_var($value, FILTER_VALIDATE_BOOLEAN);
     }
 
-    /**
-     * Sanitize email address.
-     *
-     * @param $value
-     * @return string
-     */
+    /** Sanitize email address. */
     public static function email($value): string
     {
         return sanitize_email(wp_unslash($value));
     }
 
-    /**
-     * Sanitize textarea content.
-     *
-     * @param $value
-     * @return string
-     */
+    /** Sanitize textarea content. */
     public static function textarea($value): string
     {
         return sanitize_textarea_field(wp_unslash($value));
     }
 
-    /**
-     * Sanitize URL.
-     *
-     * @param $value
-     * @return string
-     */
+    /** Sanitize URL. */
     public static function url($value): string
     {
         return esc_url_raw(wp_unslash($value));
     }
 
-    /**
-     * Sanitize array of text values.
-     *
-     * @param $array
-     * @return array
-     */
+    /** Sanitize array of text values. */
     public static function arrayOfText($array): array
     {
         if (!is_array($array)) {
@@ -108,12 +66,7 @@ class Sanitize
         return array_map(static fn($v) => self::text($v), $array);
     }
 
-    /**
-     * Sanitize array of integers.
-     *
-     * @param $array
-     * @return array
-     */
+    /** Sanitize array of integers. */
     public static function arrayOfInt($array): array
     {
         if (!is_array($array)) {
@@ -123,13 +76,7 @@ class Sanitize
         return array_map(static fn($v) => self::int($v), $array);
     }
 
-    /**
-     * Sanitize input array using rules.
-     *
-     * @param array $input
-     * @param array $rules
-     * @return array
-     */
+    /** Sanitize input array using rules. */
     public static function map(array $input, array $rules): array
     {
         $clean = [];

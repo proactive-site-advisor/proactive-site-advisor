@@ -10,20 +10,14 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class DailyStatsDataProvider
+ * Provides query helpers for retrieving daily statistics data from the database.
  *
  * @package ProactiveSiteAdvisor\DataProviders
- * @version 1.0.0
+ * @since   1.0.0
  */
 class DailyStatsDataProvider extends AbstractDataProvider
 {
-    /**
-     * Get stats for the last N days.
-     *
-     * @param int $days Number of days to retrieve (1-90).
-     *
-     * @return array<int, array<string, mixed>>
-     */
+    /** Get stats for the last N days. */
     public function getLastDays(int $days = 7): array
     {
         global $wpdb;
@@ -51,14 +45,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         return $rows;
     }
 
-    /**
-     * Retrieve daily statistics for a given number of days prior to a specific date.
-     *
-     * @param string $today
-     * @param int $days
-     *
-     * @return array
-     */
+    /** Retrieve daily statistics for a given number of days prior to a specific date. */
     public function getDailyStatsBeforeDate(string $today, int $days = 7): array
     {
         global $wpdb;
@@ -87,13 +74,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         return $rows;
     }
 
-    /**
-     * Retrieve daily statistics for a specific date.
-     *
-     * @param string $date
-     *
-     * @return array
-     */
+    /** Retrieve daily statistics for a specific date. */
     public function getDailyStatsByDate(string $date): array
     {
         global $wpdb;
@@ -120,11 +101,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
         return $row;
     }
 
-    /**
-     * Get number of days with collected data.
-     *
-     * @return int
-     */
+    /** Get number of days with collected data. */
     public function getDaysWithData(): int
     {
         global $wpdb;

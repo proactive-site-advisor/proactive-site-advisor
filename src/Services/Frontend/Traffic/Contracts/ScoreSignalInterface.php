@@ -7,17 +7,13 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Interface ScoreSignalInterface
+ * Defines the contract for suspicion score signals.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts
- * @version 1.0.0
+ * @since   1.0.0
  */
 interface ScoreSignalInterface
 {
-    /**
-     * Returns a suspicion score for the current request.
-     *
-     * @return int
-     */
+    /** Returns a suspicion score for the current request. */
     public function getScore(): int;
 }

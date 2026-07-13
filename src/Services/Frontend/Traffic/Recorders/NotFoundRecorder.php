@@ -13,25 +13,20 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class NotFoundRecorder
+ * Records 404 errors for valid requests.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders
- * @version 1.0.0
+ * @since   1.0.0
  */
 class NotFoundRecorder
 {
+    /** Maximum number of paths to track. */
     private const MAX_PATHS = 30;
 
-    /**
-     * @var bool
-     */
+    /** Whether the recorder has already run. */
     private static bool $hasRun = false;
 
-    /**
-     * Records 404 if request is valid.
-     *
-     * @return void
-     */
+    /** Records 404 if request is valid. */
     public function maybeRecord(): void
     {
         if (self::$hasRun) {

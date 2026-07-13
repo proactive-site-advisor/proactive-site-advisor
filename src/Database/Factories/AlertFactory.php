@@ -10,27 +10,17 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class AlertFactory
- *
  * Factory for creating Alert records with fake data.
  *
  * @package ProactiveSiteAdvisor\Database\Factories
- * @version 1.0.0
+ * @since   1.0.0
  */
 class AlertFactory extends AbstractFactory
 {
-    /**
-     * Model class.
-     *
-     * @var string
-     */
+    /** Model class. */
     protected string $model = Alert::class;
 
-    /**
-     * Define default attributes.
-     *
-     * @return array
-     */
+    /** Define default attributes. */
     protected function definition(): array
     {
         return [
@@ -41,13 +31,7 @@ class AlertFactory extends AbstractFactory
         ];
     }
 
-    /**
-     * Create a traffic drop alert, following TrafficAnalyzer rules.
-     *
-     * @param string $date
-     * @param int $percentDrop
-     * @return Alert|null
-     */
+    /** Create a traffic drop alert, following TrafficAnalyzer rules. */
     public function trafficDrop(string $date, int $percentDrop = 35): ?Alert
     {
         if ($percentDrop <= 30) {
@@ -75,13 +59,7 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /**
-     * Create a traffic spike alert, following TrafficAnalyzer rules.
-     *
-     * @param string $date
-     * @param int $percentIncrease
-     * @return Alert|null
-     */
+    /** Create a traffic spike alert, following TrafficAnalyzer rules. */
     public function trafficSpike(string $date, int $percentIncrease = 75): ?Alert
     {
         if ($percentIncrease <= 50) {
@@ -108,14 +86,7 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /**
-     * Create a 404 spike alert, compatible with Error404Analyzer logic.
-     *
-     * @param string $date
-     * @param int $errorCount
-     * @param int $average
-     * @return Alert|null
-     */
+    /** Create a 404 spike alert, compatible with Error404Analyzer logic. */
     public function error404Spike(string $date, int $errorCount = 50, int $average = 15): ?Alert
     {
         $ratio = $average > 0 ? $errorCount / $average : 0;
@@ -149,13 +120,7 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /**
-     * Create a bot spike alert, following BotTrafficAnalyzer rules.
-     *
-     * @param string $date
-     * @param int $percentIncrease
-     * @return Alert|null
-     */
+    /** Create a bot spike alert, following BotTrafficAnalyzer rules. */
     public function botSpike(string $date, int $percentIncrease = 180): ?Alert
     {
         if ($percentIncrease <= 150) {
@@ -190,13 +155,7 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /**
-     * Create a bot drop alert, following BotTrafficAnalyzer rules.
-     *
-     * @param string $date
-     * @param int $percentDrop
-     * @return Alert|null
-     */
+    /** Create a bot drop alert, following BotTrafficAnalyzer rules. */
     public function botDrop(string $date, int $percentDrop = 80): ?Alert
     {
         if ($percentDrop <= 70) {
@@ -231,12 +190,7 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /**
-     * Create a random alert for realistic pattern.
-     *
-     * @param string $date
-     * @return Alert|null
-     */
+    /** Create a random alert for realistic pattern. */
     public function randomAlert(string $date): ?Alert
     {
         $types = ['traffic_drop', 'traffic_spike', '404_spike', 'bot_spike', 'bot_drop'];
