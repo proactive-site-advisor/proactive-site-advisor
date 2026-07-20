@@ -291,7 +291,7 @@ class CacheManager extends AbstractSingleton
             )
         );
 
-        Logger::info("Cache group flushed: {$group}");
+        Logger::info("Cache group flushed: $group");
 
         /**
          * Fires after a cache group is flushed.

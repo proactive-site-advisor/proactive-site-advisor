@@ -146,6 +146,24 @@ class HeaderReader
         return 'unknown';
     }
 
+    /** Build anonymous requester fingerprint from IP and browser headers. */
+    public static function getFingerprint(): string
+    {
+        $ip = self::getIp();
+
+        $baseFingerprint = self::getUserAgent()
+            . '|'
+            . self::getAcceptLanguage()
+            . '|'
+            . self::getSecChUa();
+
+        if ($ip === '' || $ip === 'unknown') {
+            return 'noip_' . md5($baseFingerprint);
+        }
+
+        return md5($ip . '|' . $baseFingerprint);
+    }
+
     /** Generic header getter with sanitization. */
     public static function getHeader(string $key): string
     {

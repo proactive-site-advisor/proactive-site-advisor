@@ -24,38 +24,34 @@ abstract class AbstractSeeder
     /** Seeder priority (lower runs first). */
     protected int $priority = 10;
 
-    /** Current seeding pattern. */
-    protected string $pattern = 'realistic';
+    /** Current seeding options. */
+    protected array $options = [];
 
-    /** Number of days to seed. */
-    protected int $days = 30;
-
-    /** Set the seeding pattern. */
-    public function setPattern(string $pattern): self
+    /** Set seeding options. */
+    public function setOptions(array $options): self
     {
-        $this->pattern = $pattern;
+        $this->options = $options;
 
         return $this;
     }
 
-    /** Get the seeding pattern. */
-    public function getPattern(): string
+    /** Get seeding options. */
+    public function getOptions(): array
     {
-        return $this->pattern;
+        return $this->options;
     }
 
-    /** Set the number of days to seed. */
-    public function setDays(int $days): self
+    /**
+     * Get a seeding option.
+     *
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    protected function option(string $key, $default = null)
     {
-        $this->days = max(1, $days);
-
-        return $this;
-    }
-
-    /** Get the number of days to seed. */
-    public function getDays(): int
-    {
-        return $this->days;
+        return $this->options[$key] ?? $default;
     }
 
     /** Run the seeder. */
@@ -86,20 +82,6 @@ abstract class AbstractSeeder
     public function getTable(): string
     {
         return $this->table;
-    }
-
-    /** Get date range for seeding. */
-    protected function getDateRange(): array
-    {
-        $dates   = [];
-        $endDate = current_time('Y-m-d');
-        $endTs   = strtotime($endDate);
-
-        for ($i = $this->days - 1; $i >= 0; $i--) {
-            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
-        }
-
-        return $dates;
     }
 
     /** Log progress message. */

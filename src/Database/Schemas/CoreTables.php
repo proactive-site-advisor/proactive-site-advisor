@@ -24,6 +24,8 @@ class CoreTables
         return [
             self::getDailyStatsSchema(),
             self::getAlertsSchema(),
+            self::getRateCountersSchema(),
+            self::getDailyFingerprintSchema(),
         ];
     }
 
@@ -32,6 +34,8 @@ class CoreTables
     {
         SchemaRegistry::registerTable(self::getDailyStatsSchema());
         SchemaRegistry::registerTable(self::getAlertsSchema());
+        SchemaRegistry::registerTable(self::getRateCountersSchema());
+        SchemaRegistry::registerTable(self::getDailyFingerprintSchema());
 
         SchemaBuilder::createTables();
     }
@@ -66,6 +70,32 @@ class CoreTables
             ->json('meta_json')
             ->timestamps()
             ->unique('alerts_unique', ['alert_date', 'type']);
+
+        return $schema;
+    }
+
+    /** Rate counters table schema for burst detection. */
+    public static function getRateCountersSchema(): TableSchema
+    {
+        $schema = new TableSchema('rate_counters');
+        $schema
+            ->varchar('hash', 32)
+            ->int('count')->default(0)
+            ->datetime('expires_at')
+            ->primaryKey('hash');
+
+        return $schema;
+    }
+
+    public static function getDailyFingerprintSchema(): TableSchema
+    {
+        $schema = new TableSchema('daily_fingerprint');
+        $schema
+            ->varchar('fingerprint', 32)
+            ->date('record_date')
+            ->int('pageview_count')->default(0)
+            ->boolean('is_bot')
+            ->primaryKey('fingerprint, record_date');
 
         return $schema;
     }

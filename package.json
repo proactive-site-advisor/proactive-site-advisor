@@ -1,7 +1,7 @@
 {
   "name": "@mohammadyari/proactive-site-advisor",
   "version": "1.0.0",
-  "description": "A WordPress plugin that provides proactive insights and actionable recommendations to detect potential issues before they impact the site.",
+  "description": "Frontend build pipeline for WordPress plugins using Gulp and Sass.",
   "type": "module",
   "scripts": {
     "build": "gulp",

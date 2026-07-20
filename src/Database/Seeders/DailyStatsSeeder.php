@@ -35,11 +35,13 @@ class DailyStatsSeeder extends AbstractSeeder
     /** Run the seeder. */
     public function run(): int
     {
-        $this->factory->setPattern($this->pattern);
+        $pattern = $this->option('pattern', 'realistic');
+        $this->factory->setPattern($pattern);
 
-        $this->log("Seeding daily_stats with '$this->pattern' pattern for $this->days days...");
+        $days = $this->option('days', 30);
+        $this->log("Seeding daily_stats with '$pattern' pattern for $days days...");
 
-        $dates = $this->getDateRange();
+        $dates = $this->getDateRange($days);
         $count = 0;
 
         foreach ($dates as $index => $date) {
@@ -54,5 +56,19 @@ class DailyStatsSeeder extends AbstractSeeder
         $this->success("Created $count daily_stats records");
 
         return $count;
+    }
+
+    /** Get date range for seeding. */
+    private function getDateRange(int $days): array
+    {
+        $dates   = [];
+        $endDate = current_time('Y-m-d');
+        $endTs   = strtotime($endDate);
+
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
+        }
+
+        return $dates;
     }
 }

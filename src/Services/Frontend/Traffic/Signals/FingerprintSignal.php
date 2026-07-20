@@ -2,9 +2,11 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Cache\CacheKeys;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
+use ProactiveSiteAdvisor\Cache\CacheManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -63,6 +65,10 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
                 if ($this->hasInvalidClientHints($ua)) {
                     $score += 5;
                 }
+
+                if ($this->hasVersionMismatch($ua)) {
+                    $score += 3;
+                }
             }
 
             if ($this->hasClientMobileMismatch($ua)) {
@@ -82,6 +88,10 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
 
         if ($this->hasMissingUserNavigation()) {
             ++$score;
+        }
+
+        if ($this->hasMultipleUserAgents()) {
+            $score += 3;
         }
 
         return self::$score = $score;
@@ -305,5 +315,61 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             stripos($ua, 'CriOS') === false &&
             stripos($ua, 'Edg') === false
         );
+    }
+
+    /** Checks if the browser version in User-Agent contradicts Sec-CH-UA. */
+    private function hasVersionMismatch(string $ua): bool
+    {
+        if (!preg_match('/(?:Chrome|Edg|OPR)\/(\d+)/i', $ua, $uaMatch)) {
+            return false;
+        }
+        $uaVersion = (int)$uaMatch[1];
+
+        $chHeader = HeaderReader::getSecChUa();
+        if ($chHeader === '') {
+            return false;
+        }
+
+        if (!preg_match('/"v="(\d+)"/', $chHeader, $chMatch)) {
+            return false;
+        }
+        $chVersion = (int)$chMatch[1];
+
+        return abs($uaVersion - $chVersion) > 5;
+    }
+
+    /** Detects IPs sending requests with multiple different User-Agents. */
+    private function hasMultipleUserAgents(): bool
+    {
+        $ip = HeaderReader::getIp();
+        if ($ip === '' || $ip === 'unknown') {
+            return false;
+        }
+
+        $currentUa = HeaderReader::getUserAgent();
+        if ($currentUa === '') {
+            return false;
+        }
+
+        $cache    = CacheManager::instance();
+        $cacheKey = CacheKeys::ipUserAgents(md5($ip));
+
+        $recentUas = $cache->get($cacheKey);
+        if (!is_array($recentUas)) {
+            $recentUas = [];
+        }
+
+        $normalized = preg_replace('/\s+/', ' ', trim($currentUa));
+        $normalized = preg_replace('/AppleWebKit\/[\d.]+/', '', $normalized);
+        $normalized = preg_replace('/Safari\/[\d.]+/', '', $normalized);
+        $normalized = trim($normalized);
+
+        if (!in_array($normalized, $recentUas, true)) {
+            $recentUas[] = $normalized;
+        }
+
+        $cache->set($cacheKey, $recentUas, 30);
+
+        return count($recentUas) >= 2;
     }
 }

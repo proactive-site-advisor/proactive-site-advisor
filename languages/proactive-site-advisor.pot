@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-06-28 11:50+0330\n"
+"POT-Creation-Date: 2026-07-20 03:38+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,495 +22,495 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: src/Abstracts/AbstractSingleton.php:38 src/Core.php:99
+#: src/Abstracts/AbstractSingleton.php:28 src/Core.php:73
 msgid "Cloning is not allowed."
 msgstr ""
 
-#: src/Abstracts/AbstractSingleton.php:46 src/Core.php:109
+#: src/Abstracts/AbstractSingleton.php:34 src/Core.php:79
 msgid "Instances of this class cannot be unserialized."
 msgstr ""
 
-#: src/Admin/Notices/AdminNotices.php:212
+#: src/Admin/Notices/AdminNotices.php:132
 msgid "Invalid notice ID."
 msgstr ""
 
-#: src/Admin/Notices/AdminNotices.php:217
-#: src/Admin/Notices/AdminNotices.php:223
+#: src/Admin/Notices/AdminNotices.php:137
+#: src/Admin/Notices/AdminNotices.php:143
 msgid "Notice dismissed."
 msgstr ""
 
-#: src/Admin/Notices/PromoNotice.php:73
+#: src/Admin/Notices/PromoNotice.php:54
 msgid "Promo notice dismissed successfully."
 msgstr ""
 
-#: src/AdminUI/Theme/ThemeSwitcher.php:136
+#: src/AdminUI/Theme/ThemeSwitcher.php:90
 msgid "Theme switched successfully."
 msgstr ""
 
-#: src/AdminUI/Theme/ThemeSwitcher.php:139
+#: src/AdminUI/Theme/ThemeSwitcher.php:93
 msgid "Invalid theme."
 msgstr ""
 
-#: src/Components/AjaxComponent.php:52
+#: src/Components/AjaxComponent.php:37
 msgid "AJAX error: "
 msgstr ""
 
-#: src/Components/AjaxComponent.php:92
+#: src/Components/AjaxComponent.php:61
 msgid "Invalid security token."
 msgstr ""
 
-#: src/Components/AjaxComponent.php:114
+#: src/Components/AjaxComponent.php:72
 msgid "Unauthorized."
 msgstr ""
 
-#: src/Config/HeaderConfig.php:58
+#: src/Config/HeaderConfig.php:37
 msgid "Proactive Site Advisor"
 msgstr ""
 
-#: src/Cron/CronManager.php:97
+#: src/Cron/CronManager.php:65
 msgid "Every Minute"
 msgstr ""
 
-#: src/Cron/CronManager.php:101
+#: src/Cron/CronManager.php:69
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: src/Cron/CronManager.php:105
+#: src/Cron/CronManager.php:73
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: src/Cron/CronManager.php:109
+#: src/Cron/CronManager.php:77
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: src/Cron/CronManager.php:113
+#: src/Cron/CronManager.php:81
 msgid "Once Weekly"
 msgstr ""
 
-#: src/Cron/CronManager.php:117
+#: src/Cron/CronManager.php:85
 msgid "Once Monthly"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:61
+#: src/Services/Admin/Dashboard/DashboardData.php:50
 msgid "No critical issues detected"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:62
+#: src/Services/Admin/Dashboard/DashboardData.php:51
 msgid "Issues needing attention"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:65
+#: src/Services/Admin/Dashboard/DashboardData.php:54
 msgid "No unusual traffic detected"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:66
+#: src/Services/Admin/Dashboard/DashboardData.php:55
 msgid "Unusual traffic changes detected"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:69
-msgid "No bot activity anomalies"
-msgstr ""
-
-#: src/Services/Admin/Dashboard/DashboardData.php:70
-msgid "Bot traffic anomalies detected"
-msgstr ""
-
-#: src/Services/Admin/Dashboard/DashboardData.php:73
+#: src/Services/Admin/Dashboard/DashboardData.php:58
 msgid "No 404 issues detected"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:74
+#: src/Services/Admin/Dashboard/DashboardData.php:59
 msgid "Pages returning 404 errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:77
-#: src/Services/Admin/Dashboard/DashboardData.php:297
-#: src/Services/Admin/Dashboard/DashboardData.php:298
+#: src/Services/Admin/Dashboard/DashboardData.php:62
+msgid "No bot activity anomalies"
+msgstr ""
+
+#: src/Services/Admin/Dashboard/DashboardData.php:63
+msgid "Bot traffic anomalies detected"
+msgstr ""
+
+#: src/Services/Admin/Dashboard/DashboardData.php:66
+#: src/Services/Admin/Dashboard/DashboardData.php:252
+#: src/Services/Admin/Dashboard/DashboardData.php:253
 msgid "Last 7 days"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:78
+#: src/Services/Admin/Dashboard/DashboardData.php:67
 msgid "Total in last 7 days"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:93
+#: src/Services/Admin/Dashboard/DashboardData.php:78
 msgid "Not checked yet · Monitoring starting"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:97
+#: src/Services/Admin/Dashboard/DashboardData.php:82
 msgid "Collecting data · Insights will appear soon"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:101
+#: src/Services/Admin/Dashboard/DashboardData.php:86
 msgid "Last checked: over 24 hours ago · Check monitoring status"
 msgstr ""
 
 #. translators: %s: Time ago string
-#: src/Services/Admin/Dashboard/DashboardData.php:119
+#: src/Services/Admin/Dashboard/DashboardData.php:100
 #, php-format
 msgid "Last checked: %s ago · Range: last 7 days"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:152
-#: src/Services/Admin/Dashboard/DashboardData.php:403
-#: src/Services/Admin/Dashboard/DashboardData.php:455
+#: src/Services/Admin/Dashboard/DashboardData.php:123
+#: src/Services/Admin/Dashboard/DashboardData.php:340
+#: src/Services/Admin/Dashboard/DashboardData.php:386
 msgid "Getting started"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:153
+#: src/Services/Admin/Dashboard/DashboardData.php:124
 msgid ""
 "We're collecting baseline data. Your first insights will appear shortly."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:163
-#: src/Services/Admin/Dashboard/DashboardData.php:465
+#: src/Services/Admin/Dashboard/DashboardData.php:133
+#: src/Services/Admin/Dashboard/DashboardData.php:396
 msgid "Building history"
 msgstr ""
 
 #. translators: 1: Current day number, 2: Total number of baseline days required
-#: src/Services/Admin/Dashboard/DashboardData.php:166
+#: src/Services/Admin/Dashboard/DashboardData.php:136
 #, php-format
 msgid ""
 "Collecting baseline data (Day %1$d of %2$d). Your insights will become "
 "more accurate as history grows."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:176
+#: src/Services/Admin/Dashboard/DashboardData.php:146
 msgid "Check monitoring"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:177
+#: src/Services/Admin/Dashboard/DashboardData.php:147
 msgid "Last check was over 24 hours ago. Verify your site cron is running."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:202
+#: src/Services/Admin/Dashboard/DashboardData.php:168
 msgid "Critical issues detected"
 msgstr ""
 
 #. translators: %d: Number of critical issues detected in the last 7 days
-#: src/Services/Admin/Dashboard/DashboardData.php:205
+#: src/Services/Admin/Dashboard/DashboardData.php:171
 #, php-format
 msgid "%d critical issue detected in the last 7 days."
 msgid_plural "%d critical issues detected in the last 7 days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:217
+#: src/Services/Admin/Dashboard/DashboardData.php:183
 msgid "Warnings detected"
 msgstr ""
 
 #. translators: %d: Number of warnings detected in the last 7 days
-#: src/Services/Admin/Dashboard/DashboardData.php:220
+#: src/Services/Admin/Dashboard/DashboardData.php:186
 #, php-format
 msgid "%d warning detected in the last 7 days."
 msgid_plural "%d warnings detected in the last 7 days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:232
+#: src/Services/Admin/Dashboard/DashboardData.php:198
 msgid "Notices detected"
 msgstr ""
 
 #. translators: %d: Number of notices recorded in the last 7 days
-#: src/Services/Admin/Dashboard/DashboardData.php:235
+#: src/Services/Admin/Dashboard/DashboardData.php:201
 #, php-format
 msgid "%d notice recorded in the last 7 days."
 msgid_plural "%d notices recorded in the last 7 days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:246
-#: src/Services/Admin/Dashboard/DashboardData.php:427
+#: src/Services/Admin/Dashboard/DashboardData.php:212
+#: src/Services/Admin/Dashboard/DashboardData.php:362
 msgid "All clear"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:247
+#: src/Services/Admin/Dashboard/DashboardData.php:213
 msgid ""
 "No unusual activity detected in the last 7 days. We'll keep monitoring and "
 "surface issues with recommended actions."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:330
+#: src/Services/Admin/Dashboard/DashboardData.php:276
 msgid "Collecting data"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:337
+#: src/Services/Admin/Dashboard/DashboardData.php:283
 msgid "Limited data available"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:364
+#: src/Services/Admin/Dashboard/DashboardData.php:306
 msgid "Critical Alerts"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:369
+#: src/Services/Admin/Dashboard/DashboardData.php:311
 msgid "Traffic Alerts"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:374
-msgid "Bot Alerts"
-msgstr ""
-
-#: src/Services/Admin/Dashboard/DashboardData.php:379
+#: src/Services/Admin/Dashboard/DashboardData.php:316
 msgid "404 Alerts"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:384
+#: src/Services/Admin/Dashboard/DashboardData.php:321
+msgid "Bot Alerts"
+msgstr ""
+
+#: src/Services/Admin/Dashboard/DashboardData.php:326
 msgid "Total Alerts"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:404
+#: src/Services/Admin/Dashboard/DashboardData.php:341
 msgid "We're collecting baseline data for your site."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:414
+#: src/Services/Admin/Dashboard/DashboardData.php:350
 msgid "Limited history"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:415
+#: src/Services/Admin/Dashboard/DashboardData.php:351
 msgid "Not enough data yet to detect unusual activity."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:428
+#: src/Services/Admin/Dashboard/DashboardData.php:363
 msgid "No unusual activity detected in the last 7 days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:456
+#: src/Services/Admin/Dashboard/DashboardData.php:387
 msgid ""
 "We're collecting baseline data. Your first history will appear shortly."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:466
+#: src/Services/Admin/Dashboard/DashboardData.php:397
 msgid "Building history — check back in a couple days for meaningful trends."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:483
+#: src/Services/Admin/Dashboard/DashboardData.php:414
 msgid "Date"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:484
+#: src/Services/Admin/Dashboard/DashboardData.php:415
 msgid "Pageviews"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:485
+#: src/Services/Admin/Dashboard/DashboardData.php:416
 msgid "Bot Pageviews"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardData.php:486
+#: src/Services/Admin/Dashboard/DashboardData.php:417
 msgid "404 Errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardManager.php:83
+#: src/Services/Admin/Dashboard/DashboardManager.php:69
 msgid "Site Advisor"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardManager.php:101
+#: src/Services/Admin/Dashboard/DashboardManager.php:87
 #: templates/admin/pages/dashboard/header.php:21
 msgid "Dashboard"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:214
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:171
 msgid "Traffic drop"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:217
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:173
 msgid "Traffic spike"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:220
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:175
 msgid "Bot spike"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:223
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:177
 msgid "Bot drop"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:226
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:179
 msgid "404 spike"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:229
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:181
 msgid "Alert"
 msgstr ""
 
 #. translators: %s: The percentage value of traffic drop
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:245
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:190
 #, php-format
 msgid "Traffic dropped by %s%%"
 msgstr ""
 
 #. translators: %s: The percentage value of traffic increase
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:250
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:195
 #, php-format
 msgid "Traffic increased by %s%%"
 msgstr ""
 
 #. translators: %s: percentage
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:256
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:200
 #, php-format
 msgid "Bot traffic increased by %s%%"
 msgstr ""
 
 #. translators: %s: percentage
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:264
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:205
 #, php-format
 msgid "Bot traffic dropped by %s%%"
 msgstr ""
 
 #. translators: %s: The percentage value of 404 error increase
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:271
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:210
 #, php-format
 msgid "404 errors increased by %s%%"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:287
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:221
 msgid "Traffic dropped unexpectedly compared to recent days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:290
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:223
 msgid "Traffic increased significantly compared to recent days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:293
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:225
 msgid "Unusual bot activity detected – possible scraping or indexing surge."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:296
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:227
 msgid ""
 "Bot visits dropped significantly – search engines may have reduced "
 "crawling."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:299
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:229
 msgid "Visitors are reaching pages that no longer exist."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:302
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:231
 msgid "Unusual activity was detected."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:318
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:241
 msgid "Sudden traffic drops are often caused by downtime or recent changes."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:320
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:243
 msgid "Check if your site is reachable"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:321
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:244
 msgid "Review recent plugin or theme changes"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:322
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:245
 msgid "Look for increases in 404 errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:328
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:250
 msgid ""
 "Traffic spikes can indicate viral content, marketing success, or bot "
 "activity."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:330
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:252
 msgid "Check analytics for sources"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:331
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:253
 msgid "Review server load and performance"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:332
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:254
 msgid "Look for unusual referrers"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:338
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:259
 msgid ""
 "A sudden increase in bot traffic can indicate aggressive crawling or "
 "scraping attempts."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:340
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:261
 msgid "Check server load and bandwidth usage"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:341
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:262
 msgid "Review robots.txt rules and crawling rate in Google Search Console"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:342
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:263
 msgid "Consider blocking abusive IPs if the traffic is malicious"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:349
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:269
 msgid ""
 "A significant drop in bot activity may signal that search engines are "
 "having trouble accessing your site."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:351
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:271
 msgid ""
 "Verify your site is accessible and not blocking crawlers unintentionally"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:352
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:272
 msgid "Check Search Console for crawl errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:353
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:273
 msgid "Ensure your XML sitemap is up-to-date"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:360
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:279
 msgid "Missing pages can frustrate visitors and affect SEO."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:362
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:281
 msgid "Add redirects for missing pages"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:363
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:282
 msgid "Fix internal links pointing to missing URLs"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:364
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:283
 msgid "Review permalink changes"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:371
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:289
 msgid "This issue may require your attention."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:373
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:291
 msgid "Review recent changes to your site"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:374
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:292
 msgid "Check your site for visible issues"
 msgstr ""
 
 #. translators: %s: average pageviews count
-#: src/Utils/DisplayUtils.php:64
+#: src/Utils/DisplayUtils.php:47
 #, php-format
 msgid "%s pageviews"
 msgstr ""
 
-#. translators: %s: average bot pageviews count
-#: src/Utils/DisplayUtils.php:72
-#, php-format
-msgid "%s bot pageviews"
-msgstr ""
-
 #. translators: %s: average 404 errors count
-#: src/Utils/DisplayUtils.php:80
+#: src/Utils/DisplayUtils.php:55
 #, php-format
 msgid "%s page errors (404)"
 msgstr ""
 
-#: src/Utils/DisplayUtils.php:86
+#. translators: %s: average bot pageviews count
+#: src/Utils/DisplayUtils.php:63
+#, php-format
+msgid "%s bot pageviews"
+msgstr ""
+
+#: src/Utils/DisplayUtils.php:69
 msgid "Average per day: No data yet"
 msgstr ""
 
 #. translators: %s: list of average stats separated by middot
-#: src/Utils/DisplayUtils.php:91
+#: src/Utils/DisplayUtils.php:74
 #, php-format
 msgid "Average per day: %s"
 msgstr ""
@@ -527,7 +527,11 @@ msgstr ""
 msgid "Top 404 URLs"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:76
+#: templates/admin/components/alert-card.php:71
+msgid "Top Bots"
+msgstr ""
+
+#: templates/admin/components/alert-card.php:90
 msgid "Toggle details"
 msgstr ""
 
@@ -610,7 +614,7 @@ msgid "Unusual activity on your site — with recommended actions."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "Proactive Site Advisor – Local, privacy-first site alerts"
+msgid "Proactive Site Advisor – Privacy‑First Anomaly Alerts"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -619,9 +623,8 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Daily local monitoring of critical site signals – currently traffic & 404 "
-"errors. Alerts you on anomalies with actionable next steps. No automatic "
-"fixes."
+"Get early warnings on anomalies like traffic drops, 404 surges, and bot "
+"spikes. Privacy‑friendly local monitoring with actionable next steps."
 msgstr ""
 
 #. Author of the plugin/theme

@@ -32,27 +32,28 @@ class AlertSeeder extends AbstractSeeder
     /** Run the seeder. */
     public function run(): int
     {
-        $this->factory->setPattern($this->pattern);
+        $pattern = $this->option('pattern', 'realistic');
+        $this->factory->setPattern($pattern);
 
-        $this->log("Seeding alerts with '$this->pattern' pattern for $this->days days...");
+        $days = $this->option('days', 30);
+        $this->log("Seeding alerts with '$pattern' pattern for $days days...");
 
-        if ($this->pattern === 'alerts') {
-            return $this->seedAlerts();
+        if ($pattern === 'alerts') {
+            return $this->seedAlerts($days);
         }
 
-        return $this->seedRealistic();
+        return $this->seedRealistic($days);
     }
 
     /** Seed with realistic pattern - creates occasional random alerts (~10% of days). */
-    private function seedRealistic(): int
+    private function seedRealistic(int $days): int
     {
-        $dates = $this->getDateRange();
+        $dates = $this->getDateRange($days);
         $count = 0;
 
         foreach ($dates as $date) {
             if (wp_rand(1, 100) <= 10) {
                 $alert = $this->factory->randomAlert($date);
-
                 if ($alert !== null) {
                     $count++;
                 }
@@ -60,14 +61,13 @@ class AlertSeeder extends AbstractSeeder
         }
 
         $this->success("Created $count alert records");
-
         return $count;
     }
 
     /** Seed with alerts pattern - creates alerts on specific days to match DailyStatsSeeder pattern. */
-    private function seedAlerts(): int
+    private function seedAlerts(int $days): int
     {
-        $dates = $this->getDateRange();
+        $dates = $this->getDateRange($days);
         $count = 0;
 
         foreach ($dates as $index => $date) {
@@ -96,7 +96,20 @@ class AlertSeeder extends AbstractSeeder
         }
 
         $this->success("Created $count alert records");
-
         return $count;
+    }
+
+    /** Get date range for seeding. */
+    private function getDateRange(int $days): array
+    {
+        $dates   = [];
+        $endDate = current_time('Y-m-d');
+        $endTs   = strtotime($endDate);
+
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
+        }
+
+        return $dates;
     }
 }

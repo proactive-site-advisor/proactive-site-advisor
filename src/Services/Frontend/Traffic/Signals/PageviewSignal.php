@@ -52,11 +52,16 @@ class PageviewSignal
             return false;
         }
 
-        $uri       = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
-        $path      = wp_parse_url($uri, PHP_URL_PATH);
+        $uri  = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+        $path = wp_parse_url($uri, PHP_URL_PATH);
+
+        if ($path === null) {
+            return false;
+        }
+
         $extension = strtolower((string)pathinfo($path, PATHINFO_EXTENSION));
 
-        return $path !== null && $extension === '';
+        return $extension === '';
     }
 
     /** Checks if the current user should be excluded. */

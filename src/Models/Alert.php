@@ -17,10 +17,10 @@ if (!defined('ABSPATH')) {
  */
 class Alert extends AbstractModel
 {
-    /** Table name (without prefix). */
+    /** {@inheritDoc} */
     protected static string $table = 'alerts';
 
-    /** Allowed fields for mass assignment. */
+    /** {@inheritDoc} */
     protected static array $fillable = [
         'alert_date',
         'type',
@@ -28,7 +28,7 @@ class Alert extends AbstractModel
         'meta_json',
     ];
 
-    /** Attribute type casting map. */
+    /** {@inheritDoc} */
     protected static array $casts = [
         'meta_json' => 'json',
     ];

@@ -19,25 +19,16 @@ if (!defined('ABSPATH')) {
  */
 class VersionManager
 {
-    /** Current database schema version. */
-    private static string $version = '1.0.2';
-
-    /** Set the database schema version. */
-    public static function setVersion(string $version): void
-    {
-        self::$version = $version;
-    }
-
     /** Save the current database version to the database. */
     public static function saveVersion(): void
     {
-        OptionUtils::setMeta(PluginMeta::DB_VERSION, self::$version);
+        OptionUtils::setMeta(PluginMeta::DB_VERSION, self::getVersion());
     }
 
     /** Get the current database schema version. */
     public static function getVersion(): string
     {
-        return self::$version;
+        return PROACTIVE_SITE_ADVISOR_DB_VERSION;
     }
 
     /** Get the installed database version. */
@@ -49,7 +40,7 @@ class VersionManager
     /** Check if database needs update. */
     public static function needsUpdate(): bool
     {
-        return version_compare(self::getInstalledVersion(), self::$version, '<');
+        return version_compare(self::getInstalledVersion(), self::getVersion(), '<');
     }
 
     /** Run a database migration. */

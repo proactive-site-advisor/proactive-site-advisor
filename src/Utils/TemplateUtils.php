@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Utils;
 
+use ProactiveSiteAdvisor\Config\PrefixConfig;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -21,10 +23,11 @@ class TemplateUtils
             $templateName .= '.php';
         }
 
+        $slug  = PrefixConfig::SLUG;
         $paths = [
-            get_stylesheet_directory() . "/proactive-site-advisor/templates/{$templateName}",
-            get_template_directory() . "/proactive-site-advisor/templates/{$templateName}",
-            PROACTIVE_SITE_ADVISOR_TEMPLATES_PATH . $templateName,
+            trailingslashit(get_stylesheet_directory()) . $slug . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . $templateName,
+            trailingslashit(get_template_directory()) . $slug . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . $templateName,
+            trailingslashit(PROACTIVE_SITE_ADVISOR_TEMPLATES_PATH) . $templateName,
         ];
 
         $located = current(array_filter($paths, 'file_exists'));

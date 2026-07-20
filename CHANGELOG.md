@@ -1,156 +1,186 @@
-\# Changelog
+# Changelog
+
+
+
+= 1.0.8 – 2026-07-20 =
+
+* New: Atomic rate counter for burst detection without race conditions
+
+* New: Daily fingerprint tracking to retroactively correct bot pageviews
+
+* Improved: Burst detection now reliable under heavy concurrent requests
+
+* Improved: PHP 8.1+ compatibility – fixed pathinfo(null) deprecation
+
+* Improved: Real-time bot traffic correction – human counts no longer inflated
+
+* Database: Added transferPageviewsToBot() for accurate daily corrections
+
+* Retention: Automatic cleanup of expired rate counters and old fingerprints
+
+* Fix: RateCounter no longer returns 0 after immediate read (burst detection reliability)
+
+* Code quality: Centralized fingerprint generation in HeaderReader
+
+* Performance: All rate counting now atomic and fully self‑contained
+
+* New: Detection of browser version mismatch between User-Agent and Sec-CH-UA headers
+
+* New: Detection of IPs rotating multiple User-Agents within a short window
+
+* Improved: Suspicion score threshold lowered to catch more advanced bots
 
 
 
 = 1.0.7 – 2026-07-13 =
 
-\* Improvement: Fine-tuned bot fingerprinting for better precision.
+* Improvement: Fine-tuned bot fingerprinting for better precision.
 
 
 
 = 1.0.6 – 2026-07-03 =
 
-\* Fix: Daily metrics now stored in durable database instead of volatile cache to prevent data loss on cache clear
+* Fix: Daily metrics now stored in durable database instead of volatile cache to prevent data loss on cache clear
 
-\* Fix: Resolved incorrect bot classification on local development environments
+* Fix: Resolved incorrect bot classification on local development environments
 
-\* Database: Added atomic increment and JSON map update methods to DailyStats model
+* Database: Added atomic increment and JSON map update methods to DailyStats model
 
-\* Performance: Removed cache-to-database sync cron job (data now written in real-time)
+* Performance: Removed cache-to-database sync cron job (data now written in real-time)
 
-\* Stability: Eliminated race conditions in metric collection using atomic database operations
+* Stability: Eliminated race conditions in metric collection using atomic database operations
 
-\* Improvement: Simplified browser validation on localhost for accurate local development testing
+* Improvement: Simplified browser validation on localhost for accurate local development testing
 
-\* Improvement: Refined bot detection algorithm for more accurate bot identification and fewer false positives
+* Improvement: Refined bot detection algorithm for more accurate bot identification and fewer false positives
 
-\* Refactor: Unified cache clearing workflow across plugin installation, updates, activation, and deactivation
+* Refactor: Unified cache clearing workflow across plugin installation, updates, activation, and deactivation
 
-\* Performance: Optimized plugin lifecycle operations for faster and more consistent execution
+* Performance: Optimized plugin lifecycle operations for faster and more consistent execution
 
-\* Stability: Improved cache invalidation after plugin lifecycle events
+* Stability: Improved cache invalidation after plugin lifecycle events
 
 
 
 = 1.0.5 – 2026-07-01 =
 
-\* Fix: Database tables now created correctly on plugin activation (resolved table creation bug)
+* Fix: Database tables now created correctly on plugin activation (resolved table creation bug)
 
-\* Update: Bot detection patterns updated with 1500+ new bot signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
+* Update: Bot detection patterns updated with 1500+ new bot signatures (GPTBot, ClaudeBot, AmazonBot, etc.)
 
-\* Improvement: Enhanced bot detection accuracy with better User-Agent parsing and reduced false positives
+* Improvement: Enhanced bot detection accuracy with better User-Agent parsing and reduced false positives
 
-\* Performance: Optimized bot detection function for faster processing
+* Performance: Optimized bot detection function for faster processing
 
-\* Stability: Improved error handling during table updates and cron jobs
+* Stability: Improved error handling during table updates and cron jobs
 
 
 
 = 1.0.4 – 2026-06-28 =
 
-\* Feat: Bot traffic detection – separate human vs bot pageviews
+* Feat: Bot traffic detection – separate human vs bot pageviews
 
-\* Feat: Bot anomaly alerts – spike and drop detection with Top 3 bots
+* Feat: Bot anomaly alerts – spike and drop detection with Top 3 bots
 
-\* Dashboard: New "Bot Alerts" KPI card and bot pageviews column in history table
+* Dashboard: New "Bot Alerts" KPI card and bot pageviews column in history table
 
-\* Dashboard: Bot alert cards with top bot names and actionable recommendations
+* Dashboard: Bot alert cards with top bot names and actionable recommendations
 
-\* Performance: Combined bot pattern regex (1500+ patterns) in single static file
+* Performance: Combined bot pattern regex (1500+ patterns) in single static file
 
-\* Database: Added bot\_pageviews and top\_bots\_json columns to daily\_stats table
+* Database: Added bot_pageviews and top_bots_json columns to daily_stats table
 
-\* Improvement: 404 alerts now display Top 3 broken URLs for consistency
+* Improvement: 404 alerts now display Top 3 broken URLs for consistency
 
-\* Improvement: FAQ and documentation expanded with bot detection details
+* Improvement: FAQ and documentation expanded with bot detection details
 
 
 
 = 1.0.3 – 2026-06-25 =
 
-\* Fix: Make alert messages translation-ready by removing hardcoded "title" column from database and using WordPress i18n functions
+* Fix: Make alert messages translation-ready by removing hardcoded "title" column from database and using WordPress i18n functions
 
-\* Database: Remove redundant "title" column to optimize table structure
+* Database: Remove redundant "title" column to optimize table structure
 
 
 
 = 1.0.2 – 2026-06-21 =
 
-\* Added: RTL support for WordPress admin dashboard
+* Added: RTL support for WordPress admin dashboard
 
 
 
 = 1.0.1 – 2026-06-16 =
 
-\* Fix: Prevent duplicate alerts in digest cards
+* Fix: Prevent duplicate alerts in digest cards
 
-\* Feat: Add percentage change for 404 errors
-
-
-
-\## 1.0.0 – 2026-05-21
+* Feat: Add percentage change for 404 errors
 
 
 
-\### Initial Release
+## 1.0.0 – 2026-05-21
 
 
 
-\#### Core Features
-
-\- Traffic drop detection (completed day vs. last 7 days)
-
-\- Traffic spike detection (completed day vs. last 7 days)
-
-\- 404 error surge detection with Top 404 URLs (completed day vs. last 7 days)
-
-\- 7-day rolling trend analysis
+### Initial Release
 
 
 
-\#### Dashboard (Site Advisor menu)
+#### Core Features
 
-\- Critical issues indicator (color‑coded)
+- Traffic drop detection (completed day vs. last 7 days)
 
-\- Weekly Digest cards (Critical, Traffic, 404, Total alerts)
+- Traffic spike detection (completed day vs. last 7 days)
 
-\- Latest Alerts list (full details: What this means, What to check next, Top 404 URLs)
+- 404 error surge detection with Top 404 URLs (completed day vs. last 7 days)
 
-\- 7-Day History table (daily traffic and 404 counts, averages)
-
-
-
-\#### Alert Structure
-
-\- Title and date
-
-\- Metric change (e.g., "Traffic dropped by 41%")
-
-\- Short description
-
-\- "What this means" – impact explanation
-
-\- "What you should check next" – actionable recommendations (no automatic fixes)
-
-\- Top 404 URLs (for 404 alerts)
+- 7-day rolling trend analysis
 
 
 
-\#### Technical
+#### Dashboard (Site Advisor menu)
 
-\- Daily WP-Cron scan (runs after full day completion)
+- Critical issues indicator (color‑coded)
 
-\- Local storage with caching (rolling 7-day window)
+- Weekly Digest cards (Critical, Traffic, 404, Total alerts)
 
-\- No external APIs
+- Latest Alerts list (full details: What this means, What to check next, Top 404 URLs)
+
+- 7-Day History table (daily traffic and 404 counts, averages)
 
 
 
-\#### Notes
+#### Alert Structure
 
-\- Zero configuration required
+- Title and date
 
-\- Plugin does not fix anything automatically
+- Metric change (e.g., "Traffic dropped by 41%")
 
-\- Designed for shared hosting, VPS, dedicated servers
+- Short description
+
+- "What this means" – impact explanation
+
+- "What you should check next" – actionable recommendations (no automatic fixes)
+
+- Top 404 URLs (for 404 alerts)
+
+
+
+#### Technical
+
+- Daily WP-Cron scan (runs after full day completion)
+
+- Local storage with caching (rolling 7-day window)
+
+- No external APIs
+
+
+
+#### Notes
+
+- Zero configuration required
+
+- Plugin does not fix anything automatically
+
+- Designed for shared hosting, VPS, dedicated servers
 
