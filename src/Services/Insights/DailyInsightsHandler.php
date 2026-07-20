@@ -3,7 +3,9 @@
 namespace ProactiveSiteAdvisor\Services\Insights;
 
 use ProactiveSiteAdvisor\Services\Insights\Maintenance\AlertRetention;
+use ProactiveSiteAdvisor\Services\Insights\Maintenance\DailyFingerprintRetention;
 use ProactiveSiteAdvisor\Services\Insights\Maintenance\DailyStatsRetention;
+use ProactiveSiteAdvisor\Services\Insights\Maintenance\RateCountersRetention;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
@@ -32,5 +34,11 @@ class DailyInsightsHandler
 
         $dailyStatsRetention = new DailyStatsRetention();
         $dailyStatsRetention->purgeOlderThan($sevenDaysAgo);
+
+        $rateCountersRetention = new RateCountersRetention();
+        $rateCountersRetention->purgeExpired();
+
+        $dailyFingerprintRetention = new DailyFingerprintRetention();
+        $dailyFingerprintRetention->purgeOlderThan($sevenDaysAgo);
     }
 }

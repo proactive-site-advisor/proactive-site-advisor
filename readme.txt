@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,21 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Changelog ==
 
+= 1.0.8 =
+* New: Atomic rate counter for burst detection without race conditions
+* New: Daily fingerprint tracking to retroactively correct bot pageviews
+* Improved: Burst detection now reliable under heavy concurrent requests
+* Improved: PHP 8.1+ compatibility – fixed pathinfo(null) deprecation
+* Improved: Real-time bot traffic correction – human counts no longer inflated
+* Database: Added transferPageviewsToBot() for accurate daily corrections
+* Retention: Automatic cleanup of expired rate counters and old fingerprints (7‑day window)
+* Fix: RateCounter no longer returns 0 after immediate read (burst detection reliability)
+* Code quality: Centralized fingerprint generation in HeaderReader
+* Performance: All rate counting now atomic and fully self‑contained
+* New: Detection of browser version mismatch between User-Agent and Sec-CH-UA headers
+* New: Detection of IPs rotating multiple User-Agents within a short window
+* Improved: Suspicion score threshold lowered to catch more advanced bots
+
 = 1.0.7 =
 * Improvement: Fine-tuned bot fingerprinting for better precision.
 
@@ -168,6 +183,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Upgrade Notice ==
 
+= 1.0.8 =
+Atomic burst detection, retroactive bot pageview correction, and PHP 8.1+ fixes. Safe automatic update.
+
 = 1.0.7 =
 Fine-tuned bot fingerprinting for better precision. Safe automatic update – no action needed.
 
@@ -191,3 +209,6 @@ Removes duplicate digest entries and adds 404 change percentage. Safe automatic 
 
 = 1.0.0 =
 Initial release.
+
+== Source Code ==
+Source code and build tools are available at: https://github.com/proactive-site-advisor/proactive-site-advisor

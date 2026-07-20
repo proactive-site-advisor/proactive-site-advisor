@@ -114,6 +114,6 @@ class TrafficEngine
             $score  += $signal->getScore();
         }
 
-        return self::$cache[self::SUSPICIOUS] = $score >= 6;
+        return self::$cache[self::SUSPICIOUS] = $score >= 5;
     }
 }

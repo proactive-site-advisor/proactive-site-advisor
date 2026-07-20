@@ -25,10 +25,7 @@ class SeederManager extends AbstractSingleton
     ];
 
     /** Current seeding options. */
-    private array $options = [
-        'days'    => 30,
-        'pattern' => 'realistic',
-    ];
+    private array $options = [];
 
     /** Register a seeder class. */
     public function addSeeder(string $seederClass): self
@@ -43,9 +40,12 @@ class SeederManager extends AbstractSingleton
     /** Remove a seeder class. */
     public function removeSeeder(string $seederClass): self
     {
-        $this->seeders = array_filter($this->seeders, static function ($class) use ($seederClass) {
-            return $class !== $seederClass;
-        });
+        $this->seeders = array_values(array_filter(
+            $this->seeders,
+            static function ($class) use ($seederClass) {
+                return $class !== $seederClass;
+            }
+        ));
 
         return $this;
     }
@@ -59,7 +59,7 @@ class SeederManager extends AbstractSingleton
     /** Set seeding options. */
     public function setOptions(array $options): self
     {
-        $this->options = array_merge($this->options, $options);
+        $this->options = $options;
 
         return $this;
     }
@@ -97,8 +97,7 @@ class SeederManager extends AbstractSingleton
             return null;
         }
 
-        $seeder->setPattern($this->options['pattern']);
-        $seeder->setDays($this->options['days']);
+        $seeder->setOptions($this->options);
 
         return $seeder->run();
     }
@@ -136,14 +135,13 @@ class SeederManager extends AbstractSingleton
                 continue;
             }
 
-            $seeder->setPattern($this->options['pattern']);
-            $seeder->setDays($this->options['days']);
+            $seeder->setOptions($this->options);
 
             $seeders[] = $seeder;
         }
 
         usort($seeders, static function (AbstractSeeder $a, AbstractSeeder $b) {
-            return $a->getPriority() - $b->getPriority();
+            return $a->getPriority() <=> $b->getPriority();
         });
 
         return $seeders;

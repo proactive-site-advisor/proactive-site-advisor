@@ -7,6 +7,8 @@ use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotAgentSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\PageviewSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficEngine;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Models\DailyFingerprint;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -39,11 +41,18 @@ class PageviewRecorder
             return;
         }
 
-        $today = DateTimeUtils::todayKey();
+        $today       = DateTimeUtils::todayKey();
+        $fingerprint = HeaderReader::getFingerprint();
 
         if (TrafficEngine::isHuman()) {
+            DailyFingerprint::incrementHumanCount($fingerprint, $today);
             DailyStats::incrementAtomic($today, 'pageviews', 1);
         } else {
+            if (!DailyFingerprint::isBot($fingerprint, $today)) {
+                $humanPageviewsToTransfer = DailyFingerprint::markAsBot($fingerprint, $today);
+                DailyStats::transferPageviewsToBot($today, $humanPageviewsToTransfer);
+            }
+
             DailyStats::incrementAtomic($today, 'bot_pageviews', 1);
             $this->trackBotName($today);
         }

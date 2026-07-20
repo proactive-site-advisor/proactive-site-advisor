@@ -18,10 +18,10 @@ if (!defined('ABSPATH')) {
  */
 class DailyStats extends AbstractModel
 {
-    /** Table name (without prefix). */
+    /** {@inheritDoc} */
     protected static string $table = 'daily_stats';
 
-    /** Fillable fields (allowed for mass assignment). */
+    /** {@inheritDoc} */
     protected static array $fillable = [
         'stats_date',
         'pageviews',
@@ -31,7 +31,7 @@ class DailyStats extends AbstractModel
         'top_bots_json',
     ];
 
-    /** Attribute type casts. */
+    /** {@inheritDoc} */
     protected static array $casts = [
         'pageviews'     => 'integer',
         'errors_404'    => 'integer',
@@ -128,9 +128,7 @@ class DailyStats extends AbstractModel
         );
     }
 
-    /**
-     * Update a JSON column by merging new data and keeping only top N entries.
-     */
+    /** Update a JSON column by merging new data and keeping only top N entries. */
     public static function updateJsonMap(string $dateYmd, string $jsonColumn, array $newData, int $maxEntries = 30): void
     {
         $table  = static::getTableName();
@@ -202,5 +200,31 @@ class DailyStats extends AbstractModel
 
         $decoded = json_decode($row[$jsonColumn], true);
         return is_array($decoded) ? $decoded : [];
+    }
+
+    /** Transfer a count of pageviews from human to bot for correction. */
+    public static function transferPageviewsToBot(string $dateYmd, int $count): void
+    {
+        if ($count <= 0) {
+            return;
+        }
+
+        $table  = static::getTableName();
+        $nowRaw = DateTimeUtils::now();
+
+        static::ensureDayExists($dateYmd);
+
+        QueryRunner::preparedQuery(
+            "UPDATE $table SET
+            pageviews = IF(pageviews >= %d, pageviews - %d, 0),
+            bot_pageviews = bot_pageviews + %d,
+            updated_at = %s
+        WHERE stats_date = %s",
+            $count,
+            $count,
+            $count,
+            $nowRaw,
+            $dateYmd
+        );
     }
 }

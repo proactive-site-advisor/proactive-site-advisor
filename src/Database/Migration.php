@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Database;
 
+use ProactiveSiteAdvisor\Database\Schemas\CoreTables;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -23,7 +25,10 @@ class Migration
             },
             '1.0.2' => function () {
                 self::migrateTo102();
-            }
+            },
+            '1.0.3' => function () {
+                self::migrateTo103();
+            },
         ];
 
         foreach ($migrations as $version => $callback) {
@@ -57,5 +62,13 @@ class Migration
             "longtext NULL DEFAULT NULL",
             "AFTER bot_pageviews"
         );
+    }
+
+    /** Migration to version 1.0.3 - Create rate_counters table for atomic burst detection. */
+    private static function migrateTo103(): void
+    {
+        SchemaRegistry::registerTable(CoreTables::getRateCountersSchema());
+        SchemaRegistry::registerTable(CoreTables::getDailyFingerprintSchema());
+        SchemaBuilder::createTables();
     }
 }

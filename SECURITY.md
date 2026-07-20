@@ -44,7 +44,9 @@ Allow reasonable time to fix the issue before public disclosure.
 
 This plugin stores locally:
 
-- Daily aggregated traffic counts
+- Daily aggregated traffic counts (human and bot)
+
+- Top 3 bot names (crawler identifiers only)
 
 - Daily 404 error counts
 

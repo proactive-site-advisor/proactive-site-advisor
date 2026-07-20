@@ -244,12 +244,12 @@ class Logger
     /** Write a message to the PHP error log. */
     private static function writeToErrorLog(string $level, string $message, array $context): void
     {
-        $prefix     = '[Proactive Site Advisor]';
+        $slug       = PrefixConfig::SLUG;
         $contextStr = !empty($context) ? ' | ' . wp_json_encode($context) : '';
 
         /** @noinspection ForgottenDebugOutputInspection */
         // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-        error_log("$prefix [$level] $message$contextStr");
+        error_log("$slug [$level] $message$contextStr");
     }
 
     /** Create the log directory with security measures. */

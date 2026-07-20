@@ -2,12 +2,11 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
-use ProactiveSiteAdvisor\Cache\CacheKeys;
-use ProactiveSiteAdvisor\Cache\CacheManager;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Models\RateCounter;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -26,6 +25,9 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
 
     /** Maximum allowed burst requests. */
     private const BURST_LIMIT = 3;
+
+    /** Burst detection window in seconds. */
+    private const BURST_WINDOW = 2;
 
     /** Cached request count. */
     private static ?int $count = null;
@@ -71,14 +73,8 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
             return $burstCount > self::BURST_LIMIT;
         }
 
-        $cache = CacheManager::instance();
-
-        $secondKey = DateTimeUtils::timestamp();
-        $key       = CacheKeys::burstRate($this->requestHash(), $secondKey);
-
-        $count = (int)$cache->get($key);
-        $count++;
-        $cache->set($key, $count, 2);
+        $hash  = HeaderReader::getFingerprint() . '|burst|' . DateTimeUtils::timestamp();
+        $count = RateCounter::incrementAndGet($hash, self::BURST_WINDOW);
 
         $burstCount = $count;
 
@@ -92,36 +88,10 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
             return self::$count;
         }
 
-        $cache = CacheManager::instance();
-
-        $key = CacheKeys::requestRate($this->requestHash());
-
-        $count = (int)$cache->get($key);
-
-        $count++;
-
-        $cache->set($key, $count, self::WINDOW);
+        $count = RateCounter::incrementAndGet(HeaderReader::getFingerprint(), self::WINDOW);
 
         self::$count = $count;
 
         return $count;
-    }
-
-    /** Builds anonymous requester fingerprint. */
-    private function requestHash(): string
-    {
-        $ip = HeaderReader::getIp();
-
-        $baseFingerprint = HeaderReader::getUserAgent()
-            . '|'
-            . HeaderReader::getAcceptLanguage()
-            . '|'
-            . HeaderReader::getSecChUa();
-
-        if ($ip === '' || $ip === 'unknown') {
-            return 'noip_' . md5($baseFingerprint);
-        }
-
-        return md5($ip . '|' . $baseFingerprint);
     }
 }
