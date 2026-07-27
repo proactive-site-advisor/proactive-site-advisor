@@ -46,9 +46,9 @@ class BaselineCalculator
         $sumBotPv = 0;
 
         foreach ($rows as $row) {
-            $sumPv    += (int)$row['pageviews'];
-            $sum404   += (int)$row['errors_404'];
-            $sumBotPv += (int)$row['bot_pageviews'];
+            $sumPv    += $row['pageviews'];
+            $sum404   += $row['errors_404'];
+            $sumBotPv += $row['bot_pageviews'];
         }
 
         return [

@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  * Tracks daily fingerprint pageviews for bot correction.
  *
  * @package ProactiveSiteAdvisor\Models
- * @since   1.1.0
+ * @since   1.0.0
  */
 class DailyFingerprint extends AbstractModel
 {
@@ -49,7 +49,7 @@ class DailyFingerprint extends AbstractModel
         global $wpdb;
         $table = static::getTableName();
 
-        $row = $wpdb->get_row($wpdb->prepare(
+        $row = (array)$wpdb->get_row($wpdb->prepare(
             "SELECT is_bot FROM $table WHERE fingerprint = %s AND record_date = %s",
             $fingerprint,
             $dateYmd
@@ -67,7 +67,7 @@ class DailyFingerprint extends AbstractModel
         global $wpdb;
         $table = static::getTableName();
 
-        $row = $wpdb->get_row($wpdb->prepare(
+        $row = (array)$wpdb->get_row($wpdb->prepare(
             "SELECT pageview_count, is_bot FROM $table WHERE fingerprint = %s AND record_date = %s FOR UPDATE",
             $fingerprint,
             $dateYmd

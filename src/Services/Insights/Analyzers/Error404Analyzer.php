@@ -1,6 +1,9 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Insights;
+namespace ProactiveSiteAdvisor\Services\Insights\Analyzers;
+
+use ProactiveSiteAdvisor\Config\PluginSettings;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,6 +20,13 @@ class Error404Analyzer
     /** Analyzes whether today's 404 errors exceed normal baseline levels. */
     public function analyze(int $today404, float $avg404): array
     {
+        $spikePercent = OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::ERROR_404_SPIKE_PERCENT),
+            100
+        );
+
+        $spikeRatio = 1 + ($spikePercent / 100);
+
         if ($avg404 <= 0) {
             return [
                 'type'       => null,
@@ -28,7 +38,7 @@ class Error404Analyzer
         $ratio  = $today404 / $avg404;
         $change = ($ratio - 1) * 100;
 
-        if ($ratio > 2) {
+        if ($ratio > $spikeRatio) {
             $severity = $ratio >= 3 ? 'critical' : 'warning';
 
             return [

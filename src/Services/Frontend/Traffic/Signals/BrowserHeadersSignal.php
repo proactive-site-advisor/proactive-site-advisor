@@ -3,7 +3,6 @@
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\BotSignalInterface;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\DataLoader;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
@@ -17,39 +16,32 @@ if (!defined('ABSPATH')) {
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals
  * @since   1.0.0
  */
-class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
+class BrowserHeadersSignal implements BotSignalInterface
 {
+    /** Minimum length for Accept-Language header. */
+    private const MIN_ACCEPT_LANGUAGE_LENGTH = 2;
+
+    /** Score value for Upgrade-Insecure-Requests header. */
+    private const UPGRADE_HEADER_SCORE = 2;
+
+    /** Minimum number of MIME types in Accept header. */
+    private const MIN_ACCEPT_TYPES = 2;
+
+    /** Minimum header score to be considered a real browser. */
+    private const MIN_BROWSER_HEADER_SCORE = 4;
+
+    /** Valid Sec-Fetch-Site values for a browser request. */
+    private const VALID_FETCH_SITES = [
+        'none',
+        'same-origin',
+        'same-site',
+        'cross-site',
+    ];
+
     /** {@inheritDoc} */
     public function isBot(): bool
     {
         return !$this->isBrowser();
-    }
-
-    /** {@inheritDoc} */
-    public function getScore(): int
-    {
-        $score = 0;
-
-        if (!$this->hasHtmlAcceptHeader()) {
-            $score += 4;
-        }
-
-        if (!$this->hasBrowserUserAgent()) {
-            $score += 3;
-        }
-
-        $headerScore = $this->getHeaderScore();
-        if ($headerScore < 2) {
-            $score += 3;
-        } elseif ($headerScore < 4) {
-            $score += 2;
-        }
-
-        if ($this->isPrefetchOrPreview()) {
-            $score += 2;
-        }
-
-        return $score;
     }
 
     /** Determines if the request resembles a real browser navigation. */
@@ -67,7 +59,11 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        if ($this->getHeaderScore() < 4) {
+        if ($this->hasJsonAcceptInNavigation()) {
+            return false;
+        }
+
+        if ($this->getHeaderScore() < self::MIN_BROWSER_HEADER_SCORE) {
             return false;
         }
 
@@ -117,11 +113,19 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        return in_array(
-            $site,
-            ['none', 'same-origin', 'same-site', 'cross-site'],
-            true
-        );
+        /**
+         * Filters the list of valid Sec-Fetch-Site header values.
+         *
+         * @param string[] $sites Default ['none', 'same-origin', 'same-site', 'cross-site'].
+         * @since  1.0.0
+         */
+        $validSites = apply_filters('proactive_site_advisor_valid_fetch_sites', self::VALID_FETCH_SITES);
+
+        if (!is_array($validSites)) {
+            $validSites = self::VALID_FETCH_SITES;
+        }
+
+        return in_array($site, $validSites, true);
     }
 
     /** Checks for prefetch or preview headers. */
@@ -161,7 +165,7 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         $score = 0;
 
         $acceptLanguage = HeaderReader::getAcceptLanguage();
-        if ($acceptLanguage !== '' && strlen($acceptLanguage) > 2) {
+        if ($acceptLanguage !== '' && strlen($acceptLanguage) > self::MIN_ACCEPT_LANGUAGE_LENGTH) {
             $score++;
         }
 
@@ -178,13 +182,13 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
 
         $upgrade = HeaderReader::getUpgradeInsecureRequests();
         if ($upgrade === '1') {
-            $score += 2;
+            $score += self::UPGRADE_HEADER_SCORE;
         }
 
         $accept = HeaderReader::getAccept();
         if ($accept !== '') {
             $types = array_filter(explode(',', $accept));
-            if (count($types) >= 2) {
+            if (count($types) >= self::MIN_ACCEPT_TYPES) {
                 $score++;
             }
         }
@@ -194,5 +198,17 @@ class BrowserHeadersSignal implements BotSignalInterface, ScoreSignalInterface
         }
 
         return $score;
+    }
+
+    /** Checks if navigation request contains JSON in Accept header. */
+    private function hasJsonAcceptInNavigation(): bool
+    {
+        $mode = HeaderReader::getSecFetchMode();
+        if ($mode !== 'navigate') {
+            return false;
+        }
+
+        $accept = HeaderReader::getAccept();
+        return stripos($accept, 'application/json') !== false;
     }
 }

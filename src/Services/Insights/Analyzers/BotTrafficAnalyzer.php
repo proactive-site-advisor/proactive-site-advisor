@@ -1,6 +1,9 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Insights;
+namespace ProactiveSiteAdvisor\Services\Insights\Analyzers;
+
+use ProactiveSiteAdvisor\Config\PluginSettings;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,6 +20,18 @@ class BotTrafficAnalyzer
     /** Analyze today's bot traffic against the baseline average. */
     public function analyze(int $todayBotPv, float $avgBotPv): array
     {
+        $spikePercent = OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::BOT_SPIKE_PERCENT),
+            100
+        );
+        $dropPercent  = OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::BOT_DROP_PERCENT),
+            50
+        );
+
+        $spikeRatio = 1 + ($spikePercent / 100);
+        $dropRatio  = 1 - ($dropPercent / 100);
+
         if ($avgBotPv <= 0) {
             return [
                 'type'       => null,
@@ -28,7 +43,7 @@ class BotTrafficAnalyzer
         $ratio  = $todayBotPv / $avgBotPv;
         $change = ($ratio - 1) * 100;
 
-        if ($ratio > 2.0) {
+        if ($ratio > $spikeRatio) {
             return [
                 'type'       => 'bot_spike',
                 'severity'   => $ratio >= 3.5 ? 'critical' : 'warning',
@@ -36,7 +51,7 @@ class BotTrafficAnalyzer
             ];
         }
 
-        if ($ratio < 0.5) {
+        if ($ratio < $dropRatio) {
             return [
                 'type'       => 'bot_drop',
                 'severity'   => $ratio <= 0.3 ? 'critical' : 'warning',

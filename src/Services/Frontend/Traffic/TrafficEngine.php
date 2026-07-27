@@ -31,8 +31,11 @@ class TrafficEngine
     /** Cache key for suspicious score. */
     private const SUSPICIOUS = 'is_suspicious';
 
-    /** Cache key for 404 logging decision. */
-    private const LOG_404 = 'should_log_404';
+    /** Minimum threshold for suspicion score. */
+    private const MINIMUM_SUSPICION_THRESHOLD = 4;
+
+    /** Default threshold for suspicion score. */
+    private const DEFAULT_SUSPICION_THRESHOLD = 4;
 
     /** Determines if the current request is from a human. */
     public static function isHuman(): bool
@@ -54,28 +57,6 @@ class TrafficEngine
         }
 
         return self::$cache[self::HUMAN] = true;
-    }
-
-    /** Determines if 404 should be logged. */
-    public static function shouldLog404(): bool
-    {
-        if (array_key_exists(self::LOG_404, self::$cache)) {
-            return self::$cache[self::LOG_404];
-        }
-
-        if (Environment::isLocal()) {
-            return self::$cache[self::LOG_404] = true;
-        }
-
-        if (self::detectBot()) {
-            return self::$cache[self::LOG_404] = false;
-        }
-
-        if (self::hasSuspicionScore()) {
-            return self::$cache[self::LOG_404] = false;
-        }
-
-        return self::$cache[self::LOG_404] = true;
     }
 
     /** Checks all bot signals. */
@@ -114,6 +95,19 @@ class TrafficEngine
             $score  += $signal->getScore();
         }
 
-        return self::$cache[self::SUSPICIOUS] = $score >= 5;
+        /**
+         * Filters the suspicion score threshold.
+         *
+         * @param int $threshold The minimum score to mark a request as suspicious.
+         * @return int
+         * @since  1.0.0
+         */
+        $threshold = (int)apply_filters(
+            'proactive_site_advisor_suspicion_threshold',
+            self::DEFAULT_SUSPICION_THRESHOLD
+        );
+        $threshold = max(self::MINIMUM_SUSPICION_THRESHOLD, $threshold);
+
+        return self::$cache[self::SUSPICIOUS] = $score >= $threshold;
     }
 }

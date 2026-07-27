@@ -1,6 +1,9 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Insights;
+namespace ProactiveSiteAdvisor\Services\Insights\Analyzers;
+
+use ProactiveSiteAdvisor\Config\PluginSettings;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,6 +20,18 @@ class TrafficAnalyzer
     /** Analyzes today's traffic against the baseline average. */
     public function analyze(int $todayPv, float $avgPv): array
     {
+        $spikePercent = OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::TRAFFIC_SPIKE_PERCENT),
+            50
+        );
+        $dropPercent  = OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::TRAFFIC_DROP_PERCENT),
+            30
+        );
+
+        $spikeRatio = 1 + ($spikePercent / 100);
+        $dropRatio  = 1 - ($dropPercent / 100);
+
         if ($avgPv <= 0) {
             return ['type' => null, 'severity' => null, 'change_pct' => 0];
         }
@@ -24,7 +39,7 @@ class TrafficAnalyzer
         $ratio  = $todayPv / $avgPv;
         $change = ($ratio - 1) * 100;
 
-        if ($ratio < 0.7) {
+        if ($ratio < $dropRatio) {
             return [
                 'type'       => 'traffic_drop',
                 'severity'   => abs($change) >= 40 ? 'critical' : 'warning',
@@ -32,7 +47,7 @@ class TrafficAnalyzer
             ];
         }
 
-        if ($ratio > 1.5) {
+        if ($ratio > $spikeRatio) {
             return [
                 'type'       => 'traffic_spike',
                 'severity'   => 'info',

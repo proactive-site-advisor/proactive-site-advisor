@@ -20,8 +20,31 @@ if (!defined('ABSPATH')) {
  */
 class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
 {
-    /** Cached suspicion score. */
-    private static ?int $score = null;
+    /** Version threshold for modern Chrome-family browsers. */
+    private const MODERN_CHROME_VERSION_THRESHOLD = 90;
+
+    /** Version threshold for modern Firefox browsers. */
+    private const MODERN_FIREFOX_VERSION_THRESHOLD = 90;
+
+    /** Maximum allowed difference between User‑Agent and Sec‑CH‑UA major versions. */
+    private const MAX_VERSION_MISMATCH = 5;
+
+    /** Cache lifetime in seconds for IP‑based User‑Agent tracking. */
+    private const CACHE_TTL = 15;
+
+    /** Default minimum number of distinct User‑Agents to flag as a definite bot. */
+    private const MIN_DISTINCT_UAS_FOR_BOT = 4;
+
+    /** Threshold for the number of distinct User‑Agents to add a suspicion score. */
+    private const DISTINCT_UA_THRESHOLD = 3;
+
+    /** Score values for individual signals. */
+    private const SCORE_VERSION_MISMATCH         = 3;
+    private const SCORE_CLIENT_MOBILE_MISMATCH   = 2;
+    private const SCORE_CLIENT_PLATFORM_MISMATCH = 2;
+    private const SCORE_NAVIGATION_MISMATCH      = 3;
+    private const SCORE_DISTINCT_UA              = 2;
+    private const SCORE_EXPLICIT_NON_USER        = 3;
 
     /** Cached client hint brands. */
     private static ?array $brands = null;
@@ -43,58 +66,68 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return true;
         }
 
+        if ($this->hasMultipleDistinctUserAgents()) {
+            return true;
+        }
+
+        if ($this->hasFetchUserForNonModern($ua)) {
+            return true;
+        }
+
+        if ($this->isModernChromeFamily($ua) && $this->hasMissingClientHints()) {
+            return true;
+        }
+
+        if ($this->isModernChromeFamily($ua) && $this->hasInvalidClientHints($ua)) {
+            return true;
+        }
+
+        if ($this->isModernFirefox($ua) && $this->hasMissingClientHints()) {
+            return true;
+        }
+
+        if ($this->hasSuspiciousAcceptLanguage()) {
+            return true;
+        }
+
         return false;
     }
 
     /** {@inheritDoc} */
     public function getScore(): int
     {
-        if (self::$score !== null) {
-            return self::$score;
-        }
-
         $score = 0;
         $ua    = HeaderReader::getUserAgent();
 
         if (!$this->isSafariLike($ua)) {
-            if ($this->isModernChromeFamily($ua)) {
-                if ($this->hasMissingClientHints()) {
-                    $score += 5;
-                }
-
-                if ($this->hasInvalidClientHints($ua)) {
-                    $score += 5;
-                }
-
-                if ($this->hasVersionMismatch($ua)) {
-                    $score += 3;
-                }
+            if ($this->isModernChromeFamily($ua) && $this->hasVersionMismatch($ua)) {
+                $score += self::SCORE_VERSION_MISMATCH;
             }
 
             if ($this->hasClientMobileMismatch($ua)) {
-                $score += 2;
+                $score += self::SCORE_CLIENT_MOBILE_MISMATCH;
             }
 
             if ($this->hasClientPlatformMismatch($ua)) {
-                $score += 2;
+                $score += self::SCORE_CLIENT_PLATFORM_MISMATCH;
             }
         }
 
         $score += $this->getMissingBrowserHeadersScore();
 
         if ($this->hasNavigationMismatch()) {
-            $score += 3;
+            $score += self::SCORE_NAVIGATION_MISMATCH;
         }
 
-        if ($this->hasMissingUserNavigation()) {
-            ++$score;
+        if ($this->getDistinctUserAgentCount() >= self::DISTINCT_UA_THRESHOLD) {
+            $score += self::SCORE_DISTINCT_UA;
         }
 
-        if ($this->hasMultipleUserAgents()) {
-            $score += 3;
+        if ($this->hasExplicitNonUserNavigation()) {
+            $score += self::SCORE_EXPLICIT_NON_USER;
         }
 
-        return self::$score = $score;
+        return $score;
     }
 
     /** Checks if Sec-CH-UA header is malformed. */
@@ -106,7 +139,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         }
 
         return preg_match(
-                '/^"([^"]+)";v="\d+"(,\s*"([^"]+)";v="\d+")*$/i',
+                '/^"[^"]+";v="\d+(?:\.\d+)*"(?:,\s*"[^"]+";v="\d+(?:\.\d+)*")*$/i',
                 $header
             ) !== 1;
     }
@@ -142,7 +175,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        return (int)$match[2] >= 90;
+        return (int)$match[2] >= self::MODERN_CHROME_VERSION_THRESHOLD;
     }
 
     /** Checks missing client hints. */
@@ -193,7 +226,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         }
 
         preg_match_all(
-            '/"([^"]+)";v="\d+"/',
+            '/"([^"]+)";v="\d+(?:\.\d+)*"/',
             $header,
             $matches
         );
@@ -226,20 +259,6 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         }
 
         return !($mode === 'navigate' && $dest === 'document');
-    }
-
-    /** Checks missing user navigation. */
-    private function hasMissingUserNavigation(): bool
-    {
-        $mode = HeaderReader::getSecFetchMode();
-        $dest = HeaderReader::getSecFetchDest();
-        $user = HeaderReader::getSecFetchUser();
-
-        if ($mode === 'navigate' && $dest === 'document') {
-            return $user !== '?1';
-        }
-
-        return false;
     }
 
     /** Calculates missing browser headers score. */
@@ -299,6 +318,24 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return true;
         }
 
+        if (
+            stripos($ua, 'Linux') !== false &&
+            stripos($ua, 'Android') === false &&
+            stripos($platform, 'Linux') === false
+        ) {
+            return true;
+        }
+
+        if (stripos($ua, 'CrOS') !== false && stripos($platform, 'Chrome') === false) {
+            return true;
+        }
+
+        if (stripos($platform, 'iOS') === false) {
+            if (stripos($ua, 'iPhone') !== false || stripos($ua, 'iPad') !== false) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -323,6 +360,7 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         if (!preg_match('/(?:Chrome|Edg|OPR)\/(\d+)/i', $ua, $uaMatch)) {
             return false;
         }
+
         $uaVersion = (int)$uaMatch[1];
 
         $chHeader = HeaderReader::getSecChUa();
@@ -330,25 +368,47 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
             return false;
         }
 
-        if (!preg_match('/"v="(\d+)"/', $chHeader, $chMatch)) {
-            return false;
+        if (stripos($ua, 'Edg') !== false) {
+            $patterns = [
+                '/"(?:Microsoft Edge|Edge|Edg)";v="(\d+)"/i',
+                '/"Chromium";v="(\d+)"/i',
+            ];
+        } elseif (stripos($ua, 'OPR') !== false) {
+            $patterns = [
+                '/"(?:Opera|OPR)";v="(\d+)"/i',
+                '/"Chromium";v="(\d+)"/i',
+            ];
+        } else {
+            $patterns = [
+                '/"(?:Google Chrome|Chrome)";v="(\d+)"/i',
+                '/"Chromium";v="(\d+)"/i',
+            ];
         }
-        $chVersion = (int)$chMatch[1];
 
-        return abs($uaVersion - $chVersion) > 5;
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $chHeader, $chMatch) === 1) {
+                $chVersion = (int)$chMatch[1];
+
+                return abs($uaVersion - $chVersion) > self::MAX_VERSION_MISMATCH;
+            }
+        }
+
+        return false;
     }
 
-    /** Detects IPs sending requests with multiple different User-Agents. */
-    private function hasMultipleUserAgents(): bool
+    /**
+     * Returns the number of distinct normalized User-Agents for this IP within the last 15 seconds.
+     */
+    private function getDistinctUserAgentCount(): int
     {
         $ip = HeaderReader::getIp();
         if ($ip === '' || $ip === 'unknown') {
-            return false;
+            return 0;
         }
 
         $currentUa = HeaderReader::getUserAgent();
         if ($currentUa === '') {
-            return false;
+            return 0;
         }
 
         $cache    = CacheManager::instance();
@@ -362,14 +422,83 @@ class FingerprintSignal implements BotSignalInterface, ScoreSignalInterface
         $normalized = preg_replace('/\s+/', ' ', trim($currentUa));
         $normalized = preg_replace('/AppleWebKit\/[\d.]+/', '', $normalized);
         $normalized = preg_replace('/Safari\/[\d.]+/', '', $normalized);
+        $normalized = preg_replace('/Chrome\/[\d.]+/', 'Chrome', $normalized);
+        $normalized = preg_replace('/Edg\/[\d.]+/', 'Edg', $normalized);
+        $normalized = preg_replace('/OPR\/[\d.]+/', 'OPR', $normalized);
+        $normalized = preg_replace('/Firefox\/[\d.]+/', 'Firefox', $normalized);
         $normalized = trim($normalized);
 
         if (!in_array($normalized, $recentUas, true)) {
             $recentUas[] = $normalized;
         }
 
-        $cache->set($cacheKey, $recentUas, 30);
+        $cache->set($cacheKey, $recentUas, self::CACHE_TTL);
 
-        return count($recentUas) >= 2;
+        return count($recentUas);
+    }
+
+    /**
+     * Checks if the IP has sent 4 or more distinct User-Agents within the detection window.
+     */
+    private function hasMultipleDistinctUserAgents(): bool
+    {
+        /**
+         * Filters the minimum number of distinct user-agents required to flag as a definite bot.
+         *
+         * @param int $minCount
+         * @since 1.0.0
+         */
+        $minCount = apply_filters('proactive_site_advisor_min_distinct_uas_for_bot', self::MIN_DISTINCT_UAS_FOR_BOT);
+
+        return $this->getDistinctUserAgentCount() >= (int)$minCount;
+    }
+
+    /** Only flag if Sec-Fetch-User is explicitly ?0 (non-user-initiated). */
+    private function hasExplicitNonUserNavigation(): bool
+    {
+        $ua = HeaderReader::getUserAgent();
+
+        if (!$this->isModernChromeFamily($ua) && !$this->isModernFirefox($ua)) {
+            return false;
+        }
+
+        $mode = HeaderReader::getSecFetchMode();
+        $dest = HeaderReader::getSecFetchDest();
+        $user = HeaderReader::getSecFetchUser();
+
+        return ($mode === 'navigate' && $dest === 'document' && $user === '?0');
+    }
+
+    /** Determines if User-Agent is Firefox 90 or higher. */
+    private function isModernFirefox(string $ua): bool
+    {
+        if (!preg_match('/Firefox\/(\d+)/i', $ua, $match)) {
+            return false;
+        }
+        return (int)$match[1] >= self::MODERN_FIREFOX_VERSION_THRESHOLD;
+    }
+
+    /** Checks if non-modern browsers are sending Sec-Fetch-User header. */
+    private function hasFetchUserForNonModern(string $ua): bool
+    {
+        if ($this->isModernChromeFamily($ua) || $this->isModernFirefox($ua)) {
+            return false;
+        }
+
+        $user = HeaderReader::getSecFetchUser();
+
+        return $user === '?1';
+    }
+
+    /** Checks for suspicious Accept-Language pattern (score 4). */
+    private function hasSuspiciousAcceptLanguage(): bool
+    {
+        $lang = trim(HeaderReader::getAcceptLanguage());
+
+        if ($lang === '') {
+            return false;
+        }
+
+        return preg_match('/;q=1\.0(?:,|$)/i', $lang) === 1;
     }
 }

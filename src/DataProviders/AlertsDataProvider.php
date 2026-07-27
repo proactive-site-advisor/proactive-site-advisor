@@ -74,7 +74,7 @@ class AlertsDataProvider extends AbstractDataProvider
         // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $row = $wpdb->get_row($sql, ARRAY_A) ?? [];
+        $row = (array)$wpdb->get_row($sql, ARRAY_A) ?? [];
 
         return [
             'critical' => (int)($row['critical'] ?? 0),

@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-07-20 03:38+0330\n"
+"POT-Creation-Date: 2026-07-27 17:04+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,11 +22,11 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: src/Abstracts/AbstractSingleton.php:28 src/Core.php:73
+#: src/Abstracts/AbstractSingleton.php:28 src/Core.php:75
 msgid "Cloning is not allowed."
 msgstr ""
 
-#: src/Abstracts/AbstractSingleton.php:34 src/Core.php:79
+#: src/Abstracts/AbstractSingleton.php:34 src/Core.php:81
 msgid "Instances of this class cannot be unserialized."
 msgstr ""
 
@@ -299,11 +299,11 @@ msgstr ""
 msgid "404 Errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardManager.php:69
+#: src/Services/Admin/Dashboard/DashboardManager.php:70
 msgid "Site Advisor"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardManager.php:87
+#: src/Services/Admin/Dashboard/DashboardManager.php:88
 #: templates/admin/pages/dashboard/header.php:21
 msgid "Dashboard"
 msgstr ""
@@ -333,158 +333,187 @@ msgid "Alert"
 msgstr ""
 
 #. translators: %s: The percentage value of traffic drop
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:190
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:192
 #, php-format
 msgid "Traffic dropped by %s%%"
 msgstr ""
 
 #. translators: %s: The percentage value of traffic increase
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:195
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:197
 #, php-format
 msgid "Traffic increased by %s%%"
 msgstr ""
 
 #. translators: %s: percentage
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:200
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:202
 #, php-format
 msgid "Bot traffic increased by %s%%"
 msgstr ""
 
 #. translators: %s: percentage
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:205
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:207
 #, php-format
 msgid "Bot traffic dropped by %s%%"
 msgstr ""
 
 #. translators: %s: The percentage value of 404 error increase
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:210
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:212
 #, php-format
 msgid "404 errors increased by %s%%"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:221
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:223
 msgid "Traffic dropped unexpectedly compared to recent days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:223
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:225
 msgid "Traffic increased significantly compared to recent days."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:225
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:227
 msgid "Unusual bot activity detected – possible scraping or indexing surge."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:227
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:229
 msgid ""
 "Bot visits dropped significantly – search engines may have reduced "
 "crawling."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:229
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:231
 msgid "Visitors are reaching pages that no longer exist."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:231
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:233
 msgid "Unusual activity was detected."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:241
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:243
 msgid "Sudden traffic drops are often caused by downtime or recent changes."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:243
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:245
 msgid "Check if your site is reachable"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:244
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:246
 msgid "Review recent plugin or theme changes"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:245
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:247
 msgid "Look for increases in 404 errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:250
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:252
 msgid ""
 "Traffic spikes can indicate viral content, marketing success, or bot "
 "activity."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:252
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:254
 msgid "Check analytics for sources"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:253
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:255
 msgid "Review server load and performance"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:254
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:256
 msgid "Look for unusual referrers"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:259
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:261
 msgid ""
 "A sudden increase in bot traffic can indicate aggressive crawling or "
 "scraping attempts."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:261
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:263
 msgid "Check server load and bandwidth usage"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:262
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:264
 msgid "Review robots.txt rules and crawling rate in Google Search Console"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:263
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:265
 msgid "Consider blocking abusive IPs if the traffic is malicious"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:269
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:271
 msgid ""
 "A significant drop in bot activity may signal that search engines are "
 "having trouble accessing your site."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:271
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:273
 msgid ""
 "Verify your site is accessible and not blocking crawlers unintentionally"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:272
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:274
 msgid "Check Search Console for crawl errors"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:273
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:275
 msgid "Ensure your XML sitemap is up-to-date"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:279
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:281
 msgid "Missing pages can frustrate visitors and affect SEO."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:281
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:283
 msgid "Add redirects for missing pages"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:282
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:284
 msgid "Fix internal links pointing to missing URLs"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:283
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:285
 msgid "Review permalink changes"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:289
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:291
 msgid "This issue may require your attention."
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:291
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:293
 msgid "Review recent changes to your site"
 msgstr ""
 
-#: src/Services/Admin/Dashboard/DashboardProcessor.php:292
+#: src/Services/Admin/Dashboard/DashboardProcessor.php:294
 msgid "Check your site for visible issues"
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsData.php:33
+msgid "Alerts"
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsData.php:38
+msgid "Thresholds"
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsManager.php:31
+#: templates/admin/pages/settings/header.php:21
+msgid "Settings"
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsSaveHandler.php:32
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsSaveHandler.php:51
+msgid "Your settings have been saved and are now active."
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsSaveHandler.php:55
+msgid "Settings Updated"
+msgstr ""
+
+#: src/Services/Admin/Settings/SettingsSaver.php:37
+msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
 #. translators: %s: average pageviews count
@@ -611,6 +640,184 @@ msgstr ""
 
 #: templates/admin/pages/dashboard/header.php:24
 msgid "Unusual activity on your site — with recommended actions."
+msgstr ""
+
+#: templates/admin/pages/settings/content.php:71
+msgid "Save Changes"
+msgstr ""
+
+#: templates/admin/pages/settings/header.php:24
+msgid "Control when and how you receive anomaly alerts for your site."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:25
+msgid "Alert Eligibility"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:28
+msgid ""
+"Control the minimum activity levels required for traffic‑related anomaly "
+"alerts."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:39
+msgid "Minimum weekly average"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:47
+msgid "e.g. 3"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:54
+msgid ""
+"If the average pageview count over the last 7 days is below this number, "
+"traffic, 404, and bot alerts will not be generated."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:62
+msgid "Minimum pageviews for alert"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:70
+msgid "e.g. 10"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:77
+msgid ""
+"If today's total pageviews are below this number, traffic, 404, and bot "
+"alerts will be suppressed even if the percentage change is large."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:90
+msgid "Alert Thresholds"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:93
+msgid ""
+"Set the percentage change thresholds that trigger traffic, 404, and bot "
+"alerts."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:104
+msgid "Human traffic spike"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:112
+#: templates/admin/pages/settings/sections/alert-conditions.php:204
+msgid "50"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:119
+msgid ""
+"Alert when today's human pageviews exceed the 7‑day average by more than "
+"this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:127
+msgid "Human traffic drop"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:135
+msgid "30"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:142
+msgid ""
+"Alert when today's human pageviews fall below the 7‑day average by more "
+"than this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:150
+msgid "404 error surge"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:158
+#: templates/admin/pages/settings/sections/alert-conditions.php:181
+msgid "100"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:165
+msgid ""
+"Alert when today's 404 errors exceed the 7‑day average by more than this "
+"percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:173
+msgid "Bot traffic spike"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:188
+msgid ""
+"Alert when today's bot pageviews exceed the 7‑day average by more than "
+"this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:196
+msgid "Bot traffic drop"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alert-conditions.php:211
+msgid ""
+"Alert when today's bot pageviews fall below the 7‑day average by more than "
+"this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:24
+msgid "Active Alerts"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:26
+msgid ""
+"Choose which anomalies you want to be notified about. Disabling an alert "
+"type will suppress it even if its threshold is reached."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:38
+msgid "Human Traffic Drop"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:52
+#: templates/admin/pages/settings/sections/alerts.php:78
+#: templates/admin/pages/settings/sections/alerts.php:104
+#: templates/admin/pages/settings/sections/alerts.php:130
+#: templates/admin/pages/settings/sections/alerts.php:156
+msgid "Enable"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:55
+msgid "Get alerted when human pageviews drop significantly."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:64
+msgid "Human Traffic Spike"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:81
+msgid "Get alerted when human pageviews suddenly increase."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:90
+msgid "404 Error Surge"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:107
+msgid "Get alerted when 404 errors jump above the normal baseline."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:116
+msgid "Bot Traffic Spike"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:133
+msgid "Get alerted when bot pageviews show a sudden upward spike."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:142
+msgid "Bot Traffic Drop"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:159
+msgid "Get alerted when bot pageviews drop below expected levels."
 msgstr ""
 
 #. Plugin Name of the plugin/theme

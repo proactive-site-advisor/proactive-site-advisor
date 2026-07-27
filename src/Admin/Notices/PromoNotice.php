@@ -57,13 +57,13 @@ class PromoNotice
     /** Check if the promo notice should be shown for the current user. */
     public static function shouldShowPromoNotice(): bool
     {
-        $dismissedUntil = OptionUtils::getUserOption(UserOptions::PROMO_NOTICE_DISMISSED_UNTIL, 0);
+        $dismissedUntil = (int)OptionUtils::getUserOption(UserOptions::PROMO_NOTICE_DISMISSED_UNTIL, 0);
 
         if (empty($dismissedUntil)) {
             return true;
         }
 
-        return DateTimeUtils::timestamp() > (int)$dismissedUntil;
+        return DateTimeUtils::timestamp() > $dismissedUntil;
     }
 
     /** Get the dismiss duration in days. */

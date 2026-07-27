@@ -2,6 +2,28 @@
 
 
 
+= 1.1.0 – 2026-07-27 =
+
+* New: Admin settings page with Alerts and Thresholds sections
+
+* Improved: Settings validation and sanitization with range limits (5–100%)
+
+* New: BehavioralSignal – detects bots with unnaturally regular request timing
+
+* New: Definitive bot detection for IPs rotating 4+ distinct User-Agents
+
+* Improved: Accurate burst rate detection without timestamp interference
+
+* Removed: Redundant scoring logic from BrowserHeadersSignal
+
+* Bot detection: Separated hard bot signals from suspicion scoring – high‑confidence signals now trigger direct bot classification.
+
+* Firefox support: Extended missing client‑hints detection to modern Firefox browsers.
+
+* Tuning: Improved burst detection sensitivity for 3‑request‑in‑2‑second patterns.
+
+* Performance: Removed redundant per‑request scoring cache.
+
 = 1.0.8 – 2026-07-20 =
 
 * New: Atomic rate counter for burst detection without race conditions

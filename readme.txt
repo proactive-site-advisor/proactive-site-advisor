@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,18 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Changelog ==
 
+= 1.1.0 =
+* New: Admin settings page with Alerts and Thresholds sections
+* Improved: Settings validation and sanitization with range limits (5–100%)
+* New: BehavioralSignal – detects bots with unnaturally regular request timing
+* New: Definitive bot detection for IPs rotating 4+ distinct User-Agents
+* Improved: Accurate burst rate detection without timestamp interference
+* Removed: Redundant scoring logic from BrowserHeadersSignal
+* Bot detection: Separated hard bot signals from suspicion scoring – high‑confidence signals now trigger direct bot classification.
+* Firefox support: Extended missing client‑hints detection to modern Firefox browsers.
+* Tuning: Improved burst detection sensitivity for 3‑request‑in‑2‑second patterns.
+* Performance: Removed redundant per‑request scoring cache.
+
 = 1.0.8 =
 * New: Atomic rate counter for burst detection without race conditions
 * New: Daily fingerprint tracking to retroactively correct bot pageviews
@@ -182,6 +194,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+New settings page for managing alerts and thresholds, plus major bot detection improvements including behavioral analysis, Firefox client-hints support, and a cleaner scoring architecture. Safe automatic update – review the new settings to customize your alert thresholds.
 
 = 1.0.8 =
 Atomic burst detection, retroactive bot pageview correction, and PHP 8.1+ fixes. Safe automatic update.

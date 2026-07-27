@@ -10,6 +10,7 @@ use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\IpSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\RateSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\ReferrerSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\ScannerPatternSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BehavioralSignal;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -35,6 +36,7 @@ class SignalConfig
             ScannerPatternSignal::class,
             FingerprintSignal::class,
             RateSignal::class,
+            BehavioralSignal::class,
         ];
 
         /**
@@ -50,10 +52,10 @@ class SignalConfig
     public static function getScoreSignals(): array
     {
         $signals = [
-            BrowserHeadersSignal::class,
             BrowserNameSignal::class,
             FingerprintSignal::class,
             RateSignal::class,
+            BehavioralSignal::class,
         ];
 
         /**

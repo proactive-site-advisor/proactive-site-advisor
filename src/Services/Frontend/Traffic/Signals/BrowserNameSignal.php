@@ -22,12 +22,27 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
     /** Cached browser allowlist. */
     private static ?array $allowlist = null;
 
+    /** Version thresholds for browser plausibility scoring. */
+    private const OLD_VERSION_THRESHOLD   = 60;
+    private const AGING_VERSION_THRESHOLD = 80;
+
+    /** Score values for different browser age brackets. */
+    private const SCORE_AGING_VERSION = 2;
+
     /** {@inheritDoc} */
     public function isBot(): bool
     {
         $ua = HeaderReader::getUserAgent();
 
-        return $this->hasInvalidBrowserName($ua);
+        if ($this->hasInvalidBrowserName($ua)) {
+            return true;
+        }
+
+        if ($this->hasTooOldBrowserVersion($ua)) {
+            return true;
+        }
+
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -94,6 +109,24 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         ];
     }
 
+    /** Checks if browser version is too old (score >= 4). */
+    private function hasTooOldBrowserVersion(string $ua): bool
+    {
+        $parsed = $this->parseUserAgent($ua);
+        if ($parsed['browser'] === '' || $parsed['version'] === '') {
+            return false;
+        }
+
+        $majorVersion = (int)explode('.', $parsed['version'])[0];
+        $browsers     = ['Chrome', 'Edge', 'Opera', 'Firefox'];
+
+        if (!in_array($parsed['browser'], $browsers, true)) {
+            return false;
+        }
+
+        return $majorVersion < self::OLD_VERSION_THRESHOLD;
+    }
+
     /** Calculates plausibility score based on browser version. */
     private function getPlausibilityScore(): int
     {
@@ -104,23 +137,14 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
         }
 
         $majorVersion = (int)explode('.', $parsed['version'])[0];
-
-        $browsers = ['Chrome', 'Edge', 'Opera', 'Firefox'];
+        $browsers     = ['Chrome', 'Edge', 'Opera', 'Firefox'];
 
         if (!in_array($parsed['browser'], $browsers, true)) {
             return 0;
         }
 
-        if ($majorVersion < 40) {
-            return 5;
-        }
-
-        if ($majorVersion < 60) {
-            return 4;
-        }
-
-        if ($majorVersion < 80) {
-            return 2;
+        if ($majorVersion < self::AGING_VERSION_THRESHOLD) {
+            return self::SCORE_AGING_VERSION;
         }
 
         return 0;

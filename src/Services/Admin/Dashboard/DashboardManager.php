@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Admin\Dashboard;
 
+use ProactiveSiteAdvisor\Config\PrefixConfig;
 use ProactiveSiteAdvisor\Config\UserOptions;
 use ProactiveSiteAdvisor\DataProviders\AlertsDataProvider;
 use ProactiveSiteAdvisor\Utils\DisplayUtils;
@@ -75,7 +76,7 @@ class DashboardManager
         }
 
         $items[] = [
-            'id'       => 'proactive-site-advisor',
+            'id'       => PrefixConfig::SLUG,
             'title'    => $badgeTitle,
             'icon'     => $icon,
             'position' => $position,
@@ -83,9 +84,9 @@ class DashboardManager
         ];
 
         $items[] = [
-            'id'       => 'proactive-site-advisor',
+            'id'       => PrefixConfig::SLUG,
             'title'    => esc_html__('Dashboard', 'proactive-site-advisor'),
-            'parentId' => 'proactive-site-advisor',
+            'parentId' => PrefixConfig::SLUG,
             'callback' => DashboardPage::class,
         ];
 

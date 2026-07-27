@@ -31,6 +31,9 @@ class CacheKeys
     /** Cache key prefix for tracking multiple User-Agents per IP. */
     private const KEY_IP_UA_PREFIX = 'ip_ua_';
 
+    /** Cache key prefix for behavioral history data. */
+    private const KEY_BEHAVIORAL_HISTORY = 'behavioral_';
+
     /** Get admin notices cache key. */
     public static function adminNotices(): string
     {
@@ -53,5 +56,11 @@ class CacheKeys
     public static function ipUserAgents(string $ipHash): string
     {
         return self::KEY_IP_UA_PREFIX . $ipHash;
+    }
+
+    /** Get cache key for behavioral history data. */
+    public static function behavioralHistory(string $fingerprint): string
+    {
+        return self::KEY_BEHAVIORAL_HISTORY . md5($fingerprint);
     }
 }

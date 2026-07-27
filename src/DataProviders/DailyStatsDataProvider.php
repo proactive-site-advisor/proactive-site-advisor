@@ -109,9 +109,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
         $table = DailyStats::getTableName();
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-
-        return (int)$count;
+        return (int)$wpdb->get_var("SELECT COUNT(*) FROM $table");
     }
 }

@@ -3,6 +3,7 @@
 namespace ProactiveSiteAdvisor\Utils;
 
 use ProactiveSiteAdvisor\Config\PluginOptions;
+use ProactiveSiteAdvisor\Config\PluginSettings;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -25,15 +26,32 @@ class OptionUtils
     /** Get default plugin options. */
     public static function getDefaults(): array
     {
-        return [];
+        return [
+            PluginSettings::SECTION_ALERT_CONDITIONS => [
+                PluginSettings::MIN_WEEKLY_AVG          => 3,
+                PluginSettings::MIN_PAGEVIEWS_FOR_ALERT => 10,
+                PluginSettings::TRAFFIC_SPIKE_PERCENT   => 50,
+                PluginSettings::TRAFFIC_DROP_PERCENT    => 30,
+                PluginSettings::ERROR_404_SPIKE_PERCENT => 100,
+                PluginSettings::BOT_SPIKE_PERCENT       => 100,
+                PluginSettings::BOT_DROP_PERCENT        => 50,
+            ],
+            PluginSettings::SECTION_ALERTS           => [
+                PluginSettings::ALERT_TRAFFIC_DROP  => 1,
+                PluginSettings::ALERT_TRAFFIC_SPIKE => 1,
+                PluginSettings::ALERT_404_SPIKE     => 1,
+                PluginSettings::ALERT_BOT_SPIKE     => 1,
+                PluginSettings::ALERT_BOT_DROP      => 1,
+            ],
+        ];
     }
 
     /** Get all plugin options (merged with defaults). */
     public static function getAllOptions(): array
     {
-        $options = get_option(PluginOptions::OPTION_NAME);
+        $options = (array)get_option(PluginOptions::OPTION_NAME);
 
-        if (!is_array($options)) {
+        if (empty($options)) {
             return self::getDefaults();
         }
 
@@ -73,7 +91,7 @@ class OptionUtils
     /** Delete a single plugin option. */
     public static function deleteOption(string $key): void
     {
-        $options = get_option(PluginOptions::OPTION_NAME, []);
+        $options = (array)get_option(PluginOptions::OPTION_NAME, []);
 
         $keys = explode('.', $key);
         $last = array_pop($keys);
@@ -109,7 +127,7 @@ class OptionUtils
             return $default;
         }
 
-        $options = get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
+        $options = (array)get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
         return $options[$key] ?? $default;
     }
 
@@ -121,7 +139,7 @@ class OptionUtils
             return;
         }
 
-        $options       = get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
+        $options       = (array)get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
         $options[$key] = $value;
         update_user_meta($userId, PluginOptions::OPTION_NAME, $options);
     }
@@ -134,7 +152,7 @@ class OptionUtils
             return;
         }
 
-        $options = get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
+        $options = (array)get_user_meta($userId, PluginOptions::OPTION_NAME, true) ?: [];
         if (isset($options[$key])) {
             unset($options[$key]);
             update_user_meta($userId, PluginOptions::OPTION_NAME, $options);
