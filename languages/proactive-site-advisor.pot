@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-07-27 17:04+0330\n"
+"POT-Creation-Date: 2026-07-29 20:57+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -650,118 +650,6 @@ msgstr ""
 msgid "Control when and how you receive anomaly alerts for your site."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alert-conditions.php:25
-msgid "Alert Eligibility"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:28
-msgid ""
-"Control the minimum activity levels required for traffic‑related anomaly "
-"alerts."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:39
-msgid "Minimum weekly average"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:47
-msgid "e.g. 3"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:54
-msgid ""
-"If the average pageview count over the last 7 days is below this number, "
-"traffic, 404, and bot alerts will not be generated."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:62
-msgid "Minimum pageviews for alert"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:70
-msgid "e.g. 10"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:77
-msgid ""
-"If today's total pageviews are below this number, traffic, 404, and bot "
-"alerts will be suppressed even if the percentage change is large."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:90
-msgid "Alert Thresholds"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:93
-msgid ""
-"Set the percentage change thresholds that trigger traffic, 404, and bot "
-"alerts."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:104
-msgid "Human traffic spike"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:112
-#: templates/admin/pages/settings/sections/alert-conditions.php:204
-msgid "50"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:119
-msgid ""
-"Alert when today's human pageviews exceed the 7‑day average by more than "
-"this percentage."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:127
-msgid "Human traffic drop"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:135
-msgid "30"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:142
-msgid ""
-"Alert when today's human pageviews fall below the 7‑day average by more "
-"than this percentage."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:150
-msgid "404 error surge"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:158
-#: templates/admin/pages/settings/sections/alert-conditions.php:181
-msgid "100"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:165
-msgid ""
-"Alert when today's 404 errors exceed the 7‑day average by more than this "
-"percentage."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:173
-msgid "Bot traffic spike"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:188
-msgid ""
-"Alert when today's bot pageviews exceed the 7‑day average by more than "
-"this percentage."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:196
-msgid "Bot traffic drop"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alert-conditions.php:211
-msgid ""
-"Alert when today's bot pageviews fall below the 7‑day average by more than "
-"this percentage."
-msgstr ""
-
 #: templates/admin/pages/settings/sections/alerts.php:24
 msgid "Active Alerts"
 msgstr ""
@@ -818,6 +706,118 @@ msgstr ""
 
 #: templates/admin/pages/settings/sections/alerts.php:159
 msgid "Get alerted when bot pageviews drop below expected levels."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:25
+msgid "Alert Eligibility"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:28
+msgid ""
+"Control the minimum activity levels required for traffic‑related anomaly "
+"alerts."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:39
+msgid "Minimum weekly average"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:47
+msgid "e.g. 3"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:54
+msgid ""
+"If the average pageview count over the last 7 days is below this number, "
+"traffic, 404, and bot alerts will not be generated."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:62
+msgid "Minimum pageviews for alert"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:70
+msgid "e.g. 10"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:77
+msgid ""
+"If today's total pageviews are below this number, traffic, 404, and bot "
+"alerts will be suppressed even if the percentage change is large."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:90
+msgid "Alert Thresholds"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:93
+msgid ""
+"Set the percentage change thresholds that trigger traffic, 404, and bot "
+"alerts."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:104
+msgid "Human traffic spike"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:112
+#: templates/admin/pages/settings/sections/thresholds.php:204
+msgid "50"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:119
+msgid ""
+"Alert when today's human pageviews exceed the 7‑day average by more than "
+"this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:127
+msgid "Human traffic drop"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:135
+msgid "30"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:142
+msgid ""
+"Alert when today's human pageviews fall below the 7‑day average by more "
+"than this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:150
+msgid "404 error surge"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:158
+#: templates/admin/pages/settings/sections/thresholds.php:181
+msgid "100"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:165
+msgid ""
+"Alert when today's 404 errors exceed the 7‑day average by more than this "
+"percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:173
+msgid "Bot traffic spike"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:188
+msgid ""
+"Alert when today's bot pageviews exceed the 7‑day average by more than "
+"this percentage."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:196
+msgid "Bot traffic drop"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/thresholds.php:211
+msgid ""
+"Alert when today's bot pageviews fall below the 7‑day average by more than "
+"this percentage."
 msgstr ""
 
 #. Plugin Name of the plugin/theme

@@ -14,15 +14,36 @@ if (!defined('ABSPATH')) {
  */
 class PluginSettings
 {
-    /** Alert Conditions settings section. */
-    public const SECTION_ALERT_CONDITIONS = 'alert_conditions';
-
     /** Alerts settings section. */
     public const SECTION_ALERTS = 'alerts';
 
+    /** Thresholds settings section. */
+    public const SECTION_THRESHOLDS = 'thresholds';
+
     /*
     |--------------------------------------------------------------------------
-    | Alert Conditions Settings
+    | Alerts Settings
+    |--------------------------------------------------------------------------
+    */
+
+    /** Enable alert for human traffic drop. */
+    public const ALERT_TRAFFIC_DROP = 'traffic_drop';
+
+    /** Enable alert for human traffic spike. */
+    public const ALERT_TRAFFIC_SPIKE = 'traffic_spike';
+
+    /** Enable alert for 404 error surge. */
+    public const ALERT_404_SPIKE = '404_spike';
+
+    /** Enable alert for bot traffic spike. */
+    public const ALERT_BOT_SPIKE = 'bot_spike';
+
+    /** Enable alert for bot traffic drop. */
+    public const ALERT_BOT_DROP = 'bot_drop';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Thresholds Settings
     |--------------------------------------------------------------------------
     */
 
@@ -46,25 +67,4 @@ class PluginSettings
 
     /** Percentage decrease in bot pageviews that triggers a drop alert. */
     public const BOT_DROP_PERCENT = 'bot_drop_percent';
-
-    /*
-    |--------------------------------------------------------------------------
-    | Alerts Settings
-    |--------------------------------------------------------------------------
-    */
-
-    /** Enable alert for human traffic drop. */
-    public const ALERT_TRAFFIC_DROP = 'traffic_drop';
-
-    /** Enable alert for human traffic spike. */
-    public const ALERT_TRAFFIC_SPIKE = 'traffic_spike';
-
-    /** Enable alert for 404 error surge. */
-    public const ALERT_404_SPIKE = '404_spike';
-
-    /** Enable alert for bot traffic spike. */
-    public const ALERT_BOT_SPIKE = 'bot_spike';
-
-    /** Enable alert for bot traffic drop. */
-    public const ALERT_BOT_DROP = 'bot_drop';
 }

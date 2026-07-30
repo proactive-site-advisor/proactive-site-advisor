@@ -32,23 +32,23 @@ class BotTrafficDropAlertGenerator extends AbstractTrafficAlertGenerator
     public function generate(string $date, array $context): ?array
     {
         $dropPercent = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::BOT_DROP_PERCENT),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::BOT_DROP_PERCENT),
             50
         );
 
-        $dropRatio  = 1 - ($dropPercent / 100);
         $avgBotPv   = $context['avg_bot_pageviews'] ?? 0;
         $todayBotPv = $context['todayBotPv'] ?? 0;
 
-        if ($avgBotPv <= 0 || $todayBotPv >= $avgBotPv * $dropRatio) {
+        if (!$this->isDropEligible($avgBotPv, $todayBotPv, $dropPercent)) {
             return null;
         }
 
-        $change = round((($todayBotPv / $avgBotPv) - 1) * 100, 2);
+        $change   = round((($todayBotPv / $avgBotPv) - 1) * 100, 2);
+        $severity = $this->calculateSeverity($change, $dropPercent);
 
         return [
             'type'       => 'bot_drop',
-            'severity'   => $todayBotPv <= $avgBotPv * 0.3 ? 'critical' : 'warning',
+            'severity'   => $severity,
             'change_pct' => $change,
         ];
     }

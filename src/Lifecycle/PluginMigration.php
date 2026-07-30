@@ -62,7 +62,7 @@ class PluginMigration
         }
     }
 
-    /** Merge default settings for alert conditions with existing options. */
+    /** Merge default settings for thresholds with existing options. */
     private static function migrateTo110(): void
     {
         $optionName = PluginOptions::OPTION_NAME;

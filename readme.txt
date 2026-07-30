@@ -129,6 +129,26 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Firefox support: Extended missing client‑hints detection to modern Firefox browsers.
 * Tuning: Improved burst detection sensitivity for 3‑request‑in‑2‑second patterns.
 * Performance: Removed redundant per‑request scoring cache.
+* New: ClientHintsSignal – dedicated signal for Sec-CH-UA header analysis
+* New: AcceptLanguageSignal – dedicated signal for Accept-Language analysis
+* New: FetchHeadersSignal – dedicated signal for Sec-Fetch-* header analysis
+* New: DistinctUserAgentSignal – dedicated signal for multi-UA detection
+* New: MissingHeadersSignal – score for missing common browser headers
+* New: BrowserHelper – centralized browser detection utility
+* New: ClientHintsHelper – centralized Client Hints analysis utility
+* Improved: Cleaner signal architecture with focused, single-responsibility classes
+* Improved: Better code maintainability and testability through class decomposition
+* Removed: Monolithic FingerprintSignal – split into 5 focused signals
+* Code Quality: Refactored signal architecture following SOLID principles
+* Code Quality: Centralized browser and client hints logic in dedicated helpers
+* Fixed: Opera browser no longer incorrectly flagged as suspicious due to Client Hints version mismatch.
+* Fixed: RefererConsistencySignal no longer penalizes cross‑site navigations with missing Referer header.
+* Fixed: Baseline calculation now includes the fully completed day (`stats_date <= %s`) instead of excluding it, ensuring accurate 7‑day averages for anomaly detection.
+* Fixed: Dashboard no longer displays incomplete current day data – history and averages now only include fully completed days.
+* Fixed: Alert severity (`critical`/`warning`) is now dynamically calculated based on user‑defined thresholds, making severity levels consistent with each site’s custom settings.
+* Fixed: Empty `top_404_json` or `top_bots_json` values no longer result in malformed alert metadata – now properly handled as empty arrays.
+* Fixed: `FOR UPDATE` locking in `markAsBot()` is now wrapped in an explicit transaction, eliminating race conditions under concurrent requests.
+* Removed: Deprecated and unused analyzer classes (`TrafficAnalyzer`, `Error404Analyzer`, `BotTrafficAnalyzer`) – their logic is fully covered by the new Generator architecture.
 
 = 1.0.8 =
 * New: Atomic rate counter for burst detection without race conditions

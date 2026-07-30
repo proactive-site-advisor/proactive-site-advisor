@@ -23,7 +23,7 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
     private const WINDOW = 10;
 
     /** Maximum allowed burst requests. */
-    private const BURST_LIMIT = 3;
+    private const BURST_LIMIT = 5;
 
     /** Burst detection window in seconds. */
     private const BURST_WINDOW = 2;
@@ -107,7 +107,7 @@ class RateSignal implements BotSignalInterface, ScoreSignalInterface
 
         $burstCount = $count;
 
-        return $burstCount >= self::BURST_LIMIT;
+        return $burstCount > self::BURST_LIMIT;
     }
 
     /** Returns request count within the window. */

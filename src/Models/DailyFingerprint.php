@@ -67,6 +67,8 @@ class DailyFingerprint extends AbstractModel
         global $wpdb;
         $table = static::getTableName();
 
+        $wpdb->query('START TRANSACTION');
+
         $row = (array)$wpdb->get_row($wpdb->prepare(
             "SELECT pageview_count, is_bot FROM $table WHERE fingerprint = %s AND record_date = %s FOR UPDATE",
             $fingerprint,
@@ -77,18 +79,20 @@ class DailyFingerprint extends AbstractModel
         $alreadyBot           = $row ? (int)$row['is_bot'] : 0;
 
         if ($alreadyBot) {
+            $wpdb->query('COMMIT');
             return 0;
         }
 
         QueryRunner::preparedQuery(
             "INSERT INTO $table (fingerprint, record_date, pageview_count, is_bot)
-             VALUES (%s, %s, %d, 1)
-             ON DUPLICATE KEY UPDATE is_bot = 1",
+         VALUES (%s, %s, %d, 1)
+         ON DUPLICATE KEY UPDATE is_bot = 1",
             $fingerprint,
             $dateYmd,
             $currentPageviewCount
         );
 
+        $wpdb->query('COMMIT');
         return $currentPageviewCount;
     }
 

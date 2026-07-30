@@ -23,12 +23,16 @@ class SettingsSanitizer
         $rules = SettingsSanitizationSchema::getRules();
         $clean = [];
 
-        foreach ($input as $section => $data) {
-            if (!is_array($data) || !isset($rules[$section])) {
-                continue;
+        foreach ($rules as $section => $fields) {
+            $data = isset($input[$section]) && is_array($input[$section]) ? $input[$section] : [];
+
+            foreach ($fields as $field => $type) {
+                if ($type === 'bool' && !array_key_exists($field, $data)) {
+                    $data[$field] = 0;
+                }
             }
 
-            $clean[$section] = Sanitize::map($data, $rules[$section]);
+            $clean[$section] = Sanitize::map($data, $fields);
             $clean[$section] = $this->applyPostProcessing($section, $clean[$section]);
         }
 
@@ -38,7 +42,13 @@ class SettingsSanitizer
     /** Apply extra constraints after basic sanitization. */
     private function applyPostProcessing(string $section, array $clean): array
     {
-        if ($section === PluginSettings::SECTION_ALERT_CONDITIONS) {
+        if ($section === PluginSettings::SECTION_ALERTS) {
+            foreach ($clean as $field => $value) {
+                $clean[$field] = $value ? 1 : 0;
+            }
+        }
+
+        if ($section === PluginSettings::SECTION_THRESHOLDS) {
             $percentFields = [
                 PluginSettings::TRAFFIC_SPIKE_PERCENT,
                 PluginSettings::TRAFFIC_DROP_PERCENT,
@@ -51,12 +61,6 @@ class SettingsSanitizer
                 if (isset($clean[$field])) {
                     $clean[$field] = max(5, min(100, $clean[$field]));
                 }
-            }
-        }
-
-        if ($section === PluginSettings::SECTION_ALERTS) {
-            foreach ($clean as $field => $value) {
-                $clean[$field] = $value ? 1 : 0;
             }
         }
 

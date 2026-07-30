@@ -32,6 +32,9 @@ class BehavioralSignal implements BotSignalInterface, ScoreSignalInterface
     /** Default threshold for hard bot detection. */
     private const DEFAULT_BOT_THRESHOLD = 0.5;
 
+    /** Default threshold for perfect interval (cron-like) detection. */
+    private const DEFAULT_PERFECT_INTERVAL_THRESHOLD = 0.05;
+
     /** Score thresholds. */
     private const SCORE_MEDIUM_THRESHOLD = 1.0;
 
@@ -52,7 +55,13 @@ class BehavioralSignal implements BotSignalInterface, ScoreSignalInterface
      */
     public function isBot(): bool
     {
-        return $this->getIntervalDeviation() < $this->getBotThreshold();
+        $deviation = $this->getIntervalDeviation();
+
+        if ($deviation < $this->getPerfectIntervalThreshold()) {
+            return true;
+        }
+
+        return $deviation < $this->getBotThreshold();
     }
 
     /**
@@ -79,6 +88,22 @@ class BehavioralSignal implements BotSignalInterface, ScoreSignalInterface
         return (float)apply_filters(
             'proactive_site_advisor_behavioral_bot_threshold',
             self::DEFAULT_BOT_THRESHOLD
+        );
+    }
+
+    /** Returns the configured perfect interval threshold. */
+    private function getPerfectIntervalThreshold(): float
+    {
+        /**
+         * Filters the standard deviation threshold used for detecting
+         * perfectly regular (cron-like) request intervals.
+         *
+         * @param float $threshold Default 0.05 seconds.
+         * @since 1.0.0
+         */
+        return (float)apply_filters(
+            'proactive_site_advisor_behavioral_perfect_interval_threshold',
+            self::DEFAULT_PERFECT_INTERVAL_THRESHOLD
         );
     }
 

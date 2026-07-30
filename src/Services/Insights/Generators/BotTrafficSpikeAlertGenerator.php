@@ -32,23 +32,23 @@ class BotTrafficSpikeAlertGenerator extends AbstractTrafficAlertGenerator
     public function generate(string $date, array $context): ?array
     {
         $spikePercent = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::BOT_SPIKE_PERCENT),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::BOT_SPIKE_PERCENT),
             100
         );
 
-        $spikeRatio = 1 + ($spikePercent / 100);
         $avgBotPv   = $context['avg_bot_pageviews'] ?? 0;
         $todayBotPv = $context['todayBotPv'] ?? 0;
 
-        if ($avgBotPv <= 0 || $todayBotPv <= $avgBotPv * $spikeRatio) {
+        if (!$this->isSpikeEligible($avgBotPv, $todayBotPv, $spikePercent)) {
             return null;
         }
 
-        $change = round((($todayBotPv / $avgBotPv) - 1) * 100, 2);
+        $change   = round((($todayBotPv / $avgBotPv) - 1) * 100, 2);
+        $severity = $this->calculateSeverity($change, $spikePercent);
 
         return [
             'type'       => 'bot_spike',
-            'severity'   => $todayBotPv >= $avgBotPv * 3.5 ? 'critical' : 'warning',
+            'severity'   => $severity,
             'change_pct' => $change,
         ];
     }

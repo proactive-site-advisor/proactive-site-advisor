@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Abstracts;
 
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -20,23 +22,6 @@ abstract class AbstractFactory
      * @var class-string<AbstractModel>
      */
     protected string $model = '';
-
-    /** Current pattern context. */
-    protected string $pattern = 'realistic';
-
-    /** Set the pattern context. */
-    public function setPattern(string $pattern): self
-    {
-        $this->pattern = $pattern;
-
-        return $this;
-    }
-
-    /** Get the current pattern. */
-    public function getPattern(): string
-    {
-        return $this->pattern;
-    }
 
     /** Define default attributes for the model. */
     abstract protected function definition(): array;
@@ -118,8 +103,8 @@ abstract class AbstractFactory
     /** Generate a random date within range. */
     protected function randomDate(string $start, string $end): string
     {
-        $startTs = strtotime($start);
-        $endTs   = strtotime($end);
+        $startTs = DateTimeUtils::current()->modify($start)->getTimestamp();
+        $endTs   = DateTimeUtils::current()->modify($end)->getTimestamp();
 
         $randomTs = wp_rand($startTs, $endTs);
 
@@ -130,14 +115,15 @@ abstract class AbstractFactory
     protected function dateRange(int $days, string $endDate = ''): array
     {
         if (empty($endDate)) {
-            $endDate = (string)current_time('Y-m-d');
+            $endDate = DateTimeUtils::current()->format('Y-m-d');
         }
 
-        $dates = [];
-        $endTs = strtotime($endDate);
+        $dates      = [];
+        $endDateObj = DateTimeUtils::current()->modify($endDate);
 
         for ($i = $days - 1; $i >= 0; $i--) {
-            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
+            $date    = $endDateObj->modify('-' . ($days - 1 - $i) . ' days')->format('Y-m-d');
+            $dates[] = $date;
         }
 
         return $dates;
@@ -146,7 +132,7 @@ abstract class AbstractFactory
     /** Check if a date falls on a weekend. */
     protected function isWeekend(string $date): bool
     {
-        $dayOfWeek = (int)gmdate('N', strtotime($date));
+        $dayOfWeek = (int)DateTimeUtils::current()->modify($date)->format('N');
 
         return $dayOfWeek >= 6;
     }

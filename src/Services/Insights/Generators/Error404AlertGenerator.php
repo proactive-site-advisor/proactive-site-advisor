@@ -32,23 +32,23 @@ class Error404AlertGenerator extends AbstractTrafficAlertGenerator
     public function generate(string $date, array $context): ?array
     {
         $spikePercent = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::ERROR_404_SPIKE_PERCENT),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::ERROR_404_SPIKE_PERCENT),
             100
         );
 
-        $spikeRatio = 1 + ($spikePercent / 100);
-        $avg404     = $context['avg_404'] ?? 0;
-        $today404   = $context['today404'] ?? 0;
+        $avg404   = $context['avg_404'] ?? 0;
+        $today404 = $context['today404'] ?? 0;
 
-        if ($avg404 <= 0 || $today404 <= $avg404 * $spikeRatio) {
+        if (!$this->isSpikeEligible($avg404, $today404, $spikePercent)) {
             return null;
         }
 
-        $change = round((($today404 / $avg404) - 1) * 100, 2);
+        $change   = round((($today404 / $avg404) - 1) * 100, 2);
+        $severity = $this->calculateSeverity($change, $spikePercent);
 
         return [
             'type'       => '404_spike',
-            'severity'   => $today404 >= $avg404 * 3 ? 'critical' : 'warning',
+            'severity'   => $severity,
             'change_pct' => $change,
         ];
     }

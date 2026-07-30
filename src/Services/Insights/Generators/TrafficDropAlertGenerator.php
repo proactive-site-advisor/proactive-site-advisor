@@ -32,23 +32,23 @@ class TrafficDropAlertGenerator extends AbstractTrafficAlertGenerator
     public function generate(string $date, array $context): ?array
     {
         $dropPercent = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::TRAFFIC_DROP_PERCENT),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::TRAFFIC_DROP_PERCENT),
             30
         );
 
-        $dropRatio = 1 - ($dropPercent / 100);
-        $avgPv     = $context['avg_pageviews'] ?? 0;
-        $todayPv   = $context['todayPv'] ?? 0;
+        $avgPv   = $context['avg_pageviews'] ?? 0;
+        $todayPv = $context['todayPv'] ?? 0;
 
-        if ($avgPv <= 0 || $todayPv >= $avgPv * $dropRatio) {
+        if (!$this->isDropEligible($avgPv, $todayPv, $dropPercent)) {
             return null;
         }
 
-        $change = round((($todayPv / $avgPv) - 1) * 100, 2);
+        $change   = round((($todayPv / $avgPv) - 1) * 100, 2);
+        $severity = $this->calculateSeverity($change, $dropPercent);
 
         return [
             'type'       => 'traffic_drop',
-            'severity'   => abs($change) >= 40 ? 'critical' : 'warning',
+            'severity'   => $severity,
             'change_pct' => $change,
         ];
     }

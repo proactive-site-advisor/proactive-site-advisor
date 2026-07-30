@@ -32,7 +32,7 @@ class TrafficSpikeAlertGenerator extends AbstractTrafficAlertGenerator
     public function generate(string $date, array $context): ?array
     {
         $spikePercent = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::TRAFFIC_SPIKE_PERCENT),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::TRAFFIC_SPIKE_PERCENT),
             50
         );
 

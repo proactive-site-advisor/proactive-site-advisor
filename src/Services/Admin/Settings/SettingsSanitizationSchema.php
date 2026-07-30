@@ -16,7 +16,14 @@ class SettingsSanitizationSchema
     public static function getRules(): array
     {
         return [
-            PluginSettings::SECTION_ALERT_CONDITIONS => [
+            PluginSettings::SECTION_ALERTS           => [
+                PluginSettings::ALERT_TRAFFIC_DROP  => 'bool',
+                PluginSettings::ALERT_TRAFFIC_SPIKE => 'bool',
+                PluginSettings::ALERT_404_SPIKE     => 'bool',
+                PluginSettings::ALERT_BOT_SPIKE     => 'bool',
+                PluginSettings::ALERT_BOT_DROP      => 'bool',
+            ],
+            PluginSettings::SECTION_THRESHOLDS => [
                 PluginSettings::MIN_WEEKLY_AVG          => 'int',
                 PluginSettings::MIN_PAGEVIEWS_FOR_ALERT => 'int',
                 PluginSettings::TRAFFIC_SPIKE_PERCENT   => 'int',
@@ -24,13 +31,6 @@ class SettingsSanitizationSchema
                 PluginSettings::ERROR_404_SPIKE_PERCENT => 'int',
                 PluginSettings::BOT_SPIKE_PERCENT       => 'int',
                 PluginSettings::BOT_DROP_PERCENT        => 'int',
-            ],
-            PluginSettings::SECTION_ALERTS           => [
-                PluginSettings::ALERT_TRAFFIC_DROP  => 'bool',
-                PluginSettings::ALERT_TRAFFIC_SPIKE => 'bool',
-                PluginSettings::ALERT_404_SPIKE     => 'bool',
-                PluginSettings::ALERT_BOT_SPIKE     => 'bool',
-                PluginSettings::ALERT_BOT_DROP      => 'bool',
             ],
         ];
     }

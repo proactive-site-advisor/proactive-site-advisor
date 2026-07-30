@@ -41,4 +41,5 @@ return [
     '/administrator',
     '/admin/controller/extension/extension',
     '/admin/controller/extension',
+    '/uploads',
 ];

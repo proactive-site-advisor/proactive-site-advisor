@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Database\Factories;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractFactory;
 use ProactiveSiteAdvisor\Models\Alert;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -20,11 +21,28 @@ class AlertFactory extends AbstractFactory
     /** Model class. */
     protected string $model = Alert::class;
 
+    /** Current pattern context. */
+    protected string $pattern = 'realistic';
+
+    /** Set the pattern context. */
+    public function setPattern(string $pattern): self
+    {
+        $this->pattern = $pattern;
+
+        return $this;
+    }
+
+    /** Get the current pattern. */
+    public function getPattern(): string
+    {
+        return $this->pattern;
+    }
+
     /** Define default attributes. */
     protected function definition(): array
     {
         return [
-            'alert_date' => current_time('Y-m-d'),
+            'alert_date' => DateTimeUtils::current()->modify('-1 day')->format('Y-m-d'),
             'type'       => 'traffic_drop',
             'severity'   => 'warning',
             'meta_json'  => null,

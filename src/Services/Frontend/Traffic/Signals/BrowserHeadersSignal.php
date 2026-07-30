@@ -18,14 +18,8 @@ if (!defined('ABSPATH')) {
  */
 class BrowserHeadersSignal implements BotSignalInterface
 {
-    /** Minimum length for Accept-Language header. */
-    private const MIN_ACCEPT_LANGUAGE_LENGTH = 2;
-
     /** Score value for Upgrade-Insecure-Requests header. */
     private const UPGRADE_HEADER_SCORE = 2;
-
-    /** Minimum number of MIME types in Accept header. */
-    private const MIN_ACCEPT_TYPES = 2;
 
     /** Minimum header score to be considered a real browser. */
     private const MIN_BROWSER_HEADER_SCORE = 4;
@@ -165,19 +159,13 @@ class BrowserHeadersSignal implements BotSignalInterface
         $score = 0;
 
         $acceptLanguage = HeaderReader::getAcceptLanguage();
-        if ($acceptLanguage !== '' && strlen($acceptLanguage) > self::MIN_ACCEPT_LANGUAGE_LENGTH) {
+        if ($acceptLanguage !== '') {
             $score++;
         }
 
         $acceptEncoding = HeaderReader::getAcceptEncoding();
         if ($acceptEncoding !== '') {
-            if (
-                stripos($acceptEncoding, 'gzip') !== false ||
-                stripos($acceptEncoding, 'br') !== false ||
-                stripos($acceptEncoding, 'zstd') !== false
-            ) {
-                $score++;
-            }
+            $score++;
         }
 
         $upgrade = HeaderReader::getUpgradeInsecureRequests();
@@ -187,10 +175,7 @@ class BrowserHeadersSignal implements BotSignalInterface
 
         $accept = HeaderReader::getAccept();
         if ($accept !== '') {
-            $types = array_filter(explode(',', $accept));
-            if (count($types) >= self::MIN_ACCEPT_TYPES) {
-                $score++;
-            }
+            $score++;
         }
 
         if ($this->hasValidFetchSite()) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Section template: Alert Conditions.
+ * Section template: Thresholds.
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables are locally scoped via include.
  *
@@ -43,11 +43,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][min_weekly_avg]"
+                            name="settings[thresholds][min_weekly_avg]"
                             placeholder="<?php esc_attr_e('e.g. 3', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-min-weekly-avg"
-                            value="<?php echo esc_attr($settings['alert_conditions']['min_weekly_avg']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['min_weekly_avg']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">
@@ -66,11 +66,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][min_pageviews_for_alert]"
+                            name="settings[thresholds][min_pageviews_for_alert]"
                             placeholder="<?php esc_attr_e('e.g. 10', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-min-pageviews"
-                            value="<?php echo esc_attr($settings['alert_conditions']['min_pageviews_for_alert']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['min_pageviews_for_alert']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">
@@ -108,11 +108,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][traffic_spike_percent]"
+                            name="settings[thresholds][traffic_spike_percent]"
                             placeholder="<?php esc_attr_e('50', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-traffic-spike"
-                            value="<?php echo esc_attr($settings['alert_conditions']['traffic_spike_percent']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['traffic_spike_percent']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">
@@ -131,11 +131,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][traffic_drop_percent]"
+                            name="settings[thresholds][traffic_drop_percent]"
                             placeholder="<?php esc_attr_e('30', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-traffic-drop"
-                            value="<?php echo esc_attr($settings['alert_conditions']['traffic_drop_percent']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['traffic_drop_percent']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">
@@ -154,11 +154,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][404_spike_percent]"
+                            name="settings[thresholds][404_spike_percent]"
                             placeholder="<?php esc_attr_e('100', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-404-spike"
-                            value="<?php echo esc_attr($settings['alert_conditions']['404_spike_percent']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['404_spike_percent']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">
@@ -177,11 +177,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][bot_spike_percent]"
+                            name="settings[thresholds][bot_spike_percent]"
                             placeholder="<?php esc_attr_e('100', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-bot-spike"
-                            value="<?php echo esc_attr($settings['alert_conditions']['bot_spike_percent']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['bot_spike_percent']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">
@@ -200,11 +200,11 @@ if (!defined('ABSPATH')) {
                     <div class="psa-settings__field">
                         <input
                             type="text"
-                            name="settings[alert_conditions][bot_drop_percent]"
+                            name="settings[thresholds][bot_drop_percent]"
                             placeholder="<?php esc_attr_e('50', 'proactive-site-advisor'); ?>"
                             class="psa-form-control"
                             id="psa-bot-drop"
-                            value="<?php echo esc_attr($settings['alert_conditions']['bot_drop_percent']); ?>"
+                            value="<?php echo esc_attr($settings['thresholds']['bot_drop_percent']); ?>"
                         >
 
                         <div class="psa-settings__text psa-form-text">

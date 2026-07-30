@@ -27,7 +27,9 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
     private const AGING_VERSION_THRESHOLD = 80;
 
     /** Score values for different browser age brackets. */
-    private const SCORE_AGING_VERSION = 2;
+    private const SCORE_AGING_VERSION = 1;
+    private const SCORE_OLD_VERSION   = 1;
+
 
     /** {@inheritDoc} */
     public function isBot(): bool
@@ -38,17 +40,22 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
             return true;
         }
 
-        if ($this->hasTooOldBrowserVersion($ua)) {
-            return true;
-        }
-
         return false;
     }
 
     /** {@inheritDoc} */
     public function getScore(): int
     {
-        return $this->getPlausibilityScore();
+        $score = 0;
+        $ua    = HeaderReader::getUserAgent();
+
+        if ($this->hasTooOldBrowserVersion($ua)) {
+            $score += self::SCORE_OLD_VERSION;
+        }
+
+        $score += $this->getPlausibilityScore();
+
+        return $score;
     }
 
     /** Checks if browser name is invalid. */
@@ -86,7 +93,6 @@ class BrowserNameSignal implements BotSignalInterface, ScoreSignalInterface
             '/Edg\/([\d.]+)/i'            => 'Edge',
             '/OPR\/([\d.]+)/i'            => 'Opera',
             '/SamsungBrowser\/([\d.]+)/i' => 'SamsungBrowser',
-            '/HeadlessChrome\/([\d.]+)/i' => 'HeadlessChrome',
             '/CriOS\/([\d.]+)/i'          => 'Chrome iOS',
             '/FxiOS\/([\d.]+)/i'          => 'Firefox iOS',
             '/Firefox\/([\d.]+)/i'        => 'Firefox',

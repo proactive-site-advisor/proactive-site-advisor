@@ -27,7 +27,14 @@ class OptionUtils
     public static function getDefaults(): array
     {
         return [
-            PluginSettings::SECTION_ALERT_CONDITIONS => [
+            PluginSettings::SECTION_ALERTS     => [
+                PluginSettings::ALERT_TRAFFIC_DROP  => 1,
+                PluginSettings::ALERT_TRAFFIC_SPIKE => 1,
+                PluginSettings::ALERT_404_SPIKE     => 1,
+                PluginSettings::ALERT_BOT_SPIKE     => 1,
+                PluginSettings::ALERT_BOT_DROP      => 1,
+            ],
+            PluginSettings::SECTION_THRESHOLDS => [
                 PluginSettings::MIN_WEEKLY_AVG          => 3,
                 PluginSettings::MIN_PAGEVIEWS_FOR_ALERT => 10,
                 PluginSettings::TRAFFIC_SPIKE_PERCENT   => 50,
@@ -35,13 +42,6 @@ class OptionUtils
                 PluginSettings::ERROR_404_SPIKE_PERCENT => 100,
                 PluginSettings::BOT_SPIKE_PERCENT       => 100,
                 PluginSettings::BOT_DROP_PERCENT        => 50,
-            ],
-            PluginSettings::SECTION_ALERTS           => [
-                PluginSettings::ALERT_TRAFFIC_DROP  => 1,
-                PluginSettings::ALERT_TRAFFIC_SPIKE => 1,
-                PluginSettings::ALERT_404_SPIKE     => 1,
-                PluginSettings::ALERT_BOT_SPIKE     => 1,
-                PluginSettings::ALERT_BOT_DROP      => 1,
             ],
         ];
     }

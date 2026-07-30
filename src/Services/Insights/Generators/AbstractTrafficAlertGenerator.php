@@ -22,12 +22,12 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
     protected function passesTrafficEligibility(array $context): bool
     {
         $minWeeklyAvg = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::MIN_WEEKLY_AVG),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::MIN_WEEKLY_AVG),
             3
         );
 
         $minPageviews = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERT_CONDITIONS, PluginSettings::MIN_PAGEVIEWS_FOR_ALERT),
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::MIN_PAGEVIEWS_FOR_ALERT),
             10
         );
 
@@ -36,5 +36,38 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
         $count        = $context['count'] ?? 0;
 
         return $count >= 7 && $avgPageviews >= $minWeeklyAvg && $todayPv >= $minPageviews;
+    }
+
+    /** Check if a drop condition is met. */
+    protected function isDropEligible(float $avg, float $today, int $dropPercent): bool
+    {
+        if ($avg <= 0) {
+            return false;
+        }
+
+        $dropRatio = 1 - ($dropPercent / 100);
+
+        return $today < $avg * $dropRatio;
+    }
+
+    /** Check if a spike condition is met. */
+    protected function isSpikeEligible(float $avg, float $today, int $spikePercent): bool
+    {
+        if ($avg <= 0) {
+            return false;
+        }
+
+        $spikeRatio = 1 + ($spikePercent / 100);
+
+        return $today > $avg * $spikeRatio;
+    }
+
+    /** Calculate severity based on change relative to user threshold. */
+    protected function calculateSeverity(float $changePercent, float $thresholdPercent): string
+    {
+        $absChange        = abs($changePercent);
+        $ratioToThreshold = $absChange / $thresholdPercent;
+
+        return $ratioToThreshold >= 2 ? 'critical' : 'warning';
     }
 }
