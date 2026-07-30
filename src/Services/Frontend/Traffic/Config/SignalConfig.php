@@ -2,13 +2,24 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Config;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BehavioralSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotAgentSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BrowserHeadersSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BrowserNameSignal;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\FingerprintSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptEncodingSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptHeaderSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptLanguageSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\ClientHintsSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\ConnectionHeaderSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\DistinctUserAgentSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\FetchHeadersSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\MissingHeadersSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\CookieBehaviorSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\IpSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\RateSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\RefererConsistencySignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\ReferrerSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\RequestMethodSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\ScannerPatternSignal;
 
 if (!defined('ABSPATH')) {
@@ -33,8 +44,13 @@ class SignalConfig
             IpSignal::class,
             ReferrerSignal::class,
             ScannerPatternSignal::class,
-            FingerprintSignal::class,
             RateSignal::class,
+            BehavioralSignal::class,
+            ClientHintsSignal::class,
+            FetchHeadersSignal::class,
+            DistinctUserAgentSignal::class,
+            RefererConsistencySignal::class,
+            RequestMethodSignal::class,
         ];
 
         /**
@@ -50,10 +66,20 @@ class SignalConfig
     public static function getScoreSignals(): array
     {
         $signals = [
-            BrowserHeadersSignal::class,
             BrowserNameSignal::class,
-            FingerprintSignal::class,
             RateSignal::class,
+            BehavioralSignal::class,
+            ClientHintsSignal::class,
+            AcceptLanguageSignal::class,
+            FetchHeadersSignal::class,
+            DistinctUserAgentSignal::class,
+            MissingHeadersSignal::class,
+            AcceptEncodingSignal::class,
+            ConnectionHeaderSignal::class,
+            AcceptHeaderSignal::class,
+            RefererConsistencySignal::class,
+            RequestMethodSignal::class,
+            CookieBehaviorSignal::class,
         ];
 
         /**

@@ -13,6 +13,7 @@ use ProactiveSiteAdvisor\Cron\CronManager;
 use ProactiveSiteAdvisor\Database\SchemaManager;
 use ProactiveSiteAdvisor\Menu\MenuManager;
 use ProactiveSiteAdvisor\Services\Admin\Dashboard\DashboardManager;
+use ProactiveSiteAdvisor\Services\Admin\Settings\SettingsManager;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficManager;
 use ProactiveSiteAdvisor\Services\Insights\InsightsManager;
 use ProactiveSiteAdvisor\Utils\Logger;
@@ -49,6 +50,7 @@ final class Core
         AssetLoader::class,
         ThemeSwitcher::class,
         DashboardManager::class,
+        SettingsManager::class,
         UpdateHandler::class,
     ];
 

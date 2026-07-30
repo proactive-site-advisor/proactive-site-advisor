@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Database\Seeders;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractSeeder;
 use ProactiveSiteAdvisor\Database\Factories\DailyStatsFactory;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -62,11 +63,11 @@ class DailyStatsSeeder extends AbstractSeeder
     private function getDateRange(int $days): array
     {
         $dates   = [];
-        $endDate = current_time('Y-m-d');
-        $endTs   = strtotime($endDate);
+        $endDate = DateTimeUtils::current()->modify('-1 day');
 
         for ($i = $days - 1; $i >= 0; $i--) {
-            $dates[] = gmdate('Y-m-d', strtotime("-$i days", $endTs));
+            $date    = $endDate->modify('-' . ($days - 1 - $i) . ' days')->format('Y-m-d');
+            $dates[] = $date;
         }
 
         return $dates;

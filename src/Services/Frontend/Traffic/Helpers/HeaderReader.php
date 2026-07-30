@@ -116,6 +116,12 @@ class HeaderReader
         return self::getHeader('REQUEST_URI');
     }
 
+    /** Get Cookie header. */
+    public static function getCookie(): string
+    {
+        return self::getHeader('HTTP_COOKIE');
+    }
+
     /** Get client IP address from standard headers. */
     public static function getIp(): string
     {

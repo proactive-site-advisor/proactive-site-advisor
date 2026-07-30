@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
  * Handles retention policy for daily fingerprint records.
  *
  * @package ProactiveSiteAdvisor\Services\Insights\Maintenance
- * @since   1.1.0
+ * @since   1.0.0
  */
 class DailyFingerprintRetention
 {

@@ -1,0 +1,70 @@
+<?php
+
+namespace ProactiveSiteAdvisor\Config;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * Defines plugin configuration keys and settings constants.
+ *
+ * @package ProactiveSiteAdvisor\Config
+ * @since 1.0.0
+ */
+class PluginSettings
+{
+    /** Alerts settings section. */
+    public const SECTION_ALERTS = 'alerts';
+
+    /** Thresholds settings section. */
+    public const SECTION_THRESHOLDS = 'thresholds';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alerts Settings
+    |--------------------------------------------------------------------------
+    */
+
+    /** Enable alert for human traffic drop. */
+    public const ALERT_TRAFFIC_DROP = 'traffic_drop';
+
+    /** Enable alert for human traffic spike. */
+    public const ALERT_TRAFFIC_SPIKE = 'traffic_spike';
+
+    /** Enable alert for 404 error surge. */
+    public const ALERT_404_SPIKE = '404_spike';
+
+    /** Enable alert for bot traffic spike. */
+    public const ALERT_BOT_SPIKE = 'bot_spike';
+
+    /** Enable alert for bot traffic drop. */
+    public const ALERT_BOT_DROP = 'bot_drop';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Thresholds Settings
+    |--------------------------------------------------------------------------
+    */
+
+    /** Minimum weekly average pageviews to enable alerts. */
+    public const MIN_WEEKLY_AVG = 'min_weekly_avg';
+
+    /** Minimum pageviews required today to trigger an alert. */
+    public const MIN_PAGEVIEWS_FOR_ALERT = 'min_pageviews_for_alert';
+
+    /** Percentage increase in human pageviews that triggers a spike alert. */
+    public const TRAFFIC_SPIKE_PERCENT = 'traffic_spike_percent';
+
+    /** Percentage decrease in human pageviews that triggers a drop alert. */
+    public const TRAFFIC_DROP_PERCENT = 'traffic_drop_percent';
+
+    /** Percentage increase in 404 errors that triggers an alert. */
+    public const ERROR_404_SPIKE_PERCENT = '404_spike_percent';
+
+    /** Percentage increase in bot pageviews that triggers a spike alert. */
+    public const BOT_SPIKE_PERCENT = 'bot_spike_percent';
+
+    /** Percentage decrease in bot pageviews that triggers a drop alert. */
+    public const BOT_DROP_PERCENT = 'bot_drop_percent';
+}

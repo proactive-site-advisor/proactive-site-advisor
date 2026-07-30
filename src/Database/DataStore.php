@@ -30,7 +30,7 @@ class DataStore
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table management requires direct queries
         $result = $wpdb->insert($tableName, $data, $format ?: null);
 
-        return $result ? $wpdb->insert_id : false;
+        return $result ? (int)$wpdb->insert_id : false;
     }
 
     /** Update rows in a table. */

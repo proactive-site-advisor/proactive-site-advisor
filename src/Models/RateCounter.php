@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  * Atomic rate counter model for burst detection.
  *
  * @package ProactiveSiteAdvisor\Models
- * @since   1.1.0
+ * @since   1.0.0
  */
 class RateCounter extends AbstractModel
 {
@@ -50,16 +50,16 @@ class RateCounter extends AbstractModel
             $newExpiry
         );
 
-        $count = $wpdb->get_var($wpdb->prepare(
+        $count = (int)$wpdb->get_var($wpdb->prepare(
             "SELECT count FROM $table WHERE hash = %s",
             $hash
         ));
 
-        if ($count === null) {
+        if ($count === 0) {
             return 1;
         }
 
-        return (int)$count;
+        return $count;
     }
 
     /** Delete all expired rate counter rows. */

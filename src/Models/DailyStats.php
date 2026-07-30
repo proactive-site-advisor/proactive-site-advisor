@@ -192,7 +192,7 @@ class DailyStats extends AbstractModel
         $sql = "SELECT $columnSql FROM `$table` WHERE stats_date = %s LIMIT 1";
 
         // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $row = $wpdb->get_row($wpdb->prepare($sql, $dateYmd), ARRAY_A);
+        $row = (array)$wpdb->get_row($wpdb->prepare($sql, $dateYmd), ARRAY_A);
 
         if (empty($row) || empty($row[$jsonColumn])) {
             return [];

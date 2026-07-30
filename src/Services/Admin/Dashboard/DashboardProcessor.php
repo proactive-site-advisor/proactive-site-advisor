@@ -185,29 +185,31 @@ class DashboardProcessor
     /** Generate alert title from meta data. */
     private function getTitle(string $type, array $meta): string
     {
+        $changePct = abs((int)($meta['change_pct'] ?? 0));
+
         if ($type === 'traffic_drop') {
             /* translators: %s: The percentage value of traffic drop */
-            return sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+            return sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), $changePct);
         }
 
         if ($type === 'traffic_spike') {
             /* translators: %s: The percentage value of traffic increase */
-            return sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+            return sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), $changePct);
         }
 
         if ($type === 'bot_spike') {
             /* translators: %s: percentage */
-            return sprintf(__('Bot traffic increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+            return sprintf(__('Bot traffic increased by %s%%', 'proactive-site-advisor'), $changePct);
         }
 
         if ($type === 'bot_drop') {
             /* translators: %s: percentage */
-            return sprintf(__('Bot traffic dropped by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+            return sprintf(__('Bot traffic dropped by %s%%', 'proactive-site-advisor'), $changePct);
         }
 
         if ($type === '404_spike') {
             /* translators: %s: The percentage value of 404 error increase */
-            return sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), abs($meta['change_pct'] ?? 0));
+            return sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), $changePct);
         }
 
         return $this->getLabel($type);
@@ -340,9 +342,9 @@ class DashboardProcessor
         $count             = count($rows);
 
         foreach ($rows as $row) {
-            $totalPageviews    += $row['pageviews'];
-            $totalBotPageviews += $row['bot_pageviews'];
-            $total404          += $row['errors_404'];
+            $totalPageviews    += (int)$row['pageviews'];
+            $totalBotPageviews += (int)$row['bot_pageviews'];
+            $total404          += (int)$row['errors_404'];
         }
 
         return [

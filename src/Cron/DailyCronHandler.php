@@ -85,7 +85,7 @@ class DailyCronHandler extends AbstractCronTask
          * @param string $serviceId The service identifier.
          * @since  1.0.0
          */
-        $enabled = apply_filters('proactive_site_advisor_daily_cron_service_enabled', true, $serviceId);
+        $enabled = (bool)apply_filters('proactive_site_advisor_daily_cron_service_enabled', true, $serviceId);
 
         if (!$enabled) {
             Logger::debug("Service skipped (disabled): $serviceId");

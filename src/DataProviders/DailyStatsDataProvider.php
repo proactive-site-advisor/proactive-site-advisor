@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\DataProviders;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractDataProvider;
 use ProactiveSiteAdvisor\Models\DailyStats;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -24,14 +25,17 @@ class DailyStatsDataProvider extends AbstractDataProvider
 
         $days  = max(1, min(90, $days));
         $table = DailyStats::getTableName();
+        $today = DateTimeUtils::current()->format('Y-m-d');
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT stats_date, pageviews, errors_404, bot_pageviews, top_404_json, top_bots_json
                  FROM {$table}
+                 WHERE stats_date < %s
                  ORDER BY stats_date DESC
                  LIMIT %d",
+                $today,
                 $days
             ),
             ARRAY_A
@@ -57,7 +61,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
             $wpdb->prepare(
                 "SELECT pageviews, errors_404, bot_pageviews
              FROM {$table}
-             WHERE stats_date < %s
+             WHERE stats_date <= %s
              ORDER BY stats_date DESC
              LIMIT %d",
                 $today,
@@ -109,9 +113,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
         $table = DailyStats::getTableName();
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $count = $wpdb->get_var("SELECT COUNT(*) FROM $table");
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-
-        return (int)$count;
+        return (int)$wpdb->get_var("SELECT COUNT(*) FROM $table");
     }
 }

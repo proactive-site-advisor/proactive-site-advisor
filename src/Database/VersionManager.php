@@ -34,7 +34,7 @@ class VersionManager
     /** Get the installed database version. */
     public static function getInstalledVersion(): string
     {
-        return OptionUtils::getMeta(PluginMeta::DB_VERSION, '0.0.0');
+        return OptionUtils::getMeta(PluginMeta::DB_VERSION, '1.0.0');
     }
 
     /** Check if database needs update. */

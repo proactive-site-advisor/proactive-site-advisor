@@ -48,6 +48,6 @@ class QueryRunner
     {
         global $wpdb;
 
-        return $wpdb->insert_id;
+        return (int)$wpdb->insert_id;
     }
 }

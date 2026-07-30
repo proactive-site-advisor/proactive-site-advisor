@@ -43,7 +43,7 @@ class NotFoundRecorder
             return;
         }
 
-        if (!TrafficEngine::shouldLog404()) {
+        if (!TrafficEngine::isHuman()) {
             return;
         }
 

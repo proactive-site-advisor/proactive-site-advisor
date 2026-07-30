@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Database\Factories;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractFactory;
 use ProactiveSiteAdvisor\Models\DailyStats;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,6 +20,9 @@ class DailyStatsFactory extends AbstractFactory
 {
     /** Model class. */
     protected string $model = DailyStats::class;
+
+    /** Current pattern context. */
+    protected string $pattern = 'realistic';
 
     /** Common bot names for realistic top bots data. */
     private array $commonBotNames = [
@@ -39,14 +43,14 @@ class DailyStatsFactory extends AbstractFactory
     /** Common 404 paths for realistic data. */
     private array $common404Paths = [
         '/wp-login.php',
-        '/wp-admin/',
+        '/wp-admin',
         '/xmlrpc.php',
         '/.env',
         '/wp-content/uploads/2024/missing-image.jpg',
-        '/old-page-slug/',
-        '/products/discontinued-item/',
-        '/blog/deleted-post/',
-        '/api/v1/deprecated/',
+        '/old-page-slug',
+        '/products/discontinued-item',
+        '/blog/deleted-post',
+        '/api/v1/deprecated',
         '/favicon.ico',
         '/.git/config',
         '/wp-config.php.bak',
@@ -55,11 +59,25 @@ class DailyStatsFactory extends AbstractFactory
         '/login',
     ];
 
+    /** Set the pattern context. */
+    public function setPattern(string $pattern): self
+    {
+        $this->pattern = $pattern;
+
+        return $this;
+    }
+
+    /** Get the current pattern. */
+    public function getPattern(): string
+    {
+        return $this->pattern;
+    }
+
     /** Define default attributes. */
     protected function definition(): array
     {
         return [
-            'stats_date'    => current_time('Y-m-d'),
+            'stats_date'    => DateTimeUtils::current()->modify('-1 day')->format('Y-m-d'),
             'pageviews'     => $this->randomInt(800, 1500),
             'errors_404'    => $this->randomInt(5, 30),
             'top_404_json'  => null,
@@ -174,13 +192,11 @@ class DailyStatsFactory extends AbstractFactory
             }
 
             if ($count > 0) {
-                $topBots[] = [$name, $count];
+                $topBots[$name] = $count;
             }
         }
 
-        usort($topBots, static function ($a, $b) {
-            return $b[1] - $a[1];
-        });
+        arsort($topBots, SORT_NUMERIC);
 
         return wp_json_encode(array_slice($topBots, 0, 3));
     }
@@ -207,13 +223,11 @@ class DailyStatsFactory extends AbstractFactory
             }
 
             if ($count > 0) {
-                $top404[] = [$path, $count];
+                $top404[$path] = $count;
             }
         }
 
-        usort($top404, static function ($a, $b) {
-            return $b[1] - $a[1];
-        });
+        arsort($top404, SORT_NUMERIC);
 
         return wp_json_encode(array_slice($top404, 0, 3));
     }

@@ -171,13 +171,13 @@ class CacheManager extends AbstractSingleton
     /** Increment numeric cache value. */
     public function increment(string $key, int $amount = 1, ?int $expiration = null, ?string $group = null): int
     {
-        $value = $this->get($key, 0, $group);
+        $value = (int)$this->get($key, 0, $group);
 
         if (!is_numeric($value)) {
             $value = 0;
         }
 
-        $newValue = (int)$value + $amount;
+        $newValue = $value + $amount;
 
         $this->set($key, $newValue, $expiration, $group);
 

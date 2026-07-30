@@ -21,6 +21,9 @@ class BotAgentSignal implements BotSignalInterface
     /** Cached custom bot patterns. */
     private static ?array $customPatterns = null;
 
+    /** Maximum length for normalized bot name. */
+    private const MAX_BOT_NAME_LENGTH = 60;
+
     /** {@inheritDoc} */
     public function isBot(): bool
     {
@@ -196,7 +199,7 @@ class BotAgentSignal implements BotSignalInterface
          * Filters headless browser patterns.
          *
          * @param string[] $patterns
-         * @since  1.0.0
+         * @since 1.0.0
          */
         $patterns = apply_filters('proactive_site_advisor_headless_patterns', $patterns);
 
@@ -222,11 +225,11 @@ class BotAgentSignal implements BotSignalInterface
         $name = trim($name);
 
         if (function_exists('mb_strlen')) {
-            if (mb_strlen($name) > 60) {
-                $name = mb_substr($name, 0, 60);
+            if (mb_strlen($name) > self::MAX_BOT_NAME_LENGTH) {
+                $name = mb_substr($name, 0, self::MAX_BOT_NAME_LENGTH);
             }
-        } elseif (strlen($name) > 60) {
-            $name = substr($name, 0, 60);
+        } elseif (strlen($name) > self::MAX_BOT_NAME_LENGTH) {
+            $name = substr($name, 0, self::MAX_BOT_NAME_LENGTH);
         }
 
         return $name !== '' ? $name : 'unknown';

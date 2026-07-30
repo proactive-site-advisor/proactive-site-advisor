@@ -41,6 +41,10 @@ class PageviewRecorder
             return;
         }
 
+        if (is_404()) {
+            return;
+        }
+
         $today       = DateTimeUtils::todayKey();
         $fingerprint = HeaderReader::getFingerprint();
 

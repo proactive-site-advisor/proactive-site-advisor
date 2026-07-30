@@ -47,13 +47,13 @@ class UpdateHandler
 
             self::flushRewriteRules();
             self::clearTransients();
+        }
 
-            /**
-             * Fires after the plugin has been updated.
-             *
-             * @since 1.0.0
-             */
-            do_action('proactive_site_advisor_updated');
+        if (PluginMigration::needsUpdate()) {
+            self::runPluginMigrations();
+
+            self::flushRewriteRules();
+            self::clearTransients();
         }
     }
 
@@ -85,6 +85,21 @@ class UpdateHandler
          * @since 1.0.0
          */
         do_action('proactive_site_advisor_database_migrations_complete');
+    }
+
+    /** Run plugin-level migrations (settings, etc.). */
+    private static function runPluginMigrations(): void
+    {
+        PluginMigration::up();
+
+        PluginMigration::saveVersion();
+
+        /**
+         * Fires after plugin-level migrations have been applied.
+         *
+         * @since 1.0.0
+         */
+        do_action('proactive_site_advisor_plugin_updated');
     }
 
     /** Flush rewrite rules. */
