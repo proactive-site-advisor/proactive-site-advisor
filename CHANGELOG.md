@@ -10,11 +10,15 @@
 
 * New: Http2CleartextUpgradeSignal – detects non-browser HTTP/2 cleartext upgrade attempts.
 
-* New: Centralized all alert text definitions into the `alerts.php` configuration file, adding `badge_labels`, `title_templates`, and a `common` section for shared strings.
-
-* Improved: Integrated statistical metrics (Today vs. 7-day average) directly into the "Why this alert?" section for a cleaner, single-paragraph explanation.
-
 * New: SecFetchUserSignal – detects missing Sec-Fetch-User header on top-level navigations from modern browsers.
+
+* New: Alert patterns – highlights recurring changes over recent days.
+
+* New: Related activity context – shows when multiple anomaly types are detected together.
+
+* New: Centralized alert text definitions into the `alerts.php` configuration file, adding shared alert strings and improving message consistency.
+
+* New: Improved alert explanations with clearer context, severity details, and actionable next steps.
 
 
 
