@@ -41,10 +41,6 @@ class BrowserHeadersSignal implements BotSignalInterface
     /** Determines if the request resembles a real browser navigation. */
     private function isBrowser(): bool
     {
-        if ($this->isPrefetchOrPreview()) {
-            return false;
-        }
-
         if (!$this->hasHtmlAcceptHeader()) {
             return false;
         }
@@ -120,37 +116,6 @@ class BrowserHeadersSignal implements BotSignalInterface
         }
 
         return in_array($site, $validSites, true);
-    }
-
-    /** Checks for prefetch or preview headers. */
-    private function isPrefetchOrPreview(): bool
-    {
-        $checks = [
-            HeaderReader::getPurpose()    => ['prefetch', 'preview'],
-            HeaderReader::getSecPurpose() => ['prefetch'],
-        ];
-
-        foreach ($checks as $header => $keywords) {
-            foreach ($keywords as $keyword) {
-                if (stripos($header, $keyword) !== false) {
-                    if ($this->isNavigationRequest()) {
-                        return false;
-                    }
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /** Helper to determine if the request is a navigation. */
-    private function isNavigationRequest(): bool
-    {
-        $mode = HeaderReader::getSecFetchMode();
-        $dest = HeaderReader::getSecFetchDest();
-
-        return ($mode === 'navigate' && $dest === 'document');
     }
 
     /** Calculates browser request score. */

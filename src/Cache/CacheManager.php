@@ -13,6 +13,8 @@ if (!defined('ABSPATH')) {
 /**
  * Handles plugin caching with local, object cache, and transient support.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom cache management requires direct database queries.
+ *
  * @package ProactiveSiteAdvisor\Cache
  * @since   1.0.0
  */
@@ -233,7 +235,6 @@ class CacheManager extends AbstractSingleton
 
         $like = PrefixConfig::PREFIX . ':%';
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options}
@@ -280,7 +281,6 @@ class CacheManager extends AbstractSingleton
             . $group
             . ':%';
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options}

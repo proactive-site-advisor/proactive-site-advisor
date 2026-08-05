@@ -9,6 +9,13 @@ if (!defined('ABSPATH')) {
 /**
  * High-level CRUD operations for database records.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table management requires direct database queries.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Database operations require fresh state and are not cacheable.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names and SQL identifiers are generated internally.
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- SQL statements are prepared before execution.
+ * phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Dynamic placeholders are generated safely.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Database identifiers are generated from trusted internal schema definitions.
+ *
  * @package ProactiveSiteAdvisor\Database
  * @since   1.0.0
  */
@@ -27,10 +34,9 @@ class DataStore
 
         $tableName = $schema->getFullName();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table management requires direct queries
         $result = $wpdb->insert($tableName, $data, $format ?: null);
 
-        return $result ? (int)$wpdb->insert_id : false;
+        return $result ? $wpdb->insert_id : false;
     }
 
     /** Update rows in a table. */
@@ -46,7 +52,6 @@ class DataStore
 
         $tableName = $schema->getFullName();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table management requires direct queries
         return $wpdb->update($tableName, $data, $where, $format ?: null, $whereFormat ?: null);
     }
 
@@ -63,7 +68,6 @@ class DataStore
 
         $tableName = $schema->getFullName();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table management requires direct queries
         return $wpdb->delete($tableName, $where, $whereFormat ?: null);
     }
 
@@ -91,14 +95,11 @@ class DataStore
 
             $whereClause = implode(' AND ', $conditions);
 
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized, placeholders built dynamically
             $sql = $wpdb->prepare("SELECT * FROM $tableName WHERE $whereClause LIMIT 1", ...$values);
         } else {
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized, value is prepared
             $sql = $wpdb->prepare("SELECT * FROM $tableName WHERE `$idColumn` = %s LIMIT 1", $idOrWhere);
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above
         return $wpdb->get_row($sql);
     }
 
@@ -147,14 +148,12 @@ class DataStore
             $sql .= ' WHERE ' . implode(' AND ', $conditions);
 
             if (!empty($values)) {
-                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared with values
                 $sql = $wpdb->prepare($sql, ...$values);
             }
         }
 
         $order = strtoupper($args['order']) === 'DESC' ? 'DESC' : 'ASC';
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- orderby is from trusted defaults, order is validated
-        $sql .= " ORDER BY `{$args['orderby']}` $order";
+        $sql   .= " ORDER BY `{$args['orderby']}` $order";
 
         if ($args['limit'] > 0) {
             $sql .= $wpdb->prepare(' LIMIT %d', $args['limit']);
@@ -164,7 +163,6 @@ class DataStore
             }
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is built with prepared statements
         return $wpdb->get_results($sql);
     }
 
@@ -174,6 +172,7 @@ class DataStore
         global $wpdb;
 
         $schema = SchemaRegistry::getTable($name);
+
         if (!$schema) {
             return 0;
         }
@@ -184,6 +183,7 @@ class DataStore
 
         if (!empty($where)) {
             $conditions = [];
+
             foreach ($where as $column => $value) {
                 if (is_array($value)) {
                     $placeholders = array_fill(0, count($value), '%s');
@@ -199,11 +199,9 @@ class DataStore
         }
 
         if (!empty($values)) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared with values
             $sql = $wpdb->prepare($sql, ...$values);
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
         return (int)$wpdb->get_var($sql);
     }
 }

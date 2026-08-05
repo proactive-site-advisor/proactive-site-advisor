@@ -24,64 +24,203 @@ if (!defined('ABSPATH')) {
 
 <div class="psa-card psa-alert-card psa-alert-card--<?php echo esc_attr($color); ?> psa-alert-card--collapsible">
     <div class="psa-alert-card__body">
+
         <div class="psa-alert-card__icon">
             <span class="<?php echo esc_attr($icon); ?>"></span>
         </div>
+
         <div class="psa-alert-card__content">
+
             <div class="psa-alert-card__header">
                 <span class="psa-badge psa-badge--<?php echo esc_attr($color); ?>">
                     <?php echo esc_html($label); ?>
                 </span>
-                <span class="psa-alert-card__date"><?php echo esc_html($date); ?></span>
-            </div>
-            <h5 class="psa-alert-card__title"><?php echo esc_html($title); ?></h5>
-            <p class="psa-alert-card__message"><?php echo esc_html($short); ?></p>
 
-            <div id="<?php echo esc_attr($id); ?>-details" class="psa-alert-card__details" hidden>
+                <span class="psa-alert-card__date">
+                    <?php echo esc_html($date); ?>
+                </span>
+            </div>
+
+            <h5 class="psa-alert-card__title">
+                <?php echo esc_html($title); ?>
+            </h5>
+
+            <p class="psa-alert-card__message">
+                <?php echo esc_html($short); ?>
+            </p>
+
+
+            <div id="<?php echo esc_attr($id); ?>-details"
+                 class="psa-alert-card__details"
+                 hidden>
+
+
+                <!-- Context -->
                 <div class="psa-alert-card__section">
-                    <h6 class="psa-alert-card__section-title"><?php esc_html_e('What this means', 'proactive-site-advisor'); ?></h6>
-                    <p class="psa-alert-card__section-text"><?php echo esc_html($expanded['meaning']); ?></p>
+                    <h6 class="psa-alert-card__section-title">
+                        <?php esc_html_e('What this means', 'proactive-site-advisor'); ?>
+                    </h6>
+
+                    <p class="psa-alert-card__section-text">
+                        <?php echo esc_html($expanded['context']); ?>
+                    </p>
                 </div>
 
+
+                <!-- Severity -->
                 <div class="psa-alert-card__section">
-                    <h6 class="psa-alert-card__section-title"><?php esc_html_e('What you should check next', 'proactive-site-advisor'); ?></h6>
+                    <h6 class="psa-alert-card__section-title">
+                        <?php esc_html_e('Why this alert?', 'proactive-site-advisor'); ?>
+                    </h6>
+
+                    <p class="psa-alert-card__section-text">
+                        <?php echo esc_html($expanded['severity']['text']); ?>
+                    </p>
+
+                    <p class="psa-page-meta psa-mt-2">
+                        <?php
+                        $severityText = $expanded['severity']['text'];
+                        $metrics      = $expanded['severity']['metrics'];
+                        $changeSign   = $metrics['change'] > 0 ? '+' : '';
+
+                        echo sprintf(
+                        /* translators: 1: Today's value, 2: 7-day average value, 3: Percentage change */
+                            esc_html__(
+                                'Today: %1$s · 7-day average: %2$s · Change: %3$s%%',
+                                'proactive-site-advisor'
+                            ),
+                            esc_html(number_format_i18n($metrics['today'])),
+                            esc_html(number_format_i18n($metrics['avg7'])),
+                            esc_html($changeSign . round($metrics['change'], 1))
+                        );
+                        ?>
+                    </p>
+                </div>
+
+                <!-- Pattern -->
+                <?php if (!empty($expanded['pattern'])) : ?>
+                    <div class="psa-alert-card__section">
+
+                        <h6 class="psa-alert-card__section-title">
+                            <?php esc_html_e('Pattern', 'proactive-site-advisor'); ?>
+                        </h6>
+
+                        <p class="psa-alert-card__section-text">
+                            <?php echo esc_html($expanded['pattern']); ?>
+                        </p>
+
+                    </div>
+                <?php endif; ?>
+
+
+                <!-- Concurrent -->
+                <?php if (!empty($expanded['concurrent'])) : ?>
+                    <div class="psa-alert-card__section">
+
+                        <h6 class="psa-alert-card__section-title">
+                            <?php esc_html_e('Related activity', 'proactive-site-advisor'); ?>
+                        </h6>
+
+                        <p class="psa-alert-card__section-text">
+                            <?php echo esc_html($expanded['concurrent']); ?>
+                        </p>
+
+                    </div>
+                <?php endif; ?>
+
+
+                <!-- Checks -->
+                <div class="psa-alert-card__section">
+
+                    <h6 class="psa-alert-card__section-title">
+                        <?php esc_html_e('What you should check next', 'proactive-site-advisor'); ?>
+                    </h6>
+
                     <ul class="psa-alert-card__checklist">
+
                         <?php foreach ($expanded['checks'] as $check) : ?>
-                            <li><?php echo esc_html($check); ?></li>
+
+                            <li>
+                                <?php echo esc_html($check); ?>
+                            </li>
+
                         <?php endforeach; ?>
+
                     </ul>
+
                 </div>
 
-                <?php if (!empty($expanded['topUrls'])): ?>
+
+                <!-- Top 404 URLs -->
+                <?php if (!empty($expanded['topUrls'])) : ?>
+
                     <div class="psa-alert-card__section">
-                        <h6 class="psa-alert-card__section-title"><?php esc_html_e('Top 404 URLs', 'proactive-site-advisor'); ?></h6>
+
+                        <h6 class="psa-alert-card__section-title">
+                            <?php esc_html_e('Top 404 URLs', 'proactive-site-advisor'); ?>
+                        </h6>
+
                         <ul class="psa-alert-card__url-list">
+
                             <?php foreach ($expanded['topUrls'] as $urlItem) : ?>
+
                                 <li>
-                                    <code class="psa-alert-card__url-path"><?php echo esc_html($urlItem['path']); ?></code>
-                                    <span class="psa-alert-card__url-count"><?php echo esc_html(number_format_i18n($urlItem['count'])); ?></span>
+                                    <code class="psa-alert-card__url-path">
+                                        <?php echo esc_html($urlItem['path']); ?>
+                                    </code>
+
+                                    <span class="psa-alert-card__url-count">
+                                        <?php echo esc_html(number_format_i18n($urlItem['count'])); ?>
+                                    </span>
                                 </li>
+
                             <?php endforeach; ?>
+
                         </ul>
+
                     </div>
+
                 <?php endif; ?>
 
-                <?php if (!empty($expanded['topBots'])): ?>
+
+                <!-- Top Bots -->
+                <?php if (!empty($expanded['topBots'])) : ?>
+
                     <div class="psa-alert-card__section">
-                        <h6 class="psa-alert-card__section-title"><?php esc_html_e('Top Bots', 'proactive-site-advisor'); ?></h6>
+
+                        <h6 class="psa-alert-card__section-title">
+                            <?php esc_html_e('Top Bots', 'proactive-site-advisor'); ?>
+                        </h6>
+
                         <ul class="psa-alert-card__url-list">
+
                             <?php foreach ($expanded['topBots'] as $botItem) : ?>
+
                                 <li>
-                                    <span class="psa-alert-card__url-path"><?php echo esc_html($botItem['name']); ?></span>
-                                    <span class="psa-alert-card__url-count"><?php echo esc_html(number_format_i18n($botItem['count'])); ?></span>
+
+                                    <span class="psa-alert-card__url-path">
+                                        <?php echo esc_html($botItem['name']); ?>
+                                    </span>
+
+                                    <span class="psa-alert-card__url-count">
+                                        <?php echo esc_html(number_format_i18n($botItem['count'])); ?>
+                                    </span>
+
                                 </li>
+
                             <?php endforeach; ?>
+
                         </ul>
+
                     </div>
+
                 <?php endif; ?>
 
             </div>
+
         </div>
+
+
         <button
             type="button"
             class="psa-alert-card__toggle"
@@ -91,5 +230,7 @@ if (!defined('ABSPATH')) {
         >
             <span class="psa-icon--chevron-down"></span>
         </button>
+
+
     </div>
 </div>

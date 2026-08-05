@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders\NavigationBehaviorRecorder;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders\NotFoundRecorder;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Recorders\PageviewRecorder;
 
@@ -20,8 +21,15 @@ class TrafficManager
     /** Registers all traffic-related hooks. */
     public function register(): void
     {
+        add_action('wp', [$this, 'recordNavigationBehavior'], 10);
         add_action('wp', [$this, 'recordPageview'], 20);
         add_action('template_redirect', [$this, 'recordNotFound'], 1);
+    }
+
+    /** Records navigation behavior for session‑based bot detection. */
+    public function recordNavigationBehavior(): void
+    {
+        (new NavigationBehaviorRecorder())->record();
     }
 
     /** Records pageview if applicable. */

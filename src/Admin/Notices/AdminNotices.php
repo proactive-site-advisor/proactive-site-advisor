@@ -17,6 +17,8 @@ if (!defined('ABSPATH')) {
 /**
  * Centralized admin notice management with dismissibility support.
  *
+ * phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verification is handled inside AjaxComponent::register().
+ *
  * @package ProactiveSiteAdvisor\Admin\Notices
  * @since   1.0.0
  */
@@ -123,8 +125,6 @@ class AdminNotices
     /** Handle AJAX dismiss request. */
     public static function handleDismiss(): void
     {
-        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $noticeId = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
         $notice   = self::$notices[$noticeId] ?? null;
 

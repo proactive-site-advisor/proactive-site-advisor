@@ -54,4 +54,28 @@ class BrowserHelper
             stripos($ua, 'Edg') === false
         );
     }
+
+    /** Checks whether the request is a speculative navigation (prefetch, prerender, preview). */
+    public static function isSpeculativeNavigation(): bool
+    {
+        if (
+            HeaderReader::getSecFetchMode() === 'navigate' &&
+            HeaderReader::getSecFetchDest() === 'document'
+        ) {
+            return false;
+        }
+        
+        $purpose    = HeaderReader::getPurpose();
+        $secPurpose = HeaderReader::getSecPurpose();
+
+        $speculativeKeywords = ['prefetch', 'prerender', 'preview'];
+
+        foreach ($speculativeKeywords as $keyword) {
+            if (stripos($purpose, $keyword) !== false || stripos($secPurpose, $keyword) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -14,6 +14,12 @@ use ProactiveSiteAdvisor\Config\PluginOptions;
 /**
  * Handles plugin uninstallation logic for complete cleanup.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Uninstall cleanup requires direct database operations.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall cleanup does not require database caching.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange -- Uninstall cleanup requires dropping plugin tables.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table identifiers cannot be prepared with placeholders.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are validated and escaped before use.
+ *
  * @package ProactiveSiteAdvisor\Lifecycle
  * @since   1.0.0
  */
@@ -62,7 +68,6 @@ class UninstallHandler
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Multisite network query requires direct access
         $blogIds = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
 
         foreach ($blogIds as $blogId) {
@@ -79,7 +84,6 @@ class UninstallHandler
 
         delete_option(PluginOptions::OPTION_NAME);
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk cleanup on uninstall requires direct query
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM $wpdb->options WHERE option_name LIKE %s",
@@ -115,7 +119,6 @@ class UninstallHandler
         foreach ($tablesToDelete as $tableName) {
             $tableName = esc_sql($tableName);
 
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is sanitized above
             $wpdb->query("DROP TABLE IF EXISTS $tableName");
         }
     }

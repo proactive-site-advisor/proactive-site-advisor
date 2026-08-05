@@ -34,6 +34,9 @@ class CacheKeys
     /** Cache key prefix for behavioral history data. */
     private const KEY_BEHAVIORAL_HISTORY = 'behavioral_';
 
+    /** Cache key prefix for navigation behavior state. */
+    private const KEY_NAVIGATION_BEHAVIOR = 'nav_beh_';
+
     /** Get admin notices cache key. */
     public static function adminNotices(): string
     {
@@ -62,5 +65,11 @@ class CacheKeys
     public static function behavioralHistory(string $fingerprint): string
     {
         return self::KEY_BEHAVIORAL_HISTORY . md5($fingerprint);
+    }
+
+    /** Get cache key for navigation behavior state. */
+    public static function navigationBehavior(string $fingerprint): string
+    {
+        return self::KEY_NAVIGATION_BEHAVIOR . $fingerprint;
     }
 }

@@ -11,6 +11,8 @@ if (!defined('ABSPATH')) {
 /**
  * Utility class for managing WordPress plugins programmatically.
  *
+ * phpcs:disable WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required because this class only detects admin navigation state and does not process actions.
+ *
  * @package ProactiveSiteAdvisor\Utils
  * @since   1.0.0
  */
@@ -22,6 +24,7 @@ class PluginUtils
         if (!function_exists('get_plugins')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
+
         return get_plugins();
     }
 
@@ -29,6 +32,7 @@ class PluginUtils
     public static function pluginExists(string $pluginFile): bool
     {
         $allPlugins = self::getAllPlugins();
+
         return isset($allPlugins[$pluginFile]);
     }
 
@@ -38,6 +42,7 @@ class PluginUtils
         if (!function_exists('is_plugin_active')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
+
         return is_plugin_active($pluginFile);
     }
 
@@ -45,6 +50,7 @@ class PluginUtils
     public static function getPluginInfo(string $pluginFile): ?array
     {
         $allPlugins = self::getAllPlugins();
+
         return $allPlugins[$pluginFile] ?? null;
     }
 
@@ -85,14 +91,10 @@ class PluginUtils
             return false;
         }
 
-        // Nonce verification is not required for simply checking if the page parameter exists.
-        // This is for navigation detection only, not form processing.
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!isset($_GET['page'])) {
             return false;
         }
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $page = sanitize_key(wp_unslash($_GET['page']));
 
         return str_starts_with($page, PrefixConfig::SLUG);

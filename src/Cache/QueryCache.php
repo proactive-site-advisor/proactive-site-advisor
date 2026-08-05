@@ -9,6 +9,8 @@ if (!defined('ABSPATH')) {
 /**
  * Query caching layer for database operations.
  *
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- Prepared SQL handling is performed internally before caching.
+ *
  * @package ProactiveSiteAdvisor\Cache
  * @since   1.0.0
  */
@@ -49,7 +51,6 @@ class QueryCache
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $preparedSql = empty($args) ? $sql : $wpdb->prepare($sql, ...$args);
 
         if ($preparedSql === false) {

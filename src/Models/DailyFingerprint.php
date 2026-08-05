@@ -12,6 +12,11 @@ if (!defined('ABSPATH')) {
 /**
  * Tracks daily fingerprint pageviews for bot correction.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct database operations are required for transactional queries and row locking.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Query results require fresh database state and are not suitable for caching.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are trusted internal identifiers.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Database identifiers are generated internally.
+ *
  * @package ProactiveSiteAdvisor\Models
  * @since   1.0.0
  */

@@ -2,12 +2,13 @@
 /**
  * Scanner 404 URL Patterns
  *
- * Patterns that, when matched against a 404 request URI,
- * indicate a vulnerability scanner or malicious bot.
- *
- * @package ProactiveSiteAdvisor\Data
+ * @package ProactiveSiteAdvisor\data
  * @since   1.0.0
  */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 return [
     '\.env$',
@@ -42,4 +43,5 @@ return [
     '/admin/controller/extension/extension',
     '/admin/controller/extension',
     '/uploads',
+    '/class-php',
 ];

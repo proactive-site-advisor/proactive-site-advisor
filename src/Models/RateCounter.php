@@ -13,6 +13,11 @@ if (!defined('ABSPATH')) {
 /**
  * Atomic rate counter model for burst detection.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct database operations are required for atomic counter reads.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Rate counter values require fresh database state.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are trusted internal identifiers.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Database identifiers are generated internally.
+ *
  * @package ProactiveSiteAdvisor\Models
  * @since   1.0.0
  */
@@ -35,7 +40,11 @@ class RateCounter extends AbstractModel
         $table = static::getTableName();
 
         $now       = DateTimeUtils::now();
-        $newExpiry = gmdate(DateTimeUtils::FORMAT_DATETIME, DateTimeUtils::timestamp() + $windowSeconds);
+        $newExpiry = DateTimeUtils::convert(
+            DateTimeUtils::timestamp() + $windowSeconds,
+            'UTC',
+            'UTC'
+        );
 
         QueryRunner::preparedQuery(
             "INSERT INTO $table (hash, count, expires_at)

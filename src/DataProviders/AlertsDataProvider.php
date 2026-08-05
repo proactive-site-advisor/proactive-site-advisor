@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\DataProviders;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractDataProvider;
 use ProactiveSiteAdvisor\Models\Alert;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,6 +12,12 @@ if (!defined('ABSPATH')) {
 
 /**
  * Provides query helpers for retrieving alert data from the database.
+ *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct database queries are required for custom data retrieval.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Query results require fresh database state.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are trusted internal identifiers.
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- SQL statements are prepared before execution.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Database identifiers are generated from trusted internal methods.
  *
  * @package ProactiveSiteAdvisor\DataProviders
  * @since   1.0.0
@@ -25,9 +32,8 @@ class AlertsDataProvider extends AbstractDataProvider
         $limit = max(1, min(20, $limit));
 
         $table = Alert::getTableName();
-        $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
+        $start = DateTimeUtils::current()->modify("-$days days")->format(DateTimeUtils::FORMAT_DATE);
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT id, alert_date, type, severity, meta_json, created_at
@@ -40,7 +46,6 @@ class AlertsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($rows)) {
             return [];
@@ -55,9 +60,8 @@ class AlertsDataProvider extends AbstractDataProvider
         global $wpdb;
 
         $table = Alert::getTableName();
-        $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
+        $start = DateTimeUtils::current()->modify("-$days days")->format(DateTimeUtils::FORMAT_DATE);
 
-        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $sql = $wpdb->prepare(
             "
             SELECT
@@ -71,10 +75,12 @@ class AlertsDataProvider extends AbstractDataProvider
             $start,
             $lastSeenId
         );
-        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $row = (array)$wpdb->get_row($sql, ARRAY_A) ?? [];
+        $row = $wpdb->get_row($sql, ARRAY_A);
+
+        if (!is_array($row)) {
+            $row = [];
+        }
 
         return [
             'critical' => (int)($row['critical'] ?? 0),
@@ -89,9 +95,8 @@ class AlertsDataProvider extends AbstractDataProvider
         global $wpdb;
 
         $table = Alert::getTableName();
-        $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
+        $start = DateTimeUtils::current()->modify("-$days days")->format(DateTimeUtils::FORMAT_DATE);
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT type, severity
@@ -101,36 +106,6 @@ class AlertsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-
-        if (!is_array($rows)) {
-            return [];
-        }
-
-        return $rows;
-    }
-
-    /** Retrieve meta_json rows for 404 spike alerts in the last N days. */
-    public function get404SpikeRows(int $days = 7): array
-    {
-        global $wpdb;
-
-        $table = Alert::getTableName();
-        $start = wp_date('Y-m-d', strtotime(sprintf('-%d days', $days)));
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
-        $rows = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT meta_json
-                 FROM {$table}
-                 WHERE type = '404_spike'
-                 AND alert_date >= %s
-                 AND meta_json IS NOT NULL",
-                $start
-            ),
-            ARRAY_A
-        );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($rows)) {
             return [];
@@ -146,7 +121,49 @@ class AlertsDataProvider extends AbstractDataProvider
 
         $table = Alert::getTableName();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         return (int)$wpdb->get_var("SELECT MAX(id) FROM $table");
+    }
+
+    /** Get repetition count of a specific alert type in previous days (excluding the given date). */
+    public function getRepetitionCount(string $type, string $date, int $days = 3): int
+    {
+        global $wpdb;
+
+        $table = Alert::getTableName();
+        $start = DateTimeUtils::format(strtotime("-$days days", strtotime($date)), DateTimeUtils::FORMAT_DATE);
+
+        $count = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$table}
+                WHERE type = %s
+                AND alert_date < %s
+                AND alert_date >= %s",
+                $type,
+                $date,
+                $start
+            )
+        );
+
+        return (int)$count;
+    }
+
+    /** Get distinct alert types other than the current type that occurred on the same date. */
+    public function getConcurrentTypes(string $date, string $currentType): array
+    {
+        global $wpdb;
+
+        $table = Alert::getTableName();
+
+        $results = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT type FROM {$table}
+                WHERE alert_date = %s
+                AND type != %s",
+                $date,
+                $currentType
+            )
+        );
+
+        return array_values(array_filter($results));
     }
 }

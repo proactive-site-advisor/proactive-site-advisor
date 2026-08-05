@@ -3,6 +3,7 @@
 namespace ProactiveSiteAdvisor\Cron;
 
 use ProactiveSiteAdvisor\Abstracts\AbstractSingleton;
+use ProactiveSiteAdvisor\Utils\DateTimeUtils;
 use ProactiveSiteAdvisor\Utils\Logger;
 use Exception;
 
@@ -169,7 +170,7 @@ class CronManager extends AbstractSingleton
             Logger::debug('Cron task scheduled', [
                 'hook'       => $task->getHook(),
                 'recurrence' => $task->getRecurrence(),
-                'first_run'  => gmdate('Y-m-d H:i:s', $task->getFirstRun()),
+                'first_run'  => DateTimeUtils::convert($task->getFirstRun(), 'UTC', 'UTC'),
             ]);
         }
 
@@ -311,7 +312,7 @@ class CronManager extends AbstractSingleton
                     $pluginEvents[$hook] = [
                         'timestamp'  => $timestamp,
                         'recurrence' => $task->getRecurrence(),
-                        'next_run'   => gmdate('Y-m-d H:i:s', $timestamp),
+                        'next_run'   => DateTimeUtils::convert($timestamp, 'UTC', 'UTC'),
                     ];
                 }
             }
