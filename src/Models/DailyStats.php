@@ -13,6 +13,12 @@ if (!defined('ABSPATH')) {
 /**
  * Model for daily statistics including pageviews and 404 errors.
  *
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared after trusted internal identifiers are validated.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct database operations are required for reading dynamic JSON data.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Statistics require fresh database state.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table and column names are trusted internal identifiers.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Database identifiers are generated from internal allowlists.
+ *
  * @package ProactiveSiteAdvisor\Models
  * @since   1.0.0
  */
@@ -52,31 +58,6 @@ class DailyStats extends AbstractModel
             $dateYmd,
             $nowRaw,
             $nowRaw
-        );
-    }
-
-    /** Increment statistics and update top 404 paths for a specific date. */
-    public static function updateDay(string $dateYmd, int $pageviews, int $errors404, ?string $top404Json, int $botPageviews, ?string $topBotsJson): void
-    {
-        $table  = static::getTableName();
-        $nowRaw = DateTimeUtils::now();
-
-        QueryRunner::preparedQuery(
-            "UPDATE $table SET
-                pageviews = pageviews + %d,
-                errors_404 = errors_404 + %d,
-                top_404_json = %s,
-                bot_pageviews = bot_pageviews + %d,
-                top_bots_json = %s,
-                updated_at = %s
-            WHERE stats_date = %s",
-            max(0, $pageviews),
-            max(0, $errors404),
-            $top404Json,
-            max(0, $botPageviews),
-            $topBotsJson,
-            $nowRaw,
-            $dateYmd
         );
     }
 
@@ -145,6 +126,7 @@ class DailyStats extends AbstractModel
             if (!is_numeric($count)) {
                 $count = 1;
             }
+
             $currentData[$key] = isset($currentData[$key])
                 ? ((int)$currentData[$key] + (int)$count)
                 : (int)$count;
@@ -191,7 +173,6 @@ class DailyStats extends AbstractModel
 
         $sql = "SELECT $columnSql FROM `$table` WHERE stats_date = %s LIMIT 1";
 
-        // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $row = (array)$wpdb->get_row($wpdb->prepare($sql, $dateYmd), ARRAY_A);
 
         if (empty($row) || empty($row[$jsonColumn])) {
@@ -199,6 +180,7 @@ class DailyStats extends AbstractModel
         }
 
         $decoded = json_decode($row[$jsonColumn], true);
+
         return is_array($decoded) ? $decoded : [];
     }
 

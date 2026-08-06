@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) {
 /**
  * Promotional notice with dismissal support.
  *
+ * phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verification is handled inside AjaxComponent::register().
+ *
  * @package ProactiveSiteAdvisor\Admin\Notices
  * @since   1.0.0
  */
@@ -40,9 +42,6 @@ class PromoNotice
     /** AJAX handler for dismissing the promo notice. */
     public static function handleDismiss(): void
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
-
         $dismissDays  = self::getDismissDuration();
         $dismissUntil = DateTimeUtils::timestamp() + ($dismissDays * DAY_IN_SECONDS);
 

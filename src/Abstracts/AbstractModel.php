@@ -16,6 +16,8 @@ if (!defined('ABSPATH')) {
 /**
  * Base model class providing CRUD operations and data access.
  *
+ * phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages contain internal values and are not rendered directly.
+ *
  * @package ProactiveSiteAdvisor\Abstracts
  * @since   1.0.0
  */
@@ -91,7 +93,6 @@ abstract class AbstractModel
         $model = static::find($id);
 
         if ($model === null) {
-            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new RuntimeException(sprintf('Model not found with ID: %d', $id));
         }
 

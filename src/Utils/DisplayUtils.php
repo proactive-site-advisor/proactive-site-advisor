@@ -37,7 +37,7 @@ class DisplayUtils
     }
 
     /** Render history average text. */
-    public static function renderHistoryAverage(int $pageviews, int $errors, int $botPageviews): string
+    public static function renderHistoryAverage(int $pageviews, int $errors, int $botRequests): string
     {
         $parts = [];
 
@@ -52,26 +52,26 @@ class DisplayUtils
         if ($errors > 0) {
             $parts[] = sprintf(
             /* translators: %s: average 404 errors count */
-                __('%s page errors (404)', 'proactive-site-advisor'),
+                __('%s 404 errors', 'proactive-site-advisor'),
                 '<strong>' . esc_html(number_format_i18n($errors)) . '</strong>'
             );
         }
 
-        if ($botPageviews > 0) {
+        if ($botRequests > 0) {
             $parts[] = sprintf(
-            /* translators: %s: average bot pageviews count */
-                __('%s bot pageviews', 'proactive-site-advisor'),
-                '<strong>' . esc_html(number_format_i18n($botPageviews)) . '</strong>'
+            /* translators: %s: average bot requests count */
+                __('%s bot requests', 'proactive-site-advisor'),
+                '<strong>' . esc_html(number_format_i18n($botRequests)) . '</strong>'
             );
         }
 
         if (empty($parts)) {
-            return esc_html__('Average per day: No data yet', 'proactive-site-advisor');
+            return esc_html__('7-day daily average — No data yet', 'proactive-site-advisor');
         }
 
         return sprintf(
-        /* translators: %s: list of average stats separated by middot */
-            esc_html__('Average per day: %s', 'proactive-site-advisor'),
+        /* translators: %s: list of average monitoring stats separated by middot */
+            esc_html__('7-day daily average — %s', 'proactive-site-advisor'),
             implode(' · ', $parts)
         );
     }

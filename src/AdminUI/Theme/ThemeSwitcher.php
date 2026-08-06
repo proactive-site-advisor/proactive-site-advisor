@@ -16,6 +16,8 @@ if (!defined('ABSPATH')) {
 /**
  * Manages the admin UI theme (light / dark) on a per-user basis.
  *
+ * phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verification is handled inside AjaxComponent::register().
+ *
  * @package ProactiveSiteAdvisor\AdminUI\Theme
  * @since   1.0.0
  */
@@ -80,8 +82,6 @@ class ThemeSwitcher extends AbstractSingleton
     /** Handle AJAX requests for switching the admin theme. */
     public function handleThemeSwitch(): void
     {
-        // Safe: Only updates current user's data; nonce is verified and user capability is checked in AjaxComponent::register().
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $theme = isset($_POST['theme']) ? sanitize_text_field(wp_unslash($_POST['theme'])) : '';
 
         if ($this->setTheme($theme)) {

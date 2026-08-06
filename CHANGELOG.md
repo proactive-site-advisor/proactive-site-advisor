@@ -2,6 +2,26 @@
 
 
 
+= 1.1.1 – 2026-08-x =
+
+* New: AcceptEncodingDeflateSignal – dedicated signal for missing `deflate` in browser Accept-Encoding headers.
+
+* New: SecFetchSiteNoneWithRefererSignal – dedicated signal for detecting contradictory Fetch Metadata and Referer headers.
+
+* New: Http2CleartextUpgradeSignal – detects non-browser HTTP/2 cleartext upgrade attempts.
+
+* New: SecFetchUserSignal – detects missing Sec-Fetch-User header on top-level navigations from modern browsers.
+
+* New: Alert patterns – highlights recurring changes over recent days.
+
+* New: Related activity context – shows when multiple anomaly types are detected together.
+
+* New: Centralized alert text definitions into the `alerts.php` configuration file, adding shared alert strings and improving message consistency.
+
+* New: Improved alert explanations with clearer context, severity details, and actionable next steps.
+
+
+
 = 1.1.0 – 2026-07-30 =
 
 * New: Admin settings page with Alerts and Thresholds sections

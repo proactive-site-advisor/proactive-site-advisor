@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Services\Admin\Dashboard;
 
 use ProactiveSiteAdvisor\Config\PrefixConfig;
 use ProactiveSiteAdvisor\Utils\DateTimeUtils;
+use ProactiveSiteAdvisor\Services\Admin\AlertMessageBuilder;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -28,7 +29,6 @@ class DashboardProcessor
         $bot      = 0;
 
         foreach ($rows as $row) {
-
             $severity = $row['severity'];
             $type     = $row['type'];
 
@@ -69,7 +69,7 @@ class DashboardProcessor
     }
 
     /** Build alert cards for UI. */
-    public function buildAlerts(array $alerts): array
+    public function buildAlerts(array $alerts, array $repetitionData, array $concurrencyData): array
     {
         if (empty($alerts)) {
             return [];
@@ -77,24 +77,47 @@ class DashboardProcessor
 
         usort($alerts, [$this, 'sortBySeverity']);
 
-        $result = [];
+        $builder = new AlertMessageBuilder();
+        $result  = [];
 
         foreach ($alerts as $alert) {
-
+            $id       = $alert['id'];
             $type     = $alert['type'];
             $severity = $alert['severity'];
+            $date     = $alert['alert_date'];
+            $meta     = $this->decodeMeta($alert['meta_json']);
 
-            $meta = $this->decodeMeta($alert['meta_json']);
+            $meta['severity'] = $severity;
+
+            $repetitionCount = $repetitionData[$id] ?? 0;
+            $concurrentTypes = $concurrencyData[$id] ?? [];
+
+            $alertData = $builder->buildForDashboard(
+                $type,
+                $meta,
+                $repetitionCount,
+                $concurrentTypes
+            );
+
+            $expanded = $alertData['expanded'];
+
+            if ($type === '404_spike' && !empty($meta['top'])) {
+                $expanded['topUrls'] = $this->normalizeTop404Urls($meta['top']);
+            }
+
+            if (($type === 'bot_spike' || $type === 'bot_drop') && !empty($meta['top'])) {
+                $expanded['topBots'] = $this->normalizeTopBotNames($meta['top']);
+            }
 
             $result[] = [
-                'id'       => $alert['id'],
+                'id'       => $id,
                 'icon'     => $this->getIcon($type),
                 'color'    => $this->getColor($severity),
-                'label'    => $this->getLabel($type),
-                'title'    => $this->getTitle($type, $meta),
-                'short'    => $this->getShortMessage($type),
-                'expanded' => $this->getExpandedContent($type, $meta),
-                'date'     => DateTimeUtils::format($alert['alert_date'], 'F j, Y'),
+                'label'    => $alertData['label'],
+                'title'    => $alertData['title'],
+                'short'    => $alertData['short'],
+                'expanded' => $expanded,
+                'date'     => DateTimeUtils::format($date, 'F j, Y'),
             ];
         }
 
@@ -131,172 +154,6 @@ class DashboardProcessor
         return [];
     }
 
-    /** Get icon class for alert type. */
-    private function getIcon($type): string
-    {
-        switch ($type) {
-            case 'traffic_drop':
-                return PrefixConfig::css('icon--traffic-drop');
-            case 'traffic_spike':
-                return PrefixConfig::css('icon--traffic-spike');
-            case 'bot_spike':
-                return PrefixConfig::css('icon--bot-spike');
-            case 'bot_drop':
-                return PrefixConfig::css('icon--bot-drop');
-            case '404_spike':
-                return PrefixConfig::css('icon--error-404');
-            default:
-                return PrefixConfig::css('icon--alert');
-        }
-    }
-
-    /** Get color for severity level. */
-    private function getColor($severity): string
-    {
-        switch ($severity) {
-            case 'critical':
-                return 'error';
-            case 'warning':
-                return 'warning';
-            default:
-                return 'info';
-        }
-    }
-
-    /** Get label for alert type. */
-    private function getLabel($type): ?string
-    {
-        switch ($type) {
-            case 'traffic_drop':
-                return __('Traffic drop', 'proactive-site-advisor');
-            case 'traffic_spike':
-                return __('Traffic spike', 'proactive-site-advisor');
-            case 'bot_spike':
-                return __('Bot spike', 'proactive-site-advisor');
-            case 'bot_drop':
-                return __('Bot drop', 'proactive-site-advisor');
-            case '404_spike':
-                return __('404 spike', 'proactive-site-advisor');
-            default:
-                return __('Alert', 'proactive-site-advisor');
-        }
-    }
-
-    /** Generate alert title from meta data. */
-    private function getTitle(string $type, array $meta): string
-    {
-        $changePct = abs((int)($meta['change_pct'] ?? 0));
-
-        if ($type === 'traffic_drop') {
-            /* translators: %s: The percentage value of traffic drop */
-            return sprintf(__('Traffic dropped by %s%%', 'proactive-site-advisor'), $changePct);
-        }
-
-        if ($type === 'traffic_spike') {
-            /* translators: %s: The percentage value of traffic increase */
-            return sprintf(__('Traffic increased by %s%%', 'proactive-site-advisor'), $changePct);
-        }
-
-        if ($type === 'bot_spike') {
-            /* translators: %s: percentage */
-            return sprintf(__('Bot traffic increased by %s%%', 'proactive-site-advisor'), $changePct);
-        }
-
-        if ($type === 'bot_drop') {
-            /* translators: %s: percentage */
-            return sprintf(__('Bot traffic dropped by %s%%', 'proactive-site-advisor'), $changePct);
-        }
-
-        if ($type === '404_spike') {
-            /* translators: %s: The percentage value of 404 error increase */
-            return sprintf(__('404 errors increased by %s%%', 'proactive-site-advisor'), $changePct);
-        }
-
-        return $this->getLabel($type);
-    }
-
-    /** Get short message for alert type. */
-    private function getShortMessage($type): ?string
-    {
-        switch ($type) {
-            case 'traffic_drop':
-                return __('Traffic dropped unexpectedly compared to recent days.', 'proactive-site-advisor');
-            case 'traffic_spike':
-                return __('Traffic increased significantly compared to recent days.', 'proactive-site-advisor');
-            case 'bot_spike':
-                return __('Unusual bot activity detected – possible scraping or indexing surge.', 'proactive-site-advisor');
-            case 'bot_drop':
-                return __('Bot visits dropped significantly – search engines may have reduced crawling.', 'proactive-site-advisor');
-            case '404_spike':
-                return __('Visitors are reaching pages that no longer exist.', 'proactive-site-advisor');
-            default:
-                return __('Unusual activity was detected.', 'proactive-site-advisor');
-        }
-    }
-
-    /** Get expanded content for alert type. */
-    private function getExpandedContent($type, array $meta): array
-    {
-        switch ($type) {
-            case 'traffic_drop':
-                return [
-                    'meaning' => __('Sudden traffic drops are often caused by downtime or recent changes.', 'proactive-site-advisor'),
-                    'checks'  => [
-                        __('Check if your site is reachable', 'proactive-site-advisor'),
-                        __('Review recent plugin or theme changes', 'proactive-site-advisor'),
-                        __('Look for increases in 404 errors', 'proactive-site-advisor'),
-                    ],
-                ];
-            case 'traffic_spike':
-                return [
-                    'meaning' => __('Traffic spikes can indicate viral content, marketing success, or bot activity.', 'proactive-site-advisor'),
-                    'checks'  => [
-                        __('Check analytics for sources', 'proactive-site-advisor'),
-                        __('Review server load and performance', 'proactive-site-advisor'),
-                        __('Look for unusual referrers', 'proactive-site-advisor'),
-                    ],
-                ];
-            case 'bot_spike':
-                return [
-                    'meaning' => __('A sudden increase in bot traffic can indicate aggressive crawling or scraping attempts.', 'proactive-site-advisor'),
-                    'checks'  => [
-                        __('Check server load and bandwidth usage', 'proactive-site-advisor'),
-                        __('Review robots.txt rules and crawling rate in Google Search Console', 'proactive-site-advisor'),
-                        __('Consider blocking abusive IPs if the traffic is malicious', 'proactive-site-advisor'),
-                    ],
-                    'topBots' => $this->normalizeTopBotNames($meta['top'] ?? []),
-                ];
-            case 'bot_drop':
-                return [
-                    'meaning' => __('A significant drop in bot activity may signal that search engines are having trouble accessing your site.', 'proactive-site-advisor'),
-                    'checks'  => [
-                        __('Verify your site is accessible and not blocking crawlers unintentionally', 'proactive-site-advisor'),
-                        __('Check Search Console for crawl errors', 'proactive-site-advisor'),
-                        __('Ensure your XML sitemap is up-to-date', 'proactive-site-advisor'),
-                    ],
-                    'topBots' => $this->normalizeTopBotNames($meta['top'] ?? []),
-                ];
-            case '404_spike':
-                return [
-                    'meaning' => __('Missing pages can frustrate visitors and affect SEO.', 'proactive-site-advisor'),
-                    'checks'  => [
-                        __('Add redirects for missing pages', 'proactive-site-advisor'),
-                        __('Fix internal links pointing to missing URLs', 'proactive-site-advisor'),
-                        __('Review permalink changes', 'proactive-site-advisor'),
-                    ],
-                    'topUrls' => $this->normalizeTop404Urls($meta['top'] ?? []),
-                ];
-            default:
-                return [
-                    'meaning' => __('This issue may require your attention.', 'proactive-site-advisor'),
-                    'checks'  => [
-                        __('Review recent changes to your site', 'proactive-site-advisor'),
-                        __('Check your site for visible issues', 'proactive-site-advisor'),
-                    ],
-                ];
-        }
-    }
-
     /** Normalize "top 404" URLs meta. */
     private function normalizeTop404Urls(array $meta): array
     {
@@ -327,6 +184,38 @@ class DashboardProcessor
             }
         }
         return $topBots;
+    }
+
+    /** Get icon class for alert type. */
+    private function getIcon($type): string
+    {
+        switch ($type) {
+            case 'traffic_drop':
+                return PrefixConfig::css('icon--traffic-drop');
+            case 'traffic_spike':
+                return PrefixConfig::css('icon--traffic-spike');
+            case 'bot_spike':
+                return PrefixConfig::css('icon--bot-spike');
+            case 'bot_drop':
+                return PrefixConfig::css('icon--bot-drop');
+            case '404_spike':
+                return PrefixConfig::css('icon--error-404');
+            default:
+                return PrefixConfig::css('icon--alert');
+        }
+    }
+
+    /** Get color for severity level. */
+    private function getColor($severity): string
+    {
+        switch ($severity) {
+            case 'critical':
+                return 'error';
+            case 'warning':
+                return 'warning';
+            default:
+                return 'info';
+        }
     }
 
     /** Build average pageviews / errors_404 from history rows. */

@@ -3,6 +3,7 @@
  * Admin layout: Header.
  *
  * phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+ * phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamic attribute strings are escaped before output.
  *
  * @package ProactiveSiteAdvisor\Templates\Admin\Layouts
  * @since   1.0.0
@@ -153,7 +154,7 @@ if (!defined('ABSPATH')) {
                         <a
                             href="<?php echo esc_url($url); ?>"
                             class="<?php echo esc_attr($btnClass); ?>"
-                            <?php echo $attrsStr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                            <?php echo $attrsStr; ?>
                         >
                             <?php if (!empty($icon)) : ?>
                                 <span class="psa-dashicons <?php echo esc_attr($icon); ?>"></span>
@@ -164,7 +165,7 @@ if (!defined('ABSPATH')) {
                         <button
                             type="button"
                             class="<?php echo esc_attr($btnClass); ?>"
-                            <?php echo $attrsStr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                            <?php echo $attrsStr; ?>
                         >
                             <?php if (!empty($icon)) : ?>
                                 <span class="psa-dashicons <?php echo esc_attr($icon); ?>"></span>

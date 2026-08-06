@@ -10,7 +10,7 @@ Do not open public issues. Email us at:
 
 
 
-security.proactive.site.advisor@gmail.com
+proactive.site.advisor@gmail.com
 
 
 

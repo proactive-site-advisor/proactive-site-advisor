@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,15 +25,30 @@ When an anomaly is detected, you don't just get a number. You get a human-readab
 
 Here’s a real example of a traffic drop alert:
 
-> **Traffic drop — July 9, 2026**
-> Traffic dropped by 44.98% compared to recent days.
+> **Traffic — August 2, 2026**
 >
-> *What this means:* Sudden drops are often caused by downtime or recent changes.
+> **Traffic dropped 41%**
+> Your human traffic decreased sharply compared to recent activity.
+>
+> *What this means:*
+> A decrease in human traffic means fewer real visitors reached your site compared to your normal activity. This does not always indicate a problem and can happen after website changes, availability issues, visibility changes, broken links, or changes in visitor behavior.
+>
+> *Why this alert?*
+> Human traffic decreased significantly compared to your recent activity. This level of change is unusual and may indicate an issue affecting how visitors reach or interact with your site.
+>
+> Today: 445 · 7-day average: 754 · Change: -41%
+>
+> *Pattern:*
+> This alert has appeared for the second consecutive day.
+>
+> *Related activity:*
+> Detected together with: 404 Errors, Bot Activity.
 >
 > *What you should check next:*
-> - Check if your site is reachable
-> - Review recent plugin or theme changes
-> - Look for increases in 404 errors
+> - Review broken links first, as they may be affecting traffic.
+> - Verify that your most important pages are available and responding correctly.
+> - Review major recent changes, migrations, deployments, or settings updates that may have affected visitor access.
+> - Check that your site is loading normally and important pages are accessible.
 
 404 alerts include the top 3 broken URLs with fix suggestions. Bot alerts list the top 3 crawlers by name with visit counts and context.
 
@@ -47,7 +62,8 @@ Install, activate, done. The plugin starts logging and comparing data from day o
 
 = Features =
 
-* **Bot anomaly detection** – Sudden changes in bot visits (crawlers, scrapers) with top 3 bot names.
+* **Bot anomaly detection** – Detects unusual crawler activity with top bot names and auto-corrected traffic counts.
+* **Built-in rate limiting – Mitigates aggressive scraping and bot floods in real-time.
 * **Human traffic monitoring** – Drops or spikes compared to the previous 7‑day average.
 * **404 error surge alerts** – Top 3 broken URLs with hit counts and fix suggestions.
 * **Actionable recommendations** – Every alert includes a "What you should check next" list.
@@ -60,8 +76,8 @@ Install, activate, done. The plugin starts logging and comparing data from day o
 = Privacy & Performance by Design =
 
 * **Truly self‑hosted** – All statistics stay in your WordPress database. We never see your data.
-* **No personal data** – Only daily summaries. No IP addresses, no visitor profiles.
-* **Ultra‑light footprint** – Two small database tables, no front‑end scripts, zero impact on page speed.
+* **No personal data** – Only daily summaries. No IP addresses, no cookies.
+* **Ultra‑light footprint** – Lightweight background processing, zero front-end impact.
 * **GDPR/CCPA friendly** – No cookies, no cross‑site tracking, no consent banner needed for monitoring.
 
 = Who is Proactive Site Advisor for? =
@@ -117,6 +133,16 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 4. Bot alert with top 3 bot names and percentage change.
 
 == Changelog ==
+
+= 1.1.1 =
+* New: AcceptEncodingDeflateSignal – dedicated signal for missing `deflate` in browser Accept-Encoding headers.
+* New: SecFetchSiteNoneWithRefererSignal – dedicated signal for detecting contradictory Fetch Metadata and Referer headers.
+* New: Http2CleartextUpgradeSignal – detects non-browser HTTP/2 cleartext upgrade attempts.
+* New: SecFetchUserSignal – detects missing Sec-Fetch-User header on top-level navigations from modern browsers.
+* New: Alert patterns – highlights recurring changes over recent days.
+* New: Related activity context – shows when multiple anomaly types are detected together.
+* New: Centralized alert text definitions into the `alerts.php` configuration file, adding shared alert strings and improving message consistency.
+* New: Improved alert explanations with clearer context, severity details, and actionable next steps.
 
 = 1.1.0 =
 * New: Admin settings page with Alerts and Thresholds sections
@@ -214,6 +240,8 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.1.1 =
 
 = 1.1.0 =
 New settings page for managing alerts and thresholds, plus major bot detection improvements including behavioral analysis, Firefox client-hints support, and a cleaner scoring architecture. Safe automatic update – review the new settings to customize your alert thresholds.

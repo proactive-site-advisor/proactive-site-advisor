@@ -14,6 +14,8 @@ if (!defined('ABSPATH')) {
 /**
  * Handles plugin update logic including database migrations.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Multisite network query requires direct access.
+ *
  * @package ProactiveSiteAdvisor\Lifecycle
  * @since   1.0.0
  */
@@ -62,7 +64,6 @@ class UpdateHandler
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Multisite network query requires direct access
         $blogIds = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
 
         foreach ($blogIds as $blogId) {

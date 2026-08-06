@@ -2,6 +2,9 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\BrowserHelper;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -17,6 +20,10 @@ class PageviewSignal
     /** Determines if the current request should be collected. */
     public static function shouldCollect(): bool
     {
+        if (BrowserHelper::isSpeculativeNavigation()) {
+            return false;
+        }
+
         if (
             !isset($_SERVER['REQUEST_METHOD']) ||
             sanitize_key(wp_unslash($_SERVER['REQUEST_METHOD'])) !== 'get'
@@ -52,7 +59,7 @@ class PageviewSignal
             return false;
         }
 
-        $uri  = isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+        $uri  = HeaderReader::getRequestUri();
         $path = wp_parse_url($uri, PHP_URL_PATH);
 
         if ($path === null) {

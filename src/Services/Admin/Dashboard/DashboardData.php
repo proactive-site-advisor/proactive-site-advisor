@@ -79,7 +79,7 @@ class DashboardData
         }
 
         if ($status === PluginStatus::STATUS_LIMITED) {
-            return __('Collecting data · Insights will appear soon', 'proactive-site-advisor');
+            return __('Collecting baseline data · Alerts will become available soon', 'proactive-site-advisor');
         }
 
         if ($status === PluginStatus::STATUS_ISSUE) {
@@ -97,7 +97,7 @@ class DashboardData
         $timeAgo = human_time_diff($lastRun, $now);
 
         /* translators: %s: Time ago string */
-        return sprintf(__('Last checked: %s ago · Range: last 7 days', 'proactive-site-advisor'), $timeAgo);
+        return sprintf(__('Last checked: %s ago · Baseline: last 7 days', 'proactive-site-advisor'), $timeAgo);
     }
 
     /** Returns the colored dashboard status block (severity or plugin-status). */
@@ -121,7 +121,7 @@ class DashboardData
                 return [
                     'color' => 'info',
                     'title' => __('Getting started', 'proactive-site-advisor'),
-                    'text'  => __("We're collecting baseline data. Your first insights will appear shortly.", 'proactive-site-advisor'),
+                    'text'  => __("We're collecting baseline data. Alerts will become available once enough history has been collected.", 'proactive-site-advisor'),
                 ];
 
             case PluginStatus::STATUS_LIMITED:
@@ -133,7 +133,7 @@ class DashboardData
                     'title'    => __('Building history', 'proactive-site-advisor'),
                     'text'     => sprintf(
                     /* translators: 1: Current day number, 2: Total number of baseline days required */
-                        __('Collecting baseline data (Day %1$d of %2$d). Your insights will become more accurate as history grows.', 'proactive-site-advisor'),
+                        __('Collecting baseline data (Day %1$d of %2$d). Monitoring is active. More history is needed before alerts can be generated.', 'proactive-site-advisor'),
                         $days,
                         PluginStatus::BASELINE_DAYS
                     ),
@@ -335,41 +335,54 @@ class DashboardData
         $status = PluginStatus::getStatus($this->daysWithData);
 
         if ($status === PluginStatus::STATUS_FRESH) {
-            return array(
+            return [
                 'hasData' => false,
                 'title'   => __('Getting started', 'proactive-site-advisor'),
                 'text'    => __("We're collecting baseline data for your site.", 'proactive-site-advisor'),
                 'icon'    => PrefixConfig::css('icon--info'),
                 'color'   => 'info',
-            );
+            ];
         }
 
         if ($status === PluginStatus::STATUS_LIMITED) {
-            return array(
+            return [
                 'hasData' => false,
                 'title'   => __('Limited history', 'proactive-site-advisor'),
-                'text'    => __('Not enough data yet to detect unusual activity.', 'proactive-site-advisor'),
+                'text'    => __('Monitoring is active, but more history is needed before unusual activity can be detected.', 'proactive-site-advisor'),
                 'icon'    => PrefixConfig::css('icon--clock'),
                 'color'   => 'warning',
-            );
+            ];
         }
 
         $rawAlerts = $this->alertsDataProvider->getLatestAlerts(20);
 
         if (empty($rawAlerts)) {
-            return array(
+            return [
                 'hasData' => false,
                 'title'   => __('All clear', 'proactive-site-advisor'),
-                'text'    => __('No unusual activity detected in the last 7 days.', 'proactive-site-advisor'),
+                'text'    => __("No unusual activity detected. We'll continue monitoring your site.", 'proactive-site-advisor'),
                 'icon'    => PrefixConfig::css('icon--check-circle'),
                 'color'   => 'success',
-            );
+            ];
         }
 
-        return array(
+        // Prepare repetition and concurrency data for each alert
+        $repetitionData  = [];
+        $concurrencyData = [];
+
+        foreach ($rawAlerts as $alert) {
+            $id   = $alert['id'];
+            $type = $alert['type'];
+            $date = $alert['alert_date'];
+
+            $repetitionData[$id]  = $this->alertsDataProvider->getRepetitionCount($type, $date);
+            $concurrencyData[$id] = $this->alertsDataProvider->getConcurrentTypes($date, $type);
+        }
+
+        return [
             'hasData' => true,
-            'data'    => $this->dashboardProcessor->buildAlerts($rawAlerts),
-        );
+            'data'    => $this->dashboardProcessor->buildAlerts($rawAlerts, $repetitionData, $concurrencyData),
+        ];
     }
 
     /** Get 7‑day history formatted for dashboard. */

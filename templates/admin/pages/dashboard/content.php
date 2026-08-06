@@ -100,7 +100,7 @@ echo TemplateUtils::renderTemplate(
         <p class="psa-section__description"><?php esc_html_e('Daily traffic and error statistics.', 'proactive-site-advisor'); ?></p>
         <?php if ($history['hasData']): ?>
             <p class="psa-page-meta psa-mb-2">
-                <span class="psa-icon--traffic"></span>
+                <span class="psa-icon--chart-bar"></span>
                 <?php echo wp_kses_post($history['average']); ?>
             </p>
             <div class="psa-card psa-table-card ">

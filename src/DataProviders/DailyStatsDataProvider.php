@@ -13,6 +13,11 @@ if (!defined('ABSPATH')) {
 /**
  * Provides query helpers for retrieving daily statistics data from the database.
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct database queries are required for custom statistics retrieval.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Statistics require fresh database state.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are trusted internal identifiers.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Database identifiers are generated from trusted internal methods.
+ *
  * @package ProactiveSiteAdvisor\DataProviders
  * @since   1.0.0
  */
@@ -25,9 +30,8 @@ class DailyStatsDataProvider extends AbstractDataProvider
 
         $days  = max(1, min(90, $days));
         $table = DailyStats::getTableName();
-        $today = DateTimeUtils::current()->format('Y-m-d');
+        $today = DateTimeUtils::current()->format(DateTimeUtils::FORMAT_DATE);
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT stats_date, pageviews, errors_404, bot_pageviews, top_404_json, top_bots_json
@@ -40,7 +44,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($rows)) {
             return [];
@@ -56,7 +59,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
 
         $table = DailyStats::getTableName();
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT pageviews, errors_404, bot_pageviews
@@ -69,7 +71,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($rows)) {
             return [];
@@ -85,7 +86,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
 
         $table = DailyStats::getTableName();
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from trusted internal method
         $row = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT pageviews, errors_404, bot_pageviews, top_404_json, top_bots_json
@@ -96,7 +96,6 @@ class DailyStatsDataProvider extends AbstractDataProvider
             ),
             ARRAY_A
         );
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!is_array($row)) {
             return [];
@@ -111,8 +110,13 @@ class DailyStatsDataProvider extends AbstractDataProvider
         global $wpdb;
 
         $table = DailyStats::getTableName();
+        $today = DateTimeUtils::current()->format(DateTimeUtils::FORMAT_DATE);
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        return (int)$wpdb->get_var("SELECT COUNT(*) FROM $table");
+        return (int)$wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM $table WHERE stats_date < %s",
+                $today
+            )
+        );
     }
 }

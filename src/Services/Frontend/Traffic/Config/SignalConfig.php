@@ -2,10 +2,12 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Config;
 
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BehavioralSignal;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotAgentSignal;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BrowserHeadersSignal;
-use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BrowserNameSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\NavigationBehaviorSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptEncodingBrotliSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\SecFetchUserSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\Http2CleartextUpgradeSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\SecFetchSiteNoneWithRefererSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptEncodingDeflateSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptEncodingSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptHeaderSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptLanguageSignal;
@@ -15,6 +17,10 @@ use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\DistinctU
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\FetchHeadersSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\MissingHeadersSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\CookieBehaviorSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BehavioralSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BotAgentSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BrowserHeadersSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\BrowserNameSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\IpSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\RateSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\RefererConsistencySignal;
@@ -80,6 +86,12 @@ class SignalConfig
             RefererConsistencySignal::class,
             RequestMethodSignal::class,
             CookieBehaviorSignal::class,
+            SecFetchSiteNoneWithRefererSignal::class,
+            AcceptEncodingDeflateSignal::class,
+            Http2CleartextUpgradeSignal::class,
+            SecFetchUserSignal::class,
+            AcceptEncodingBrotliSignal::class,
+            NavigationBehaviorSignal::class,
         ];
 
         /**

@@ -11,6 +11,11 @@ if (!defined('ABSPATH')) {
 /**
  * Handles DDL operations (table structure management) including:
  *
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Database schema management requires direct query execution.
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- DDL operations do not require database caching.
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dynamic schema queries use trusted internal table definitions.
+ * phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table and column names are validated through internal schema management.
+ *
  * @package ProactiveSiteAdvisor\Database
  * @since   1.0.0
  */
@@ -93,7 +98,6 @@ class TableMaintenance
 
         $tableName = $schema->getFullName();
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
         return $wpdb->get_var("SHOW TABLES LIKE '$tableName'") === $tableName;
     }
 
@@ -110,7 +114,6 @@ class TableMaintenance
 
         $tableName = $schema->getFullName();
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Custom table management requires direct queries
         $columns = $wpdb->get_results("DESCRIBE $tableName", ARRAY_A);
 
         return $columns ?: [];

@@ -11,6 +11,9 @@ use ProactiveSiteAdvisor\Config\PrefixConfig;
 /**
  * Plugin-specific logging utility with multiple log levels and file-based output.
  *
+ * phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- File logging requires direct file writes.
+ * phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Error logging is intentionally used for debug output.
+ *
  * @package ProactiveSiteAdvisor\Utils
  * @since   1.0.0
  */
@@ -237,7 +240,6 @@ class Logger
             self::init();
         }
 
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
         file_put_contents(self::$logFile, $message, FILE_APPEND | LOCK_EX);
     }
 
@@ -248,7 +250,6 @@ class Logger
         $contextStr = !empty($context) ? ' | ' . wp_json_encode($context) : '';
 
         /** @noinspection ForgottenDebugOutputInspection */
-        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
         error_log("$slug [$level] $message$contextStr");
     }
 

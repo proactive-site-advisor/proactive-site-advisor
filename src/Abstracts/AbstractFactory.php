@@ -108,7 +108,7 @@ abstract class AbstractFactory
 
         $randomTs = wp_rand($startTs, $endTs);
 
-        return gmdate('Y-m-d', $randomTs);
+        return DateTimeUtils::convert($randomTs, 'UTC', 'UTC', DateTimeUtils::FORMAT_DATE);
     }
 
     /** Generate a date range array. */

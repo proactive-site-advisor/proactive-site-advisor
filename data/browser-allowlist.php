@@ -1,13 +1,15 @@
 <?php
+
 /**
  * Browser Allowlist
  *
- * Generated from donatj/phpuseragentparser Browsers interface
- * Only these browser names are considered valid.
- *
- * @package ProactiveSiteAdvisor\Data
+ * @package ProactiveSiteAdvisor\data
  * @since   1.0.0
  */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 return [
     'Camino',
