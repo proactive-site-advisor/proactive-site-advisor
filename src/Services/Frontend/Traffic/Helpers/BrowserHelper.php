@@ -64,7 +64,7 @@ class BrowserHelper
         ) {
             return false;
         }
-        
+
         $purpose    = HeaderReader::getPurpose();
         $secPurpose = HeaderReader::getSecPurpose();
 
@@ -77,5 +77,18 @@ class BrowserHelper
         }
 
         return false;
+    }
+
+    /**
+     * Whether the request is a real navigation that carries a prefetch purpose.
+     *
+     * These are genuine page loads (user click) but the browser may reuse a
+     * previously prefetched response and omit some Fetch Metadata headers.
+     */
+    public static function isNavigationWithPrefetch(): bool
+    {
+        return HeaderReader::getSecFetchMode() === 'navigate'
+            && HeaderReader::getSecFetchDest() === 'document'
+            && stripos(HeaderReader::getSecPurpose(), 'prefetch') !== false;
     }
 }
