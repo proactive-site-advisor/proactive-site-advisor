@@ -22,6 +22,9 @@ class NavigationBehaviorSignal implements ScoreSignalInterface
     /** Maximum score this signal can contribute. */
     private const MAX_SCORE = 3;
 
+    /** Maximum time span (seconds) for "many pages" to be considered suspicious. */
+    private const RAPID_PAGES_TIME_WINDOW = 30;
+
     /** {@inheritDoc} */
     public function getScore(): int
     {
@@ -54,6 +57,8 @@ class NavigationBehaviorSignal implements ScoreSignalInterface
             isset($state['unique_pages'], $state['pages'])
             && $state['pages'] >= 8
             && $state['unique_pages'] >= 6
+            && !empty($state['timestamps'])
+            && (max($state['timestamps']) - min($state['timestamps'])) < self::RAPID_PAGES_TIME_WINDOW
         ) {
             ++$score;
         }
@@ -61,14 +66,6 @@ class NavigationBehaviorSignal implements ScoreSignalInterface
         if (
             isset($state['repeat_pages'])
             && $state['repeat_pages'] >= 5
-        ) {
-            ++$score;
-        }
-
-        if (
-            isset($state['empty_refers'], $state['pages'])
-            && $state['pages'] >= 5
-            && $state['empty_refers'] === $state['pages']
         ) {
             ++$score;
         }

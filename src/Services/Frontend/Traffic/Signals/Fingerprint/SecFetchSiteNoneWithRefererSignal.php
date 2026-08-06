@@ -3,6 +3,7 @@
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint;
 
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Contracts\ScoreSignalInterface;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\BrowserHelper;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Helpers\HeaderReader;
 
 if (!defined('ABSPATH')) {
@@ -23,14 +24,10 @@ class SecFetchSiteNoneWithRefererSignal implements ScoreSignalInterface
     /** {@inheritDoc} */
     public function getScore(): int
     {
-        if (
-            HeaderReader::getSecFetchMode() === 'navigate' &&
-            HeaderReader::getSecFetchDest() === 'document' &&
-            stripos(HeaderReader::getSecPurpose(), 'prefetch') !== false
-        ) {
+        if (BrowserHelper::isNavigationWithPrefetch()) {
             return 0;
         }
-        
+
         $site = HeaderReader::getSecFetchSite();
 
         if ($site !== 'none') {

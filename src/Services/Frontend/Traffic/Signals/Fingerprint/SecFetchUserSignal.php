@@ -24,6 +24,10 @@ class SecFetchUserSignal implements ScoreSignalInterface
     /** {@inheritDoc} */
     public function getScore(): int
     {
+        if (BrowserHelper::isNavigationWithPrefetch()) {
+            return 0;
+        }
+
         if (
             HeaderReader::getSecFetchMode() !== 'navigate' ||
             HeaderReader::getSecFetchDest() !== 'document'
