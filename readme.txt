@@ -63,7 +63,7 @@ Install, activate, done. The plugin starts logging and comparing data from day o
 = Features =
 
 * **Bot anomaly detection** – Detects unusual crawler activity with top bot names and auto-corrected traffic counts.
-* **Built-in rate limiting – Mitigates aggressive scraping and bot floods in real-time.
+* **Built-in rate limiting** – Mitigates aggressive scraping and bot floods in real-time.
 * **Human traffic monitoring** – Drops or spikes compared to the previous 7‑day average.
 * **404 error surge alerts** – Top 3 broken URLs with hit counts and fix suggestions.
 * **Actionable recommendations** – Every alert includes a "What you should check next" list.
