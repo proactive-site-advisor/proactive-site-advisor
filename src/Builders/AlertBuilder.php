@@ -1,18 +1,21 @@
 <?php
 
-namespace ProactiveSiteAdvisor\Services\Admin;
+namespace ProactiveSiteAdvisor\Builders;
+
+use ProactiveSiteAdvisor\Config\PluginSettings;
+use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Builds dynamic alert messages for dashboard, email, and widgets.
+ * Builds normalized alert data from raw alert data.
  *
- * @package ProactiveSiteAdvisor\Services\Admin
+ * @package ProactiveSiteAdvisor\Builders
  * @since   1.0.0
  */
-class AlertMessageBuilder
+class AlertBuilder
 {
     /** Alert definitions loaded from data file. */
     private array $alerts = [];
@@ -27,19 +30,26 @@ class AlertMessageBuilder
         }
     }
 
-    /** Build full alert data for dashboard. */
-    public function buildForDashboard(
-        string $type,
-        array  $meta,
-        int    $repetitionCount,
-        array  $concurrentTypes
+    /** Build normalized alert data. */
+    public function build(
+        array $alert,
+        int   $repetitionCount = 0,
+        array $concurrentTypes = []
     ): array
     {
-        $changePct = $meta['change_pct'];
+        $type     = $alert['type'];
+        $severity = $alert['severity'];
+        $meta     = $this->decodeMeta($alert['meta_json']);
+
+        $meta['severity'] = $severity;
 
         return [
+            'id'       => (int)($alert['id']),
+            'type'     => $type,
+            'severity' => $severity,
+            'date'     => $alert['alert_date'],
             'label'    => $this->getLabel($type),
-            'title'    => $this->getTitle($type, $changePct),
+            'title'    => $this->getTitle($type, (float)($meta['change_pct'])),
             'short'    => $this->getShortMessage($type, $meta),
             'expanded' => $this->getExpandedContent(
                 $type,
@@ -58,10 +68,10 @@ class AlertMessageBuilder
         return $customLabels[$type];
     }
 
-    /** Build alert title with severity label. */
+    /** Build alert title with change percentage. */
     private function getTitle(string $type, float $changePct): string
     {
-        $abs = round(abs($changePct), 1);
+        $abs = number_format_i18n(round(abs($changePct), 1), 1);
 
         $templates = $this->alerts['title_templates'];
         $template  = $templates[$type];
@@ -77,7 +87,7 @@ class AlertMessageBuilder
         return $this->alerts[$type]['short'][$level];
     }
 
-    /** Build expanded content. */
+    /** Build expanded alert content. */
     private function getExpandedContent(
         string $type,
         int    $repetitionCount,
@@ -87,7 +97,7 @@ class AlertMessageBuilder
     {
         $level = $meta['severity'];
 
-        return [
+        $expanded = [
             'context'    => $this->getContext($type),
             'severity'   => $this->getSeverityExplanation($type, $level, $meta),
             'pattern'    => $this->getRepetitionText($repetitionCount),
@@ -99,6 +109,16 @@ class AlertMessageBuilder
                 $concurrentTypes
             ),
         ];
+
+        if ($type === '404_spike' && !empty($meta['top'])) {
+            $expanded['topUrls'] = $this->normalizeTop404Urls($meta['top']);
+        }
+
+        if (($type === 'bot_spike' || $type === 'bot_drop') && !empty($meta['top'])) {
+            $expanded['topBots'] = $this->normalizeTopBotNames($meta['top']);
+        }
+
+        return $expanded;
     }
 
     /** Get alert context description. */
@@ -107,15 +127,22 @@ class AlertMessageBuilder
         return $this->alerts[$type]['context'];
     }
 
-    /** Get severity explanation text. */
+    /** Get severity explanation text and metrics. */
     private function getSeverityExplanation(string $type, string $level, array $meta): array
     {
         $avg7   = $meta['avg7'];
         $today  = $meta['today'];
         $change = $meta['change_pct'];
 
+        $threshold = $this->getThresholdPercent($type);
+
+        $text = sprintf(
+            $this->alerts['severity_text'][$type][$level],
+            $threshold
+        );
+
         return [
-            'text'    => $this->alerts['severity_text'][$type][$level],
+            'text'    => $text,
             'metrics' => [
                 'avg7'   => $avg7,
                 'today'  => $today,
@@ -136,20 +163,21 @@ class AlertMessageBuilder
         $checks = [];
 
         if (!empty($concurrentTypes)) {
-            $checks = array_merge($checks, $this->getConcurrencyChecks($type, $concurrentTypes));
+            $checks = array_merge(
+                $checks,
+                $this->getConcurrencyChecks($type, $concurrentTypes)
+            );
         }
 
-        if ($level !== 'info') {
-            $severityChecks = $config[$level];
-            $checks         = array_merge($checks, $severityChecks);
+        if ($level !== 'info' && !empty($config[$level])) {
+            $checks = array_merge($checks, $config[$level]);
         }
 
         if ($repetitionCount >= 3) {
             $checks[] = $this->alerts['common']['pattern_continue'];
         }
 
-        $baseChecks = $config['base'];
-        $checks     = array_merge($checks, $baseChecks);
+        $checks = array_merge($checks, $config['base']);
 
         return array_slice(array_values(array_unique($checks)), 0, 4);
     }
@@ -199,5 +227,79 @@ class AlertMessageBuilder
         }
 
         return $checks;
+    }
+
+    /** Decode meta JSON string or array. */
+    private function decodeMeta($meta): array
+    {
+        if (is_string($meta)) {
+            $decoded = json_decode($meta, true);
+
+            return is_array($decoded) ? $decoded : [];
+        }
+
+        if (is_array($meta)) {
+            return $meta;
+        }
+
+        return [];
+    }
+
+    /** Normalize top 404 URLs meta. */
+    private function normalizeTop404Urls(array $meta): array
+    {
+        $topUrls = [];
+
+        foreach ($meta as $item) {
+            if (is_array($item) && isset($item[0], $item[1])) {
+                $topUrls[] = [
+                    'path'  => (string)$item[0],
+                    'count' => (int)$item[1],
+                ];
+            }
+        }
+
+        return $topUrls;
+    }
+
+    /** Normalize top bot names meta. */
+    private function normalizeTopBotNames(array $meta): array
+    {
+        $topBots = [];
+
+        foreach ($meta as $item) {
+            if (is_array($item) && isset($item[0], $item[1])) {
+                $topBots[] = [
+                    'name'  => (string)$item[0],
+                    'count' => (int)$item[1],
+                ];
+            }
+        }
+
+        return $topBots;
+    }
+
+    /**
+     * Get threshold percentage for an alert type.
+     */
+    private function getThresholdPercent(string $type): float
+    {
+        $map = [
+            'traffic_drop'  => PluginSettings::TRAFFIC_DROP_PERCENT,
+            'traffic_spike' => PluginSettings::TRAFFIC_SPIKE_PERCENT,
+            '404_spike'     => PluginSettings::ERROR_404_SPIKE_PERCENT,
+            'bot_spike'     => PluginSettings::BOT_SPIKE_PERCENT,
+            'bot_drop'      => PluginSettings::BOT_DROP_PERCENT,
+        ];
+
+        $key = $map[$type];
+
+        $defaults = OptionUtils::getDefaults();
+        $default  = $defaults[PluginSettings::SECTION_THRESHOLDS][$key];
+
+        return OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, $key),
+            $default
+        );
     }
 }

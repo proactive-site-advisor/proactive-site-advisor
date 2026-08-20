@@ -75,4 +75,16 @@ class DisplayUtils
             implode(' · ', $parts)
         );
     }
+
+    /** Get a display-friendly site host from a URL. */
+    public static function siteHost(string $url): string
+    {
+        $host = wp_parse_url($url, PHP_URL_HOST);
+
+        if (!is_string($host) || $host === '') {
+            return '';
+        }
+
+        return preg_replace('/^www\./i', '', $host);
+    }
 }

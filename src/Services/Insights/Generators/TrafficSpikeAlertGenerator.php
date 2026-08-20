@@ -44,11 +44,12 @@ class TrafficSpikeAlertGenerator extends AbstractTrafficAlertGenerator
             return null;
         }
 
-        $change = round((($todayPv / $avgPv) - 1) * 100, 2);
+        $change   = round((($todayPv / $avgPv) - 1) * 100, 2);
+        $severity = $this->calculateSpikeSeverity($change, $spikePercent);
 
         return [
             'type'       => 'traffic_spike',
-            'severity'   => 'info',
+            'severity'   => $severity,
             'change_pct' => $change,
         ];
     }

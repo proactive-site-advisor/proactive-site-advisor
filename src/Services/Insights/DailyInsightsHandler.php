@@ -20,25 +20,45 @@ if (!defined('ABSPATH')) {
  */
 class DailyInsightsHandler
 {
+    private const RETENTION_DAYS = 7;
+
     /** Executes daily insight tasks for a specific date. */
     public function handle(string $date): void
     {
+        $this->generateAlerts($date);
+        $this->fireDailyInsightsAction($date);
+        $this->purgeExpiredData();
+    }
+
+    /** Generates alerts for the given date. */
+    private function generateAlerts(string $date): void
+    {
         $alertEngine = new AlertEngine();
         $alertEngine->generateForDay($date);
+    }
 
-        $now          = DateTimeUtils::current();
-        $sevenDaysAgo = $now->modify('-7 days')->format('Y-m-d');
+    /** Fires the daily insights action after alerts have been generated. */
+    private function fireDailyInsightsAction(string $date): void
+    {
+        /**
+         * Fires after daily alerts have been generated.
+         *
+         * @param string $date The date for which alerts were generated (Y-m-d).
+         * @since 1.0.0
+         */
+        do_action('proactive_site_advisor_after_daily_insights', $date);
+    }
 
-        $alertRetention = new AlertRetention();
-        $alertRetention->purgeOlderThan($sevenDaysAgo);
+    /** Removes data that is outside the retention period. */
+    private function purgeExpiredData(): void
+    {
+        $retentionDate = DateTimeUtils::current()
+            ->modify('-' . self::RETENTION_DAYS . ' days')
+            ->format('Y-m-d');
 
-        $dailyStatsRetention = new DailyStatsRetention();
-        $dailyStatsRetention->purgeOlderThan($sevenDaysAgo);
-
-        $rateCountersRetention = new RateCountersRetention();
-        $rateCountersRetention->purgeExpired();
-
-        $dailyFingerprintRetention = new DailyFingerprintRetention();
-        $dailyFingerprintRetention->purgeOlderThan($sevenDaysAgo);
+        (new AlertRetention())->purgeOlderThan($retentionDate);
+        (new DailyStatsRetention())->purgeOlderThan($retentionDate);
+        (new RateCountersRetention())->purgeExpired();
+        (new DailyFingerprintRetention())->purgeOlderThan($retentionDate);
     }
 }

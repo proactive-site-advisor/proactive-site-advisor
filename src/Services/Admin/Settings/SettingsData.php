@@ -28,15 +28,20 @@ class SettingsData
     public function getSections(): array
     {
         $sections = [
-            PluginSettings::SECTION_ALERTS           => [
+            PluginSettings::SECTION_ALERTS        => [
                 'template' => 'admin/pages/settings/sections/alerts',
                 'title'    => __('Alerts', 'proactive-site-advisor'),
                 'icon'     => PrefixConfig::css('icon--bell'),
             ],
-            PluginSettings::SECTION_THRESHOLDS => [
+            PluginSettings::SECTION_THRESHOLDS    => [
                 'template' => 'admin/pages/settings/sections/thresholds',
                 'title'    => __('Thresholds', 'proactive-site-advisor'),
                 'icon'     => PrefixConfig::css('icon--slider'),
+            ],
+            PluginSettings::SECTION_NOTIFICATIONS => [
+                'template' => 'admin/pages/settings/sections/notifications',
+                'title'    => __('Notifications', 'proactive-site-advisor'),
+                'icon'     => PrefixConfig::css('icon--notification'),
             ],
         ];
 

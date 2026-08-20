@@ -17,6 +17,7 @@ use ProactiveSiteAdvisor\Services\Admin\Settings\SettingsManager;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\TrafficManager;
 use ProactiveSiteAdvisor\Services\Insights\InsightsManager;
 use ProactiveSiteAdvisor\Utils\Logger;
+use ProactiveSiteAdvisor\Services\Notifications\NotificationManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -40,6 +41,7 @@ final class Core
         CronManager::class,
         CLIManager::class,
         InsightsManager::class,
+        NotificationManager::class,
     ];
 
     /** List of admin-specific service classes. */

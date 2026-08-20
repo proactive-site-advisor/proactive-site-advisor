@@ -20,6 +20,9 @@ class PluginSettings
     /** Thresholds settings section. */
     public const SECTION_THRESHOLDS = 'thresholds';
 
+    /** Notifications settings section. */
+    public const SECTION_NOTIFICATIONS = 'notifications';
+
     /*
     |--------------------------------------------------------------------------
     | Alerts Settings
@@ -67,4 +70,25 @@ class PluginSettings
 
     /** Percentage decrease in bot pageviews that triggers a drop alert. */
     public const BOT_DROP_PERCENT = 'bot_drop_percent';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications Settings
+    |--------------------------------------------------------------------------
+    */
+
+    /** Enable or disable the daily digest email. */
+    public const ENABLE_DAILY_DIGEST = 'enable_daily_digest';
+
+    /** Email address to receive daily digest notifications. */
+    public const DIGEST_RECIPIENT_EMAIL = 'digest_recipient_email';
+
+    /** Include traffic alerts (spike/drop) in the digest. */
+    public const DIGEST_INCLUDE_TRAFFIC = 'digest_include_traffic';
+
+    /** Include 404 spike alerts in the digest. */
+    public const DIGEST_INCLUDE_404 = 'digest_include_404';
+
+    /** Include bot alerts (spike/drop) in the digest. */
+    public const DIGEST_INCLUDE_BOT = 'digest_include_bot';
 }

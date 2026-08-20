@@ -66,7 +66,6 @@ if (!defined('ABSPATH')) {
                     </p>
                 </div>
 
-
                 <!-- Severity -->
                 <div class="psa-alert-card__section">
                     <h6 class="psa-alert-card__section-title">
@@ -79,19 +78,16 @@ if (!defined('ABSPATH')) {
 
                     <p class="psa-page-meta psa-mt-2">
                         <?php
-                        $severityText = $expanded['severity']['text'];
-                        $metrics      = $expanded['severity']['metrics'];
-                        $changeSign   = $metrics['change'] > 0 ? '+' : '';
+                        $metrics     = $expanded['severity']['metrics'];
+                        $changeSign  = $metrics['change'] > 0 ? '+' : '';
+                        $changeValue = $changeSign . number_format_i18n(round($metrics['change'], 1), 1);
 
-                        echo sprintf(
-                        /* translators: 1: Today's value, 2: 7-day average value, 3: Percentage change */
-                            esc_html__(
-                                'Today: %1$s · 7-day average: %2$s · Change: %3$s%%',
-                                'proactive-site-advisor'
-                            ),
-                            esc_html(number_format_i18n($metrics['today'])),
-                            esc_html(number_format_i18n($metrics['avg7'])),
-                            esc_html($changeSign . round($metrics['change'], 1))
+                        printf(
+                        /* translators: 1: Today's value, 2: 7-day average value, 3: Percentage change with % sign */
+                            esc_html__('Today: %1$s · 7-day average: %2$s · Change: %3$s', 'proactive-site-advisor'),
+                            '<strong>' . esc_html(number_format_i18n($metrics['today'])) . '</strong>',
+                            '<strong>' . esc_html(number_format_i18n($metrics['avg7'])) . '</strong>',
+                            '<strong>' . esc_html($changeValue) . '%</strong>'
                         );
                         ?>
                     </p>

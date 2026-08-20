@@ -27,14 +27,14 @@ class OptionUtils
     public static function getDefaults(): array
     {
         return [
-            PluginSettings::SECTION_ALERTS     => [
+            PluginSettings::SECTION_ALERTS        => [
                 PluginSettings::ALERT_TRAFFIC_DROP  => 1,
                 PluginSettings::ALERT_TRAFFIC_SPIKE => 1,
                 PluginSettings::ALERT_404_SPIKE     => 1,
                 PluginSettings::ALERT_BOT_SPIKE     => 1,
                 PluginSettings::ALERT_BOT_DROP      => 1,
             ],
-            PluginSettings::SECTION_THRESHOLDS => [
+            PluginSettings::SECTION_THRESHOLDS    => [
                 PluginSettings::MIN_WEEKLY_AVG          => 3,
                 PluginSettings::MIN_PAGEVIEWS_FOR_ALERT => 10,
                 PluginSettings::TRAFFIC_SPIKE_PERCENT   => 50,
@@ -42,6 +42,13 @@ class OptionUtils
                 PluginSettings::ERROR_404_SPIKE_PERCENT => 100,
                 PluginSettings::BOT_SPIKE_PERCENT       => 100,
                 PluginSettings::BOT_DROP_PERCENT        => 50,
+            ],
+            PluginSettings::SECTION_NOTIFICATIONS => [
+                PluginSettings::ENABLE_DAILY_DIGEST    => 1,
+                PluginSettings::DIGEST_RECIPIENT_EMAIL => get_option('admin_email'),
+                PluginSettings::DIGEST_INCLUDE_TRAFFIC => 1,
+                PluginSettings::DIGEST_INCLUDE_404     => 1,
+                PluginSettings::DIGEST_INCLUDE_BOT     => 1,
             ],
         ];
     }

@@ -70,4 +70,21 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
 
         return $ratioToThreshold >= 2 ? 'critical' : 'warning';
     }
+
+    /** Calculates severity for traffic spikes based on intensity relative to threshold. */
+    protected function calculateSpikeSeverity(float $changePercent, float $thresholdPercent): string
+    {
+        $absChange        = abs($changePercent);
+        $ratioToThreshold = $absChange / $thresholdPercent;
+
+        if ($ratioToThreshold >= 2.5) {
+            return 'critical';
+        }
+
+        if ($ratioToThreshold >= 1.5) {
+            return 'warning';
+        }
+
+        return 'info';
+    }
 }

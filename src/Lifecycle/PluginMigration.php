@@ -4,6 +4,7 @@ namespace ProactiveSiteAdvisor\Lifecycle;
 
 use ProactiveSiteAdvisor\Config\PluginMeta;
 use ProactiveSiteAdvisor\Config\PluginOptions;
+use ProactiveSiteAdvisor\Config\PluginSettings;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
@@ -51,6 +52,9 @@ class PluginMigration
             '1.1.0' => function () {
                 self::migrateTo110();
             },
+            '1.2.0' => function () {
+                self::migrateTo120();
+            },
         ];
 
         foreach ($migrations as $version => $callback) {
@@ -70,11 +74,34 @@ class PluginMigration
         $defaults   = OptionUtils::getDefaults();
 
         if (!is_array($existing)) {
-            $existing = [];
+            $existing = $defaults;
         }
 
         $merged = array_replace_recursive($defaults, $existing);
 
         OptionUtils::updateAll($merged);
+    }
+
+    /** Add notification settings to existing options. */
+    private static function migrateTo120(): void
+    {
+        $optionName = PluginOptions::OPTION_NAME;
+        $existing   = get_option($optionName, []);
+
+        if (!is_array($existing)) {
+            $existing = OptionUtils::getDefaults();
+        }
+
+        if (!isset($existing[PluginSettings::SECTION_NOTIFICATIONS])) {
+            $existing[PluginSettings::SECTION_NOTIFICATIONS] = [
+                PluginSettings::ENABLE_DAILY_DIGEST    => 1,
+                PluginSettings::DIGEST_RECIPIENT_EMAIL => get_option('admin_email'),
+                PluginSettings::DIGEST_INCLUDE_TRAFFIC => 1,
+                PluginSettings::DIGEST_INCLUDE_404     => 1,
+                PluginSettings::DIGEST_INCLUDE_BOT     => 1,
+            ];
+
+            OptionUtils::updateAll($existing);
+        }
     }
 }
