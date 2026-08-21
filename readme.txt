@@ -2,9 +2,9 @@
 Contributors: zheynlab
 Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detection
 Requires at least: 6.1
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ Here’s a real example of a traffic drop alert:
 > A decrease in human traffic means fewer real visitors reached your site compared to your normal activity. This does not always indicate a problem and can happen after website changes, availability issues, visibility changes, broken links, or changes in visitor behavior.
 >
 > *Why this alert?*
-> Human traffic decreased significantly compared to your recent activity. This level of change is unusual and may indicate an issue affecting how visitors reach or interact with your site.
+> The decrease exceeded your configured threshold of 30% by a significant margin, indicating an unusual deviation from your recent traffic pattern.
 >
 > Today: 445 · 7-day average: 754 · Change: -41%
 >
@@ -45,10 +45,10 @@ Here’s a real example of a traffic drop alert:
 > Detected together with: 404 Errors, Bot Activity.
 >
 > *What you should check next:*
-> - Review broken links first, as they may be affecting traffic.
 > - Verify that your most important pages are available and responding correctly.
 > - Review major recent changes, migrations, deployments, or settings updates that may have affected visitor access.
 > - Check that your site is loading normally and important pages are accessible.
+> - Review recent content updates, deleted posts, or changes to important pages.
 
 404 alerts include the top 3 broken URLs with fix suggestions. Bot alerts list the top 3 crawlers by name with visit counts and context.
 
@@ -133,6 +133,13 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 4. Bot alert with top 3 bot names and percentage change.
 
 == Changelog ==
+
+= 1.2.0 =
+* New: Daily Email Digest – automatic daily email summary after cron run when alerts are detected.
+* New: Email content includes total alerts, alert types with percentage changes, recommendations summary, and direct link to alerts dashboard.
+* New: Email settings – enable/disable, recipient email (default: admin email), and alert type checkboxes (Traffic, 404, Bot).
+* New: Three-level severity for traffic spike alerts – `info`, `warning`, and `critical` (previously only `info`).
+* New: Severity now dynamically calculated based on spike intensity relative to user‑defined threshold.
 
 = 1.1.1 =
 * New: AcceptEncodingDeflateSignal – dedicated signal for missing `deflate` in browser Accept-Encoding headers.
@@ -241,7 +248,11 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Upgrade Notice ==
 
+= 1.2.0 =
+New daily email digest and three-level severity for traffic spike alerts. Safe automatic update.
+
 = 1.1.1 =
+New settings page for alerts and thresholds. Bot detection improvements include behavioral analysis, Firefox support, and cleaner scoring. Safe automatic update – review thresholds.
 
 = 1.1.0 =
 New settings page for managing alerts and thresholds, plus major bot detection improvements including behavioral analysis, Firefox client-hints support, and a cleaner scoring architecture. Safe automatic update – review the new settings to customize your alert thresholds.
@@ -274,4 +285,4 @@ Removes duplicate digest entries and adds 404 change percentage. Safe automatic 
 Initial release.
 
 == Source Code ==
-Source code and build tools are available at: https://github.com/proactive-site-advisor/proactive-site-advisor
+Source code and build tools are available at: [GitHub Repository](https://github.com/proactive-site-advisor/proactive-site-advisor)

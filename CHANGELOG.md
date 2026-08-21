@@ -2,7 +2,21 @@
 
 
 
-= 1.1.1 – 2026-08-x =
+= 1.2.0 – 2026-08-21 =
+
+* New: Daily Email Digest – automatic daily email summary after cron run when alerts are detected.
+
+* New: Email content includes total alerts, alert types with percentage changes, recommendations summary, and direct link to alerts dashboard.
+
+* New: Email settings – enable/disable, recipient email (default: admin email), and alert type checkboxes (Traffic, 404, Bot).
+
+* New: Three-level severity for traffic spike alerts – `info`, `warning`, and `critical` (previously only `info`).
+
+* New: Severity now dynamically calculated based on spike intensity relative to user‑defined threshold.
+
+
+
+= 1.1.1 – 2026-08-6 =
 
 * New: AcceptEncodingDeflateSignal – dedicated signal for missing `deflate` in browser Accept-Encoding headers.
 

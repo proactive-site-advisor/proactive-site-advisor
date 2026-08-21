@@ -24,6 +24,31 @@ if (!defined('ABSPATH')) {
  */
 class AlertsDataProvider extends AbstractDataProvider
 {
+    /** Retrieve alert rows for a specific date. */
+    public function getAlertsByDate(string $date): array
+    {
+        global $wpdb;
+
+        $table = Alert::getTableName();
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, alert_date, type, severity, meta_json, created_at
+             FROM {$table}
+             WHERE alert_date = %s
+             ORDER BY id DESC",
+                $date
+            ),
+            ARRAY_A
+        );
+
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        return $rows;
+    }
+
     /** Retrieve the latest alert rows from the database. */
     public function getLatestAlerts(int $limit = 7, int $days = 7): array
     {

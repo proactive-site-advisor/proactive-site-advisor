@@ -67,8 +67,6 @@ abstract class AbstractSeeder
         $count = DataStore::getRowCount($this->table);
         TableMaintenance::truncateTable($this->table);
 
-        $this->log("Truncated $this->table: $count records removed");
-
         return $count;
     }
 

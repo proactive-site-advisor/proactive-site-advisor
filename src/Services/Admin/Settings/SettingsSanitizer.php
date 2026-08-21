@@ -64,6 +64,19 @@ class SettingsSanitizer
             }
         }
 
+        if ($section === PluginSettings::SECTION_NOTIFICATIONS) {
+            if (empty($clean[PluginSettings::DIGEST_RECIPIENT_EMAIL])) {
+                $clean[PluginSettings::DIGEST_RECIPIENT_EMAIL] = get_option('admin_email');
+            }
+
+            foreach ($clean as $field => $value) {
+                if ($field === PluginSettings::DIGEST_RECIPIENT_EMAIL) {
+                    continue;
+                }
+                $clean[$field] = $value ? 1 : 0;
+            }
+        }
+
         return $clean;
     }
 }

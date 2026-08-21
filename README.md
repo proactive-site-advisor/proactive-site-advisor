@@ -28,7 +28,7 @@ The plugin adds a **"Site Advisor"** dashboard in your admin with:
 >
 > *Why this alert?*
 >
-> Human traffic decreased significantly compared to your recent activity. This level of change is unusual and may indicate an issue affecting how visitors reach or interact with your site.
+> The decrease exceeded your configured threshold of 30% by a significant margin, indicating an unusual deviation from your recent traffic pattern.
 >
 > Today: 445 · 7-day average: 754 · Change: -41%
 >
@@ -42,10 +42,10 @@ The plugin adds a **"Site Advisor"** dashboard in your admin with:
 >
 > *What you should check next*
 >
-> - Review broken links first, as they may be affecting traffic.
 > - Verify that your most important pages are available and responding correctly.
 > - Review major recent changes, migrations, deployments, or settings updates that may have affected visitor access.
 > - Check that your site is loading normally and important pages are accessible.
+> - Review recent content updates, deleted posts, or changes to important pages.
 
 ## Why Proactive Site Advisor?
 

@@ -28,72 +28,87 @@ return [
     ],
     'severity_text'   => [
         'traffic_drop'  => [
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'A small decrease in human traffic was detected compared to your recent activity. Small variations like this can happen naturally as visitor behavior changes.',
+                'The decrease crossed your configured threshold of %1$s%%, but the change is still relatively small and may be a normal variation.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'Human traffic decreased noticeably compared to your recent activity. This type of change is worth reviewing because it may be related to recent updates, visibility changes, or visitor behavior changes.',
+                'The decrease exceeded your configured threshold of %1$s%% and is larger than normal day-to-day variation.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'Human traffic decreased significantly compared to your recent activity. This level of change is unusual and may indicate an issue affecting how visitors reach or interact with your site.',
+                'The decrease exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual deviation from your recent traffic pattern.',
                 'proactive-site-advisor'
             ),
         ],
         'traffic_spike' => [
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'A small increase in human traffic was detected compared to your recent activity. This may be a normal variation in visitor behavior or the result of recent content activity.',
+                'The increase crossed your configured threshold of %1$s%%, but the change is still relatively small and may be a normal variation.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'Human traffic increased noticeably compared to your recent activity. Reviewing recent content, campaigns, or changes can help identify what caused the increase.',
+                'The increase exceeded your configured threshold of %1$s%% and is larger than typical day-to-day variation for your site.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'Human traffic increased significantly compared to your recent activity. This unusual change is worth reviewing to understand whether it came from content activity, campaigns, visibility changes, or unexpected visitor behavior.',
+                'The increase exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual deviation from your recent traffic pattern.',
                 'proactive-site-advisor'
             ),
         ],
         '404_spike'     => [
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'A small increase in 404 errors was detected compared to your recent activity. Minor changes like this can happen naturally as visitors reach older or unavailable pages.',
+                'The increase in 404 errors crossed your configured threshold of %1$s%%, but it is still relatively small and may be an early signal.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                '404 errors increased noticeably compared to your recent activity. Reviewing the affected URLs can help identify whether recent changes or broken links caused the increase.',
+                'The increase in 404 errors exceeded your configured threshold of %1$s%% and is larger than normal day-to-day variation.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                '404 errors increased significantly compared to your recent activity. This unusual change may indicate that visitors are reaching missing pages more often, so the affected URLs should be reviewed to find the cause.',
+                'The increase in 404 errors exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual increase in missing-page requests.',
                 'proactive-site-advisor'
             ),
         ],
         'bot_spike'     => [
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'A small increase in bot activity was detected compared to your recent pattern. This may be a normal variation in automated visits.',
+                'The increase in bot activity crossed your configured threshold of %1$s%%, but it is still relatively small and may be an early signal.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'Bot activity increased noticeably compared to your recent pattern. Reviewing the detected bots can help determine whether this change is expected.',
+                'The increase in bot activity exceeded your configured threshold of %1$s%% and is larger than typical day-to-day variation.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'Bot activity increased significantly compared to your recent pattern. Review the detected bots and their request volume to understand whether this activity may affect your site resources.',
+                'The increase in bot activity exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual change in automated traffic.',
                 'proactive-site-advisor'
             ),
         ],
         'bot_drop'      => [
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'A small decrease in bot activity was detected compared to your recent pattern. Small variations in automated activity can happen naturally.',
+                'The decrease in bot activity crossed your configured threshold of %1$s%%, but it is still relatively small and may be an early signal.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'Bot activity decreased noticeably compared to your recent pattern. Reviewing recent site changes can help identify what caused the change.',
+                'The decrease in bot activity exceeded your configured threshold of %1$s%% and is larger than typical day-to-day variation.',
                 'proactive-site-advisor'
             ),
+            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'Bot activity decreased significantly compared to your recent pattern. Review crawler access and recent site changes to understand why automated activity has changed.',
+                'The decrease in bot activity exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual change in automated traffic.',
                 'proactive-site-advisor'
             ),
         ],
@@ -156,7 +171,7 @@ return [
                     'proactive-site-advisor'
                 ),
                 __(
-                    'Review recent changes, including plugin updates, theme changes, migrations, or new content edits.',
+                    'Review recent content updates, deleted posts, or changes to important pages.',
                     'proactive-site-advisor'
                 ),
                 __(
@@ -202,7 +217,7 @@ return [
             ),
         ],
         'context' => __(
-            'An increase in human traffic can be a positive sign, such as popular content, campaigns, or improved visibility. Unusual increases may indicate changes in visitor behavior or activity that is worth reviewing.',
+            'An increase in human traffic can be a positive sign, such as popular content, campaigns, or improved visibility. Unusual increases may indicate changes in visitor behavior or other activity worth reviewing.',
             'proactive-site-advisor'
         ),
         'checks'  => [

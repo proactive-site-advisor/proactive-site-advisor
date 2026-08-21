@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * Detects bot-like navigation patterns across consecutive page views.
  *
  * @package ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint
- * @since   1.1.1
+ * @since   1.0.0
  */
 class NavigationBehaviorSignal implements ScoreSignalInterface
 {

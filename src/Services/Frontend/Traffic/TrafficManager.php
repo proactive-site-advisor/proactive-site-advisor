@@ -21,7 +21,7 @@ class TrafficManager
     /** Registers all traffic-related hooks. */
     public function register(): void
     {
-        add_action('wp', [$this, 'recordNavigationBehavior'], 10);
+        add_action('wp', [$this, 'recordNavigationBehavior']);
         add_action('wp', [$this, 'recordPageview'], 20);
         add_action('template_redirect', [$this, 'recordNotFound'], 1);
     }
