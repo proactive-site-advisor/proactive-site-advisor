@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-08-21 03:21+0330\n"
+"POT-Creation-Date: 2026-08-28 04:39+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -564,6 +564,7 @@ msgid "Once Monthly"
 msgstr ""
 
 #: src/Services/Admin/Dashboard/DashboardManager.php:74
+#: src/Services/Notifications/Channels/EmailChannel.php:165
 msgid "Site Advisor"
 msgstr ""
 
@@ -813,7 +814,7 @@ msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
 #. translators: 1: Number of alerts, 2: Date of the digest
-#: src/Services/Notifications/Channels/EmailChannel.php:65
+#: src/Services/Notifications/Channels/EmailChannel.php:71
 #, php-format
 msgid "Daily Digest: %1$d alerts on %2$s"
 msgstr ""
@@ -1265,8 +1266,9 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Get early warnings on anomalies like traffic drops, 404 surges, and bot "
-"spikes. Privacy‑friendly local monitoring with actionable next steps."
+"Get early warnings on traffic drops, 404 surges, and bot spikes. "
+"Privacy‑friendly anomaly detection that tells you when, why, and what to "
+"check next."
 msgstr ""
 
 #. Author of the plugin/theme

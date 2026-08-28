@@ -54,7 +54,13 @@ class EmailChannel implements NotificationChannelInterface
         $subject = $this->buildSubject($date, count($alerts));
         $body    = $this->buildBody($alerts, $date);
 
+        add_filter('wp_mail_from', [$this, 'filterFromEmail']);
+        add_filter('wp_mail_from_name', [$this, 'filterFromName']);
+
         wp_mail($recipient, $subject, $body, ['Content-Type: text/html; charset=UTF-8']);
+
+        remove_filter('wp_mail_from', [$this, 'filterFromEmail']);
+        remove_filter('wp_mail_from_name', [$this, 'filterFromName']);
     }
 
     /** Builds the email subject. */
@@ -137,5 +143,33 @@ class EmailChannel implements NotificationChannelInterface
     {
         $filename = $isRtl ? 'brand-icon-rtl.png' : 'brand-icon.png';
         return PROACTIVE_SITE_ADVISOR_ASSETS . 'img/email-icons/' . $filename;
+    }
+
+    /** Filters the From email address for this plugin's emails. */
+    public function filterFromEmail(): string
+    {
+        $default = 'noreply@' . DisplayUtils::siteHost(home_url());
+
+        /**
+         * Filters the From email address.
+         *
+         * @param string $default The from email address.
+         * @since 1.2.1
+         */
+        return apply_filters('proactive_site_advisor_email_from', $default);
+    }
+
+    /** Filters the From name for this plugin's emails. */
+    public function filterFromName(): string
+    {
+        $default = __('Site Advisor', 'proactive-site-advisor');
+
+        /**
+         * Filters the From name.
+         *
+         * @param string $default The from name.
+         * @since 1.2.1
+         */
+        return apply_filters('proactive_site_advisor_email_from_name', $default);
     }
 }
