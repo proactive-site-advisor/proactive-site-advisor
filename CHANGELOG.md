@@ -2,6 +2,12 @@
 
 
 
+= 1.2.1 – 2026-08-28 =
+
+* Improved: Email notifications now use a dedicated sender name and email address for clearer and more consistent email identification.
+
+
+
 = 1.2.0 – 2026-08-21 =
 
 * New: Daily Email Digest – automatic daily email summary after cron run when alerts are detected.
