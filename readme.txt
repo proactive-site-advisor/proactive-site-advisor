@@ -101,7 +101,7 @@ Install, activate, done. The plugin starts logging data from day one and begins 
 
 = Watch a Quick Demo =
 
-[Video: 2-minute demo](https://youtu.be/m6ZQkGUT8e0)
+[Watch the demo](https://youtu.be/m6ZQkGUT8e0)
 
 == Installation ==
 
