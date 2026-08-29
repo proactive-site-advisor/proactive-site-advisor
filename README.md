@@ -74,6 +74,10 @@ The plugin never phones home. All data is collected, summarized, and stored insi
 **Zero‑configuration monitoring**
 Install, activate, done. The plugin starts collecting data from day one and begins anomaly detection after a 7-day baseline period. No API keys, no tracking codes, no setup wizard. Optional settings are available under **Site Advisor → Settings** if you want to customize alert thresholds or email notifications.
 
+## Watch the Demo
+
+[![Proactive Site Advisor Demo](https://img.youtube.com/vi/m6ZQkGUT8e0/0.jpg)](https://youtu.be/m6ZQkGUT8e0)
+
 ## Key Features
 
 - **Bot anomaly detection** – Detects unusual crawler activity with top bot names and auto-corrected traffic counts.
