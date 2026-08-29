@@ -76,7 +76,7 @@ Install, activate, done. The plugin starts collecting data from day one and begi
 
 ## Watch the Demo
 
-[![Proactive Site Advisor Demo](https://img.youtube.com/vi/m6ZQkGUT8e0/0.jpg)](https://youtu.be/m6ZQkGUT8e0)
+[![Proactive Site Advisor Demo](https://raw.githubusercontent.com/proactive-site-advisor/proactive-site-advisor/main/assets/img/demo-thumbnail.png)](https://youtu.be/m6ZQkGUT8e0)
 
 ## Key Features
 
