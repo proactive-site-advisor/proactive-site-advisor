@@ -99,7 +99,11 @@ Install, activate, done. The plugin starts logging data from day one and begins 
 * **SEO and content teams** – Catch 404s and broken links instantly, protecting your rankings.
 * **Privacy‑conscious WordPress users** – Get site insights without giving data to third parties.
 
-= Installation =
+= Watch a Quick Demo =
+
+[Video: 2-minute demo](https://youtu.be/m6ZQkGUT8e0)
+
+== Installation ==
 
 1. Download the plugin zip file.
 2. In your WordPress dashboard, go to **Plugins → Add New → Upload Plugin**.
