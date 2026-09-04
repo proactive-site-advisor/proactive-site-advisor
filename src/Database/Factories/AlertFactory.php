@@ -118,9 +118,9 @@ class AlertFactory extends AbstractFactory
         $changePct = round(($ratio - 1) * 100, 2);
 
         $topPaths = [
-            ['/wp-login.php', $this->randomInt(10, 20)],
-            ['/xmlrpc.php', $this->randomInt(5, 15)],
-            ['/.env', $this->randomInt(3, 10)],
+            '/wp-login.php' => $this->randomInt(10, 20),
+            '/xmlrpc.php'   => $this->randomInt(5, 15),
+            '/.env'         => $this->randomInt(3, 10),
         ];
 
         $metaJson = wp_json_encode([
@@ -153,9 +153,9 @@ class AlertFactory extends AbstractFactory
         $severity  = $ratio >= 3.5 ? 'critical' : 'warning';
 
         $topBots = [
-            ['Googlebot', $this->randomInt(50, 80)],
-            ['Bingbot', $this->randomInt(30, 60)],
-            ['AhrefsBot', $this->randomInt(20, 40)],
+            'Googlebot' => $this->randomInt(50, 80),
+            'Bingbot'   => $this->randomInt(30, 60),
+            'AhrefsBot' => $this->randomInt(20, 40),
         ];
 
         $metaJson = wp_json_encode([
@@ -189,8 +189,9 @@ class AlertFactory extends AbstractFactory
         $severity = $ratio <= 0.3 ? 'critical' : 'warning';
 
         $topBots = [
-            ['Googlebot', $this->randomInt(2, 5)],
-            ['Bingbot', $this->randomInt(1, 4)],
+            'Googlebot' => $this->randomInt(2, 5),
+            'Bingbot'   => $this->randomInt(1, 4),
+            'AhrefsBot' => $this->randomInt(3, 7),
         ];
 
         $metaJson = wp_json_encode([

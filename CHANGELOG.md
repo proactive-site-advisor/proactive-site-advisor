@@ -2,6 +2,12 @@
 
 
 
+= 1.2.2 – 2026-09-04 =
+
+Fixed: Alert metadata now uses the correct metrics for each alert type.
+
+
+
 = 1.2.1 – 2026-08-28 =
 
 * Improved: Email notifications now use a dedicated sender name and email address for clearer and more consistent email identification.
@@ -22,7 +28,7 @@
 
 
 
-= 1.1.1 – 2026-08-6 =
+= 1.1.1 – 2026-08-06 =
 
 * New: AcceptEncodingDeflateSignal – dedicated signal for missing `deflate` in browser Accept-Encoding headers.
 

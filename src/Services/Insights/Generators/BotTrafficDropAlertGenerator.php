@@ -47,9 +47,14 @@ class BotTrafficDropAlertGenerator extends AbstractTrafficAlertGenerator
         $severity = $this->calculateSeverity($change, $dropPercent);
 
         return [
-            'type'       => 'bot_drop',
-            'severity'   => $severity,
-            'change_pct' => $change,
+            'type'     => 'bot_drop',
+            'severity' => $severity,
+            'meta'     => [
+                'today'      => $context['todayBotPv'],
+                'avg7'       => (int)round($context['avg_bot_pageviews']),
+                'change_pct' => $change,
+                'top'        => $context['topBots'],
+            ],
         ];
     }
 }

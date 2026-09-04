@@ -70,34 +70,12 @@ class AlertEngine
                 continue;
             }
 
-            $meta = $this->buildMeta($result, $context);
-
             Alert::createIfNotExists(
                 $date,
                 $result['type'],
                 $result['severity'],
-                wp_json_encode($meta)
+                wp_json_encode($result['meta'])
             );
         }
-    }
-
-    /** Build the meta array for an alert based on its type and context. */
-    private function buildMeta(array $result, array $context): array
-    {
-        $meta = [
-            'today'      => $context['todayPv'] ?? 0,
-            'avg7'       => (int)round($context['avg_pageviews'] ?? 0),
-            'change_pct' => $result['change_pct'],
-        ];
-
-        if ($result['type'] === '404_spike') {
-            $meta['top'] = $context['top404'];
-        }
-
-        if ($result['type'] === 'bot_spike' || $result['type'] === 'bot_drop') {
-            $meta['top'] = $context['topBots'];
-        }
-
-        return $meta;
     }
 }

@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,6 +155,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Changelog ==
 
+= 1.2.2 =
+Fixed: Alert metadata now uses the correct metrics for each alert type.
+
 = 1.2.1 =
 * Improved: Email notifications now use a dedicated sender name and email address for clearer and more consistent email identification.
 
@@ -271,6 +274,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+Alert metadata now uses the correct metrics for each alert type, improving accuracy and consistency across alerts. afe automatic update.
 
 = 1.2.1 =
 Improved email sender identification for daily digest notifications with a dedicated sender name and email address. Safe automatic update.

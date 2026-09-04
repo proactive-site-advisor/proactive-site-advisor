@@ -47,9 +47,13 @@ class TrafficDropAlertGenerator extends AbstractTrafficAlertGenerator
         $severity = $this->calculateSeverity($change, $dropPercent);
 
         return [
-            'type'       => 'traffic_drop',
-            'severity'   => $severity,
-            'change_pct' => $change,
+            'type'     => 'traffic_drop',
+            'severity' => $severity,
+            'meta'     => [
+                'today'      => $context['todayPv'],
+                'avg7'       => (int)round($context['avg_pageviews']),
+                'change_pct' => $change,
+            ],
         ];
     }
 }
