@@ -250,13 +250,11 @@ class AlertBuilder
     {
         $topUrls = [];
 
-        foreach ($meta as $item) {
-            if (is_array($item) && isset($item[0], $item[1])) {
-                $topUrls[] = [
-                    'path'  => (string)$item[0],
-                    'count' => (int)$item[1],
-                ];
-            }
+        foreach ($meta as $path => $count) {
+            $topUrls[] = [
+                'path'  => (string)$path,
+                'count' => (int)$count,
+            ];
         }
 
         return $topUrls;
@@ -267,13 +265,11 @@ class AlertBuilder
     {
         $topBots = [];
 
-        foreach ($meta as $item) {
-            if (is_array($item) && isset($item[0], $item[1])) {
-                $topBots[] = [
-                    'name'  => (string)$item[0],
-                    'count' => (int)$item[1],
-                ];
-            }
+        foreach ($meta as $name => $count) {
+            $topBots[] = [
+                'name'  => (string)$name,
+                'count' => (int)$count,
+            ];
         }
 
         return $topBots;

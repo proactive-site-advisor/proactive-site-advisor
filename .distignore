@@ -1,5 +1,5 @@
 .git
-.wporg-assets
+.wordpress-org
 .github
 .gitignore
 .editorconfig
@@ -16,3 +16,4 @@ config
 phpcs.xml
 composer.lock
 .distignore
+assets/img/demo-thumbnail.png
