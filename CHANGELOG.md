@@ -2,9 +2,19 @@
 
 
 
+= 1.2.3 – 2026-09-05 =
+
+* Improved: Alert generators now explicitly sort and limit top items to 3 entries for consistent display
+
+* Improved: AlertEngine context returns empty arrays instead of null for missing top data
+
+* Fix: Top 3 items now correctly selected regardless of recording-time sorting behavior
+
+
+
 = 1.2.2 – 2026-09-04 =
 
-Fixed: Alert metadata now uses the correct metrics for each alert type.
+* Fixed: Alert metadata now uses the correct metrics for each alert type.
 
 
 

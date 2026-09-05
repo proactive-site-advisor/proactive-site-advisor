@@ -4,7 +4,7 @@
  * Plugin Name:         Proactive Site Advisor – Privacy‑First Anomaly Alerts
  * Plugin URI:          https://github.com/proactive-site-advisor/proactive-site-advisor
  * Description:         Get early warnings on traffic drops, 404 surges, and bot spikes. Privacy‑friendly anomaly detection that tells you when, why, and what to check next.
- * Version:             1.2.2
+ * Version:             1.2.3
  * Author:              Mohammad Yari
  * Author URI:          https://github.com/proactive-site-advisor
  * Text Domain:         proactive-site-advisor
@@ -50,7 +50,7 @@ if (!defined('PROACTIVE_SITE_ADVISOR_ASSETS')) {
 
 /** Plugin version. */
 if (!defined('PROACTIVE_SITE_ADVISOR_VERSION')) {
-    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.2.2');
+    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.2.3');
 }
 
 /** Database schema version. */

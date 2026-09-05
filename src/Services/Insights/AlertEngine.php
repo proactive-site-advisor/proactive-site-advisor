@@ -50,8 +50,8 @@ class AlertEngine
             'today404'          => (int)$row['errors_404'],
             'todayBotPv'        => (int)$row['bot_pageviews'],
             'count'             => (int)$base['count'],
-            'top404'            => !empty($row['top_404_json']) ? json_decode($row['top_404_json'], true) : null,
-            'topBots'           => !empty($row['top_bots_json']) ? json_decode($row['top_bots_json'], true) : null,
+            'top404'            => !empty($row['top_404_json']) ? json_decode($row['top_404_json'], true) : [],
+            'topBots'           => !empty($row['top_bots_json']) ? json_decode($row['top_bots_json'], true) : [],
         ];
 
         $generators = AlertGeneratorConfig::getGenerators();

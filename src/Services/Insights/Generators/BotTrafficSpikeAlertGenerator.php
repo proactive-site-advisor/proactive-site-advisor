@@ -46,6 +46,10 @@ class BotTrafficSpikeAlertGenerator extends AbstractTrafficAlertGenerator
         $change   = round((($todayBotPv / $avgBotPv) - 1) * 100, 2);
         $severity = $this->calculateSeverity($change, $spikePercent);
 
+        $top = $context['topBots'];
+        arsort($top);
+        $top = array_slice($top, 0, 3, true);
+
         return [
             'type'     => 'bot_spike',
             'severity' => $severity,
@@ -53,7 +57,7 @@ class BotTrafficSpikeAlertGenerator extends AbstractTrafficAlertGenerator
                 'today'      => $context['todayBotPv'],
                 'avg7'       => (int)round($context['avg_bot_pageviews']),
                 'change_pct' => $change,
-                'top'        => $context['topBots'],
+                'top'        => $top,
             ],
         ];
     }
