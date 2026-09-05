@@ -46,6 +46,10 @@ class BotTrafficDropAlertGenerator extends AbstractTrafficAlertGenerator
         $change   = round((($todayBotPv / $avgBotPv) - 1) * 100, 2);
         $severity = $this->calculateSeverity($change, $dropPercent);
 
+        $top = $context['topBots'];
+        arsort($top);
+        $top = array_slice($top, 0, 3, true);
+
         return [
             'type'     => 'bot_drop',
             'severity' => $severity,
@@ -53,7 +57,7 @@ class BotTrafficDropAlertGenerator extends AbstractTrafficAlertGenerator
                 'today'      => $context['todayBotPv'],
                 'avg7'       => (int)round($context['avg_bot_pageviews']),
                 'change_pct' => $change,
-                'top'        => $context['topBots'],
+                'top'        => $top,
             ],
         ];
     }

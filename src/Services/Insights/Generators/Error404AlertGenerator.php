@@ -46,15 +46,18 @@ class Error404AlertGenerator extends AbstractTrafficAlertGenerator
         $change   = round((($today404 / $avg404) - 1) * 100, 2);
         $severity = $this->calculateSeverity($change, $spikePercent);
 
+        $top = $context['top404'];
+        arsort($top);
+        $top = array_slice($top, 0, 3, true);
+
         return [
             'type'     => '404_spike',
             'severity' => $severity,
-
             'meta' => [
                 'today'      => $context['today404'],
                 'avg7'       => (int)round($context['avg_404']),
                 'change_pct' => $change,
-                'top'        => $context['top404'],
+                'top'        => $top,
             ],
         ];
     }
