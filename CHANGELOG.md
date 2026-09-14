@@ -2,6 +2,14 @@
 
 
 
+= 1.2.4 – 2026-09-14 =
+
+* Fixed: Traffic spike icons were missing from `warning` and `critical` alerts in email notifications.
+
+* Improved: Added severity-specific traffic spike icons to warning and critical alerts in email notifications.
+
+
+
 = 1.2.3 – 2026-09-05 =
 
 * Improved: Alert generators now explicitly sort and limit top items to 3 entries for consistent display
