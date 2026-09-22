@@ -2,6 +2,14 @@
 
 
 
+= 1.2.5 – 2026-09-23 =
+
+* New: HeadlessChromeSignal – detects the HeadlessChrome brand in Sec-CH-UA.
+
+* New: FrameworkInternalHeaderSignal – detects internal Next.js middleware headers.
+
+
+
 = 1.2.4 – 2026-09-14 =
 
 * Fixed: Traffic spike icons were missing from `warning` and `critical` alerts in email notifications.

@@ -2,6 +2,8 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Config;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\HeadlessChromeSignal;
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\FrameworkInternalHeaderSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\NavigationBehaviorSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\AcceptEncodingBrotliSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\SecFetchUserSignal;
@@ -44,6 +46,8 @@ class SignalConfig
     public static function getBotSignals(): array
     {
         $signals = [
+            HeadlessChromeSignal::class,
+            FrameworkInternalHeaderSignal::class,
             BotAgentSignal::class,
             BrowserHeadersSignal::class,
             BrowserNameSignal::class,
