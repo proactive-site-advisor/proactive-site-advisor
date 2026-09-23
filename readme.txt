@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,6 +155,10 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Changelog ==
 
+= 1.2.5 =
+* New: HeadlessChromeSignal – detects the HeadlessChrome brand in Sec-CH-UA.
+* New: FrameworkInternalHeaderSignal – detects internal Next.js middleware headers.
+
 = 1.2.4 =
 * Fixed: Traffic spike icons were missing from `warning` and `critical` alerts in email notifications.
 * Improved: Added severity-specific traffic spike icons to warning and critical alerts in email notifications.
@@ -283,6 +287,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.2.5 =
+Adds detection for HeadlessChrome brand in Sec-CH-UA and internal Next.js middleware headers. Safe automatic update.
 
 = 1.2.4 =
 Fixed missing traffic spike icons in warning and critical email alerts. Safe automatic update.
