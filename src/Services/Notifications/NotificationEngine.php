@@ -44,19 +44,13 @@ class NotificationEngine
             return;
         }
 
-        $filteredAlerts = $this->filterAlerts($alerts, $settings);
-
-        if (empty($filteredAlerts)) {
-            return;
-        }
-
         $channels = NotificationChannelConfig::getChannels();
 
         foreach ($channels as $channelClass) {
             /** @var NotificationChannelInterface $channel */
             $channel = new $channelClass();
             if ($channel->isEnabled($settings)) {
-                $channel->send($filteredAlerts, $date, $settings);
+                $channel->send($alerts, $date, $settings);
             }
         }
     }
@@ -65,27 +59,5 @@ class NotificationEngine
     private function getSettings(): array
     {
         return OptionUtils::getSection(PluginSettings::SECTION_NOTIFICATIONS);
-    }
-
-    /** Filters alerts based on user settings. */
-    private function filterAlerts(array $alerts, array $settings): array
-    {
-
-        return array_filter($alerts, static function ($alert) use ($settings) {
-            $typeToSettingKey = [
-                'traffic_drop'  => PluginSettings::DIGEST_INCLUDE_TRAFFIC,
-                'traffic_spike' => PluginSettings::DIGEST_INCLUDE_TRAFFIC,
-                '404_spike'     => PluginSettings::DIGEST_INCLUDE_404,
-                'bot_spike'     => PluginSettings::DIGEST_INCLUDE_BOT,
-                'bot_drop'      => PluginSettings::DIGEST_INCLUDE_BOT,
-            ];
-            $type             = $alert['type'];
-
-            if (isset($typeToSettingKey[$type])) {
-                return !empty($settings[$typeToSettingKey[$type]]);
-            }
-
-            return true;
-        });
     }
 }

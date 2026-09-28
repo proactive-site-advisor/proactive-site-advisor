@@ -2,9 +2,6 @@
 
 namespace ProactiveSiteAdvisor\Builders;
 
-use ProactiveSiteAdvisor\Config\PluginSettings;
-use ProactiveSiteAdvisor\Utils\OptionUtils;
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -49,7 +46,7 @@ class AlertBuilder
             'severity' => $severity,
             'date'     => $alert['alert_date'],
             'label'    => $this->getLabel($type),
-            'title'    => $this->getTitle($type, (float)($meta['change_pct'])),
+            'title'    => $this->getTitle($type, $meta),
             'short'    => $this->getShortMessage($type, $meta),
             'expanded' => $this->getExpandedContent(
                 $type,
@@ -68,15 +65,25 @@ class AlertBuilder
         return $customLabels[$type];
     }
 
-    /** Build alert title with change percentage. */
-    private function getTitle(string $type, float $changePct): string
+    /** Build alert title with change percentage or absolute delta. */
+    private function getTitle(string $type, array $meta): string
     {
-        $abs = number_format_i18n(round(abs($changePct), 1), 1);
+        $value    = $this->formatTitleValue($meta);
+        $template = $this->alerts['title_templates'][$type];
 
-        $templates = $this->alerts['title_templates'];
-        $template  = $templates[$type];
+        return sprintf($template, $value);
+    }
 
-        return sprintf($template, $abs);
+    /** Format the change value: percentage when available, otherwise absolute delta. */
+    private function formatTitleValue(array $meta): string
+    {
+        $changePct = $meta['change_pct'] ?? null;
+
+        if ($changePct !== null) {
+            return number_format_i18n(round(abs((float)$changePct), 1), 1) . '%';
+        }
+
+        return number_format_i18n(abs((int)($meta['delta'] ?? 0)));
     }
 
     /** Get short message based on type and severity. */
@@ -134,15 +141,8 @@ class AlertBuilder
         $today  = $meta['today'];
         $change = $meta['change_pct'];
 
-        $threshold = $this->getThresholdPercent($type);
-
-        $text = sprintf(
-            $this->alerts['severity_text'][$type][$level],
-            $threshold
-        );
-
         return [
-            'text'    => $text,
+            'text'    => $this->alerts['severity_text'][$type][$level],
             'metrics' => [
                 'avg7'   => $avg7,
                 'today'  => $today,
@@ -273,29 +273,5 @@ class AlertBuilder
         }
 
         return $topBots;
-    }
-
-    /**
-     * Get threshold percentage for an alert type.
-     */
-    private function getThresholdPercent(string $type): float
-    {
-        $map = [
-            'traffic_drop'  => PluginSettings::TRAFFIC_DROP_PERCENT,
-            'traffic_spike' => PluginSettings::TRAFFIC_SPIKE_PERCENT,
-            '404_spike'     => PluginSettings::ERROR_404_SPIKE_PERCENT,
-            'bot_spike'     => PluginSettings::BOT_SPIKE_PERCENT,
-            'bot_drop'      => PluginSettings::BOT_DROP_PERCENT,
-        ];
-
-        $key = $map[$type];
-
-        $defaults = OptionUtils::getDefaults();
-        $default  = $defaults[PluginSettings::SECTION_THRESHOLDS][$key];
-
-        return OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, $key),
-            $default
-        );
     }
 }

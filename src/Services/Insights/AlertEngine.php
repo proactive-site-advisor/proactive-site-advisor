@@ -22,7 +22,7 @@ class AlertEngine
     /** Provides daily stats from DB. */
     private DailyStatsDataProvider $dailyStatsDataProvider;
 
-    /** Calculates 7-day averages of traffic + 404. */
+    /** Calculates baseline statistics. */
     private BaselineCalculator $baselineCalculator;
 
     /** Constructor. */
@@ -35,23 +35,25 @@ class AlertEngine
     /** Generates alerts for a specific date (YYYY-MM-DD). */
     public function generateForDay(string $date): void
     {
-        $base = $this->baselineCalculator->calculate($date);
-        $row  = $this->dailyStatsDataProvider->getDailyStatsByDate($date);
+        $baseline = $this->baselineCalculator->calculate($date);
+        $row      = $this->dailyStatsDataProvider->getDailyStatsByDate($date);
 
         if (!$row) {
             return;
         }
 
         $context = [
-            'avg_pageviews'     => (float)$base['avg_pageviews'],
-            'avg_404'           => (float)$base['avg_404'],
-            'avg_bot_pageviews' => (float)$base['avg_bot_pageviews'],
-            'todayPv'           => (int)$row['pageviews'],
-            'today404'          => (int)$row['errors_404'],
-            'todayBotPv'        => (int)$row['bot_pageviews'],
-            'count'             => (int)$base['count'],
-            'top404'            => !empty($row['top_404_json']) ? json_decode($row['top_404_json'], true) : [],
-            'topBots'           => !empty($row['top_bots_json']) ? json_decode($row['top_bots_json'], true) : [],
+            'count'      => (int)$baseline['count'],
+            'todayPv'    => (int)$row['pageviews'],
+            'today404'   => (int)$row['errors_404'],
+            'todayBotPv' => (int)$row['bot_pageviews'],
+            'baseline'   => [
+                'pageviews'     => $baseline['pageviews'],
+                'errors_404'    => $baseline['errors_404'],
+                'bot_pageviews' => $baseline['bot_pageviews'],
+            ],
+            'top404'     => !empty($row['top_404_json']) ? json_decode($row['top_404_json'], true) : [],
+            'topBots'    => !empty($row['top_bots_json']) ? json_decode($row['top_bots_json'], true) : [],
         ];
 
         $generators = AlertGeneratorConfig::getGenerators();

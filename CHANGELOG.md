@@ -2,6 +2,38 @@
 
 
 
+= 1.2.6 – 2026-10-01 =
+
+* New: Adaptive anomaly detection engine based on robust statistics (median + MAD + count-aware noise floor + robust z-score).
+
+* New: Sensitivity setting with three levels — Low, Normal, High — replacing all previous percentage thresholds.
+
+* New: Auto-tune thresholds based on your site's traffic scale. Advanced users can disable it and set manual thresholds per metric.
+
+* New: Configuration is now automatically tuned to the site's actual scale, so alerts work reliably across small and large sites.
+
+* New: Detection is now robust against a single outlier day and against sparse or zero counts.
+
+* Improved: Bot Spike and Bot Drop alerts merged into a single "Bot Traffic Change" toggle in settings.
+
+* Improved: Alert titles now fall back to absolute change counts when no reliable baseline exists (e.g. baseline = 0).
+
+* Improved: Severity (info/warning/critical) is now derived from the statistical strength of the anomaly, not from a percentage threshold.
+
+* Improved: Settings page redesigned — Alerts and Sensitivity are now grouped clearly, and Advanced options are hidden by default.
+
+* Improved: Migration to 1.2.6 automatically converts existing thresholds into the new Sensitivity model.
+
+* Removed: Percentage thresholds (traffic_spike_percent, traffic_drop_percent, 404_spike_percent, bot_spike_percent, bot_drop_percent).
+
+* Removed: min_weekly_avg and min_pageviews_for_alert settings.
+
+* Removed: "Alert Types to Include" section in Notifications — alert visibility is now controlled entirely from the Alerts section.
+
+* Fixed: Baseline window now excludes the evaluated day, ensuring the anomaly is measured against 7 previous days only.
+
+
+
 = 1.2.5 – 2026-09-23 =
 
 * New: HeadlessChromeSignal – detects the HeadlessChrome brand in Sec-CH-UA.

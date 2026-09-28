@@ -2,8 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Insights\Config;
 
-use ProactiveSiteAdvisor\Services\Insights\Generators\BotTrafficDropAlertGenerator;
-use ProactiveSiteAdvisor\Services\Insights\Generators\BotTrafficSpikeAlertGenerator;
+use ProactiveSiteAdvisor\Services\Insights\Generators\BotTrafficChangeAlertGenerator;
 use ProactiveSiteAdvisor\Services\Insights\Generators\Error404AlertGenerator;
 use ProactiveSiteAdvisor\Services\Insights\Generators\TrafficDropAlertGenerator;
 use ProactiveSiteAdvisor\Services\Insights\Generators\TrafficSpikeAlertGenerator;
@@ -27,8 +26,7 @@ class AlertGeneratorConfig
             TrafficDropAlertGenerator::class,
             TrafficSpikeAlertGenerator::class,
             Error404AlertGenerator::class,
-            BotTrafficSpikeAlertGenerator::class,
-            BotTrafficDropAlertGenerator::class,
+            BotTrafficChangeAlertGenerator::class,
         ];
 
         /**

@@ -20,24 +20,18 @@ class SettingsSanitizationSchema
                 PluginSettings::ALERT_TRAFFIC_DROP  => 'bool',
                 PluginSettings::ALERT_TRAFFIC_SPIKE => 'bool',
                 PluginSettings::ALERT_404_SPIKE     => 'bool',
-                PluginSettings::ALERT_BOT_SPIKE     => 'bool',
-                PluginSettings::ALERT_BOT_DROP      => 'bool',
+                PluginSettings::ALERT_BOT_CHANGE    => 'bool',
             ],
-            PluginSettings::SECTION_THRESHOLDS    => [
-                PluginSettings::MIN_WEEKLY_AVG          => 'int',
-                PluginSettings::MIN_PAGEVIEWS_FOR_ALERT => 'int',
-                PluginSettings::TRAFFIC_SPIKE_PERCENT   => 'int',
-                PluginSettings::TRAFFIC_DROP_PERCENT    => 'int',
-                PluginSettings::ERROR_404_SPIKE_PERCENT => 'int',
-                PluginSettings::BOT_SPIKE_PERCENT       => 'int',
-                PluginSettings::BOT_DROP_PERCENT        => 'int',
+            PluginSettings::SECTION_SENSITIVITY   => [
+                PluginSettings::SENSITIVITY_LEVEL     => 'string',
+                PluginSettings::SENSITIVITY_AUTO_TUNE => 'bool',
+                PluginSettings::TRAFFIC_MIN_ABS       => 'int',
+                PluginSettings::ERROR_404_MIN_ABS     => 'int',
+                PluginSettings::BOT_MIN_ABS           => 'int',
             ],
             PluginSettings::SECTION_NOTIFICATIONS => [
                 PluginSettings::ENABLE_DAILY_DIGEST    => 'bool',
                 PluginSettings::DIGEST_RECIPIENT_EMAIL => 'email',
-                PluginSettings::DIGEST_INCLUDE_TRAFFIC => 'bool',
-                PluginSettings::DIGEST_INCLUDE_404     => 'bool',
-                PluginSettings::DIGEST_INCLUDE_BOT     => 'bool',
             ],
         ];
     }

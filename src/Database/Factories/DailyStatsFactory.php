@@ -67,12 +67,6 @@ class DailyStatsFactory extends AbstractFactory
         return $this;
     }
 
-    /** Get the current pattern. */
-    public function getPattern(): string
-    {
-        return $this->pattern;
-    }
-
     /** Define default attributes. */
     protected function definition(): array
     {

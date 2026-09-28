@@ -18,12 +18,13 @@ if (!defined('ABSPATH')) {
 <div id="psa-section-<?php echo esc_attr($sectionId); ?>" class="psa-settings__section">
 
     <div class="psa-card">
-
         <div class="psa-card-header">
             <div class="psa-card-header-content">
-                <h5 class="psa-card-title"><?php esc_html_e('Active Alerts', 'proactive-site-advisor'); ?></h5>
+                <h5 class="psa-card-title">
+                    <?php esc_html_e('Human Traffic', 'proactive-site-advisor'); ?>
+                </h5>
                 <p class="psa-card-subtitle">
-                    <?php esc_html_e('Choose which anomalies you want to be notified about. Disabling an alert type will suppress it even if its threshold is reached.', 'proactive-site-advisor'); ?>
+                    <?php esc_html_e('Watch the real visitors on your site — the people who read, click, and buy.', 'proactive-site-advisor'); ?>
                 </p>
             </div>
         </div>
@@ -31,11 +32,11 @@ if (!defined('ABSPATH')) {
         <div class="psa-card-body">
             <div class="psa-settings__list">
 
-                <!-- Human Traffic Drop -->
+                <!-- Traffic Drop -->
                 <div class="psa-settings__item">
                     <div class="psa-settings__label">
                         <div class="psa-form-label">
-                            <?php esc_html_e('Human Traffic Drop', 'proactive-site-advisor'); ?>
+                            <?php esc_html_e('Traffic Drop', 'proactive-site-advisor'); ?>
                         </div>
                     </div>
 
@@ -49,19 +50,19 @@ if (!defined('ABSPATH')) {
                                 class="psa-form-check-input"
                                 <?php checked(!empty($settings['alerts']['traffic_drop'])); ?>
                             >
-                            <label for="psa-alert-traffic-drop" class="psa-form-check-label"><?php esc_html_e('Enable', 'proactive-site-advisor'); ?></label>
+                            <label for="psa-alert-traffic-drop" class="psa-form-check-label"><?php esc_html_e('Detect', 'proactive-site-advisor'); ?></label>
                         </div>
                         <div class="psa-settings__text psa-form-text">
-                            <?php esc_html_e('Get alerted when human pageviews drop significantly.', 'proactive-site-advisor'); ?>
+                            <?php esc_html_e('Sudden drops in human pageviews. Often the first sign something is broken.', 'proactive-site-advisor'); ?>
                         </div>
                     </div>
                 </div>
 
-                <!-- Human Traffic Spike -->
+                <!-- Traffic Spike -->
                 <div class="psa-settings__item">
                     <div class="psa-settings__label">
                         <div class="psa-form-label">
-                            <?php esc_html_e('Human Traffic Spike', 'proactive-site-advisor'); ?>
+                            <?php esc_html_e('Traffic Spike', 'proactive-site-advisor'); ?>
                         </div>
                     </div>
 
@@ -75,13 +76,32 @@ if (!defined('ABSPATH')) {
                                 class="psa-form-check-input"
                                 <?php checked(!empty($settings['alerts']['traffic_spike'])); ?>
                             >
-                            <label for="psa-alert-traffic-spike" class="psa-form-check-label"><?php esc_html_e('Enable', 'proactive-site-advisor'); ?></label>
+                            <label for="psa-alert-traffic-spike" class="psa-form-check-label"><?php esc_html_e('Detect', 'proactive-site-advisor'); ?></label>
                         </div>
                         <div class="psa-settings__text psa-form-text">
-                            <?php esc_html_e('Get alerted when human pageviews suddenly increase.', 'proactive-site-advisor'); ?>
+                            <?php esc_html_e('Sudden increases in human pageviews. Could be a viral moment — or an attack.', 'proactive-site-advisor'); ?>
                         </div>
                     </div>
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="psa-card">
+        <div class="psa-card-header">
+            <div class="psa-card-header-content">
+                <h5 class="psa-card-title">
+                    <?php esc_html_e('404 Errors', 'proactive-site-advisor'); ?>
+                </h5>
+                <p class="psa-card-subtitle">
+                    <?php esc_html_e("Catch broken links before your visitors do — pages they tried to reach but couldn't.", 'proactive-site-advisor'); ?>
+                </p>
+            </div>
+        </div>
+
+        <div class="psa-card-body">
+            <div class="psa-settings__list">
 
                 <!-- 404 Error Surge -->
                 <div class="psa-settings__item">
@@ -101,69 +121,64 @@ if (!defined('ABSPATH')) {
                                 class="psa-form-check-input"
                                 <?php checked(!empty($settings['alerts']['404_spike'])); ?>
                             >
-                            <label for="psa-alert-404-spike" class="psa-form-check-label"><?php esc_html_e('Enable', 'proactive-site-advisor'); ?></label>
+                            <label for="psa-alert-404-spike" class="psa-form-check-label"><?php esc_html_e('Detect', 'proactive-site-advisor'); ?></label>
                         </div>
                         <div class="psa-settings__text psa-form-text">
-                            <?php esc_html_e('Get alerted when 404 errors jump above the normal baseline.', 'proactive-site-advisor'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bot Traffic Spike -->
-                <div class="psa-settings__item">
-                    <div class="psa-settings__label">
-                        <div class="psa-form-label">
-                            <?php esc_html_e('Bot Traffic Spike', 'proactive-site-advisor'); ?>
-                        </div>
-                    </div>
-
-                    <div class="psa-settings__field">
-                        <div class="psa-form-check psa-form-switch">
-                            <input
-                                type="checkbox"
-                                id="psa-alert-bot-spike"
-                                name="settings[alerts][bot_spike]"
-                                value="1"
-                                class="psa-form-check-input"
-                                <?php checked(!empty($settings['alerts']['bot_spike'])); ?>
-                            >
-                            <label for="psa-alert-bot-spike" class="psa-form-check-label"><?php esc_html_e('Enable', 'proactive-site-advisor'); ?></label>
-                        </div>
-                        <div class="psa-settings__text psa-form-text">
-                            <?php esc_html_e('Get alerted when bot pageviews show a sudden upward spike.', 'proactive-site-advisor'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bot Traffic Drop -->
-                <div class="psa-settings__item">
-                    <div class="psa-settings__label">
-                        <div class="psa-form-label">
-                            <?php esc_html_e('Bot Traffic Drop', 'proactive-site-advisor'); ?>
-                        </div>
-                    </div>
-
-                    <div class="psa-settings__field">
-                        <div class="psa-form-check psa-form-switch">
-                            <input
-                                type="checkbox"
-                                id="psa-alert-bot-drop"
-                                name="settings[alerts][bot_drop]"
-                                value="1"
-                                class="psa-form-check-input"
-                                <?php checked(!empty($settings['alerts']['bot_drop'])); ?>
-                            >
-                            <label for="psa-alert-bot-drop" class="psa-form-check-label"><?php esc_html_e('Enable', 'proactive-site-advisor'); ?></label>
-                        </div>
-                        <div class="psa-settings__text psa-form-text">
-                            <?php esc_html_e('Get alerted when bot pageviews drop below expected levels.', 'proactive-site-advisor'); ?>
+                            <?php esc_html_e('A rising number of 404 errors. Usually means broken links, deleted content, or a bad redirect.', 'proactive-site-advisor'); ?>
                         </div>
                     </div>
                 </div>
 
             </div>
         </div>
-
     </div>
 
+    <div class="psa-card">
+        <div class="psa-card-header">
+            <div class="psa-card-header-content">
+                <h5 class="psa-card-title">
+                    <?php esc_html_e('Bot Traffic', 'proactive-site-advisor'); ?>
+                </h5>
+                <p class="psa-card-subtitle">
+                    <?php esc_html_e('Track the automated visitors on your site — search engine crawlers, AI scrapers, and everything in between.', 'proactive-site-advisor'); ?>
+                </p>
+            </div>
+        </div>
+
+        <div class="psa-card-body">
+            <div class="psa-settings__list">
+
+                <!-- Bot Traffic Change -->
+                <div class="psa-settings__item">
+                    <div class="psa-settings__label">
+                        <div class="psa-form-label">
+                            <?php esc_html_e('Bot Traffic Change', 'proactive-site-advisor'); ?>
+                        </div>
+                    </div>
+
+                    <div class="psa-settings__field">
+                        <div class="psa-form-check psa-form-switch">
+                            <input
+                                type="checkbox"
+                                id="psa-alert-bot-change"
+                                name="settings[alerts][bot_change]"
+                                value="1"
+                                class="psa-form-check-input"
+                                <?php checked(!empty($settings['alerts']['bot_change'])); ?>
+                            >
+                            <label for="psa-alert-bot-change" class="psa-form-check-label"><?php esc_html_e('Detect', 'proactive-site-advisor'); ?></label>
+                        </div>
+                        <div class="psa-settings__text psa-form-text">
+                            <?php esc_html_e('Unusual spikes or drops in bot activity. Often signals new scrapers, AI crawlers, or a sudden block or attack.', 'proactive-site-advisor'); ?>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <p class="psa-settings__text psa-form-text">
+        <?php esc_html_e('Turning any alert off stops it from being detected anywhere — dashboard, email, and any connected channel.', 'proactive-site-advisor'); ?>
+    </p>
 </div>

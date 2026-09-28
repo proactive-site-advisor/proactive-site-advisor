@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-09-22 23:55+0330\n"
+"POT-Creation-Date: 2026-09-28 10:31+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -34,200 +34,183 @@ msgstr ""
 msgid "Critical"
 msgstr ""
 
-#: data/alerts.php:33
-#, php-format
+#: data/alerts.php:32
 msgid ""
-"The decrease crossed your configured threshold of %1$s%%, but the change "
-"is still relatively small and may be a normal variation."
+"The decrease is slightly outside your site's normal range of variation."
 msgstr ""
 
-#: data/alerts.php:38
-#, php-format
+#: data/alerts.php:36
 msgid ""
-"The decrease exceeded your configured threshold of %1$s%% and is larger "
-"than normal day-to-day variation."
+"The decrease is clearly outside your site's normal range and may warrant "
+"investigation."
 msgstr ""
 
-#: data/alerts.php:43
-#, php-format
+#: data/alerts.php:40
 msgid ""
-"The decrease exceeded your configured threshold of %1$s%% by a significant "
-"margin, indicating an unusual deviation from your recent traffic pattern."
+"The decrease is substantially beyond your site's normal range and warrants "
+"prompt investigation."
+msgstr ""
+
+#: data/alerts.php:46
+msgid ""
+"The increase is slightly outside your site's normal range of variation."
 msgstr ""
 
 #: data/alerts.php:50
-#, php-format
 msgid ""
-"The increase crossed your configured threshold of %1$s%%, but the change "
-"is still relatively small and may be a normal variation."
+"The increase is clearly outside your site's normal range and may warrant "
+"investigation."
 msgstr ""
 
-#: data/alerts.php:55
-#, php-format
+#: data/alerts.php:54
 msgid ""
-"The increase exceeded your configured threshold of %1$s%% and is larger "
-"than typical day-to-day variation for your site."
+"The increase is substantially beyond your site's normal range and warrants "
+"prompt investigation."
 msgstr ""
 
 #: data/alerts.php:60
-#, php-format
 msgid ""
-"The increase exceeded your configured threshold of %1$s%% by a significant "
-"margin, indicating an unusual deviation from your recent traffic pattern."
+"The increase in 404 errors is slightly outside your site's normal range of "
+"variation."
 msgstr ""
 
-#: data/alerts.php:67
-#, php-format
+#: data/alerts.php:64
 msgid ""
-"The increase in 404 errors crossed your configured threshold of %1$s%%, "
-"but it is still relatively small and may be an early signal."
+"The increase in 404 errors is clearly outside your site's normal range and "
+"may warrant investigation."
 msgstr ""
 
-#: data/alerts.php:72
-#, php-format
+#: data/alerts.php:68
 msgid ""
-"The increase in 404 errors exceeded your configured threshold of %1$s%% "
-"and is larger than normal day-to-day variation."
+"The increase in 404 errors is substantially beyond your site's normal "
+"range, indicating an unusual rise in missing-page requests."
 msgstr ""
 
-#: data/alerts.php:77
-#, php-format
+#: data/alerts.php:74
 msgid ""
-"The increase in 404 errors exceeded your configured threshold of %1$s%% by "
-"a significant margin, indicating an unusual increase in missing-page "
-"requests."
+"The increase in bot activity is slightly outside your site's normal range "
+"of variation."
 msgstr ""
 
-#: data/alerts.php:84
-#, php-format
+#: data/alerts.php:78
 msgid ""
-"The increase in bot activity crossed your configured threshold of %1$s%%, "
-"but it is still relatively small and may be an early signal."
+"The increase in bot activity is clearly outside your site's normal range "
+"and may warrant investigation."
 msgstr ""
 
-#: data/alerts.php:89
-#, php-format
+#: data/alerts.php:82
 msgid ""
-"The increase in bot activity exceeded your configured threshold of %1$s%% "
-"and is larger than typical day-to-day variation."
+"The increase in bot activity is substantially beyond your site's normal "
+"range, indicating an unusual shift in automated traffic."
 msgstr ""
 
-#: data/alerts.php:94
-#, php-format
+#: data/alerts.php:88
 msgid ""
-"The increase in bot activity exceeded your configured threshold of %1$s%% "
-"by a significant margin, indicating an unusual change in automated traffic."
+"The decrease in bot activity is slightly outside your site's normal range "
+"of variation."
 msgstr ""
 
-#: data/alerts.php:101
-#, php-format
+#: data/alerts.php:92
 msgid ""
-"The decrease in bot activity crossed your configured threshold of %1$s%%, "
-"but it is still relatively small and may be an early signal."
+"The decrease in bot activity is clearly outside your site's normal range "
+"and may warrant investigation."
 msgstr ""
 
-#: data/alerts.php:106
-#, php-format
+#: data/alerts.php:96
 msgid ""
-"The decrease in bot activity exceeded your configured threshold of %1$s%% "
-"and is larger than typical day-to-day variation."
+"The decrease in bot activity is substantially beyond your site's normal "
+"range, indicating an unusual shift in automated traffic."
 msgstr ""
 
-#: data/alerts.php:111
-#, php-format
-msgid ""
-"The decrease in bot activity exceeded your configured threshold of %1$s%% "
-"by a significant margin, indicating an unusual change in automated traffic."
-msgstr ""
-
-#: data/alerts.php:117
+#: data/alerts.php:102
 msgid "This alert has appeared for the second consecutive day."
 msgstr ""
 
-#: data/alerts.php:118
+#: data/alerts.php:103
 msgid ""
 "This alert has continued for multiple consecutive days and may indicate a "
 "developing trend."
 msgstr ""
 
 #. translators: %s: List of concurrent alert types
-#: data/alerts.php:120
+#: data/alerts.php:105
 #, php-format
 msgid "Detected together with: %s."
 msgstr ""
 
-#: data/alerts.php:121
+#: data/alerts.php:106
 msgid "Review broken links first, as they may be affecting traffic."
 msgstr ""
 
-#: data/alerts.php:122
+#: data/alerts.php:107
 msgid "Review whether automated traffic is contributing to the increase."
 msgstr ""
 
-#: data/alerts.php:123
+#: data/alerts.php:108
 msgid "Review whether this pattern continues over time."
 msgstr ""
 
-#: data/alerts.php:126 data/alerts.php:127
+#: data/alerts.php:111 data/alerts.php:112
 msgid "Traffic"
 msgstr ""
 
-#: data/alerts.php:128
+#: data/alerts.php:113
 #: src/Services/Admin/Dashboard/Data/DashboardHistory.php:78
+#: templates/admin/pages/settings/sections/alerts.php:95
 msgid "404 Errors"
 msgstr ""
 
-#: data/alerts.php:129 data/alerts.php:130
+#: data/alerts.php:114 data/alerts.php:115
 msgid "Bot Activity"
 msgstr ""
 
-#. translators: %s: Percentage change value
-#: data/alerts.php:134
+#. translators: %s: Change value (percentage, or absolute count when no baseline)
+#: data/alerts.php:119
 #, php-format
-msgid "Traffic dropped %s%%"
+msgid "Traffic dropped by %s"
 msgstr ""
 
-#. translators: %s: Percentage change value
-#: data/alerts.php:136
+#. translators: %s: Change value (percentage, or absolute count when no baseline)
+#: data/alerts.php:121
 #, php-format
-msgid "Traffic surged %s%%"
+msgid "Traffic surged by %s"
 msgstr ""
 
-#. translators: %s: Percentage change value
-#: data/alerts.php:138
+#. translators: %s: Change value (percentage, or absolute count when no baseline)
+#: data/alerts.php:123
 #, php-format
-msgid "404 errors surged %s%%"
+msgid "404 errors surged by %s"
 msgstr ""
 
-#. translators: %s: Percentage change value
-#: data/alerts.php:140
+#. translators: %s: Change value (percentage, or absolute count when no baseline)
+#: data/alerts.php:125
 #, php-format
-msgid "Bot activity surged %s%%"
+msgid "Bot activity surged by %s"
 msgstr ""
 
-#. translators: %s: Percentage change value
-#: data/alerts.php:142
+#. translators: %s: Change value (percentage, or absolute count when no baseline)
+#: data/alerts.php:127
 #, php-format
-msgid "Bot activity dropped %s%%"
+msgid "Bot activity dropped by %s"
 msgstr ""
 
-#: data/alerts.php:146
+#: data/alerts.php:131 templates/admin/pages/settings/sections/alerts.php:39
 msgid "Traffic Drop"
 msgstr ""
 
-#: data/alerts.php:151
+#: data/alerts.php:136
 msgid "Your site received slightly fewer human visitors than usual."
 msgstr ""
 
-#: data/alerts.php:155
+#: data/alerts.php:140
 msgid "Your site received fewer human visitors than your recent average."
 msgstr ""
 
-#: data/alerts.php:159
+#: data/alerts.php:144
 msgid "Your human traffic decreased sharply compared to recent activity."
 msgstr ""
 
-#: data/alerts.php:164
+#: data/alerts.php:149
 msgid ""
 "A decrease in human traffic means fewer real visitors reached your site "
 "compared to your normal activity. This does not always indicate a problem "
@@ -235,172 +218,172 @@ msgid ""
 "changes, broken links, or changes in visitor behavior."
 msgstr ""
 
-#: data/alerts.php:170
+#: data/alerts.php:155
 msgid ""
 "Check that your site is loading normally and important pages are "
 "accessible."
 msgstr ""
 
-#: data/alerts.php:174
+#: data/alerts.php:159
 msgid ""
 "Review recent content updates, deleted posts, or changes to important "
 "pages."
 msgstr ""
 
-#: data/alerts.php:178
+#: data/alerts.php:163
 msgid ""
 "Check whether broken links or increased 404 errors are preventing visitors "
 "from reaching important pages."
 msgstr ""
 
-#: data/alerts.php:184
+#: data/alerts.php:169
 msgid ""
 "Compare when the traffic change started with recent updates or "
 "configuration changes to help identify possible causes."
 msgstr ""
 
-#: data/alerts.php:190
+#: data/alerts.php:175
 msgid ""
 "Verify that your most important pages are available and responding "
 "correctly."
 msgstr ""
 
-#: data/alerts.php:194
+#: data/alerts.php:179
 msgid ""
 "Review major recent changes, migrations, deployments, or settings updates "
 "that may have affected visitor access."
 msgstr ""
 
-#: data/alerts.php:202
+#: data/alerts.php:187 templates/admin/pages/settings/sections/alerts.php:65
 msgid "Traffic Spike"
 msgstr ""
 
-#: data/alerts.php:207
+#: data/alerts.php:192
 msgid "Human traffic is slightly higher than your normal activity."
 msgstr ""
 
-#: data/alerts.php:211
+#: data/alerts.php:196
 msgid "Human traffic is higher than your recent average."
 msgstr ""
 
-#: data/alerts.php:215
+#: data/alerts.php:200
 msgid "Human traffic increased sharply compared to recent activity."
 msgstr ""
 
-#: data/alerts.php:220
+#: data/alerts.php:205
 msgid ""
 "An increase in human traffic can be a positive sign, such as popular "
 "content, campaigns, or improved visibility. Unusual increases may indicate "
 "changes in visitor behavior or other activity worth reviewing."
 msgstr ""
 
-#: data/alerts.php:226
+#: data/alerts.php:211
 msgid "Review which pages are receiving the additional visitors."
 msgstr ""
 
-#: data/alerts.php:230
+#: data/alerts.php:215
 msgid ""
 "Check recent content updates, campaigns, or promotions that may explain "
 "the increase."
 msgstr ""
 
-#: data/alerts.php:234
+#: data/alerts.php:219
 msgid ""
 "Monitor site performance to make sure your hosting can handle the "
 "additional traffic."
 msgstr ""
 
-#: data/alerts.php:240
+#: data/alerts.php:225
 msgid ""
 "Review where the additional visitors are coming from and whether the "
 "increase matches your expectations."
 msgstr ""
 
-#: data/alerts.php:246
+#: data/alerts.php:231
 msgid ""
 "Review the source and timing of the increase to understand what caused "
 "this unusual change."
 msgstr ""
 
-#: data/alerts.php:250
+#: data/alerts.php:235
 msgid ""
 "Review server resources and availability during periods of higher traffic."
 msgstr ""
 
-#: data/alerts.php:258
+#: data/alerts.php:243
 msgid "404 Spike"
 msgstr ""
 
-#: data/alerts.php:263
+#: data/alerts.php:248
 msgid "Your site is receiving slightly more 404 errors than usual."
 msgstr ""
 
-#: data/alerts.php:267
+#: data/alerts.php:252
 msgid "Your site is receiving more 404 errors than your recent average."
 msgstr ""
 
-#: data/alerts.php:271
+#: data/alerts.php:256
 msgid ""
-"404 errors increased sharply, meaning more visitors are reaching pages "
-"that no longer exist."
+"404 errors increased sharply, indicating more requests to pages that no "
+"longer exist."
 msgstr ""
 
-#: data/alerts.php:276
+#: data/alerts.php:261
 msgid ""
 "404 errors occur when visitors reach pages that no longer exist on your "
 "site. This can happen after URL changes, deleted content, broken internal "
 "links, or changes to your site structure."
 msgstr ""
 
-#: data/alerts.php:282
+#: data/alerts.php:267
 msgid "Review the most frequently requested missing URLs shown below."
 msgstr ""
 
-#: data/alerts.php:286
+#: data/alerts.php:271
 msgid "Check whether these URLs should redirect to existing content."
 msgstr ""
 
-#: data/alerts.php:290
+#: data/alerts.php:275
 msgid "Update internal links that point visitors to missing pages."
 msgstr ""
 
-#: data/alerts.php:296
+#: data/alerts.php:281
 msgid ""
 "Review recent content changes, permalink updates, or site structure "
 "changes that may have caused the increase."
 msgstr ""
 
-#: data/alerts.php:302
+#: data/alerts.php:287
 msgid ""
 "Review the missing URLs receiving the most requests and determine whether "
 "they need redirects or other fixes."
 msgstr ""
 
-#: data/alerts.php:306
+#: data/alerts.php:291
 msgid ""
 "Check whether a recent migration, update, or configuration change caused "
 "the increase."
 msgstr ""
 
-#: data/alerts.php:314
+#: data/alerts.php:299
 msgid "Bot Spike"
 msgstr ""
 
-#: data/alerts.php:319
+#: data/alerts.php:304
 msgid "Bot activity is slightly higher than your recent activity."
 msgstr ""
 
-#: data/alerts.php:323
+#: data/alerts.php:308
 msgid "Bot activity is higher than your recent average."
 msgstr ""
 
-#: data/alerts.php:327
+#: data/alerts.php:312
 msgid ""
 "Bot activity increased sharply and may affect your site resources or "
 "performance."
 msgstr ""
 
-#: data/alerts.php:332
+#: data/alerts.php:317
 msgid ""
 "An increase in bot activity means more automated systems are accessing "
 "your site than usual. This can happen because of search crawlers, SEO "
@@ -408,55 +391,55 @@ msgid ""
 "detected bots can help you understand the reason for the change."
 msgstr ""
 
-#: data/alerts.php:338
+#: data/alerts.php:323
 msgid "Review the detected bots and their request volume shown below."
 msgstr ""
 
-#: data/alerts.php:342
+#: data/alerts.php:327
 msgid ""
 "Check whether the increased activity is affecting your site performance."
 msgstr ""
 
-#: data/alerts.php:346
+#: data/alerts.php:331
 msgid "Verify that expected crawlers can still access your site normally."
 msgstr ""
 
-#: data/alerts.php:352
+#: data/alerts.php:337
 msgid ""
 "Review which bots caused the increase and whether their activity matches "
 "your expectations."
 msgstr ""
 
-#: data/alerts.php:358
+#: data/alerts.php:343
 msgid ""
 "Review whether the detected bots are consuming significant site resources."
 msgstr ""
 
-#: data/alerts.php:362
+#: data/alerts.php:347
 msgid ""
 "Review server performance and security logs if the activity appears "
 "unexpected."
 msgstr ""
 
-#: data/alerts.php:370
+#: data/alerts.php:355
 msgid "Bot Activity Drop"
 msgstr ""
 
-#: data/alerts.php:375
+#: data/alerts.php:360
 msgid "Bot activity is slightly lower than your recent activity."
 msgstr ""
 
-#: data/alerts.php:379
+#: data/alerts.php:364
 msgid "Bot activity is lower than your recent average."
 msgstr ""
 
-#: data/alerts.php:383
+#: data/alerts.php:368
 msgid ""
 "Bot activity dropped sharply and may indicate changes in crawler access or "
 "how automated systems reach your site."
 msgstr ""
 
-#: data/alerts.php:388
+#: data/alerts.php:373
 msgid ""
 "A decrease in bot activity means fewer automated systems are accessing "
 "your site compared to your usual pattern. This can happen because of crawl "
@@ -464,32 +447,34 @@ msgid ""
 "other factors that affect how bots reach your site."
 msgstr ""
 
-#: data/alerts.php:394
+#: data/alerts.php:379
 msgid "Check that your site is accessible to search engine crawlers."
 msgstr ""
 
-#: data/alerts.php:398
+#: data/alerts.php:383
 msgid "Review recent changes to robots.txt, sitemap, or SEO settings."
 msgstr ""
 
-#: data/alerts.php:402
+#: data/alerts.php:387
 msgid ""
 "Check if key pages are still available and returning normal responses."
 msgstr ""
 
-#: data/alerts.php:408
+#: data/alerts.php:393
 msgid ""
 "Review whether recent updates or site changes affected crawler access."
 msgstr ""
 
-#: data/alerts.php:414
+#: data/alerts.php:399
 msgid ""
 "Verify that search engine crawlers can still access the pages they need to "
 "reach."
 msgstr ""
 
-#: data/alerts.php:418
-msgid "Review whether crawler access or search visibility may be affected."
+#: data/alerts.php:403
+msgid ""
+"Check whether crawler access or search visibility has been affected by "
+"recent changes."
 msgstr ""
 
 #: src/Abstracts/AbstractSingleton.php:28 src/Core.php:77
@@ -683,17 +668,14 @@ msgid "Critical Alerts"
 msgstr ""
 
 #: src/Services/Admin/Dashboard/Data/DashboardStatsCards.php:119
-#: templates/admin/pages/settings/sections/notifications.php:112
 msgid "Traffic Alerts"
 msgstr ""
 
 #: src/Services/Admin/Dashboard/Data/DashboardStatsCards.php:124
-#: templates/admin/pages/settings/sections/notifications.php:140
 msgid "404 Alerts"
 msgstr ""
 
 #: src/Services/Admin/Dashboard/Data/DashboardStatsCards.php:129
-#: templates/admin/pages/settings/sections/notifications.php:168
 msgid "Bot Alerts"
 msgstr ""
 
@@ -785,7 +767,7 @@ msgid "Alerts"
 msgstr ""
 
 #: src/Services/Admin/Settings/SettingsData.php:38
-msgid "Thresholds"
+msgid "Sensitivity"
 msgstr ""
 
 #: src/Services/Admin/Settings/SettingsData.php:43
@@ -972,62 +954,72 @@ msgid "Control when and how you receive anomaly alerts for your site."
 msgstr ""
 
 #: templates/admin/pages/settings/sections/alerts.php:24
-msgid "Active Alerts"
+msgid "Human Traffic"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:26
+#: templates/admin/pages/settings/sections/alerts.php:27
 msgid ""
-"Choose which anomalies you want to be notified about. Disabling an alert "
-"type will suppress it even if its threshold is reached."
+"Watch the real visitors on your site — the people who read, click, and buy."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:38
-msgid "Human Traffic Drop"
+#: templates/admin/pages/settings/sections/alerts.php:53
+#: templates/admin/pages/settings/sections/alerts.php:79
+#: templates/admin/pages/settings/sections/alerts.php:124
+#: templates/admin/pages/settings/sections/alerts.php:169
+msgid "Detect"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:52
-#: templates/admin/pages/settings/sections/alerts.php:78
-#: templates/admin/pages/settings/sections/alerts.php:104
-#: templates/admin/pages/settings/sections/alerts.php:130
-#: templates/admin/pages/settings/sections/alerts.php:156
-#: templates/admin/pages/settings/sections/notifications.php:55
-msgid "Enable"
+#: templates/admin/pages/settings/sections/alerts.php:56
+msgid ""
+"Sudden drops in human pageviews. Often the first sign something is broken."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:55
-msgid "Get alerted when human pageviews drop significantly."
+#: templates/admin/pages/settings/sections/alerts.php:82
+msgid ""
+"Sudden increases in human pageviews. Could be a viral moment — or an "
+"attack."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:64
-msgid "Human Traffic Spike"
+#: templates/admin/pages/settings/sections/alerts.php:98
+msgid ""
+"Catch broken links before your visitors do — pages they tried to reach but "
+"couldn't."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:81
-msgid "Get alerted when human pageviews suddenly increase."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/alerts.php:90
+#: templates/admin/pages/settings/sections/alerts.php:110
 msgid "404 Error Surge"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:107
-msgid "Get alerted when 404 errors jump above the normal baseline."
+#: templates/admin/pages/settings/sections/alerts.php:127
+msgid ""
+"A rising number of 404 errors. Usually means broken links, deleted "
+"content, or a bad redirect."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:116
-msgid "Bot Traffic Spike"
+#: templates/admin/pages/settings/sections/alerts.php:140
+msgid "Bot Traffic"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:133
-msgid "Get alerted when bot pageviews show a sudden upward spike."
+#: templates/admin/pages/settings/sections/alerts.php:143
+msgid ""
+"Track the automated visitors on your site — search engine crawlers, AI "
+"scrapers, and everything in between."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:142
-msgid "Bot Traffic Drop"
+#: templates/admin/pages/settings/sections/alerts.php:155
+msgid "Bot Traffic Change"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/alerts.php:159
-msgid "Get alerted when bot pageviews drop below expected levels."
+#: templates/admin/pages/settings/sections/alerts.php:172
+msgid ""
+"Unusual spikes or drops in bot activity. Often signals new scrapers, AI "
+"crawlers, or a sudden block or attack."
+msgstr ""
+
+#: templates/admin/pages/settings/sections/alerts.php:182
+msgid ""
+"Turning any alert off stops it from being detected anywhere — dashboard, "
+"email, and any connected channel."
 msgstr ""
 
 #: templates/admin/pages/settings/sections/notifications.php:25
@@ -1040,6 +1032,11 @@ msgstr ""
 
 #: templates/admin/pages/settings/sections/notifications.php:40
 msgid "Enable Daily Digest"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/notifications.php:55
+#: templates/admin/pages/settings/sections/sensitivity.php:151
+msgid "Enable"
 msgstr ""
 
 #: templates/admin/pages/settings/sections/notifications.php:59
@@ -1060,142 +1057,103 @@ msgid ""
 "email if left empty."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/notifications.php:97
-msgid "Alert Types to Include"
+#: templates/admin/pages/settings/sections/sensitivity.php:25
+msgid "Alert Sensitivity"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/notifications.php:100
-msgid "Select which alert types should appear in the daily digest email."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/notifications.php:127
-#: templates/admin/pages/settings/sections/notifications.php:155
-#: templates/admin/pages/settings/sections/notifications.php:183
-msgid "Include"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/notifications.php:131
-msgid "Include human traffic spikes and drops in the digest."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/notifications.php:159
-msgid "Include 404 error surge alerts in the digest."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/notifications.php:187
-msgid "Include bot traffic spikes and drops in the digest."
-msgstr ""
-
-#: templates/admin/pages/settings/sections/thresholds.php:25
-msgid "Alert Eligibility"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/thresholds.php:28
+#: templates/admin/pages/settings/sections/sensitivity.php:28
 msgid ""
-"Control the minimum activity levels required for traffic‑related anomaly "
-"alerts."
+"Choose how strict the alert engine should be. Higher sensitivity catches "
+"smaller changes but may produce more noise."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:39
-msgid "Minimum weekly average"
+#: templates/admin/pages/settings/sections/sensitivity.php:40
+msgid "Low"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:47
-msgid "e.g. 3"
+#: templates/admin/pages/settings/sections/sensitivity.php:54
+#: templates/admin/pages/settings/sections/sensitivity.php:80
+#: templates/admin/pages/settings/sections/sensitivity.php:106
+msgid "Use this"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:54
+#: templates/admin/pages/settings/sections/sensitivity.php:57
 msgid ""
-"If the average pageview count over the last 7 days is below this number, "
-"traffic, 404, and bot alerts will not be generated."
+"Only extreme changes trigger alerts. Best for sites with naturally high "
+"day-to-day variation."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:62
-msgid "Minimum pageviews for alert"
+#: templates/admin/pages/settings/sections/sensitivity.php:66
+msgid "Normal (recommended)"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:70
-msgid "e.g. 10"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/thresholds.php:77
+#: templates/admin/pages/settings/sections/sensitivity.php:83
 msgid ""
-"If today's total pageviews are below this number, traffic, 404, and bot "
-"alerts will be suppressed even if the percentage change is large."
+"Balanced between catching real issues and avoiding noise. Works well for "
+"most sites."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:90
-msgid "Alert Thresholds"
+#: templates/admin/pages/settings/sections/sensitivity.php:92
+msgid "High"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:93
+#: templates/admin/pages/settings/sections/sensitivity.php:109
 msgid ""
-"Set the percentage change thresholds that trigger traffic, 404, and bot "
-"alerts."
+"Even small changes trigger alerts. Best for very stable sites where every "
+"shift matters."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:104
-msgid "Human traffic spike"
+#: templates/admin/pages/settings/sections/sensitivity.php:122
+msgid "Advanced"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:112
-#: templates/admin/pages/settings/sections/thresholds.php:204
-msgid "50"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/thresholds.php:119
+#: templates/admin/pages/settings/sections/sensitivity.php:125
 msgid ""
-"Alert when today's human pageviews exceed the 7‑day average by more than "
-"this percentage."
+"Fine-tune the minimum change that matters for each metric. Most sites "
+"don't need to touch this."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:127
-msgid "Human traffic drop"
+#: templates/admin/pages/settings/sections/sensitivity.php:137
+msgid "Auto-tune thresholds"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:135
-msgid "30"
-msgstr ""
-
-#: templates/admin/pages/settings/sections/thresholds.php:142
+#: templates/admin/pages/settings/sections/sensitivity.php:154
 msgid ""
-"Alert when today's human pageviews fall below the 7‑day average by more "
-"than this percentage."
+"We automatically adjust the minimum change thresholds based on your site's "
+"traffic scale. Recommended for most sites."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:150
-msgid "404 error surge"
+#: templates/admin/pages/settings/sections/sensitivity.php:166
+msgid "Minimum meaningful traffic change"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:158
-#: templates/admin/pages/settings/sections/thresholds.php:181
-msgid "100"
+#: templates/admin/pages/settings/sections/sensitivity.php:174
+#: templates/admin/pages/settings/sections/sensitivity.php:222
+msgid "10"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:165
-msgid ""
-"Alert when today's 404 errors exceed the 7‑day average by more than this "
-"percentage."
+#: templates/admin/pages/settings/sections/sensitivity.php:181
+msgid "Ignore daily human traffic changes smaller than this number."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:173
-msgid "Bot traffic spike"
+#: templates/admin/pages/settings/sections/sensitivity.php:190
+msgid "Minimum meaningful 404 change"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:188
-msgid ""
-"Alert when today's bot pageviews exceed the 7‑day average by more than "
-"this percentage."
+#: templates/admin/pages/settings/sections/sensitivity.php:198
+msgid "3"
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:196
-msgid "Bot traffic drop"
+#: templates/admin/pages/settings/sections/sensitivity.php:205
+msgid "Ignore daily 404 changes smaller than this number."
 msgstr ""
 
-#: templates/admin/pages/settings/sections/thresholds.php:211
-msgid ""
-"Alert when today's bot pageviews fall below the 7‑day average by more than "
-"this percentage."
+#: templates/admin/pages/settings/sections/sensitivity.php:214
+msgid "Minimum meaningful bot change"
+msgstr ""
+
+#: templates/admin/pages/settings/sections/sensitivity.php:229
+msgid "Ignore daily bot traffic changes smaller than this number."
 msgstr ""
 
 #: templates/notifications/email/daily-digest.php:55

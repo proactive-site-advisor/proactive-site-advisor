@@ -2,89 +2,138 @@
 
 namespace ProactiveSiteAdvisor\Services\Insights\Generators;
 
-use ProactiveSiteAdvisor\Config\PluginSettings;
+use ProactiveSiteAdvisor\Services\Insights\Config\MetricConfig;
 use ProactiveSiteAdvisor\Services\Insights\Contracts\AlertGeneratorInterface;
-use ProactiveSiteAdvisor\Utils\OptionUtils;
+use ProactiveSiteAdvisor\Services\Insights\Detection\RobustAnomalyDetector;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Base class for traffic‑related alert generators.
+ * Base class for all metric-based alert generators.
+ *
+ * Handles warm-up, runs the anomaly detector, computes severity,
+ * and prepares common meta. Concrete generators only specify
+ * which metric, which direction, and how to build the final meta.
  *
  * @package ProactiveSiteAdvisor\Services\Insights\Generators
  * @since   1.0.0
  */
 abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
 {
-    /** Check common traffic eligibility thresholds. */
-    protected function passesTrafficEligibility(array $context): bool
+    /** Minimum days required for baseline. */
+    protected const MIN_BASELINE_DAYS = 7;
+
+    /** Anomaly detector instance. */
+    protected RobustAnomalyDetector $detector;
+
+    /** Constructor. */
+    public function __construct()
     {
-        $minWeeklyAvg = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::MIN_WEEKLY_AVG),
-            3
-        );
-
-        $minPageviews = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::MIN_PAGEVIEWS_FOR_ALERT),
-            10
-        );
-
-        $avgPageviews = $context['avg_pageviews'] ?? 0;
-        $todayPv      = $context['todayPv'] ?? 0;
-        $count        = $context['count'] ?? 0;
-
-        return $count >= 7 && $avgPageviews >= $minWeeklyAvg && $todayPv >= $minPageviews;
+        $this->detector = new RobustAnomalyDetector();
     }
 
-    /** Check if a drop condition is met. */
-    protected function isDropEligible(float $avg, float $today, int $dropPercent): bool
+    /** {@inheritDoc} */
+    public function isEligible(array $context): bool
     {
-        if ($avg <= 0) {
+        if ((int)$context['count'] < self::MIN_BASELINE_DAYS) {
             return false;
         }
 
-        $dropRatio = 1 - ($dropPercent / 100);
-
-        return $today < $avg * $dropRatio;
+        return $this->isEnabled();
     }
 
-    /** Check if a spike condition is met. */
-    protected function isSpikeEligible(float $avg, float $today, int $spikePercent): bool
+    /** {@inheritDoc} */
+    public function generate(string $date, array $context): ?array
     {
-        if ($avg <= 0) {
-            return false;
+        $config = MetricConfig::get($this->getMetric());
+
+        $baselineKey = $config['baseline_key'];
+        $todayKey    = $config['today_key'];
+
+        $baseline = $context['baseline'][$baselineKey];
+        $today    = (int)$context[$todayKey];
+
+        $config['direction'] = $this->getDirection();
+
+        $result = $this->detector->analyze($baseline, $today, $config);
+
+        if (!$result['is_alert']) {
+            return null;
         }
 
-        $spikeRatio = 1 + ($spikePercent / 100);
+        $severity = $this->calculateSeverity($result['z'], $result['threshold']);
 
-        return $today > $avg * $spikeRatio;
+        return [
+            'type'     => $this->resolveAlertType($result['direction']),
+            'severity' => $severity,
+            'meta'     => $this->buildMeta($today, $result, $context),
+        ];
     }
 
-    /** Calculate severity based on change relative to user threshold. */
-    protected function calculateSeverity(float $changePercent, float $thresholdPercent): string
+    /** Which metric this generator watches. */
+    abstract protected function getMetric(): string;
+
+    /** Which direction this generator watches. */
+    abstract protected function getDirection(): string;
+
+    /** Whether the corresponding alert toggle is enabled. */
+    abstract protected function isEnabled(): bool;
+
+    /** Resolve the final alert type string based on anomaly direction. */
+    abstract protected function resolveAlertType(string $direction): string;
+
+    /** Build the alert meta array. */
+    abstract protected function buildMeta(int $today, array $result, array $context): array;
+
+    /** Compute severity from z and threshold. */
+    protected function calculateSeverity(float $z, float $threshold): string
     {
-        $absChange        = abs($changePercent);
-        $ratioToThreshold = $absChange / $thresholdPercent;
+        if ($threshold <= 0) {
+            return 'warning';
+        }
 
-        return $ratioToThreshold >= 2 ? 'critical' : 'warning';
-    }
+        $ratio = $z / $threshold;
 
-    /** Calculates severity for traffic spikes based on intensity relative to threshold. */
-    protected function calculateSpikeSeverity(float $changePercent, float $thresholdPercent): string
-    {
-        $absChange        = abs($changePercent);
-        $ratioToThreshold = $absChange / $thresholdPercent;
-
-        if ($ratioToThreshold >= 2.5) {
+        if ($ratio >= 2.5) {
             return 'critical';
         }
 
-        if ($ratioToThreshold >= 1.5) {
+        if ($ratio >= 1.5) {
             return 'warning';
         }
 
         return 'info';
+    }
+
+    /** Compute change percent from today and average. Returns null when avg is zero. */
+    protected function buildChangePercent(int $today, float $avg): ?float
+    {
+        if ($avg <= 0) {
+            return null;
+        }
+
+        return round((($today / $avg) - 1) * 100, 2);
+    }
+
+    /** Build the common meta keys shared by all alerts. */
+    protected function buildCommonMeta(int $today, array $result): array
+    {
+        return [
+            'today'      => $today,
+            'avg7'       => (int)round($result['avg']),
+            'median7'    => (int)round($result['median']),
+            'delta'      => $result['delta'],
+            'change_pct' => $this->buildChangePercent($today, $result['avg']),
+        ];
+    }
+
+    /** Sort an associative array by value descending and keep the top N entries. */
+    protected function topN(array $items, int $limit = 3): array
+    {
+        arsort($items);
+
+        return array_slice($items, 0, $limit, true);
     }
 }

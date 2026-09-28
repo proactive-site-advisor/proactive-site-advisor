@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,14 +39,14 @@ Here’s a real example of a traffic drop alert:
 
 > **Traffic — August 2, 2026**
 >
-> **Traffic dropped 41%**
+> **Traffic dropped by 41%**
 > Your human traffic decreased sharply compared to recent activity.
 >
 > *What this means:*
 > A decrease in human traffic means fewer real visitors reached your site compared to your normal activity. This does not always indicate a problem and can happen after website changes, availability issues, visibility changes, broken links, or changes in visitor behavior.
 >
 > *Why this alert?*
-> The decrease exceeded your configured threshold of 30% by a significant margin, indicating an unusual deviation from your recent traffic pattern.
+> The decrease is substantially beyond your site's normal range and warrants prompt investigation.
 >
 > Today: 445 · 7-day average: 754 · Change: -41%
 >
@@ -69,15 +69,16 @@ This is just the beginning. The free plugin will keep improving with new read‑
 **Built for privacy and performance**
 The plugin never phones home. All data is collected, summarized, and stored inside your own database. We use lightweight tables that hold only the last 7 days of aggregated metrics. No personal visitor data is ever saved. No cookies. No front‑end scripts. GDPR‑friendly by design.
 
-**Zero‑configuration monitoring**
-Install, activate, done. The plugin starts logging data from day one and begins anomaly detection after a 7-day baseline period. No API keys, no tracking codes, no setup wizard. Optional settings are available under **Site Advisor → Settings** if you want to customize alert thresholds or email notifications.
+**Adaptive detection, zero‑configuration monitoring**
+Install, activate, done. The plugin starts logging data from day one and begins anomaly detection after a 7-day baseline period. The detection engine automatically adapts to your site's traffic scale — a small blog and a high-traffic store are measured on their own terms. No API keys, no tracking codes, no setup wizard. Optional settings are available under **Site Advisor → Settings** if you want to tune alert sensitivity or email notifications.
 
 = Features =
 
-* **Bot anomaly detection** – Detects unusual crawler activity with top bot names and auto-corrected traffic counts.
+* **Bot anomaly detection** – Detects unusual crawler activity with top bot names and bot-aware traffic counts.
 * **Bot-aware traffic correction** – Detects bot traffic and separates it from human visits, so your metrics stay accurate and anomaly detection remains reliable.
-* **Human traffic monitoring** – Drops or spikes compared to the previous 7‑day average.
+* **Human traffic monitoring** – Drops or spikes detected using robust statistics against the recent 7-day baseline.
 * **404 error surge alerts** – Top 3 broken URLs with hit counts and fix suggestions.
+* **Adaptive sensitivity** – Choose how strict the alerts should be. The engine handles the rest automatically.
 * **Actionable recommendations** – Every alert includes a "What you should check next" list.
 * **Daily WP‑Cron scans** – Automatic checks after each full day.
 * **100% local processing** – No external APIs, zero data leaves your server.
@@ -110,7 +111,7 @@ Install, activate, done. The plugin starts logging data from day one and begins 
 3. Choose the zip file and click **Install Now**, then **Activate**.
 4. Visit the new **Site Advisor** menu in your admin sidebar.
 
-That's it. No required configuration, no API connections to set up. Proactive Site Advisor starts collecting data immediately. Optional settings are available under **Site Advisor → Settings** if you want to customize thresholds or email alerts.
+That's it. No required configuration, no API connections to set up. Proactive Site Advisor starts collecting data immediately. Optional settings are available under **Site Advisor → Settings** if you want to tune sensitivity or email alerts.
 
 == Frequently Asked Questions ==
 
@@ -124,16 +125,19 @@ The plugin hooks into WordPress to log page views and 404 errors. Data is aggreg
 At the end of each day, via WordPress Cron. You don't need to click anything.
 
 = How does it know something is wrong? =
-It compares yesterday's numbers to the average of the previous 7 days. A significant deviation triggers an alert. During the first 7 days after activation, the plugin only builds the baseline and does not generate alerts. Anomaly alerts can appear from day 8 onward.
+It compares yesterday's numbers to a robust statistical baseline built from the previous 7 days (median + MAD, with a count-aware noise floor). Only changes that are both statistically unusual and practically meaningful for your site trigger an alert. During the first 7 days after activation, the plugin only builds the baseline and does not generate alerts. Anomaly alerts can appear from day 8 onward.
 
 = Why don't I see alerts immediately after activation? =
-The plugin needs 7 full days of data to understand your site's normal traffic, 404, and bot patterns. After that baseline is built, it starts comparing daily values and generating alerts only when thresholds are exceeded.
+The plugin needs 7 full days of data to understand your site's normal traffic, 404, and bot patterns. After that baseline is built, it starts comparing daily values and generating alerts only when a real anomaly is detected.
 
 = What exactly does a 404 alert show? =
 The three most-hit broken URLs from that day, with the number of hits and a plain‑English suggestion (e.g., "Set up a redirect from /old-page to /new-page").
 
 = What does a bot alert show? =
 The top three bot names (like Googlebot, AhrefsBot) with visit counts and context on whether their activity is unusual.
+
+= Can I control how sensitive the alerts are? =
+Yes. Under **Site Advisor → Settings → Sensitivity**, you can choose between Low, Normal, and High. The engine adjusts automatically based on your choice. Advanced users can also turn off auto-tuning and set manual thresholds for traffic, 404, and bot metrics separately.
 
 = Will you add more alert types and integrations? =
 Absolutely. Upcoming free releases will add read‑only integrations with popular analytics plugins such as WP Statistics, Burst Statistics, MonsterInsights, and Site Kit by Google. Later free security signal integrations are planned for Wordfence and Solid Security. Advanced anomaly types like slow page detection and server error surge detection are planned for the Pro version.
@@ -146,14 +150,31 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Screenshots ==
 
-1. Main dashboard with critical issue indicator and weekly digest.
-2. Traffic drop alert – percentage change, impact summary, and action checklist.
-3. 404 surge alert with top 3 broken URLs and hit counts.
-4. Bot alert with top 3 bot names and percentage change.
-5. Detection thresholds and alert toggles in the settings screen.
-6. Daily email digest settings and sample email content.
+1. Main dashboard with weekly digest, critical issue indicator, and 7-day history.
+2. Traffic drop alert with percentage change, impact summary, and an action checklist.
+3. 404 surge alert showing the top 3 broken URLs with hit counts and redirect suggestions.
+4. Bot activity alert with top 3 detected crawlers and a summary of the change.
+5. Alerts settings page — choose which anomalies should be monitored.
+6. Sensitivity settings page — pick Low, Normal, or High, or open Advanced for manual thresholds.
+7. Daily digest email — the summary email sent after each monitoring cycle.
 
 == Changelog ==
+
+= 1.2.6 =
+* New: Adaptive anomaly detection engine based on robust statistics (median + MAD + count-aware noise floor + robust z-score).
+* New: Sensitivity setting with three levels — Low, Normal, High — replacing all previous percentage thresholds.
+* New: Auto-tune thresholds based on your site's traffic scale. Advanced users can disable it and set manual thresholds per metric.
+* New: Configuration is now automatically tuned to the site's actual scale, so alerts work reliably across small and large sites.
+* New: Detection is now robust against a single outlier day and against sparse or zero counts.
+* Improved: Bot Spike and Bot Drop alerts merged into a single "Bot Traffic Change" toggle in settings.
+* Improved: Alert titles now fall back to absolute change counts when no reliable baseline exists (e.g. baseline = 0).
+* Improved: Severity (info/warning/critical) is now derived from the statistical strength of the anomaly, not from a percentage threshold.
+* Improved: Settings page redesigned — Alerts and Sensitivity are now grouped clearly, and Advanced options are hidden by default.
+* Improved: Migration to 1.2.6 automatically converts existing thresholds into the new Sensitivity model.
+* Removed: Percentage thresholds (traffic_spike_percent, traffic_drop_percent, 404_spike_percent, bot_spike_percent, bot_drop_percent).
+* Removed: min_weekly_avg and min_pageviews_for_alert settings.
+* Removed: "Alert Types to Include" section in Notifications — alert visibility is now controlled entirely from the Alerts section.
+* Fixed: Baseline window now excludes the evaluated day, ensuring the anomaly is measured against 7 previous days only.
 
 = 1.2.5 =
 * New: HeadlessChromeSignal – detects the HeadlessChrome brand in Sec-CH-UA.
@@ -288,6 +309,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Upgrade Notice ==
 
+= 1.2.6 =
+Introduces a new adaptive anomaly detection engine with a simplified Sensitivity setting. Existing threshold settings are migrated automatically. Recommended to review the new Sensitivity page after updating.
+
 = 1.2.5 =
 Adds detection for HeadlessChrome brand in Sec-CH-UA and internal Next.js middleware headers. Safe automatic update.
 
@@ -298,7 +322,7 @@ Fixed missing traffic spike icons in warning and critical email alerts. Safe aut
 Improved alert display consistency – top items (404 URLs, bot names) now always show the 3 most frequent entries. Safe automatic update.
 
 = 1.2.2 =
-Alert metadata now uses the correct metrics for each alert type, improving accuracy and consistency across alerts. afe automatic update.
+Alert metadata now uses the correct metrics for each alert type, improving accuracy and consistency across alerts. Safe automatic update.
 
 = 1.2.1 =
 Improved email sender identification for daily digest notifications with a dedicated sender name and email address. Safe automatic update.

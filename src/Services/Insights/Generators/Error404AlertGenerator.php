@@ -3,6 +3,7 @@
 namespace ProactiveSiteAdvisor\Services\Insights\Generators;
 
 use ProactiveSiteAdvisor\Config\PluginSettings;
+use ProactiveSiteAdvisor\Services\Insights\Config\MetricConfig;
 use ProactiveSiteAdvisor\Utils\OptionUtils;
 
 if (!defined('ABSPATH')) {
@@ -10,7 +11,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Generates a 404 error surge alert when errors exceed the threshold.
+ * Generates a 404 error surge alert when errors rise above baseline.
  *
  * @package ProactiveSiteAdvisor\Services\Insights\Generators
  * @since   1.0.0
@@ -18,47 +19,38 @@ if (!defined('ABSPATH')) {
 class Error404AlertGenerator extends AbstractTrafficAlertGenerator
 {
     /** {@inheritDoc} */
-    public function isEligible(array $context): bool
+    protected function getMetric(): string
     {
-        $enabled = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_ALERTS, PluginSettings::ALERT_404_SPIKE),
-            1
-        );
-
-        return $enabled && $this->passesTrafficEligibility($context);
+        return MetricConfig::METRIC_404;
     }
 
     /** {@inheritDoc} */
-    public function generate(string $date, array $context): ?array
+    protected function getDirection(): string
     {
-        $spikePercent = OptionUtils::getOption(
-            OptionUtils::makeKey(PluginSettings::SECTION_THRESHOLDS, PluginSettings::ERROR_404_SPIKE_PERCENT),
-            100
+        return MetricConfig::DIRECTION_SPIKE;
+    }
+
+    /** {@inheritDoc} */
+    protected function isEnabled(): bool
+    {
+        return (bool)OptionUtils::getOption(
+            OptionUtils::makeKey(PluginSettings::SECTION_ALERTS, PluginSettings::ALERT_404_SPIKE),
+            1
         );
+    }
 
-        $avg404   = $context['avg_404'] ?? 0;
-        $today404 = $context['today404'] ?? 0;
+    /** {@inheritDoc} */
+    protected function resolveAlertType(string $direction): string
+    {
+        return '404_spike';
+    }
 
-        if (!$this->isSpikeEligible($avg404, $today404, $spikePercent)) {
-            return null;
-        }
+    /** {@inheritDoc} */
+    protected function buildMeta(int $today, array $result, array $context): array
+    {
+        $meta        = $this->buildCommonMeta($today, $result);
+        $meta['top'] = $this->topN($context['top404']);
 
-        $change   = round((($today404 / $avg404) - 1) * 100, 2);
-        $severity = $this->calculateSeverity($change, $spikePercent);
-
-        $top = $context['top404'];
-        arsort($top);
-        $top = array_slice($top, 0, 3, true);
-
-        return [
-            'type'     => '404_spike',
-            'severity' => $severity,
-            'meta' => [
-                'today'      => $context['today404'],
-                'avg7'       => (int)round($context['avg_404']),
-                'change_pct' => $change,
-                'top'        => $top,
-            ],
-        ];
+        return $meta;
     }
 }
