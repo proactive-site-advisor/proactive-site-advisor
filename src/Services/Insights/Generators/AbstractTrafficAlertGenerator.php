@@ -110,7 +110,7 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
     /** Compute change percent from today and average. Returns null when avg is zero. */
     protected function buildChangePercent(int $today, float $avg): ?float
     {
-        if ($avg <= 0) {
+        if ($avg < 1.0) {
             return null;
         }
 
