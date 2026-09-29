@@ -68,22 +68,17 @@ class AlertBuilder
     /** Build alert title with change percentage or absolute delta. */
     private function getTitle(string $type, array $meta): string
     {
-        $value    = $this->formatTitleValue($meta);
-        $template = $this->alerts['title_templates'][$type];
-
-        return sprintf($template, $value);
-    }
-
-    /** Format the change value: percentage when available, otherwise absolute delta. */
-    private function formatTitleValue(array $meta): string
-    {
-        $changePct = $meta['change_pct'] ?? null;
+        $changePct = $meta['change_pct'];
 
         if ($changePct !== null) {
-            return number_format_i18n(round(abs((float)$changePct), 1), 1) . '%';
+            $value    = number_format_i18n(round(abs((float)$changePct), 1), 1) . '%';
+            $template = $this->alerts['title_templates'][$type];
+        } else {
+            $value    = number_format_i18n(abs((int)($meta['delta'])));
+            $template = $this->alerts['title_templates_absolute'][$type];
         }
 
-        return number_format_i18n(abs((int)($meta['delta'] ?? 0)));
+        return sprintf($template, $value);
     }
 
     /** Get short message based on type and severity. */
@@ -147,6 +142,7 @@ class AlertBuilder
                 'avg7'   => $avg7,
                 'today'  => $today,
                 'change' => $change,
+                'delta'  => $meta['delta'],
             ],
         ];
     }

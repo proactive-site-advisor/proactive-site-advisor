@@ -107,10 +107,10 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
         return 'info';
     }
 
-    /** Compute change percent from today and average. Returns null when avg is zero. */
-    protected function buildChangePercent(int $today, float $avg): ?float
+    /** Compute change percent from today and average. Returns null when baseline is not meaningful. */
+    protected function buildChangePercent(int $today, float $avg, float $median): ?float
     {
-        if ($avg < 1.0) {
+        if ($avg < 1.0 || $median < 1.0) {
             return null;
         }
 
@@ -125,7 +125,7 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
             'avg7'       => (int)round($result['avg']),
             'median7'    => (int)round($result['median']),
             'delta'      => $result['delta'],
-            'change_pct' => $this->buildChangePercent($today, $result['avg']),
+            'change_pct' => $this->buildChangePercent($today, $result['avg'], $result['median']),
         ];
     }
 

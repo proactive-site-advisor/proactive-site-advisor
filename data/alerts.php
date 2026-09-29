@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 }
 
 return [
-    'severity'        => [
+    'severity'                 => [
         'info'     => __(
             'Info',
             'proactive-site-advisor'
@@ -26,7 +26,7 @@ return [
             'proactive-site-advisor'
         ),
     ],
-    'severity_text'   => [
+    'severity_text'            => [
         'traffic_drop'  => [
             'info'     => __(
                 'The decrease is slightly outside your site\'s normal range of variation.',
@@ -98,7 +98,7 @@ return [
             ),
         ],
     ],
-    'common'          => [
+    'common'                   => [
         'repetition_second_day'   => __('This alert has appeared for the second consecutive day.', 'proactive-site-advisor'),
         'repetition_trend'        => __('This alert has continued for multiple consecutive days and may indicate a developing trend.', 'proactive-site-advisor'),
         /* translators: %s: List of concurrent alert types */
@@ -107,14 +107,14 @@ return [
         'check_automated_traffic' => __('Review whether automated traffic is contributing to the increase.', 'proactive-site-advisor'),
         'pattern_continue'        => __('Review whether this pattern continues over time.', 'proactive-site-advisor'),
     ],
-    'badge_labels'    => [
+    'badge_labels'             => [
         'traffic_drop'  => __('Traffic', 'proactive-site-advisor'),
         'traffic_spike' => __('Traffic', 'proactive-site-advisor'),
         '404_spike'     => __('404 Errors', 'proactive-site-advisor'),
         'bot_spike'     => __('Bot Activity', 'proactive-site-advisor'),
         'bot_drop'      => __('Bot Activity', 'proactive-site-advisor'),
     ],
-    'title_templates' => [
+    'title_templates'          => [
         /* translators: %s: Change value (percentage, or absolute count when no baseline) */
         'traffic_drop'  => __('Traffic dropped by %s', 'proactive-site-advisor'),
         /* translators: %s: Change value (percentage, or absolute count when no baseline) */
@@ -126,7 +126,19 @@ return [
         /* translators: %s: Change value (percentage, or absolute count when no baseline) */
         'bot_drop'      => __('Bot activity dropped by %s', 'proactive-site-advisor'),
     ],
-    'traffic_drop'    => [
+    'title_templates_absolute' => [
+        /* translators: %s: Absolute count of fewer pageviews */
+        'traffic_drop'  => __('%s fewer pageviews than usual', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of additional pageviews */
+        'traffic_spike' => __('%s additional pageviews', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of new 404 errors */
+        '404_spike'     => __('%s new 404 errors', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of additional bot requests */
+        'bot_spike'     => __('%s additional bot requests', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of fewer bot requests */
+        'bot_drop'      => __('%s fewer bot requests', 'proactive-site-advisor'),
+    ],
+    'traffic_drop'             => [
         'label'   => __(
             'Traffic Drop',
             'proactive-site-advisor'
@@ -182,7 +194,7 @@ return [
             ],
         ],
     ],
-    'traffic_spike'   => [
+    'traffic_spike'            => [
         'label'   => __(
             'Traffic Spike',
             'proactive-site-advisor'
@@ -238,7 +250,7 @@ return [
             ],
         ],
     ],
-    '404_spike'       => [
+    '404_spike'                => [
         'label'   => __(
             '404 Spike',
             'proactive-site-advisor'
@@ -294,7 +306,7 @@ return [
             ],
         ],
     ],
-    'bot_spike'       => [
+    'bot_spike'                => [
         'label'   => __(
             'Bot Spike',
             'proactive-site-advisor'
@@ -350,7 +362,7 @@ return [
             ],
         ],
     ],
-    'bot_drop'        => [
+    'bot_drop'                 => [
         'label'   => __(
             'Bot Activity Drop',
             'proactive-site-advisor'
