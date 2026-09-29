@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-09-30 01:23+0330\n"
+"POT-Creation-Date: 2026-09-30 01:35+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -197,7 +197,7 @@ msgstr ""
 #. translators: %s: Absolute count of fewer pageviews
 #: data/alerts.php:131
 #, php-format
-msgid "%s fewer pageviews than usual"
+msgid "%s fewer pageviews"
 msgstr ""
 
 #. translators: %s: Absolute count of additional pageviews
@@ -206,10 +206,10 @@ msgstr ""
 msgid "%s additional pageviews"
 msgstr ""
 
-#. translators: %s: Absolute count of new 404 errors
+#. translators: %s: Absolute count of additional 404 errors
 #: data/alerts.php:135
 #, php-format
-msgid "%s new 404 errors"
+msgid "%s additional 404 errors"
 msgstr ""
 
 #. translators: %s: Absolute count of additional bot requests
@@ -867,33 +867,39 @@ msgstr ""
 msgid "Why this alert?"
 msgstr ""
 
-#. translators: 1: Today's value, 2: 7-day average value, 3: Change value (percentage or delta with sign)
-#: templates/admin/components/alert-card.php:95
+#. translators: 1: Today's value, 2: 7-day average value, 3: Percentage change
+#: templates/admin/components/alert-card.php:94
 #, php-format
 msgid "Today: %1$s · 7-day average: %2$s · Change: %3$s"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:109
+#. translators: 1: Today's value, 2: 7-day average value, 3: Absolute difference
+#: templates/admin/components/alert-card.php:105
+#, php-format
+msgid "Today: %1$s · 7-day average: %2$s · Difference: %3$s"
+msgstr ""
+
+#: templates/admin/components/alert-card.php:120
 msgid "Pattern"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:125
+#: templates/admin/components/alert-card.php:136
 msgid "Related activity"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:140
+#: templates/admin/components/alert-card.php:151
 msgid "What you should check next"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:164
+#: templates/admin/components/alert-card.php:175
 msgid "Top 404 URLs"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:196
+#: templates/admin/components/alert-card.php:207
 msgid "Top Bots"
 msgstr ""
 
-#: templates/admin/components/alert-card.php:233
+#: templates/admin/components/alert-card.php:244
 msgid "Toggle details"
 msgstr ""
 

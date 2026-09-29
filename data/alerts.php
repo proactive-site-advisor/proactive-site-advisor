@@ -128,11 +128,11 @@ return [
     ],
     'title_templates_absolute' => [
         /* translators: %s: Absolute count of fewer pageviews */
-        'traffic_drop'  => __('%s fewer pageviews than usual', 'proactive-site-advisor'),
+        'traffic_drop'  => __('%s fewer pageviews', 'proactive-site-advisor'),
         /* translators: %s: Absolute count of additional pageviews */
         'traffic_spike' => __('%s additional pageviews', 'proactive-site-advisor'),
-        /* translators: %s: Absolute count of new 404 errors */
-        '404_spike'     => __('%s new 404 errors', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of additional 404 errors */
+        '404_spike'     => __('%s additional 404 errors', 'proactive-site-advisor'),
         /* translators: %s: Absolute count of additional bot requests */
         'bot_spike'     => __('%s additional bot requests', 'proactive-site-advisor'),
         /* translators: %s: Absolute count of fewer bot requests */
