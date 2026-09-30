@@ -17,8 +17,8 @@ class PluginSettings
     /** Alerts settings section. */
     public const SECTION_ALERTS = 'alerts';
 
-    /** Thresholds settings section. */
-    public const SECTION_THRESHOLDS = 'thresholds';
+    /** Sensitivity settings section. */
+    public const SECTION_SENSITIVITY = 'sensitivity';
 
     /** Notifications settings section. */
     public const SECTION_NOTIFICATIONS = 'notifications';
@@ -38,38 +38,29 @@ class PluginSettings
     /** Enable alert for 404 error surge. */
     public const ALERT_404_SPIKE = '404_spike';
 
-    /** Enable alert for bot traffic spike. */
-    public const ALERT_BOT_SPIKE = 'bot_spike';
-
-    /** Enable alert for bot traffic drop. */
-    public const ALERT_BOT_DROP = 'bot_drop';
+    /** Enable alert for bot traffic changes (spike or drop). */
+    public const ALERT_BOT_CHANGE = 'bot_change';
 
     /*
     |--------------------------------------------------------------------------
-    | Thresholds Settings
+    | Sensitivity Settings
     |--------------------------------------------------------------------------
     */
 
-    /** Minimum weekly average pageviews to enable alerts. */
-    public const MIN_WEEKLY_AVG = 'min_weekly_avg';
+    /** Sensitivity level (low / normal / high). */
+    public const SENSITIVITY_LEVEL = 'level';
 
-    /** Minimum pageviews required today to trigger an alert. */
-    public const MIN_PAGEVIEWS_FOR_ALERT = 'min_pageviews_for_alert';
+    /** Auto-tune minimum change thresholds based on site scale. */
+    public const SENSITIVITY_AUTO_TUNE = 'auto_tune';
 
-    /** Percentage increase in human pageviews that triggers a spike alert. */
-    public const TRAFFIC_SPIKE_PERCENT = 'traffic_spike_percent';
+    /** Minimum meaningful traffic change (used when auto-tune is off). */
+    public const TRAFFIC_MIN_ABS = 'traffic_min_abs';
 
-    /** Percentage decrease in human pageviews that triggers a drop alert. */
-    public const TRAFFIC_DROP_PERCENT = 'traffic_drop_percent';
+    /** Minimum meaningful 404 change (used when auto-tune is off). */
+    public const ERROR_404_MIN_ABS = 'error_404_min_abs';
 
-    /** Percentage increase in 404 errors that triggers an alert. */
-    public const ERROR_404_SPIKE_PERCENT = '404_spike_percent';
-
-    /** Percentage increase in bot pageviews that triggers a spike alert. */
-    public const BOT_SPIKE_PERCENT = 'bot_spike_percent';
-
-    /** Percentage decrease in bot pageviews that triggers a drop alert. */
-    public const BOT_DROP_PERCENT = 'bot_drop_percent';
+    /** Minimum meaningful bot change (used when auto-tune is off). */
+    public const BOT_MIN_ABS = 'bot_min_abs';
 
     /*
     |--------------------------------------------------------------------------
@@ -82,13 +73,4 @@ class PluginSettings
 
     /** Email address to receive daily digest notifications. */
     public const DIGEST_RECIPIENT_EMAIL = 'digest_recipient_email';
-
-    /** Include traffic alerts (spike/drop) in the digest. */
-    public const DIGEST_INCLUDE_TRAFFIC = 'digest_include_traffic';
-
-    /** Include 404 spike alerts in the digest. */
-    public const DIGEST_INCLUDE_404 = 'digest_include_404';
-
-    /** Include bot alerts (spike/drop) in the digest. */
-    public const DIGEST_INCLUDE_BOT = 'digest_include_bot';
 }

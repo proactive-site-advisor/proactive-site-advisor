@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 }
 
 return [
-    'severity'        => [
+    'severity'                 => [
         'info'     => __(
             'Info',
             'proactive-site-advisor'
@@ -26,94 +26,79 @@ return [
             'proactive-site-advisor'
         ),
     ],
-    'severity_text'   => [
+    'severity_text'            => [
         'traffic_drop'  => [
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'The decrease crossed your configured threshold of %1$s%%, but the change is still relatively small and may be a normal variation.',
+                'The decrease is slightly outside your site\'s normal range of variation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'The decrease exceeded your configured threshold of %1$s%% and is larger than normal day-to-day variation.',
+                'The decrease is clearly outside your site\'s normal range and may warrant investigation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'The decrease exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual deviation from your recent traffic pattern.',
+                'The decrease is substantially beyond your site\'s normal range and warrants prompt investigation.',
                 'proactive-site-advisor'
             ),
         ],
         'traffic_spike' => [
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'The increase crossed your configured threshold of %1$s%%, but the change is still relatively small and may be a normal variation.',
+                'The increase is slightly outside your site\'s normal range of variation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'The increase exceeded your configured threshold of %1$s%% and is larger than typical day-to-day variation for your site.',
+                'The increase is clearly outside your site\'s normal range and may warrant investigation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'The increase exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual deviation from your recent traffic pattern.',
+                'The increase is substantially beyond your site\'s normal range and warrants prompt investigation.',
                 'proactive-site-advisor'
             ),
         ],
         '404_spike'     => [
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'The increase in 404 errors crossed your configured threshold of %1$s%%, but it is still relatively small and may be an early signal.',
+                'The increase in 404 errors is slightly outside your site\'s normal range of variation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'The increase in 404 errors exceeded your configured threshold of %1$s%% and is larger than normal day-to-day variation.',
+                'The increase in 404 errors is clearly outside your site\'s normal range and may warrant investigation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'The increase in 404 errors exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual increase in missing-page requests.',
+                'The increase in 404 errors is substantially beyond your site\'s normal range, indicating an unusual rise in missing-page requests.',
                 'proactive-site-advisor'
             ),
         ],
         'bot_spike'     => [
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'The increase in bot activity crossed your configured threshold of %1$s%%, but it is still relatively small and may be an early signal.',
+                'The increase in bot activity is slightly outside your site\'s normal range of variation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'The increase in bot activity exceeded your configured threshold of %1$s%% and is larger than typical day-to-day variation.',
+                'The increase in bot activity is clearly outside your site\'s normal range and may warrant investigation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'The increase in bot activity exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual change in automated traffic.',
+                'The increase in bot activity is substantially beyond your site\'s normal range, indicating an unusual shift in automated traffic.',
                 'proactive-site-advisor'
             ),
         ],
         'bot_drop'      => [
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'info'     => __(
-                'The decrease in bot activity crossed your configured threshold of %1$s%%, but it is still relatively small and may be an early signal.',
+                'The decrease in bot activity is slightly outside your site\'s normal range of variation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'warning'  => __(
-                'The decrease in bot activity exceeded your configured threshold of %1$s%% and is larger than typical day-to-day variation.',
+                'The decrease in bot activity is clearly outside your site\'s normal range and may warrant investigation.',
                 'proactive-site-advisor'
             ),
-            /* translators: %1$s: The threshold percentage configured by the user. */
             'critical' => __(
-                'The decrease in bot activity exceeded your configured threshold of %1$s%% by a significant margin, indicating an unusual change in automated traffic.',
+                'The decrease in bot activity is substantially beyond your site\'s normal range, indicating an unusual shift in automated traffic.',
                 'proactive-site-advisor'
             ),
         ],
     ],
-    'common'          => [
+    'common'                   => [
         'repetition_second_day'   => __('This alert has appeared for the second consecutive day.', 'proactive-site-advisor'),
         'repetition_trend'        => __('This alert has continued for multiple consecutive days and may indicate a developing trend.', 'proactive-site-advisor'),
         /* translators: %s: List of concurrent alert types */
@@ -122,26 +107,38 @@ return [
         'check_automated_traffic' => __('Review whether automated traffic is contributing to the increase.', 'proactive-site-advisor'),
         'pattern_continue'        => __('Review whether this pattern continues over time.', 'proactive-site-advisor'),
     ],
-    'badge_labels'    => [
+    'badge_labels'             => [
         'traffic_drop'  => __('Traffic', 'proactive-site-advisor'),
         'traffic_spike' => __('Traffic', 'proactive-site-advisor'),
         '404_spike'     => __('404 Errors', 'proactive-site-advisor'),
         'bot_spike'     => __('Bot Activity', 'proactive-site-advisor'),
         'bot_drop'      => __('Bot Activity', 'proactive-site-advisor'),
     ],
-    'title_templates' => [
-        /* translators: %s: Percentage change value */
-        'traffic_drop'  => __('Traffic dropped %s%%', 'proactive-site-advisor'),
-        /* translators: %s: Percentage change value */
-        'traffic_spike' => __('Traffic surged %s%%', 'proactive-site-advisor'),
-        /* translators: %s: Percentage change value */
-        '404_spike'     => __('404 errors surged %s%%', 'proactive-site-advisor'),
-        /* translators: %s: Percentage change value */
-        'bot_spike'     => __('Bot activity surged %s%%', 'proactive-site-advisor'),
-        /* translators: %s: Percentage change value */
-        'bot_drop'      => __('Bot activity dropped %s%%', 'proactive-site-advisor'),
+    'title_templates'          => [
+        /* translators: %s: Change value (percentage, or absolute count when no baseline) */
+        'traffic_drop'  => __('Traffic dropped by %s', 'proactive-site-advisor'),
+        /* translators: %s: Change value (percentage, or absolute count when no baseline) */
+        'traffic_spike' => __('Traffic surged by %s', 'proactive-site-advisor'),
+        /* translators: %s: Change value (percentage, or absolute count when no baseline) */
+        '404_spike'     => __('404 errors surged by %s', 'proactive-site-advisor'),
+        /* translators: %s: Change value (percentage, or absolute count when no baseline) */
+        'bot_spike'     => __('Bot activity surged by %s', 'proactive-site-advisor'),
+        /* translators: %s: Change value (percentage, or absolute count when no baseline) */
+        'bot_drop'      => __('Bot activity dropped by %s', 'proactive-site-advisor'),
     ],
-    'traffic_drop'    => [
+    'title_templates_absolute' => [
+        /* translators: %s: Absolute count of fewer pageviews */
+        'traffic_drop'  => __('%s fewer pageviews', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of additional pageviews */
+        'traffic_spike' => __('%s additional pageviews', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of additional 404 errors */
+        '404_spike'     => __('%s additional 404 errors', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of additional bot requests */
+        'bot_spike'     => __('%s additional bot requests', 'proactive-site-advisor'),
+        /* translators: %s: Absolute count of fewer bot requests */
+        'bot_drop'      => __('%s fewer bot requests', 'proactive-site-advisor'),
+    ],
+    'traffic_drop'             => [
         'label'   => __(
             'Traffic Drop',
             'proactive-site-advisor'
@@ -197,7 +194,7 @@ return [
             ],
         ],
     ],
-    'traffic_spike'   => [
+    'traffic_spike'            => [
         'label'   => __(
             'Traffic Spike',
             'proactive-site-advisor'
@@ -253,7 +250,7 @@ return [
             ],
         ],
     ],
-    '404_spike'       => [
+    '404_spike'                => [
         'label'   => __(
             '404 Spike',
             'proactive-site-advisor'
@@ -268,7 +265,7 @@ return [
                 'proactive-site-advisor'
             ),
             'critical' => __(
-                '404 errors increased sharply, meaning more visitors are reaching pages that no longer exist.',
+                '404 errors increased sharply, indicating more requests to pages that no longer exist.',
                 'proactive-site-advisor'
             ),
         ],
@@ -309,7 +306,7 @@ return [
             ],
         ],
     ],
-    'bot_spike'       => [
+    'bot_spike'                => [
         'label'   => __(
             'Bot Spike',
             'proactive-site-advisor'
@@ -365,7 +362,7 @@ return [
             ],
         ],
     ],
-    'bot_drop'        => [
+    'bot_drop'                 => [
         'label'   => __(
             'Bot Activity Drop',
             'proactive-site-advisor'
@@ -415,7 +412,7 @@ return [
                     'proactive-site-advisor'
                 ),
                 __(
-                    'Review whether crawler access or search visibility may be affected.',
+                    'Check whether crawler access or search visibility has been affected by recent changes.',
                     'proactive-site-advisor'
                 ),
             ],

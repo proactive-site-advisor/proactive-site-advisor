@@ -33,9 +33,9 @@ class SettingsData
                 'title'    => __('Alerts', 'proactive-site-advisor'),
                 'icon'     => PrefixConfig::css('icon--bell'),
             ],
-            PluginSettings::SECTION_THRESHOLDS    => [
-                'template' => 'admin/pages/settings/sections/thresholds',
-                'title'    => __('Thresholds', 'proactive-site-advisor'),
+            PluginSettings::SECTION_SENSITIVITY   => [
+                'template' => 'admin/pages/settings/sections/sensitivity',
+                'title'    => __('Sensitivity', 'proactive-site-advisor'),
                 'icon'     => PrefixConfig::css('icon--slider'),
             ],
             PluginSettings::SECTION_NOTIFICATIONS => [

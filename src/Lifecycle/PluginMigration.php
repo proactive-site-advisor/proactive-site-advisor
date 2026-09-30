@@ -55,6 +55,9 @@ class PluginMigration
             '1.2.0' => function () {
                 self::migrateTo120();
             },
+            '1.2.6' => function () {
+                self::migrateTo126();
+            },
         ];
 
         foreach ($migrations as $version => $callback) {
@@ -96,12 +99,58 @@ class PluginMigration
             $existing[PluginSettings::SECTION_NOTIFICATIONS] = [
                 PluginSettings::ENABLE_DAILY_DIGEST    => 1,
                 PluginSettings::DIGEST_RECIPIENT_EMAIL => get_option('admin_email'),
-                PluginSettings::DIGEST_INCLUDE_TRAFFIC => 1,
-                PluginSettings::DIGEST_INCLUDE_404     => 1,
-                PluginSettings::DIGEST_INCLUDE_BOT     => 1,
+                'digest_include_traffic'               => 1,
+                'digest_include_404'                   => 1,
+                'digest_include_bot'                   => 1,
             ];
 
             OptionUtils::updateAll($existing);
         }
+    }
+
+    /** Migrate settings structure to 1.2.6: replace thresholds with sensitivity, merge bot alerts. */
+    private static function migrateTo126(): void
+    {
+        $optionName = PluginOptions::OPTION_NAME;
+        $existing   = get_option($optionName, []);
+
+        if (!is_array($existing)) {
+            $existing = OptionUtils::getDefaults();
+        }
+
+        $alerts = $existing[PluginSettings::SECTION_ALERTS] ?? [];
+
+        $botSpike = !empty($alerts['bot_spike']);
+        $botDrop  = !empty($alerts['bot_drop']);
+
+        $alerts[PluginSettings::ALERT_BOT_CHANGE] = ($botSpike || $botDrop) ? 1 : 0;
+
+        unset($alerts['bot_spike'], $alerts['bot_drop']);
+
+        $existing[PluginSettings::SECTION_ALERTS] = $alerts;
+
+        unset($existing['thresholds']);
+
+        if (!isset($existing[PluginSettings::SECTION_SENSITIVITY])) {
+            $existing[PluginSettings::SECTION_SENSITIVITY] = [
+                PluginSettings::SENSITIVITY_LEVEL     => 'normal',
+                PluginSettings::SENSITIVITY_AUTO_TUNE => 1,
+                PluginSettings::TRAFFIC_MIN_ABS       => 10,
+                PluginSettings::ERROR_404_MIN_ABS     => 3,
+                PluginSettings::BOT_MIN_ABS           => 10,
+            ];
+        }
+        
+        $notifications = $existing[PluginSettings::SECTION_NOTIFICATIONS] ?? [];
+
+        unset(
+            $notifications['digest_include_traffic'],
+            $notifications['digest_include_404'],
+            $notifications['digest_include_bot']
+        );
+
+        $existing[PluginSettings::SECTION_NOTIFICATIONS] = $notifications;
+
+        OptionUtils::updateAll($existing);
     }
 }

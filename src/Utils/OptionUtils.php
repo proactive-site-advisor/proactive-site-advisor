@@ -31,24 +31,18 @@ class OptionUtils
                 PluginSettings::ALERT_TRAFFIC_DROP  => 1,
                 PluginSettings::ALERT_TRAFFIC_SPIKE => 1,
                 PluginSettings::ALERT_404_SPIKE     => 1,
-                PluginSettings::ALERT_BOT_SPIKE     => 1,
-                PluginSettings::ALERT_BOT_DROP      => 1,
+                PluginSettings::ALERT_BOT_CHANGE    => 1,
             ],
-            PluginSettings::SECTION_THRESHOLDS    => [
-                PluginSettings::MIN_WEEKLY_AVG          => 3,
-                PluginSettings::MIN_PAGEVIEWS_FOR_ALERT => 10,
-                PluginSettings::TRAFFIC_SPIKE_PERCENT   => 50,
-                PluginSettings::TRAFFIC_DROP_PERCENT    => 30,
-                PluginSettings::ERROR_404_SPIKE_PERCENT => 100,
-                PluginSettings::BOT_SPIKE_PERCENT       => 100,
-                PluginSettings::BOT_DROP_PERCENT        => 50,
+            PluginSettings::SECTION_SENSITIVITY   => [
+                PluginSettings::SENSITIVITY_LEVEL     => 'normal',
+                PluginSettings::SENSITIVITY_AUTO_TUNE => 1,
+                PluginSettings::TRAFFIC_MIN_ABS       => 10,
+                PluginSettings::ERROR_404_MIN_ABS     => 3,
+                PluginSettings::BOT_MIN_ABS           => 10,
             ],
             PluginSettings::SECTION_NOTIFICATIONS => [
                 PluginSettings::ENABLE_DAILY_DIGEST    => 1,
                 PluginSettings::DIGEST_RECIPIENT_EMAIL => get_option('admin_email'),
-                PluginSettings::DIGEST_INCLUDE_TRAFFIC => 1,
-                PluginSettings::DIGEST_INCLUDE_404     => 1,
-                PluginSettings::DIGEST_INCLUDE_BOT     => 1,
             ],
         ];
     }
@@ -62,12 +56,24 @@ class OptionUtils
             return self::getDefaults();
         }
 
-        return $options;
+        return self::mergeRecursive(self::getDefaults(), $options);
     }
 
-    /**
-     * Get a single plugin option using dot notation.
-     */
+    /** Recursively merge saved options over defaults. */
+    private static function mergeRecursive(array $defaults, array $saved): array
+    {
+        foreach ($saved as $key => $value) {
+            if (is_array($value) && isset($defaults[$key]) && is_array($defaults[$key])) {
+                $defaults[$key] = self::mergeRecursive($defaults[$key], $value);
+            } else {
+                $defaults[$key] = $value;
+            }
+        }
+
+        return $defaults;
+    }
+
+    /** Get a single plugin option using dot notation. */
     public static function getOption(string $key, $default = null)
     {
         $options = self::getAllOptions();

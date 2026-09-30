@@ -63,7 +63,7 @@ class DailyStatsDataProvider extends AbstractDataProvider
             $wpdb->prepare(
                 "SELECT pageviews, errors_404, bot_pageviews
              FROM {$table}
-             WHERE stats_date <= %s
+             WHERE stats_date < %s
              ORDER BY stats_date DESC
              LIMIT %d",
                 $today,

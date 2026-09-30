@@ -48,20 +48,8 @@ class SettingsSanitizer
             }
         }
 
-        if ($section === PluginSettings::SECTION_THRESHOLDS) {
-            $percentFields = [
-                PluginSettings::TRAFFIC_SPIKE_PERCENT,
-                PluginSettings::TRAFFIC_DROP_PERCENT,
-                PluginSettings::ERROR_404_SPIKE_PERCENT,
-                PluginSettings::BOT_SPIKE_PERCENT,
-                PluginSettings::BOT_DROP_PERCENT,
-            ];
-
-            foreach ($percentFields as $field) {
-                if (isset($clean[$field])) {
-                    $clean[$field] = max(5, min(100, $clean[$field]));
-                }
-            }
+        if ($section === PluginSettings::SECTION_SENSITIVITY) {
+            $clean = $this->sanitizeSensitivity($clean);
         }
 
         if ($section === PluginSettings::SECTION_NOTIFICATIONS) {
@@ -75,6 +63,34 @@ class SettingsSanitizer
                 }
                 $clean[$field] = $value ? 1 : 0;
             }
+        }
+
+        return $clean;
+    }
+
+    /** Sanitize sensitivity section: level, auto_tune, and min_abs fields. */
+    private function sanitizeSensitivity(array $clean): array
+    {
+        $allowedLevels = ['low', 'normal', 'high'];
+
+        $level = $clean[PluginSettings::SENSITIVITY_LEVEL] ?? 'normal';
+        if (!in_array($level, $allowedLevels, true)) {
+            $level = 'normal';
+        }
+        $clean[PluginSettings::SENSITIVITY_LEVEL] = $level;
+
+        $clean[PluginSettings::SENSITIVITY_AUTO_TUNE] =
+            !empty($clean[PluginSettings::SENSITIVITY_AUTO_TUNE]) ? 1 : 0;
+
+        $minAbsFields = [
+            PluginSettings::TRAFFIC_MIN_ABS,
+            PluginSettings::ERROR_404_MIN_ABS,
+            PluginSettings::BOT_MIN_ABS,
+        ];
+
+        foreach ($minAbsFields as $field) {
+            $value         = (int)($clean[$field] ?? 0);
+            $clean[$field] = max(1, min(100000, $value));
         }
 
         return $clean;

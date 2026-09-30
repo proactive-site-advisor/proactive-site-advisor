@@ -32,12 +32,6 @@ class AlertFactory extends AbstractFactory
         return $this;
     }
 
-    /** Get the current pattern. */
-    public function getPattern(): string
-    {
-        return $this->pattern;
-    }
-
     /** Define default attributes. */
     protected function definition(): array
     {
@@ -49,15 +43,17 @@ class AlertFactory extends AbstractFactory
         ];
     }
 
-    /** Create a traffic drop alert, following TrafficAnalyzer rules. */
+    /** Create a realistic traffic drop alert. */
     public function trafficDrop(string $date, int $percentDrop = 35): ?Alert
     {
         if ($percentDrop <= 30) {
             $percentDrop = 31;
         }
 
-        $today = $this->randomInt(300, 600);
-        $avg7  = (int)round(($today / (1 - ($percentDrop / 100))));
+        $today   = $this->randomInt(300, 600);
+        $avg7    = (int)round(($today / (1 - ($percentDrop / 100))));
+        $median7 = $avg7 + $this->randomInt(-20, 20);
+        $delta   = $today - $median7;
 
         $ratio     = $today / $avg7;
         $changePct = round(($ratio - 1) * 100, 2);
@@ -66,6 +62,8 @@ class AlertFactory extends AbstractFactory
         $metaJson = wp_json_encode([
             'today'      => $today,
             'avg7'       => $avg7,
+            'median7'    => $median7,
+            'delta'      => $delta,
             'change_pct' => $changePct,
         ]);
 
@@ -77,15 +75,17 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /** Create a traffic spike alert, following TrafficAnalyzer rules. */
+    /** Create a realistic traffic spike alert. */
     public function trafficSpike(string $date, int $percentIncrease = 75): ?Alert
     {
         if ($percentIncrease <= 50) {
             $percentIncrease = 51;
         }
 
-        $avg7  = $this->randomInt(800, 1200);
-        $today = (int)($avg7 * (1 + ($percentIncrease / 100)));
+        $avg7    = $this->randomInt(800, 1200);
+        $today   = $avg7 * (1 + ($percentIncrease / 100));
+        $median7 = $avg7 + $this->randomInt(-20, 20);
+        $delta   = $today - $median7;
 
         $ratio     = $today / $avg7;
         $changePct = round(($ratio - 1) * 100, 2);
@@ -93,6 +93,8 @@ class AlertFactory extends AbstractFactory
         $metaJson = wp_json_encode([
             'today'      => $today,
             'avg7'       => $avg7,
+            'median7'    => $median7,
+            'delta'      => $delta,
             'change_pct' => $changePct,
         ]);
 
@@ -104,7 +106,7 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /** Create a 404 spike alert, compatible with Error404Analyzer logic. */
+    /** Create a realistic 404 surge alert. */
     public function error404Spike(string $date, int $errorCount = 50, int $average = 15): ?Alert
     {
         $ratio = $average > 0 ? $errorCount / $average : 0;
@@ -113,6 +115,9 @@ class AlertFactory extends AbstractFactory
             $errorCount = (int)($average * $factor);
             $ratio      = $factor;
         }
+
+        $median7 = $average + $this->randomInt(-2, 2);
+        $delta   = $errorCount - $median7;
 
         $severity  = $ratio >= 3 ? 'critical' : 'warning';
         $changePct = round(($ratio - 1) * 100, 2);
@@ -126,6 +131,8 @@ class AlertFactory extends AbstractFactory
         $metaJson = wp_json_encode([
             'today'      => $errorCount,
             'avg7'       => $average,
+            'median7'    => $median7,
+            'delta'      => $delta,
             'change_pct' => $changePct,
             'top'        => $topPaths,
         ]);
@@ -138,15 +145,17 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /** Create a bot spike alert, following BotTrafficAnalyzer rules. */
+    /** Create a realistic bot spike alert. */
     public function botSpike(string $date, int $percentIncrease = 180): ?Alert
     {
         if ($percentIncrease <= 150) {
             $percentIncrease = 151;
         }
 
-        $avg7  = $this->randomInt(200, 500);
-        $today = (int)($avg7 * (1 + ($percentIncrease / 100)));
+        $avg7    = $this->randomInt(200, 500);
+        $today   = $avg7 * (1 + ($percentIncrease / 100));
+        $median7 = $avg7 + $this->randomInt(-30, 30);
+        $delta   = $today - $median7;
 
         $ratio     = $today / $avg7;
         $changePct = round(($ratio - 1) * 100, 2);
@@ -161,6 +170,8 @@ class AlertFactory extends AbstractFactory
         $metaJson = wp_json_encode([
             'today'      => $today,
             'avg7'       => $avg7,
+            'median7'    => $median7,
+            'delta'      => $delta,
             'change_pct' => $changePct,
             'top'        => $topBots,
         ]);
@@ -173,15 +184,17 @@ class AlertFactory extends AbstractFactory
         );
     }
 
-    /** Create a bot drop alert, following BotTrafficAnalyzer rules. */
+    /** Create a realistic bot drop alert. */
     public function botDrop(string $date, int $percentDrop = 80): ?Alert
     {
         if ($percentDrop <= 70) {
             $percentDrop = 71;
         }
 
-        $avg7  = $this->randomInt(200, 500);
-        $today = (int)($avg7 * (1 - ($percentDrop / 100)));
+        $avg7    = $this->randomInt(200, 500);
+        $today   = $avg7 * (1 - ($percentDrop / 100));
+        $median7 = $avg7 + $this->randomInt(-30, 30);
+        $delta   = $today - $median7;
 
         $ratio     = $today / $avg7;
         $changePct = round(($ratio - 1) * 100, 2);
@@ -197,6 +210,8 @@ class AlertFactory extends AbstractFactory
         $metaJson = wp_json_encode([
             'today'      => $today,
             'avg7'       => $avg7,
+            'median7'    => $median7,
+            'delta'      => $delta,
             'change_pct' => $changePct,
             'top'        => $topBots,
         ]);
