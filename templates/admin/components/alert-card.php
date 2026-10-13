@@ -83,17 +83,17 @@ if (!defined('ABSPATH')) {
                         $delta   = $metrics['delta'];
 
                         $today = '<strong>' . esc_html(number_format_i18n($metrics['today'])) . '</strong>';
-                        $avg7  = '<strong>' . esc_html(number_format_i18n($metrics['avg7'])) . '</strong>';
+                        $typical = '<strong>' . esc_html(number_format_i18n($metrics['median7'])) . '</strong>';
 
                         if ($change !== null) {
                             $sign  = $change > 0 ? '+' : '';
                             $value = $sign . number_format_i18n(round((float)$change, 1), 1) . '%';
 
                             printf(
-                            /* translators: 1: Today's value, 2: 7-day average value, 3: Percentage change */
-                                esc_html__('Today: %1$s · 7-day average: %2$s · Change: %3$s', 'proactive-site-advisor'),
+                            /* translators: 1: Today's value, 2: Typical daily value, 3: Percentage change */
+                                esc_html__('Today: %1$s · Typical daily: %2$s · Change: %3$s', 'proactive-site-advisor'),
                                 $today,
-                                $avg7,
+                                $typical,
                                 '<strong>' . esc_html($value) . '</strong>'
                             );
                         } else {
@@ -101,10 +101,10 @@ if (!defined('ABSPATH')) {
                             $value = $sign . number_format_i18n($delta);
 
                             printf(
-                            /* translators: 1: Today's value, 2: 7-day average value, 3: Absolute difference */
-                                esc_html__('Today: %1$s · 7-day average: %2$s · Difference: %3$s', 'proactive-site-advisor'),
+                            /* translators: 1: Today's value, 2: Typical daily value, 3: Absolute difference */
+                                esc_html__('Today: %1$s · Typical daily: %2$s · Difference: %3$s', 'proactive-site-advisor'),
                                 $today,
-                                $avg7,
+                                $typical,
                                 '<strong>' . esc_html($value) . '</strong>'
                             );
                         }

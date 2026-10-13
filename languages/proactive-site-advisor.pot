@@ -4,7 +4,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Proactive Site Advisor - Insights & Actionable "
 "Recommendations\n"
-"POT-Creation-Date: 2026-09-30 01:35+0330\n"
+"POT-Creation-Date: 2026-10-13 19:49+0330\n"
 "PO-Revision-Date: 2026-02-17 09:10+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -850,13 +850,13 @@ msgid "%s bot requests"
 msgstr ""
 
 #: src/Utils/DisplayUtils.php:69
-msgid "7-day daily average — No data yet"
+msgid "7-day average — No data yet"
 msgstr ""
 
 #. translators: %s: list of average monitoring stats separated by middot
 #: src/Utils/DisplayUtils.php:74
 #, php-format
-msgid "7-day daily average — %s"
+msgid "7-day average — %s"
 msgstr ""
 
 #: templates/admin/components/alert-card.php:61
@@ -867,16 +867,16 @@ msgstr ""
 msgid "Why this alert?"
 msgstr ""
 
-#. translators: 1: Today's value, 2: 7-day average value, 3: Percentage change
+#. translators: 1: Today's value, 2: Typical daily value, 3: Percentage change
 #: templates/admin/components/alert-card.php:94
 #, php-format
-msgid "Today: %1$s · 7-day average: %2$s · Change: %3$s"
+msgid "Today: %1$s · Typical daily: %2$s · Change: %3$s"
 msgstr ""
 
-#. translators: 1: Today's value, 2: 7-day average value, 3: Absolute difference
+#. translators: 1: Today's value, 2: Typical daily value, 3: Absolute difference
 #: templates/admin/components/alert-card.php:105
 #, php-format
-msgid "Today: %1$s · 7-day average: %2$s · Difference: %3$s"
+msgid "Today: %1$s · Typical daily: %2$s · Difference: %3$s"
 msgstr ""
 
 #: templates/admin/components/alert-card.php:120

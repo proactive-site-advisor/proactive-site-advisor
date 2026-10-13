@@ -2,6 +2,7 @@
 
 namespace ProactiveSiteAdvisor\Services\Frontend\Traffic\Config;
 
+use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\ScannerProbeUrlSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\HeadlessChromeSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\FrameworkInternalHeaderSignal;
 use ProactiveSiteAdvisor\Services\Frontend\Traffic\Signals\Fingerprint\NavigationBehaviorSignal;
@@ -46,6 +47,7 @@ class SignalConfig
     public static function getBotSignals(): array
     {
         $signals = [
+            ScannerProbeUrlSignal::class,
             HeadlessChromeSignal::class,
             FrameworkInternalHeaderSignal::class,
             BotAgentSignal::class,

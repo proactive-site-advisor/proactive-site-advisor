@@ -129,6 +129,7 @@ class ComposerStaticInitProactiveSiteAdvisor
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\Http2CleartextUpgradeSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/Fingerprint/Http2CleartextUpgradeSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\MissingHeadersSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/Fingerprint/MissingHeadersSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\NavigationBehaviorSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/Fingerprint/NavigationBehaviorSignal.php',
+        'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\ScannerProbeUrlSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/Fingerprint/ScannerProbeUrlSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\SecFetchSiteNoneWithRefererSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/Fingerprint/SecFetchSiteNoneWithRefererSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\SecFetchUserSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/Fingerprint/SecFetchUserSignal.php',
         'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\IpSignal' => __DIR__ . '/../..' . '/src/Services/Frontend/Traffic/Signals/IpSignal.php',

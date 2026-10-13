@@ -114,6 +114,7 @@ return array(
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\Http2CleartextUpgradeSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/Fingerprint/Http2CleartextUpgradeSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\MissingHeadersSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/Fingerprint/MissingHeadersSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\NavigationBehaviorSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/Fingerprint/NavigationBehaviorSignal.php',
+    'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\ScannerProbeUrlSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/Fingerprint/ScannerProbeUrlSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\SecFetchSiteNoneWithRefererSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/Fingerprint/SecFetchSiteNoneWithRefererSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\Fingerprint\\SecFetchUserSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/Fingerprint/SecFetchUserSignal.php',
     'ProactiveSiteAdvisor\\Services\\Frontend\\Traffic\\Signals\\IpSignal' => $baseDir . '/src/Services/Frontend/Traffic/Signals/IpSignal.php',
