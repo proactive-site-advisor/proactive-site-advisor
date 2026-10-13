@@ -50,6 +50,13 @@ class DataLoader
         return is_array($data) ? $data : [];
     }
 
+    /** Loads scanner probe patterns. */
+    public static function loadScannerProbePatterns(): array
+    {
+        $data = self::loadFile('scanner-probe-patterns.php');
+        return is_array($data) ? $data : [];
+    }
+
     /** Generic file loader with caching. */
     private static function loadFile(string $filename)
     {

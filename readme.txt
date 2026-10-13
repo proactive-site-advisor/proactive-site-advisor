@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.6
+Stable tag: 1.2.7
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,6 +160,14 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 
 == Changelog ==
 
+= 1.2.7 =
+* New: ScannerProbeUrlSignal – detects scanner probe URLs on non-404 pages.
+* New: scanner-probe-patterns data file with configurable probe patterns.
+* Improved: Alert details now show "Typical daily" (median) instead of "7-day average" — the number shown is the same one used to decide whether to alert, so it matches the reported change.
+* Improved: Percentage changes are now shown only when they are meaningful for the site's own traffic pattern. On low-traffic metrics, alerts switch to an absolute difference (e.g. "+20 visits") instead of a misleading percentage (e.g. "+1000%").
+* Improved: The "Sensitivity" setting now also adjusts the relative noise floor used in detection, so choosing Low / Normal / High has a real effect on high-traffic sites.
+* Fixed: Alert details could show inconsistent values (e.g. average 4, today 3, difference +3) because the baseline and the difference were calculated from different statistics. Both now use the same value.
+
 = 1.2.6 =
 * New: Adaptive anomaly detection engine based on robust statistics (median + MAD + count-aware noise floor + robust z-score).
 * New: Sensitivity setting with three levels — Low, Normal, High — replacing all previous percentage thresholds.
@@ -308,6 +316,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.2.7 =
+New scanner probe detection for suspicious URLs, plus clearer alert details — "Typical daily" replaces "7-day average", and percentages switch to absolute numbers on low-traffic sites so alerts are never misleading.
 
 = 1.2.6 =
 Introduces a new adaptive anomaly detection engine with a simplified Sensitivity setting. Existing threshold settings are migrated automatically. Recommended to review the new Sensitivity page after updating.

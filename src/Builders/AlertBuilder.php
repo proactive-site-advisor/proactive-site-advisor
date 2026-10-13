@@ -132,17 +132,19 @@ class AlertBuilder
     /** Get severity explanation text and metrics. */
     private function getSeverityExplanation(string $type, string $level, array $meta): array
     {
-        $avg7   = $meta['avg7'];
-        $today  = $meta['today'];
-        $change = $meta['change_pct'];
+        $avg7    = $meta['avg7'];
+        $median7 = $meta['median7'];
+        $today   = $meta['today'];
+        $change  = $meta['change_pct'];
 
         return [
             'text'    => $this->alerts['severity_text'][$type][$level],
             'metrics' => [
-                'avg7'   => $avg7,
-                'today'  => $today,
-                'change' => $change,
-                'delta'  => $meta['delta'],
+                'avg7'    => $avg7,
+                'median7' => $median7,
+                'today'   => $today,
+                'change'  => $change,
+                'delta'   => $meta['delta'],
             ],
         ];
     }

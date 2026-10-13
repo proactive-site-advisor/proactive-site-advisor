@@ -2,6 +2,22 @@
 
 
 
+= 1.2.7 – 2026-10-03 =
+
+* New: ScannerProbeUrlSignal – detects scanner probe URLs on non-404 pages.
+
+* New: scanner-probe-patterns data file with configurable probe patterns.
+
+* Improved: Alert details now show "Typical daily" (median) instead of "7-day average" — the number shown is the same one used to decide whether to alert, so it matches the reported change.
+
+* Improved: Percentage changes are now shown only when they are meaningful for the site's own traffic pattern. On low-traffic metrics, alerts switch to an absolute difference (e.g. "+20 visits") instead of a misleading percentage (e.g. "+1000%").
+
+* Improved: The "Sensitivity" setting now also adjusts the relative noise floor used in detection, so choosing Low / Normal / High has a real effect on high-traffic sites.
+
+* Fixed: Alert details could show inconsistent values (e.g. average 4, today 3, difference +3) because the baseline and the difference were calculated from different statistics. Both now use the same value.
+
+
+
 = 1.2.6 – 2026-10-01 =
 
 * New: Adaptive anomaly detection engine based on robust statistics (median + MAD + count-aware noise floor + robust z-score).

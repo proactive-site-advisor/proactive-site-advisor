@@ -107,14 +107,21 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
         return 'info';
     }
 
-    /** Compute change percent from today and average. Returns null when baseline is not meaningful. */
-    protected function buildChangePercent(int $today, float $avg, float $median): ?float
+    /** Compute percentage change vs typical (median). */
+    protected function buildChangePercent(int $today, array $result): ?float
     {
-        if ($avg < 1.0 || $median < 1.0) {
+        $median = (float)$result['median'];
+        $s      = (float)$result['s'];
+
+        if ($median <= 0.0) {
             return null;
         }
 
-        return round((($today / $avg) - 1) * 100, 2);
+        if ($s >= $median * 0.5) {
+            return null;
+        }
+
+        return round((($today / $median) - 1) * 100, 2);
     }
 
     /** Build the common meta keys shared by all alerts. */
@@ -125,7 +132,7 @@ abstract class AbstractTrafficAlertGenerator implements AlertGeneratorInterface
             'avg7'       => (int)round($result['avg']),
             'median7'    => (int)round($result['median']),
             'delta'      => $result['delta'],
-            'change_pct' => $this->buildChangePercent($today, $result['avg'], $result['median']),
+            'change_pct' => $this->buildChangePercent($today, $result),
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace ProactiveSiteAdvisor\Services\Insights;
 
 use ProactiveSiteAdvisor\DataProviders\DailyStatsDataProvider;
+use ProactiveSiteAdvisor\Services\Insights\Config\MetricConfig;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -74,7 +75,7 @@ class BaselineCalculator
 
         $smad  = 1.4826 * $mad;
         $spois = ($median < 20) ? sqrt(max($median, 0.5)) : 0.0;
-        $srel  = max(0.01 * $median, 1.0);
+        $srel  = max(MetricConfig::minRel() * $median, 1.0);
         $s     = max($smad, $spois, $srel, 1.0);
 
         return [

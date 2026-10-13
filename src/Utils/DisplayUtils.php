@@ -66,12 +66,12 @@ class DisplayUtils
         }
 
         if (empty($parts)) {
-            return esc_html__('7-day daily average — No data yet', 'proactive-site-advisor');
+            return esc_html__('7-day average — No data yet', 'proactive-site-advisor');
         }
 
         return sprintf(
         /* translators: %s: list of average monitoring stats separated by middot */
-            esc_html__('7-day daily average — %s', 'proactive-site-advisor'),
+            esc_html__('7-day average — %s', 'proactive-site-advisor'),
             implode(' · ', $parts)
         );
     }

@@ -96,6 +96,14 @@ class MetricConfig
         return self::TODAY_KEY_MAP[$metric];
     }
 
+    /** Get the relative noise floor for the current sensitivity level. */
+    public static function minRel(): float
+    {
+        $level = self::getSensitivityLevel();
+
+        return self::MIN_REL_MAP[$level];
+    }
+
     /** Get sensitivity level from settings. */
     private static function getSensitivityLevel(): string
     {
