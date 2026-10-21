@@ -2,6 +2,12 @@
 
 
 
+= 1.2.8 – 2026-10-21 =
+
+* Improved: Expanded scanner probe URL patterns to detect more scanner probes.
+
+
+
 = 1.2.7 – 2026-10-03 =
 
 * New: ScannerProbeUrlSignal – detects scanner probe URLs on non-404 pages.
