@@ -55,7 +55,7 @@ class RobustAnomalyDetector
         $direction = $this->resolveDirection($delta, $config['direction']);
 
         if ($direction === null) {
-            return $this->noAlertResult($median, $avg, $delta);
+            return $this->noAlertResult($median, $avg, $delta, $s);
         }
 
         $z = (abs($delta) - self::CONTINUITY_CORRECTION) / $s;
@@ -82,6 +82,7 @@ class RobustAnomalyDetector
             'practical'   => $practical,
             'median'      => $median,
             'avg'         => $avg,
+            's'           => $s,
         ];
     }
 
@@ -149,7 +150,7 @@ class RobustAnomalyDetector
     }
 
     /** Return a safe no-alert result. */
-    private function noAlertResult(float $median, float $avg, float $delta): array
+    private function noAlertResult(float $median, float $avg, float $delta, float $s): array
     {
         return [
             'is_alert'    => false,
@@ -162,6 +163,7 @@ class RobustAnomalyDetector
             'practical'   => false,
             'median'      => $median,
             'avg'         => $avg,
+            's'           => $s,
         ];
     }
 
