@@ -4,7 +4,7 @@ Tags: anomaly detection, site monitoring, traffic alerts, 404 errors, bot detect
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.7
+Stable tag: 1.2.8
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 7. Daily digest email — the summary email sent after each monitoring cycle.
 
 == Changelog ==
+
+= 1.2.8 =
+* Improved: Expanded scanner probe URL patterns to detect more scanner probes.
 
 = 1.2.7 =
 * New: ScannerProbeUrlSignal – detects scanner probe URLs on non-404 pages.
@@ -316,6 +319,9 @@ No. The plugin has zero front‑end footprint. All processing happens in the bac
 * Daily WP-Cron scans
 
 == Upgrade Notice ==
+
+= 1.2.8 =
+Expands scanner probe URL patterns for improved bot detection. Safe automatic update.
 
 = 1.2.7 =
 New scanner probe detection for suspicious URLs, plus clearer alert details — "Typical daily" replaces "7-day average", and percentages switch to absolute numbers on low-traffic sites so alerts are never misleading.

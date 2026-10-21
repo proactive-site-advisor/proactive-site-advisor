@@ -5,7 +5,7 @@
  * Plugin URI:          https://zheynlab.com/proactive-site-advisor
  * GitHub Plugin URI:   https://github.com/proactive-site-advisor/proactive-site-advisor
  * Description:         Get early warnings on traffic drops, 404 surges, and bot spikes. Privacy‑friendly anomaly detection that tells you when, why, and what to check next.
- * Version:             1.2.7
+ * Version:             1.2.8
  * Author:              ZheynLab
  * Author URI:          https://zheynlab.com
  * Text Domain:         proactive-site-advisor
@@ -51,7 +51,7 @@ if (!defined('PROACTIVE_SITE_ADVISOR_ASSETS')) {
 
 /** Plugin version. */
 if (!defined('PROACTIVE_SITE_ADVISOR_VERSION')) {
-    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.2.7');
+    define('PROACTIVE_SITE_ADVISOR_VERSION', '1.2.8');
 }
 
 /** Database schema version. */
