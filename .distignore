@@ -1,19 +1,37 @@
+# Git
 .git
-.wordpress-org
-.github
 .gitignore
-.editorconfig
-CHANGELOG.md
-CONTRIBUTING.md
-SECURITY.md
-README.md
-assets-src
+.github
+assets/img/demo-thumbnail.png
+
+# WordPress.org assets (SVN)
+.wordpress-org
+
+# Node / build
 node_modules
 package.json
 package-lock.json
 gulpfile.mjs
+assets-src
 config
+
+# Config / IDE
+.editorconfig
 phpcs.xml
+
+# Composer (dev/build only)
 composer.lock
+
+# Documentation / meta
+CHANGELOG.md
+CONTRIBUTING.md
+SECURITY.md
+README.md
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Distribution ignore itself
 .distignore
-assets/img/demo-thumbnail.png
+
