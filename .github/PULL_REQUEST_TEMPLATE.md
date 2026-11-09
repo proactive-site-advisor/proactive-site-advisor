@@ -1,52 +1,28 @@
 ## Description
-
-<!--
-What does this PR do and why?
-Link related issues if applicable.
--->
+<!-- Briefly describe what this PR does, why it is needed, and link any related issues. -->
 
 ## Type of Change
-
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Enhancement / refactor
-- [ ] Code style update (formatting, local variables)
-- [ ] UI / UX change
-- [ ] Maintenance (docs, tooling, CI)
+- [ ] Code style / formatting update
+- [ ] Maintenance (docs, tooling, CI/CD)
 
 ## How Has This Been Tested?
-
-- [ ] Manually tested
-- [ ] CI checks passed
+- [ ] Manually tested in local environment
+- [ ] Automated tests / CI checks passed
 
 ### Test Steps
+1. 
+2. 
 
-1. Install & activate the Proactive Site Advisor plugin
-2.
-3.
+## Impact & Scope
+- [ ] Admin dashboard / settings
+- [ ] Frontend output / alerts
+- [ ] Performance / Security optimization
+- [ ] No user-facing / backend-only changes
 
-## Screenshots (if applicable)
-
-<!-- Required for UI / UX changes -->
-
-## Impact
-
-- [ ] Admin area (dashboard, settings)
-- [ ] Frontend output
-- [ ] Alert logic
-- [ ] Performance
-- [ ] Security
-- [ ] No user-facing changes
-
-## Backward Compatibility
-
-- [ ] No breaking changes
-- [ ] Behavior change (documented)
-- [ ] Breaking change (major version bump required)
-
-## Checklist
-
-- [ ] Code follows project style guidelines
-- [ ] Changes scoped to this PR
-- [ ] CI checks are passing
-- [ ] Documentation / changelog updated (if needed)
+## Backward Compatibility & Docs
+- [ ] Fully backward compatible (No breaking changes)
+- [ ] Breaking change (Requires major version / migration steps)
+- [ ] Documentation / `README.md` / inline docs updated
