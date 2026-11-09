@@ -8,7 +8,6 @@ assets/img/demo-thumbnail.png
 .wordpress-org
 
 # Node / build
-node_modules
 package.json
 package-lock.json
 gulpfile.mjs

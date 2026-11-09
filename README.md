@@ -6,6 +6,20 @@ Your site talks. Don't wait until it screams. Most WordPress issues — ranking 
 
 Everything stays 100% local — no external APIs, no data leaving your server. The plugin logs, processes, and summarizes data using lightweight database tables and atomic operations. Zero performance overhead. No cookies. No front‑end scripts.
 
+## Table of Contents
+
+- [What Proactive Site Advisor Does (and Doesn't Do)](#what-proactive-site-advisor-does-and-doesnt-do)
+- [Why Proactive Site Advisor?](#why-proactive-site-advisor)
+- [Watch the Demo](#watch-the-demo)
+- [Key Features](#key-features)
+- [Privacy & Performance by Design](#privacy--performance-by-design)
+- [Who is Proactive Site Advisor for?](#who-is-proactive-site-advisor-for)
+- [Requirements](#requirements)
+- [Installation (WordPress Users)](#installation-wordpress-users)
+- [Development Setup](#development-setup)
+- [Frequently Asked Questions](#frequently-asked-questions)
+- [Project Documentation](#project-documentation)
+
 ## What Proactive Site Advisor Does (and Doesn't Do)
 
 **Does:**
@@ -42,7 +56,7 @@ The plugin adds a **"Site Advisor"** dashboard in your admin with:
 >
 > The decrease exceeded your configured threshold of 30% by a significant margin, indicating an unusual deviation from your recent traffic pattern.
 >
-> Today: 445 · 7-day average: 754 · Change: -41%
+> Today: 445 · Typical daily: 754 · Change: -41%
 >
 > *Pattern*
 >
@@ -113,13 +127,52 @@ The plugin does **not** fix anything automatically — it only alerts and recomm
 - PHP 7.4 or higher
 - MySQL 5.7+ or MariaDB equivalent
 
-## Installation
+## Installation (WordPress Users)
 
 1. Upload `proactive-site-advisor` to `/wp-content/plugins/`
 2. Activate through **Plugins → Installed Plugins**
 3. Visit the **Site Advisor** menu in your admin sidebar
 
 That's it. No required configuration, no API connections to set up. Proactive Site Advisor starts collecting data immediately. Optional settings are available under **Site Advisor → Settings** if you want to customize thresholds or email alerts.
+
+## Development Setup
+
+Follow these steps to set up the project locally for development.
+
+### Prerequisites
+
+Make sure you have the following installed on your machine:
+
+- PHP >= 7.4
+- Composer
+- Node.js & npm
+
+### Installation
+
+1. **Clone the repository:**
+
+```bash
+   git clone https://github.com/proactive-site-advisor/proactive-site-advisor.git
+   cd proactive-site-advisor
+```
+
+2. **Install PHP dependencies:**
+
+```bash
+composer install
+```
+
+3. **Install JavaScript/CSS dependencies:**
+
+```bash
+npm install
+```
+
+4. **Build assets:**
+
+```bash
+npm run build
+```
 
 ## Frequently Asked Questions
 
@@ -152,3 +205,10 @@ The core plugin is and will remain free, licensed under GPL-2.0-or-later. A Pro 
 
 ### Does it affect site speed?
 No. The plugin has zero front‑end footprint. All processing happens in the background after page load, using efficient database queries. Your visitors won't notice it.
+
+## Project Documentation
+
+- [Changelog](CHANGELOG.md)
+- [Security Policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
+- [License](LICENSE)
