@@ -48,7 +48,7 @@ Here’s a real example of a traffic drop alert:
 > *Why this alert?*
 > The decrease is substantially beyond your site's normal range and warrants prompt investigation.
 >
-> Today: 445 · 7-day average: 754 · Change: -41%
+> Today: 445 · Typical daily: 754 · Change: -41%
 >
 > *Pattern:*
 > This alert has appeared for the second consecutive day.
