@@ -1,9 +1,6 @@
-# ===========================================
-# My Starter Kit - Git Ignore
-# ===========================================
-
 # Dependencies
 /node_modules/
+/vendor/
 
 # IDE / Editor
 .idea/
