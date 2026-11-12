@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+    PHPUnit configuration for unit tests.
+
+    @package ProactiveSiteAdvisor\Tests
+    @since   1.2.8
+-->
+<phpunit
+        bootstrap="tests/bootstrap/unit.php"
+        colors="true"
+        stopOnFailure="false"
+        cacheResult="false"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
