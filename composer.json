@@ -31,7 +31,10 @@
     "test:integration": "phpunit -c phpunit-integration.xml.dist"
   },
   "config": {
-    "autoloader-suffix": "ProactiveSiteAdvisor"
+    "autoloader-suffix": "ProactiveSiteAdvisor",
+    "platform": {
+      "php": "7.4"
+    }
   },
   "minimum-stability": "stable",
   "prefer-stable": true
