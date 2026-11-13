@@ -71,6 +71,10 @@ jobs:
             -   name: Install dependencies
                 run: composer install --no-interaction --prefer-dist --no-progress
 
+
+            -   name: Install required dependencies
+                run: sudo apt-get update && sudo apt-get install -y subversion
+
             -   name: Setup WordPress test environment
                 run: |
                     bash bin/install-wp-tests.sh \
