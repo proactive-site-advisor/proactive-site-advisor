@@ -78,7 +78,7 @@ jobs:
                         root \
                         root \
                         127.0.0.1:3306 \
-                        6.1
+                        latest
 
             -   name: Run integration tests
                 run: composer test:integration
