@@ -15,3 +15,7 @@ if (!file_exists($autoload)) {
 }
 
 require_once $autoload;
+
+if (!defined('ABSPATH')) {
+    define('ABSPATH', dirname(__DIR__, 3) . '/');
+}
