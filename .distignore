@@ -31,6 +31,14 @@ README.md
 .DS_Store
 Thumbs.db
 
+#Test Files
+.phpcs.xml.dist
+/bin
+phpunit.xml.dist
+/tests
+.phpunit.result.cache
+
+
 # Distribution ignore itself
 .distignore
 

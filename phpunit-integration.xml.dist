@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+    PHPUnit configuration for integration tests.
+
+    Runs tests in a WordPress environment.
+
+    @package ProactiveSiteAdvisor\Tests
+    @since   1.2.8
+-->
+<phpunit
+    bootstrap="tests/bootstrap/integration.php"
+    colors="true"
+    stopOnFailure="false"
+    cacheResult="false"
+>
+    <testsuites>
+        <testsuite name="Integration">
+            <directory suffix="Test.php">tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
